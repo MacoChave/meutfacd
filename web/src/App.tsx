@@ -1,23 +1,28 @@
-// import { useState } from 'react'
 // import reactLogo from './assets/react.svg'
 // import './App.css'
-
 import { QueryClientProvider } from '@tanstack/react-query';
 import queryClient from './queryClient';
 import { ThemeProvider } from '@mui/material';
 import { theme } from './themes/theme';
-import { AuthProvider } from './contexts/AuthProvider';
-import { RouterProvider } from 'react-router-dom';
-import router from './routes/Router';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import Home from './pages/Home';
+import Login from './pages/Login';
+import Logup from './pages/Logup';
+import Recovery from './pages/Recovery';
 
 function App() {
 	return (
 		<>
 			<QueryClientProvider client={queryClient}>
 				<ThemeProvider theme={theme}>
-					<AuthProvider>
-						<RouterProvider router={router} />
-					</AuthProvider>
+					<BrowserRouter>
+						<Routes>
+							<Route path='/' element={<Home />} />
+							<Route path='/login' element={<Login />} />
+							<Route path='/logup' element={<Logup />} />
+							<Route path='/recovery' element={<Recovery />} />
+						</Routes>
+					</BrowserRouter>
 				</ThemeProvider>
 			</QueryClientProvider>
 		</>
