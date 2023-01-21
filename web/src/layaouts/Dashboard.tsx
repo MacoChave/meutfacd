@@ -1,8 +1,8 @@
 import { Box } from '@mui/material';
 import { ReactNode, useState } from 'react';
-import Appbar from '../components/Appbar';
 import Sidebar from '../components/Sidebar';
 import { MenuItem } from '../propTypes/Appbar';
+import { ToolbarWithSesion } from '../components/Toolbar';
 
 const Dashboard = ({
 	menuArray,
@@ -14,7 +14,7 @@ const Dashboard = ({
 	const [open, setOpen] = useState(false);
 	return (
 		<Box sx={{ display: 'flex' }}>
-			<Appbar open={open} setOpen={setOpen} />
+			<ToolbarWithSesion />
 			<Sidebar menuArray={menuArray} open={open} setOpen={setOpen} />
 			{children}
 		</Box>

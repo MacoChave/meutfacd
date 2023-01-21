@@ -10,6 +10,14 @@ export const theme = createTheme({
 				},
 			},
 		},
+		MuiAppBar: {
+			styleOverrides: {
+				colorPrimary: {
+					backgroundColor: '#00225B',
+					color: '#fff',
+				},
+			},
+		},
 	},
 	palette: {
 		primary: {

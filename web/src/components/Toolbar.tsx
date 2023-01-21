@@ -7,10 +7,13 @@ interface ToolbarProps {
 
 export const ToolbarWithoutSesion = ({ children }: ToolbarProps) => {
 	return (
-		<AppBar>
+		<AppBar
+			position='fixed'
+			color='primary'
+			sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}>
 			<Toolbar>
 				<IconButton
-					color='secondary'
+					color='inherit'
 					sx={{ mr: 2, display: { sm: 'none' } }}>
 					<Menu />
 				</IconButton>
@@ -31,13 +34,13 @@ export const ToolbarWithoutSesion = ({ children }: ToolbarProps) => {
 export const ToolbarWithSesion = () => {
 	return (
 		<ToolbarWithoutSesion>
-			<IconButton color='secondary'>
+			<IconButton color='inherit'>
 				<Notifications />
 			</IconButton>
-			<IconButton color='secondary'>
+			<IconButton color='inherit'>
 				<AccountCircle />
 			</IconButton>
-			<IconButton color='secondary'>Cerrar sesión</IconButton>
+			<IconButton color='inherit'>Cerrar sesión</IconButton>
 		</ToolbarWithoutSesion>
 	);
 };

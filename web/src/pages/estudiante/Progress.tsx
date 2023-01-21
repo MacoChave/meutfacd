@@ -87,7 +87,11 @@ const Progress = () => {
 	return (
 		<>
 			<TableContainer component={Paper}>
-				<Typography variant='h4' textAlign='center' py={4}>
+				<Typography
+					variant='h4'
+					component='h2'
+					textAlign='center'
+					py={4}>
 					Mi progreso
 				</Typography>
 				<Table
