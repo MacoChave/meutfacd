@@ -27,7 +27,7 @@ const Login = () => {
 							xl: '30vw',
 						},
 						height: 'auto',
-						m: 'auto',
+						mx: 'auto',
 					}}>
 					<Typography variant='h4'>Iniciar sesión</Typography>
 					<form>
@@ -69,6 +69,7 @@ const Login = () => {
 						sx={{
 							display: 'flex',
 							justifyContent: 'space-around',
+							alignItems: 'center',
 						}}>
 						<Typography>¿No tienes una cuenta?</Typography>
 						<Button

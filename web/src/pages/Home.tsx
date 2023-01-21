@@ -13,7 +13,7 @@ const Home = () => {
 		<Box sx={{}}>
 			<Box
 				sx={{
-					background: 'darkblue',
+					background: '#00225B',
 					color: 'white',
 					py: 2,
 					textAlign: 'center',

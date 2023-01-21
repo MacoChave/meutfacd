@@ -1,5 +1,4 @@
-import { AppBar, Box, IconButton, Toolbar, Typography } from '@mui/material';
-import { Menu } from '@mui/icons-material';
+import { AppBar, Toolbar, Typography } from '@mui/material';
 import { AppbarProps } from '../propTypes/Appbar';
 
 const Appbar = ({ open, setOpen }: AppbarProps) => {
@@ -9,9 +8,12 @@ const Appbar = ({ open, setOpen }: AppbarProps) => {
 
 	return (
 		<>
-			<AppBar position='fixed' color='primary'>
+			<AppBar
+				position='fixed'
+				color='primary'
+				sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}>
 				<Toolbar>
-					<IconButton
+					{/* <IconButton
 						color='inherit'
 						aria-label='open drawer'
 						onClick={handleDrawerOpen}
@@ -21,7 +23,7 @@ const Appbar = ({ open, setOpen }: AppbarProps) => {
 							...(open && { display: 'none' }),
 						}}>
 						<Menu />
-					</IconButton>
+					</IconButton> */}
 					<Typography variant='h6' noWrap component='div'>
 						Unidad de tesis
 					</Typography>
