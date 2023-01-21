@@ -20,6 +20,8 @@ import Station2 from '../pages/estudiante/Station2';
 import Station3 from '../pages/estudiante/Station3';
 import Station4 from '../pages/estudiante/Station4';
 import Station5 from '../pages/estudiante/Station5';
+import Asignar from '../pages/encargado/Asignar';
+import Citas from '../pages/encargado/Citas';
 
 export const router = createBrowserRouter([
 	{
@@ -112,6 +114,24 @@ export const router = createBrowserRouter([
 				{<HomeEncargado />}
 			</ProtectedRoute>
 		),
+		children: [
+			{
+				path: 'asignar',
+				element: (
+					<ProtectedRoute isAllowed={true}>
+						{<Asignar />}
+					</ProtectedRoute>
+				),
+			},
+			{
+				path: 'citas',
+				element: (
+					<ProtectedRoute isAllowed={true}>
+						{<Citas />}
+					</ProtectedRoute>
+				),
+			},
+		],
 	},
 	{
 		path: '/evaluador',

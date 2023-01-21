@@ -72,7 +72,7 @@ const Station2 = () => {
 						}}>
 						<Box sx={boxStyle}>
 							<Typography>Resultado</Typography>
-							<Chip label='Asignado' color='primary' />
+							<Chip label='Aprobado' color='success' />
 						</Box>
 						<Box sx={boxStyle}>
 							<Typography>Certificado</Typography>

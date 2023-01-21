@@ -2,7 +2,7 @@ import { Box, Card, TextField, Typography } from '@mui/material';
 
 const style = {
 	display: 'grid' as 'grid',
-	gridTemplateColumns: 'repeat(1, 1fr)',
+	gridTemplateColumns: 'repeat(2, 1fr)',
 	gap: 4,
 	minWidth: 250,
 	maxWidth: 600,
@@ -26,7 +26,7 @@ const Station5 = () => {
 					component='h2'
 					textAlign='center'
 					py={4}>
-					Cita para previos internos
+					Formulario para solicitar exámen público
 				</Typography>
 				<Box sx={style}>
 					<Box
@@ -56,6 +56,12 @@ const Station5 = () => {
 							value='Edificio S6 - 300'
 						/>
 					</Box>
+					<Box
+						sx={{
+							display: 'flex',
+							flexDirection: 'column',
+							gap: 4,
+						}}></Box>
 				</Box>
 			</Card>
 		</>

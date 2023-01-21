@@ -1,4 +1,10 @@
-import { Visibility } from '@mui/icons-material';
+import {
+	CalendarToday,
+	Check,
+	Delete,
+	Download,
+	Message,
+} from '@mui/icons-material';
 import {
 	Chip,
 	IconButton,
@@ -18,45 +24,38 @@ type ProgressType = {
 	estacion: string;
 	evaluador: string;
 	fecha_carga: string;
-	estado: string;
-	observacion: string;
 };
 
 const rows: ProgressType[] = [
 	{
-		estacion: 'Estación 1',
-		evaluador: 'Profesor 1',
+		estacion: '20145296',
+		evaluador: 'Estudiante 1',
 		fecha_carga: '2021-10-10',
-		estado: 'Previo',
-		observacion: 'Ver observación',
 	},
 	{
-		estacion: 'Estación 1',
-		evaluador: 'Profesor 1',
+		estacion: '20145296',
+		evaluador: 'Estudiante 2',
 		fecha_carga: '2021-10-10',
-		estado: 'Aprobado',
-		observacion: 'Ver observación',
 	},
 	{
-		estacion: 'Estación 2',
-		evaluador: 'Profesor 2',
+		estacion: '20145296',
+		evaluador: 'Estudiante 2',
 		fecha_carga: '2021-10-10',
-		estado: 'Aprobado',
-		observacion: 'Ver observación',
 	},
 	{
-		estacion: 'Estación 3',
-		evaluador: 'Profesor 3',
+		estacion: '20145296',
+		evaluador: 'Estudiante 2',
 		fecha_carga: '2021-10-10',
-		estado: 'Aprobado',
-		observacion: 'Ver observación',
 	},
 	{
-		estacion: 'Estación 4',
-		evaluador: 'Profesor 4',
+		estacion: '20145296',
+		evaluador: 'Estudiante 2',
 		fecha_carga: '2021-10-10',
-		estado: 'Enviado',
-		observacion: 'Ver observación',
+	},
+	{
+		estacion: '20145296',
+		evaluador: 'Estudiante 2',
+		fecha_carga: '2021-10-10',
 	},
 ];
 
@@ -77,7 +76,7 @@ const chipsByState = (estado: string) => {
 	);
 };
 
-const Progress = () => {
+const Citas = () => {
 	const [open, setOpen] = useState(false);
 	const [row, setRow] = useState({} as ProgressType);
 	const handleShow = (row: ProgressType) => {
@@ -92,18 +91,24 @@ const Progress = () => {
 					component='h2'
 					textAlign='center'
 					py={4}>
-					Mi progreso
+					Raquel Angulo
+				</Typography>
+				<Typography
+					variant='h5'
+					component='h3'
+					textAlign='center'
+					py={4}>
+					Citas programadas
 				</Typography>
 				<Table
 					sx={{ minWidth: 250, maxWidth: 600, mx: 'auto' }}
 					aria-label='simple table'>
 					<TableHead>
 						<TableRow>
-							<TableCell>Estación</TableCell>
-							<TableCell>Evaluador</TableCell>
+							<TableCell>Carné</TableCell>
+							<TableCell>Nombre</TableCell>
 							<TableCell>Fecha de carga</TableCell>
-							<TableCell>Estado</TableCell>
-							<TableCell>Observación</TableCell>
+							<TableCell>Revisión</TableCell>
 						</TableRow>
 					</TableHead>
 					<TableBody>
@@ -121,13 +126,30 @@ const Progress = () => {
 								<TableCell>{row.evaluador}</TableCell>
 								<TableCell>{row.fecha_carga}</TableCell>
 								<TableCell>
-									{chipsByState(row.estado)}
-								</TableCell>
-								<TableCell>
 									<IconButton
 										color='primary'
 										onClick={() => handleShow(row)}>
-										<Visibility />
+										<CalendarToday />
+									</IconButton>
+									<IconButton
+										color='primary'
+										onClick={() => handleShow(row)}>
+										<Download />
+									</IconButton>
+									<IconButton
+										color='primary'
+										onClick={() => handleShow(row)}>
+										<Message />
+									</IconButton>
+									<IconButton
+										color='primary'
+										onClick={() => {}}>
+										<Check />
+									</IconButton>
+									<IconButton
+										color='primary'
+										onClick={() => {}}>
+										<Delete />
 									</IconButton>
 								</TableCell>
 							</TableRow>
@@ -136,10 +158,10 @@ const Progress = () => {
 				</Table>
 			</TableContainer>
 			<MyModal open={open} title='Observaciones' setOpen={setOpen}>
-				<Typography textAlign='center'>{row.observacion}</Typography>
+				<Typography textAlign='center'>Detalles</Typography>
 			</MyModal>
 		</>
 	);
 };
 
-export default Progress;
+export default Citas;

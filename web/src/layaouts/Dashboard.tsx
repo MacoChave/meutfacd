@@ -15,7 +15,9 @@ const Dashboard = ({
 	return (
 		<Box sx={{ display: 'flex' }}>
 			<ToolbarWithSesion />
-			<Sidebar menuArray={menuArray} open={open} setOpen={setOpen} />
+			{menuArray.length > 0 && (
+				<Sidebar menuArray={menuArray} open={open} setOpen={setOpen} />
+			)}
 			{children}
 		</Box>
 	);
