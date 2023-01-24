@@ -3,17 +3,15 @@ import {
 	Box,
 	Button,
 	Card,
-	Checkbox,
 	IconButton,
 	List,
 	ListItem,
 	ListItemButton,
-	ListItemIcon,
 	ListItemText,
 	TextField,
 	Typography,
 } from '@mui/material';
-import { useRef, useState } from 'react';
+import { useState } from 'react';
 
 const style = {
 	display: 'grid' as 'grid',
@@ -76,6 +74,7 @@ const Asignar = () => {
 							label='Evaluador'
 							value='Raquel Angulo'
 						/>
+						<Button variant='contained'>Finalizar</Button>
 					</Box>
 					<Box>
 						<Typography variant='h6' component='h3'>

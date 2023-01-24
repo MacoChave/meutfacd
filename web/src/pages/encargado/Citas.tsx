@@ -107,7 +107,7 @@ const Citas = () => {
 						<TableRow>
 							<TableCell>Carné</TableCell>
 							<TableCell>Nombre</TableCell>
-							<TableCell>Fecha de carga</TableCell>
+							<TableCell>Fecha de cita</TableCell>
 							<TableCell>Revisión</TableCell>
 						</TableRow>
 					</TableHead>

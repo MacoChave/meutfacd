@@ -31,7 +31,7 @@ const Home = () => {
 					</Typography>
 				)}
 			</Box>
-			<Box sx={{ width: '100%' }}>
+			<Box sx={{ width: '70%', mx: 'auto' }}>
 				<img
 					style={{
 						width: '100%',

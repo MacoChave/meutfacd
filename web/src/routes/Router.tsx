@@ -22,6 +22,7 @@ import Station4 from '../pages/estudiante/Station4';
 import Station5 from '../pages/estudiante/Station5';
 import Asignar from '../pages/encargado/Asignar';
 import Citas from '../pages/encargado/Citas';
+import Resumen from '../pages/analitica/Resumen';
 
 export const router = createBrowserRouter([
 	{
@@ -146,6 +147,16 @@ export const router = createBrowserRouter([
 		element: (
 			<ProtectedRoute isAllowed={true}>{<HomeReporte />}</ProtectedRoute>
 		),
+		children: [
+			{
+				path: 'resumen',
+				element: (
+					<ProtectedRoute isAllowed={true}>
+						{<Resumen />}
+					</ProtectedRoute>
+				),
+			},
+		],
 	},
 ]);
 
