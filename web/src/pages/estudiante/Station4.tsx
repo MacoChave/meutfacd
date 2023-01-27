@@ -1,5 +1,7 @@
 import { Box, Button, Card, TextField, Typography } from '@mui/material';
 import { useRef } from 'react';
+import FileChooser from '../../components/FileChooser';
+import Contenedor from '../../components/Card';
 
 const style = {
 	display: 'grid' as 'grid',
@@ -19,14 +21,7 @@ const Station4 = () => {
 	};
 	return (
 		<>
-			<Card>
-				<Typography
-					variant='h4'
-					component='h2'
-					textAlign='center'
-					py={4}>
-					Comisión y estilo
-				</Typography>
+			<Contenedor title='Comisión y estilo'>
 				<Box sx={style}>
 					<Box>
 						<Typography variant='h6'>Detalle del previo</Typography>
@@ -52,43 +47,12 @@ const Station4 = () => {
 							gridColumnStart: 2,
 							gridRow: '1 / span 2',
 							p: 2,
-							border: '4px solid darkblue',
-							borderRadius: 4,
-							display: 'flex',
-							flexDirection: 'column',
-							placeContent: 'center',
-							placeItems: 'center',
-							placeSelf: 'stretch',
-							gap: 4,
+							placeSelf: 'center',
 						}}>
-						<TextField
-							variant='standard'
-							InputProps={{ disableUnderline: true }}
-							disabled
-							label='Selecciona tu archivo'
-							sx={{
-								'& .MuiFormLabel-root.Mui-disabled': {
-									color: 'darkblue',
-								},
-							}}
-						/>
-						<Button
-							component='label'
-							sx={{
-								overflow: 'hidden',
-							}}>
-							Seleccionar
-							<input
-								ref={ref as any}
-								type='file'
-								accept='pdf'
-								hidden
-								onChange={handleChange}
-							/>
-						</Button>
+						<FileChooser />
 					</Box>
 				</Box>
-			</Card>
+			</Contenedor>
 		</>
 	);
 };

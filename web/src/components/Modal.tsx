@@ -1,5 +1,6 @@
-import { Box, Modal, Typography } from '@mui/material';
+import { Box, Divider, IconButton, Modal, Typography } from '@mui/material';
 import { ModalProps } from '../propTypes/Modal';
+import { Close } from '@mui/icons-material';
 
 const style = {
 	position: 'absolute' as 'absolute',
@@ -13,14 +14,24 @@ const style = {
 	p: 4,
 };
 
-const MyModal = ({ title, open, setOpen: setOpen, children }: ModalProps) => {
+const Dialogo = ({ title, open, setOpen: setOpen, children }: ModalProps) => {
 	return (
 		<>
 			<Modal open={open} onClose={() => setOpen(false)}>
 				<Box sx={style}>
-					<Typography variant='h6' component='h2'>
+					<IconButton
+						sx={{ position: 'absolute', top: 0, right: 0 }}
+						color='primary'
+						onClick={() => setOpen(false)}>
+						<Close />
+					</IconButton>
+					<Typography
+						variant='h6'
+						component='h2'
+						sx={{ fontWeight: 'bold' }}>
 						{title}
 					</Typography>
+					<Divider />
 					{children}
 				</Box>
 			</Modal>
@@ -28,4 +39,4 @@ const MyModal = ({ title, open, setOpen: setOpen, children }: ModalProps) => {
 	);
 };
 
-export default MyModal;
+export default Dialogo;

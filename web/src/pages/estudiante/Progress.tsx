@@ -11,7 +11,7 @@ import {
 	TableRow,
 	Typography,
 } from '@mui/material';
-import MyModal from '../../components/Modal';
+import Dialogo from '../../components/Modal';
 import { useState } from 'react';
 
 type ProgressType = {
@@ -21,44 +21,6 @@ type ProgressType = {
 	estado: string;
 	observacion: string;
 };
-
-const rows: ProgressType[] = [
-	{
-		estacion: 'Estación 1',
-		evaluador: 'Profesor 1',
-		fecha_carga: '2021-10-10',
-		estado: 'Previo',
-		observacion: 'Ver observación',
-	},
-	{
-		estacion: 'Estación 1',
-		evaluador: 'Profesor 1',
-		fecha_carga: '2021-10-10',
-		estado: 'Aprobado',
-		observacion: 'Ver observación',
-	},
-	{
-		estacion: 'Estación 2',
-		evaluador: 'Profesor 2',
-		fecha_carga: '2021-10-10',
-		estado: 'Aprobado',
-		observacion: 'Ver observación',
-	},
-	{
-		estacion: 'Estación 3',
-		evaluador: 'Profesor 3',
-		fecha_carga: '2021-10-10',
-		estado: 'Aprobado',
-		observacion: 'Ver observación',
-	},
-	{
-		estacion: 'Estación 4',
-		evaluador: 'Profesor 4',
-		fecha_carga: '2021-10-10',
-		estado: 'Enviado',
-		observacion: 'Ver observación',
-	},
-];
 
 const getChipColor = (estado: string) => {
 	switch (estado) {
@@ -80,10 +42,12 @@ const chipsByState = (estado: string) => {
 const Progress = () => {
 	const [open, setOpen] = useState(false);
 	const [row, setRow] = useState({} as ProgressType);
+
 	const handleShow = (row: ProgressType) => {
 		setOpen(true);
 		setRow(row);
 	};
+
 	return (
 		<>
 			<TableContainer component={Paper}>
@@ -99,11 +63,11 @@ const Progress = () => {
 					aria-label='simple table'>
 					<TableHead>
 						<TableRow>
-							<TableCell>Estación</TableCell>
-							<TableCell>Evaluador</TableCell>
-							<TableCell>Fecha de carga</TableCell>
-							<TableCell>Estado</TableCell>
-							<TableCell>Observación</TableCell>
+							{Object.keys(rows[0]).map((key, index) => (
+								<TableCell key={index}>
+									{key.toUpperCase()}
+								</TableCell>
+							))}
 						</TableRow>
 					</TableHead>
 					<TableBody>
@@ -135,11 +99,55 @@ const Progress = () => {
 					</TableBody>
 				</Table>
 			</TableContainer>
-			<MyModal open={open} title='Observaciones' setOpen={setOpen}>
-				<Typography textAlign='center'>{row.observacion}</Typography>
-			</MyModal>
+			<Dialogo open={open} title='Observaciones' setOpen={setOpen}>
+				<Typography variant='body2'>{row.fecha_carga}</Typography>
+				<Typography variant='body1'>{row.observacion}</Typography>
+			</Dialogo>
 		</>
 	);
 };
+
+const rows: ProgressType[] = [
+	{
+		estacion: 'Estación 1',
+		evaluador: 'Profesor 1',
+		fecha_carga: '2021-10-10',
+		estado: 'Previo',
+		observacion:
+			'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam placerat accumsan fermentum. Mauris faucibus molestie dolor a dignissim. Nam enim augue, pulvinar ac egestas sed, tincidunt nec tellus. Fusce non leo ac purus viverra tincidunt et et velit. Nulla ac leo suscipit, posuere urna nec, imperdiet erat. Nulla dapibus arcu at libero venenatis vulputate. Ut laoreet augue ut varius ultricies.',
+	},
+	{
+		estacion: 'Estación 1',
+		evaluador: 'Profesor 1',
+		fecha_carga: '2021-10-10',
+		estado: 'Aprobado',
+		observacion:
+			'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam placerat accumsan fermentum. Mauris faucibus molestie dolor a dignissim. Nam enim augue, pulvinar ac egestas sed, tincidunt nec tellus. Fusce non leo ac purus viverra tincidunt et et velit. Nulla ac leo suscipit, posuere urna nec, imperdiet erat. Nulla dapibus arcu at libero venenatis vulputate. Ut laoreet augue ut varius ultricies.',
+	},
+	{
+		estacion: 'Estación 2',
+		evaluador: 'Profesor 2',
+		fecha_carga: '2021-10-10',
+		estado: 'Aprobado',
+		observacion:
+			'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam placerat accumsan fermentum. Mauris faucibus molestie dolor a dignissim. Nam enim augue, pulvinar ac egestas sed, tincidunt nec tellus. Fusce non leo ac purus viverra tincidunt et et velit. Nulla ac leo suscipit, posuere urna nec, imperdiet erat. Nulla dapibus arcu at libero venenatis vulputate. Ut laoreet augue ut varius ultricies.',
+	},
+	{
+		estacion: 'Estación 3',
+		evaluador: 'Profesor 3',
+		fecha_carga: '2021-10-10',
+		estado: 'Aprobado',
+		observacion:
+			'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam placerat accumsan fermentum. Mauris faucibus molestie dolor a dignissim. Nam enim augue, pulvinar ac egestas sed, tincidunt nec tellus. Fusce non leo ac purus viverra tincidunt et et velit. Nulla ac leo suscipit, posuere urna nec, imperdiet erat. Nulla dapibus arcu at libero venenatis vulputate. Ut laoreet augue ut varius ultricies.',
+	},
+	{
+		estacion: 'Estación 4',
+		evaluador: 'Profesor 4',
+		fecha_carga: '2021-10-10',
+		estado: 'Enviado',
+		observacion:
+			'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam placerat accumsan fermentum. Mauris faucibus molestie dolor a dignissim. Nam enim augue, pulvinar ac egestas sed, tincidunt nec tellus. Fusce non leo ac purus viverra tincidunt et et velit. Nulla ac leo suscipit, posuere urna nec, imperdiet erat. Nulla dapibus arcu at libero venenatis vulputate. Ut laoreet augue ut varius ultricies.',
+	},
+];
 
 export default Progress;

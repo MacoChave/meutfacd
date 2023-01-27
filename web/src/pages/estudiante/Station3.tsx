@@ -7,6 +7,7 @@ import {
 	TextField,
 	Typography,
 } from '@mui/material';
+import Contenedor from '../../components/Card';
 
 const style = {
 	display: 'grid' as 'grid',
@@ -28,14 +29,7 @@ const boxStyle = {
 const Station3 = () => {
 	return (
 		<>
-			<Card>
-				<Typography
-					variant='h4'
-					component='h2'
-					textAlign='center'
-					py={4}>
-					Curso: Elaboración y planeación de tesis
-				</Typography>
+			<Contenedor title='Curso: Elaboración y planeación de tesis'>
 				<Box sx={style}>
 					<Box
 						sx={{
@@ -82,7 +76,7 @@ const Station3 = () => {
 						</Box>
 					</Box>
 				</Box>
-			</Card>
+			</Contenedor>
 		</>
 	);
 };

@@ -17,7 +17,7 @@ import {
 	TableRow,
 	Typography,
 } from '@mui/material';
-import MyModal from '../../components/Modal';
+import Dialogo from '../../components/Modal';
 import { useState } from 'react';
 
 type ProgressType = {
@@ -157,9 +157,9 @@ const Citas = () => {
 					</TableBody>
 				</Table>
 			</TableContainer>
-			<MyModal open={open} title='Observaciones' setOpen={setOpen}>
+			<Dialogo open={open} title='Observaciones' setOpen={setOpen}>
 				<Typography textAlign='center'>Detalles</Typography>
-			</MyModal>
+			</Dialogo>
 		</>
 	);
 };

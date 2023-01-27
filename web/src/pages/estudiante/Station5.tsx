@@ -1,4 +1,5 @@
 import { Box, Card, TextField, Typography } from '@mui/material';
+import Contenedor from '../../components/Card';
 
 const style = {
 	display: 'grid' as 'grid',
@@ -20,14 +21,7 @@ const boxStyle = {
 const Station5 = () => {
 	return (
 		<>
-			<Card>
-				<Typography
-					variant='h4'
-					component='h2'
-					textAlign='center'
-					py={4}>
-					Cita para previos internos
-				</Typography>
+			<Contenedor title='Cita a previos internos'>
 				<Box sx={style}>
 					<Box
 						sx={{
@@ -57,7 +51,7 @@ const Station5 = () => {
 						/>
 					</Box>
 				</Box>
-			</Card>
+			</Contenedor>
 		</>
 	);
 };

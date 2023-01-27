@@ -8,9 +8,37 @@ import {
 } from '@mui/material';
 import { ToolbarWithoutSesion } from '../components/Toolbar';
 import { useNavigate } from 'react-router-dom';
+import { Controller, SubmitHandler, useForm } from 'react-hook-form';
+import { AuthContext } from '../contexts/AuthContext';
+import { useContext } from 'react';
+
+type FormData = {
+	correo: string;
+	pass: string;
+};
 
 const Login = () => {
 	const navigate = useNavigate();
+	const context = useContext(AuthContext);
+
+	const {
+		control,
+		handleSubmit,
+		formState: { errors },
+	} = useForm<FormData>();
+
+	const onSubmit: SubmitHandler<FormData> = (data) => {
+		console.log(data);
+		if (data.correo.includes('estudiante'))
+			navigate('/estudiante', { replace: true });
+		else if (data.correo.includes('encargado'))
+			navigate('/encargado', { replace: true });
+		else if (data.correo.includes('profesor'))
+			navigate('/evaluador', { replace: true });
+		else if (data.correo.includes('admin'))
+			navigate('/admin', { replace: true });
+		else navigate('/analiticas', { replace: true });
+	};
 
 	return (
 		<>
@@ -30,7 +58,7 @@ const Login = () => {
 						mx: 'auto',
 					}}>
 					<Typography variant='h4'>Iniciar sesión</Typography>
-					<form>
+					<form onSubmit={handleSubmit(onSubmit)}>
 						<Card
 							sx={{
 								display: 'flex',
@@ -39,17 +67,33 @@ const Login = () => {
 								my: 4,
 								p: 4,
 							}}>
-							<TextField
-								label='Correo electrónico'
-								variant='filled'
-								type='email'
+							<Controller
+								control={control}
+								name='correo'
+								render={({ field }) => (
+									<TextField
+										{...field}
+										label='Correo electrónico'
+										variant='filled'
+										type='email'
+									/>
+								)}
 							/>
-							<TextField
-								label='Contraseña'
-								variant='filled'
-								type='password'
+							<Controller
+								control={control}
+								name='pass'
+								render={({ field }) => (
+									<TextField
+										{...field}
+										label='Contraseña'
+										variant='filled'
+										type='password'
+									/>
+								)}
 							/>
-							<Button variant='contained'>Ingresar</Button>
+							<Button type='submit' variant='contained'>
+								Ingresar
+							</Button>
 							<Box>
 								<Button
 									variant='text'

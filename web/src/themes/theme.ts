@@ -18,6 +18,21 @@ export const theme = createTheme({
 				},
 			},
 		},
+		MuiTableHead: {
+			styleOverrides: {
+				root: {
+					fontWeight: 'bold',
+				},
+			},
+		},
+		MuiTableCell: {
+			styleOverrides: {
+				root: {
+					fontWeight: 'inherit',
+					textAlign: 'center',
+				},
+			},
+		},
 	},
 	palette: {
 		primary: {

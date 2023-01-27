@@ -1,5 +1,15 @@
-import { AccountCircle, Menu, Notifications } from '@mui/icons-material';
-import { AppBar, Box, IconButton, Toolbar, Typography } from '@mui/material';
+import { AccountCircle, Close, Menu, Notifications } from '@mui/icons-material';
+import {
+	Alert,
+	AppBar,
+	Box,
+	IconButton,
+	Snackbar,
+	Toolbar,
+	Typography,
+} from '@mui/material';
+import { MouseEvent, SyntheticEvent, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 interface ToolbarProps {
 	children?: React.ReactNode;
@@ -32,15 +42,59 @@ export const ToolbarWithoutSesion = ({ children }: ToolbarProps) => {
 };
 
 export const ToolbarWithSesion = () => {
+	const navigate = useNavigate();
+	const [openSb, setOpensb] = useState(true);
+
+	const handleLogout = (_: MouseEvent) => {
+		console.log('Cerrar sesión');
+		navigate('/login', { replace: true });
+	};
+	const handleProfile = (_: MouseEvent) => {
+		console.log('Perfil');
+	};
+	const handleCloseSnackbar = (
+		_: SyntheticEvent | Event,
+		reason?: string
+	) => {
+		if (reason === 'clickaway') {
+			return;
+		}
+
+		setOpensb(false);
+	};
+	const action = (
+		<>
+			<IconButton
+				size='small'
+				aria-label='close'
+				color='inherit'
+				onClick={handleCloseSnackbar}>
+				<Close fontSize='small' />
+			</IconButton>
+		</>
+	);
+
 	return (
-		<ToolbarWithoutSesion>
-			<IconButton color='inherit'>
-				<Notifications />
-			</IconButton>
-			<IconButton color='inherit'>
-				<AccountCircle />
-			</IconButton>
-			<IconButton color='inherit'>Cerrar sesión</IconButton>
-		</ToolbarWithoutSesion>
+		<>
+			<ToolbarWithoutSesion>
+				<IconButton color='inherit'>
+					<Notifications />
+				</IconButton>
+				<IconButton onClick={handleProfile} color='inherit'>
+					<AccountCircle />
+				</IconButton>
+				<IconButton onClick={handleLogout} color='inherit'>
+					Cerrar sesión
+				</IconButton>
+			</ToolbarWithoutSesion>
+			<Snackbar
+				anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+				open={openSb}
+				autoHideDuration={6000}
+				onClose={handleCloseSnackbar}
+				message='Lorem ipsum dolor sit amet consectetur adipisicing elit.'
+				action={action}
+			/>
+		</>
 	);
 };

@@ -1,10 +1,26 @@
 import { Box, Toolbar } from '@mui/material';
 import Dashboard from '../../layaouts/Dashboard';
 import { Outlet } from 'react-router-dom';
+import { Assignment, PlaylistAddCheck } from '@mui/icons-material';
+
+const menuArray = [
+	{
+		text: 'Asignar',
+		description: 'Asignar estudiantes a evaluadores',
+		path: 'asignar',
+		icon: <Assignment />,
+	},
+	{
+		text: 'Citas',
+		description: 'Ver citas de estudiantes',
+		path: 'citas',
+		icon: <PlaylistAddCheck />,
+	},
+];
 
 const HomeEncargado = () => {
 	return (
-		<Dashboard menuArray={[]}>
+		<Dashboard menuArray={menuArray}>
 			<Box
 				sx={{
 					display: 'flex',
