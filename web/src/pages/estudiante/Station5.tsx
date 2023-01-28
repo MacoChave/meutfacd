@@ -1,4 +1,4 @@
-import { Box, Card, TextField, Typography } from '@mui/material';
+import { Box, TextField } from '@mui/material';
 import Contenedor from '../../components/Card';
 
 const style = {
@@ -18,7 +18,7 @@ const boxStyle = {
 	gap: 4,
 };
 
-const Station5 = () => {
+const Estacion5 = () => {
 	return (
 		<>
 			<Contenedor title='Cita a previos internos'>
@@ -56,4 +56,4 @@ const Station5 = () => {
 	);
 };
 
-export default Station5;
+export default Estacion5;

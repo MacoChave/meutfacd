@@ -1,12 +1,5 @@
+import { CalendarToday, Check, Download, Message } from '@mui/icons-material';
 import {
-	CalendarToday,
-	Check,
-	Delete,
-	Download,
-	Message,
-} from '@mui/icons-material';
-import {
-	Chip,
 	IconButton,
 	Paper,
 	Table,
@@ -18,7 +11,9 @@ import {
 	Typography,
 } from '@mui/material';
 import Dialogo from '../../components/Modal';
-import { useState } from 'react';
+import { ReactNode, useState } from 'react';
+import AgregarComentario from '../../components/FijarFecha';
+import FijarFecha from '../../components/Comentar';
 
 type ProgressType = {
 	estacion: string;
@@ -26,60 +21,29 @@ type ProgressType = {
 	fecha_carga: string;
 };
 
-const rows: ProgressType[] = [
-	{
-		estacion: '20145296',
-		evaluador: 'Estudiante 1',
-		fecha_carga: '2021-10-10',
-	},
-	{
-		estacion: '20145296',
-		evaluador: 'Estudiante 2',
-		fecha_carga: '2021-10-10',
-	},
-	{
-		estacion: '20145296',
-		evaluador: 'Estudiante 2',
-		fecha_carga: '2021-10-10',
-	},
-	{
-		estacion: '20145296',
-		evaluador: 'Estudiante 2',
-		fecha_carga: '2021-10-10',
-	},
-	{
-		estacion: '20145296',
-		evaluador: 'Estudiante 2',
-		fecha_carga: '2021-10-10',
-	},
-	{
-		estacion: '20145296',
-		evaluador: 'Estudiante 2',
-		fecha_carga: '2021-10-10',
-	},
-];
-
-const getChipColor = (estado: string) => {
-	switch (estado) {
-		case 'Enviado':
-			return 'primary';
-		case 'Aprobado':
-			return 'success';
-		case 'Previo':
-			return 'error';
-	}
-};
-
-const chipsByState = (estado: string) => {
-	return (
-		<Chip sx={{ width: 100 }} label={estado} color={getChipColor(estado)} />
-	);
-};
+enum Operation {
+	RECALENDARIZAR = 'Recalendarizar',
+	DESCARGAR = 'Descargar',
+	COMENTAR = 'Comentar',
+	APROBAR = 'Aprobar',
+}
 
 const Citas = () => {
 	const [open, setOpen] = useState(false);
-	const [row, setRow] = useState({} as ProgressType);
-	const handleShow = (row: ProgressType) => {
+	const [row, setRow] = useState<ProgressType>({} as ProgressType);
+	const [modalContent, setmodalContent] = useState<ReactNode>(<></>);
+
+	const handleShow = (row: ProgressType, operation: Operation) => {
+		switch (operation) {
+			case Operation.RECALENDARIZAR:
+				setmodalContent(<FijarFecha />);
+				break;
+			case Operation.COMENTAR:
+				setmodalContent(<AgregarComentario />);
+				break;
+			default:
+				break;
+		}
 		setOpen(true);
 		setRow(row);
 	};
@@ -128,28 +92,32 @@ const Citas = () => {
 								<TableCell>
 									<IconButton
 										color='primary'
-										onClick={() => handleShow(row)}>
+										onClick={() =>
+											handleShow(
+												row,
+												Operation.RECALENDARIZAR
+											)
+										}>
 										<CalendarToday />
 									</IconButton>
 									<IconButton
 										color='primary'
-										onClick={() => handleShow(row)}>
+										onClick={() =>
+											console.log('Download file')
+										}>
 										<Download />
 									</IconButton>
 									<IconButton
 										color='primary'
-										onClick={() => handleShow(row)}>
+										onClick={() =>
+											handleShow(row, Operation.COMENTAR)
+										}>
 										<Message />
 									</IconButton>
 									<IconButton
 										color='primary'
 										onClick={() => {}}>
 										<Check />
-									</IconButton>
-									<IconButton
-										color='primary'
-										onClick={() => {}}>
-										<Delete />
 									</IconButton>
 								</TableCell>
 							</TableRow>
@@ -158,10 +126,43 @@ const Citas = () => {
 				</Table>
 			</TableContainer>
 			<Dialogo open={open} title='Observaciones' setOpen={setOpen}>
-				<Typography textAlign='center'>Detalles</Typography>
+				{modalContent}
 			</Dialogo>
 		</>
 	);
 };
+
+const rows: ProgressType[] = [
+	{
+		estacion: '20145296',
+		evaluador: 'Estudiante 1',
+		fecha_carga: '2021-10-10',
+	},
+	{
+		estacion: '20145296',
+		evaluador: 'Estudiante 2',
+		fecha_carga: '2021-10-10',
+	},
+	{
+		estacion: '20145296',
+		evaluador: 'Estudiante 2',
+		fecha_carga: '2021-10-10',
+	},
+	{
+		estacion: '20145296',
+		evaluador: 'Estudiante 2',
+		fecha_carga: '2021-10-10',
+	},
+	{
+		estacion: '20145296',
+		evaluador: 'Estudiante 2',
+		fecha_carga: '2021-10-10',
+	},
+	{
+		estacion: '20145296',
+		evaluador: 'Estudiante 2',
+		fecha_carga: '2021-10-10',
+	},
+];
 
 export default Citas;

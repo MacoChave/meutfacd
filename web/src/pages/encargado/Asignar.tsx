@@ -12,6 +12,7 @@ import {
 	Typography,
 } from '@mui/material';
 import { useState } from 'react';
+import Contenedor from '../../components/Card';
 
 const style = {
 	display: 'grid' as 'grid',
@@ -40,21 +41,7 @@ const Asignar = () => {
 
 	return (
 		<>
-			<Card>
-				<Typography
-					variant='h4'
-					component='h2'
-					textAlign='center'
-					py={4}>
-					Elba Esther Gordillo
-				</Typography>
-				<Typography
-					variant='h6'
-					component='h2'
-					textAlign='center'
-					py={4}>
-					Asignar evaluador
-				</Typography>
+			<Contenedor title='Asignar evaluador'>
 				<Box sx={style}>
 					<Box sx={{ display: 'flex', gap: 4 }}>
 						<TextField
@@ -152,7 +139,7 @@ const Asignar = () => {
 						</List>
 					</Box>
 				</Box>
-			</Card>
+			</Contenedor>
 		</>
 	);
 };

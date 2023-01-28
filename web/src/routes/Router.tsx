@@ -15,14 +15,18 @@ import Home from '../pages/Home';
 import Login from '../pages/Login';
 import ErrorPage from '../pages/ErrorPage';
 import Progress from '../pages/estudiante/Progress';
-import Station1 from '../pages/estudiante/Station1';
-import Station2 from '../pages/estudiante/Station2';
-import Station3 from '../pages/estudiante/Station3';
-import Station4 from '../pages/estudiante/Station4';
-import Station5 from '../pages/estudiante/Station5';
+import Estacion1 from '../pages/estudiante/Station1';
+import Estacion2 from '../pages/estudiante/Station2';
+import Estacion3 from '../pages/estudiante/Station3';
+import Estacion4 from '../pages/estudiante/Station4';
+import Estacion5 from '../pages/estudiante/Station5';
 import Asignar from '../pages/encargado/Asignar';
 import Citas from '../pages/encargado/Citas';
 import Resumen from '../pages/analitica/Resumen';
+import RevisionCurso from '../pages/evaluador/RevisionCurso';
+import RevisionDocumento from '../pages/evaluador/RevisionDoc';
+import ByEstacion from '../pages/analitica/ByEstacion';
+import ByRol from '../pages/analitica/ByRol';
 
 export const router = createBrowserRouter([
 	{
@@ -62,7 +66,7 @@ export const router = createBrowserRouter([
 				path: 'estacion1',
 				element: (
 					<ProtectedRoute isAllowed={true}>
-						{<Station1 />}
+						{<Estacion1 />}
 					</ProtectedRoute>
 				),
 			},
@@ -70,7 +74,7 @@ export const router = createBrowserRouter([
 				path: 'estacion2',
 				element: (
 					<ProtectedRoute isAllowed={true}>
-						{<Station2 />}
+						{<Estacion2 />}
 					</ProtectedRoute>
 				),
 			},
@@ -78,7 +82,7 @@ export const router = createBrowserRouter([
 				path: 'estacion3',
 				element: (
 					<ProtectedRoute isAllowed={true}>
-						{<Station3 />}
+						{<Estacion3 />}
 					</ProtectedRoute>
 				),
 			},
@@ -86,7 +90,7 @@ export const router = createBrowserRouter([
 				path: 'estacion4',
 				element: (
 					<ProtectedRoute isAllowed={true}>
-						{<Station4 />}
+						{<Estacion4 />}
 					</ProtectedRoute>
 				),
 			},
@@ -94,7 +98,7 @@ export const router = createBrowserRouter([
 				path: 'estacion5',
 				element: (
 					<ProtectedRoute isAllowed={true}>
-						{<Station5 />}
+						{<Estacion5 />}
 					</ProtectedRoute>
 				),
 			},
@@ -102,7 +106,7 @@ export const router = createBrowserRouter([
 				path: 'finalizar',
 				element: (
 					<ProtectedRoute isAllowed={true}>
-						{<Station5 />}
+						{<Estacion5 />}
 					</ProtectedRoute>
 				),
 			},
@@ -141,6 +145,40 @@ export const router = createBrowserRouter([
 				{<HomeEvaluador />}
 			</ProtectedRoute>
 		),
+		children: [
+			{
+				path: 'estacion1',
+				element: (
+					<ProtectedRoute isAllowed={true}>
+						{<RevisionDocumento />}
+					</ProtectedRoute>
+				),
+			},
+			{
+				path: 'estacion2',
+				element: (
+					<ProtectedRoute isAllowed={true}>
+						{<RevisionCurso />}
+					</ProtectedRoute>
+				),
+			},
+			{
+				path: 'estacion3',
+				element: (
+					<ProtectedRoute isAllowed={true}>
+						{<RevisionCurso />}
+					</ProtectedRoute>
+				),
+			},
+			{
+				path: 'estacion4',
+				element: (
+					<ProtectedRoute isAllowed={true}>
+						{<RevisionDocumento />}
+					</ProtectedRoute>
+				),
+			},
+		],
 	},
 	{
 		path: '/analiticas',
@@ -153,6 +191,22 @@ export const router = createBrowserRouter([
 				element: (
 					<ProtectedRoute isAllowed={true}>
 						{<Resumen />}
+					</ProtectedRoute>
+				),
+			},
+			{
+				path: 'por-estacion',
+				element: (
+					<ProtectedRoute isAllowed={true}>
+						{<ByEstacion />}
+					</ProtectedRoute>
+				),
+			},
+			{
+				path: 'por-rol',
+				element: (
+					<ProtectedRoute isAllowed={true}>
+						{<ByRol />}
 					</ProtectedRoute>
 				),
 			},

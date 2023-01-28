@@ -1,12 +1,5 @@
 import { Download, FileDownload, UploadFile } from '@mui/icons-material';
-import {
-	Box,
-	Card,
-	Chip,
-	IconButton,
-	TextField,
-	Typography,
-} from '@mui/material';
+import { Box, Chip, IconButton, TextField, Typography } from '@mui/material';
 import Contenedor from '../../components/Card';
 
 const style = {
@@ -26,7 +19,7 @@ const boxStyle = {
 	gap: 4,
 };
 
-const Station2 = () => {
+const Estacion2 = () => {
 	return (
 		<>
 			<Contenedor title='Curso: Introducción a la planeación científica'>
@@ -40,7 +33,7 @@ const Station2 = () => {
 						<TextField
 							variant='filled'
 							label='Catedrático'
-							value='Gustavo Poveda'
+							value='Profesor 4'
 						/>
 						<TextField
 							variant='filled'
@@ -93,4 +86,4 @@ const Station2 = () => {
 	);
 };
 
-export default Station2;
+export default Estacion2;

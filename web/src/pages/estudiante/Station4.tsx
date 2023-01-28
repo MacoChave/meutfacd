@@ -1,5 +1,4 @@
-import { Box, Button, Card, TextField, Typography } from '@mui/material';
-import { useRef } from 'react';
+import { Box, TextField, Typography } from '@mui/material';
 import FileChooser from '../../components/FileChooser';
 import Contenedor from '../../components/Card';
 
@@ -12,13 +11,7 @@ const style = {
 	mx: 'auto',
 };
 
-const Station4 = () => {
-	const ref = useRef<HTMLInputElement>();
-
-	const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-		const file = event.target.files?.[0];
-		console.log(file);
-	};
+const Estacion4 = () => {
 	return (
 		<>
 			<Contenedor title='Comisión y estilo'>
@@ -57,4 +50,4 @@ const Station4 = () => {
 	);
 };
 
-export default Station4;
+export default Estacion4;

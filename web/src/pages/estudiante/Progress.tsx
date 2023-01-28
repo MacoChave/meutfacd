@@ -109,42 +109,34 @@ const Progress = () => {
 
 const rows: ProgressType[] = [
 	{
-		estacion: 'Estación 1',
-		evaluador: 'Profesor 1',
-		fecha_carga: '2021-10-10',
-		estado: 'Previo',
-		observacion:
-			'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam placerat accumsan fermentum. Mauris faucibus molestie dolor a dignissim. Nam enim augue, pulvinar ac egestas sed, tincidunt nec tellus. Fusce non leo ac purus viverra tincidunt et et velit. Nulla ac leo suscipit, posuere urna nec, imperdiet erat. Nulla dapibus arcu at libero venenatis vulputate. Ut laoreet augue ut varius ultricies.',
-	},
-	{
-		estacion: 'Estación 1',
-		evaluador: 'Profesor 1',
-		fecha_carga: '2021-10-10',
-		estado: 'Aprobado',
+		estacion: 'Estación 3',
+		evaluador: 'Profesor 4',
+		fecha_carga: '2023-02-02',
+		estado: 'Enviado',
 		observacion:
 			'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam placerat accumsan fermentum. Mauris faucibus molestie dolor a dignissim. Nam enim augue, pulvinar ac egestas sed, tincidunt nec tellus. Fusce non leo ac purus viverra tincidunt et et velit. Nulla ac leo suscipit, posuere urna nec, imperdiet erat. Nulla dapibus arcu at libero venenatis vulputate. Ut laoreet augue ut varius ultricies.',
 	},
 	{
 		estacion: 'Estación 2',
-		evaluador: 'Profesor 2',
-		fecha_carga: '2021-10-10',
-		estado: 'Aprobado',
-		observacion:
-			'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam placerat accumsan fermentum. Mauris faucibus molestie dolor a dignissim. Nam enim augue, pulvinar ac egestas sed, tincidunt nec tellus. Fusce non leo ac purus viverra tincidunt et et velit. Nulla ac leo suscipit, posuere urna nec, imperdiet erat. Nulla dapibus arcu at libero venenatis vulputate. Ut laoreet augue ut varius ultricies.',
-	},
-	{
-		estacion: 'Estación 3',
 		evaluador: 'Profesor 3',
-		fecha_carga: '2021-10-10',
+		fecha_carga: '2023-01-30',
 		estado: 'Aprobado',
 		observacion:
 			'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam placerat accumsan fermentum. Mauris faucibus molestie dolor a dignissim. Nam enim augue, pulvinar ac egestas sed, tincidunt nec tellus. Fusce non leo ac purus viverra tincidunt et et velit. Nulla ac leo suscipit, posuere urna nec, imperdiet erat. Nulla dapibus arcu at libero venenatis vulputate. Ut laoreet augue ut varius ultricies.',
 	},
 	{
-		estacion: 'Estación 4',
-		evaluador: 'Profesor 4',
-		fecha_carga: '2021-10-10',
-		estado: 'Enviado',
+		estacion: 'Estación 1',
+		evaluador: 'Profesor 1',
+		fecha_carga: '2023-01-20',
+		estado: 'Aprobado',
+		observacion:
+			'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam placerat accumsan fermentum. Mauris faucibus molestie dolor a dignissim. Nam enim augue, pulvinar ac egestas sed, tincidunt nec tellus. Fusce non leo ac purus viverra tincidunt et et velit. Nulla ac leo suscipit, posuere urna nec, imperdiet erat. Nulla dapibus arcu at libero venenatis vulputate. Ut laoreet augue ut varius ultricies.',
+	},
+	{
+		estacion: 'Estación 1',
+		evaluador: 'Profesor 1',
+		fecha_carga: '2023-01-18',
+		estado: 'Previo',
 		observacion:
 			'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam placerat accumsan fermentum. Mauris faucibus molestie dolor a dignissim. Nam enim augue, pulvinar ac egestas sed, tincidunt nec tellus. Fusce non leo ac purus viverra tincidunt et et velit. Nulla ac leo suscipit, posuere urna nec, imperdiet erat. Nulla dapibus arcu at libero venenatis vulputate. Ut laoreet augue ut varius ultricies.',
 	},

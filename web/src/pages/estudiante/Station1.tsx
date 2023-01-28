@@ -1,5 +1,4 @@
-import { Box, Button, Card, TextField, Typography } from '@mui/material';
-import { useRef } from 'react';
+import { Box, TextField, Typography } from '@mui/material';
 import FileChooser from '../../components/FileChooser';
 import Contenedor from '../../components/Card';
 
@@ -12,7 +11,7 @@ const style = {
 	mx: 'auto',
 };
 
-const Station1 = () => {
+const Estacion1 = () => {
 	return (
 		<>
 			<Contenedor title='Presentar punto de tesis'>
@@ -53,4 +52,4 @@ const Station1 = () => {
 	);
 };
 
-export default Station1;
+export default Estacion1;
