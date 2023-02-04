@@ -24,6 +24,9 @@ jobs:
             - name: Change directory web folder
               run: cd web/
 
+            - name: Show current folder path
+              run: pwd
+
             - name: Install dependencies
               run: npm i
 
