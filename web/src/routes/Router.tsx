@@ -27,6 +27,7 @@ import RevisionCurso from '../pages/evaluador/RevisionCurso';
 import RevisionDocumento from '../pages/evaluador/RevisionDoc';
 import ByEstacion from '../pages/analitica/ByEstacion';
 import ByRol from '../pages/analitica/ByRol';
+import Profile from '../pages/Profile';
 
 export const router = createBrowserRouter([
 	{
@@ -54,6 +55,14 @@ export const router = createBrowserRouter([
 			</ProtectedRoute>
 		),
 		children: [
+			{
+				path: 'perfil',
+				element: (
+					<ProtectedRoute isAllowed={true}>
+						{<Profile />}
+					</ProtectedRoute>
+				),
+			},
 			{
 				path: 'progreso',
 				element: (
@@ -121,6 +130,14 @@ export const router = createBrowserRouter([
 		),
 		children: [
 			{
+				path: 'perfil',
+				element: (
+					<ProtectedRoute isAllowed={true}>
+						{<Profile />}
+					</ProtectedRoute>
+				),
+			},
+			{
 				path: 'asignar',
 				element: (
 					<ProtectedRoute isAllowed={true}>
@@ -146,6 +163,14 @@ export const router = createBrowserRouter([
 			</ProtectedRoute>
 		),
 		children: [
+			{
+				path: 'perfil',
+				element: (
+					<ProtectedRoute isAllowed={true}>
+						{<Profile />}
+					</ProtectedRoute>
+				),
+			},
 			{
 				path: 'estacion1',
 				element: (
@@ -186,6 +211,14 @@ export const router = createBrowserRouter([
 			<ProtectedRoute isAllowed={true}>{<HomeReporte />}</ProtectedRoute>
 		),
 		children: [
+			{
+				path: 'perfil',
+				element: (
+					<ProtectedRoute isAllowed={true}>
+						{<Profile />}
+					</ProtectedRoute>
+				),
+			},
 			{
 				path: 'resumen',
 				element: (

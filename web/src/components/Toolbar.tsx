@@ -51,6 +51,8 @@ export const ToolbarWithSesion = () => {
 	};
 	const handleProfile = (_: MouseEvent) => {
 		console.log('Perfil');
+		// Navegar a profile a partir de ruta actual
+		navigate('perfil', { replace: true });
 	};
 	const handleCloseSnackbar = (
 		_: SyntheticEvent | Event,

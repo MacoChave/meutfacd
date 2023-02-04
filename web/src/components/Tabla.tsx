@@ -14,7 +14,9 @@ const Tabla = ({ data }: { data: Object[] }) => {
 				<TableHead>
 					<TableRow>
 						{headers.map((header: string) => (
-							<TableCell key={header}>{header}</TableCell>
+							<TableCell key={header}>
+								{header.toUpperCase()}
+							</TableCell>
 						))}
 					</TableRow>
 				</TableHead>
@@ -27,9 +29,11 @@ const Tabla = ({ data }: { data: Object[] }) => {
 									border: 0,
 								},
 							}}>
-							<TableCell>{row.nombre}</TableCell>
-							<TableCell>{row.apellido}</TableCell>
-							<TableCell>{row.edad}</TableCell>
+							{headers.map((header: string) => (
+								<TableCell key={header}>
+									{row[header]}
+								</TableCell>
+							))}
 						</TableRow>
 					))}
 				</TableBody>

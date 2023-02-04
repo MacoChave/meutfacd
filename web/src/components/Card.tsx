@@ -4,6 +4,7 @@ import { ReactNode } from 'react';
 const Contenedor = ({
 	title,
 	children,
+	...props
 }: {
 	title: string;
 	children: ReactNode;
@@ -17,7 +18,7 @@ const Contenedor = ({
 				<Typography variant='body1' component='p' textAlign='center'>
 					Usuario x
 				</Typography>
-				<Box sx={{ py: 2 }} />
+				<Box sx={{ py: 2, width: { xs: '60vw', md: '50vw' } }} />
 				{children}
 			</Card>
 		</>

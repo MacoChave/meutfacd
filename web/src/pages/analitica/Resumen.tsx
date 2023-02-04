@@ -27,12 +27,13 @@ const Resumen = () => {
 						<FormControl sx={{ flex: 1 }}>
 							<InputLabel>Ciclo lectivo</InputLabel>
 							<Select variant='filled'>
-								{[
-									2010, 2011, 2012, 2013, 2014, 2015, 2016,
-									2017, 2018, 2019, 2020, 2021, 2022, 2023,
-								].map((item) => (
-									<MenuItem value={item}>{item}</MenuItem>
-								))}
+								{[2020, 2021, 2022, 2023, 2024, 2025, 2026].map(
+									(item) => (
+										<MenuItem value={item} key={item}>
+											{item}
+										</MenuItem>
+									)
+								)}
 							</Select>
 						</FormControl>
 						<TextField

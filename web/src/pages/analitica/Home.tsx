@@ -23,12 +23,12 @@ const menuArray: MenuItem[] = [
 		path: 'por-estacion',
 		icon: <Description />,
 	},
-	{
-		text: 'Por rol',
-		description: 'Resumen por rol',
-		path: 'por-rol',
-		icon: <Assignment />,
-	},
+	// {
+	// 	text: 'Por rol',
+	// 	description: 'Resumen por rol',
+	// 	path: 'por-rol',
+	// 	icon: <Assignment />,
+	// },
 ];
 
 const HomeReporte = () => {
