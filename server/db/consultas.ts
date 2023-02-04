@@ -1,29 +1,45 @@
 import promisePool from '../config/db';
 
-const generarInsert = (tabla: string, datos: Object) => {
+export interface ISQLParametros {
+	tabla: string | string[];
+	datos: Object;
+	condicion?: Object;
+	orden?: String[];
+	direccion?: String[];
+}
+
+const separarClaveValor = (datos: Object) => {
 	let columnas = Object.keys(datos);
 	let valores = Object.values(datos);
-	let sql = `INSERT INTO ${tabla} (${columnas.join(
-		', '
-	)}) VALUES (${valores.join(', ')})`;
-	return [sql, valores];
+	return { columnas, valores };
 };
 
-export const insertar = async (tabla: string, datos: object) => {
-	let sql = generarInsert(tabla, datos);
-	return await promisePool.query(sql[0], sql[1]);
+export const insertar = async ({ tabla, datos }: ISQLParametros) => {
+	let _datos = separarClaveValor(datos);
+	let sql = `INSERT INTO ${tabla} 
+	(${_datos.columnas.join(', ')}) 
+	VALUES (${_datos.valores.map((v, index) => `$${index}`).join(', ')})`;
+	return await promisePool.query(sql, _datos.valores);
 };
 
-export const consultar = async (tabla: string, campos: string[]) => {
-	let sql = `SELECT ${campos.join(', ')} FROM ${tabla}`;
-	return await promisePool.query(sql);
-};
+// TODO: Paginar resultados
 
-export const consultarPorId = async (
-	tabla: string,
-	campos: string[],
-	id: number
-) => {
-	let sql = `SELECT ${campos.join(', ')} FROM ${tabla} WHERE id = ${id}`;
-	return await promisePool.query(sql);
-};
+export const seleccionar = async ({
+	tabla,
+	datos,
+	condicion,
+	orden,
+	direccion,
+}: ISQLParametros) => {};
+
+export const seleccionarJoin = ({
+	tabla,
+	datos,
+	condicion,
+	orden,
+	direccion,
+}: ISQLParametros) => {};
+
+export const actualizar = ({ tabla, datos, condicion }: ISQLParametros) => {};
+
+export const eliminar = ({ tabla, datos, condicion }: ISQLParametros) => {};

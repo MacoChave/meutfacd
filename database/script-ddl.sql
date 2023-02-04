@@ -1,43 +1,50 @@
 -- 
 -- -----------------------------------------------
+--  CREATE DATABASE AND UER FOR MYSQL DATABASE
+-- -----------------------------------------------
+-- 
+create database meutfacd
+	default character set utf8
+	default collate utf8_general_ci;
+
+-- 
+-- -----------------------------------------------
 --  DROP TABLES
 -- -----------------------------------------------
 -- 
-drop table if exists revision;
-drop table if exists estado_revision;
-drop table if exists dictamen;
-drop table if exists tesis;
-drop table if exists estado_tesis;
-drop table if exists notificacion;
-drop table if exists estado_notificacion;
-drop table if exists bitacora;
-drop table if exists asignacion;
-drop table if exists curso_tutor;
-drop table if exists curso;
-drop table if exists perfil_tutor;
-drop table if exists rol;
-drop table if exists perfil_estudiante;
-drop table if exists usuario;
-drop table if exists horario;
-drop table if exists jornada;
+drop table revision;
+drop table estado_revision;
+drop table dictamen;
+drop table tesis;
+drop table estado_tesis;
+drop table notificacion;
+drop table estado_notificacion;
+drop table bitacora;
+drop table asignacion;
+drop table curso_tutor;
+drop table curso;
+drop table perfil_tutor;
+drop table rol;
+drop table perfil_estudiante;
+drop table usuario;
+drop table horario;
+drop table jornada;
 
 -- 
 -- -----------------------------------------------
 --  JORNADA
 -- -----------------------------------------------
 -- 
-create table if not exists jornada (
-	id_jornada int generated always as identity,
-	nombre varchar(45) not null,
-	primary key (id_jornada)
+create table jornada (
+	id_jornada int auto_increment primary key,
+	nombre varchar(45) not null
 );
 
-create table if not exists horario (
-	id_horario int generated always as identity,
+create table horario (
+	id_horario int auto_increment primary key,
 	hora_inicio time not null,
 	hora_final time not null,
 	id_jornada int not null,
-	primary key (id_horario, id_jornada),
 	constraint fk_horario_jornada
         foreign key (id_jornada) 
 		references jornada (id_jornada)
@@ -50,8 +57,8 @@ create table if not exists horario (
 -- PERFILES
 -- -------------------------------------------------
 --
-create table if not exists usuario (
-	id_usuario int generated always as identity,
+create table usuario (
+	id_usuario int auto_increment primary key,
 	nombre varchar(50) not null,
 	apellido varchar(75) not null,
 	genero char(1) not null,
@@ -62,14 +69,12 @@ create table if not exists usuario (
 	direccion varchar(200) not null,
 	fecha_nac date not null,
 	estado char(1) not null,
-	telefono varchar(25),
-	primary key (id_usuario)
+	telefono varchar(25)
 );
-create table if not exists perfil_estudiante (
-	id_estudiante int generated always as identity,
+create table perfil_estudiante (
+	id_estudiante int auto_increment primary key,
 	id_horario int not null not null,
 	id_jornada int not null not null,
-	primary key (id_estudiante),
 	constraint fk_estudiante_usuario
 		foreign key (id_estudiante)
 		references usuario (id_usuario)
@@ -81,17 +86,15 @@ create table if not exists perfil_estudiante (
 		on delete restrict
 		on update cascade
 );
-create table if not exists rol (
-	id_rol int generated always as identity,
+create table rol (
+	id_rol int auto_increment primary key,
 	nombre varchar(45) not null,
-	descripcion varchar(255) not null,
-	primary key (id_rol)
+	descripcion varchar(255) not null
 );
-create table if not exists perfil_tutor (
-	id_tutor int generated always as identity,
+create table perfil_tutor (
+	id_tutor int auto_increment primary key,
 	no_colegiado int not null,
 	id_rol int not null,
-	primary key (id_tutor),
 	constraint fk_tutor_usuario
 		foreign key (id_tutor)
 		references usuario (id_usuario)
@@ -109,19 +112,17 @@ create table if not exists perfil_tutor (
 -- CURSO
 -- -------------------------------------------------
 --
-create table if not exists curso (
-	id_curso int generated always as identity,
-	nombre varchar(128) not null,
-	primary key (id_curso)
+create table curso (
+	id_curso int auto_increment primary key,
+	nombre varchar(128) not null
 );
-create table if not exists curso_tutor (
-	id_curso_tutor int generated always as identity,
-	fecha timestamp not null default now(),
+create table curso_tutor (
+	id_curso_tutor int auto_increment primary key,
+	fecha datetime not null default now(),
 	id_curso int not null,
 	id_tutor int not null,
 	id_horario int not null,
 	id_jornada int not null,
-	primary key (id_curso_tutor),
 	constraint fk_curso_tutor_curso
         foreign key (id_curso)
 		references curso(id_curso)
@@ -138,12 +139,11 @@ create table if not exists curso_tutor (
 		on delete restrict
 		on update cascade
 );
-create table if not exists asignacion (
+create table asignacion (
 	id_estudiante int not null,
 	id_curso_tutor int not null,
 	nota int,
 	ruta_certificado varchar(255),
-	primary key (id_estudiante, id_curso_tutor),
 	constraint fk_asignacion_estudiante
         foreign key (id_estudiante)
 		references perfil_estudiante(id_estudiante)
@@ -161,11 +161,10 @@ create table if not exists asignacion (
 -- BITACORA
 -- -------------------------------------------------
 --
-create table if not exists bitacora (
-	id_bitacora int generated always as identity,
-	fecha timestamp not null default now(),
-	detalle varchar(255) not null,
-	primary key (id_bitacora)
+create table bitacora (
+	id_bitacora int auto_increment primary key,
+	fecha datetime not null default now(),
+	detalle varchar(255) not null
 );
 
 --
@@ -173,19 +172,17 @@ create table if not exists bitacora (
 -- MENSAJERIA
 -- -------------------------------------------------
 --
-create table if not exists estado_notificacion (
-	id_estado int generated always as identity,
-	estado varchar(45) not null,
-	primary key (id_estado)
+create table estado_notificacion (
+	id_estado int auto_increment primary key,
+	estado varchar(45) not null
 );
-create table if not exists notificacion (
-	id_notificacion int generated always as identity,
+create table notificacion (
+	id_notificacion int auto_increment primary key,
 	mensaje varchar(255) not null,
-	fecha timestamp not null default now(),
+	fecha datetime not null default now(),
 	id_estado int not null,
 	id_emisor int not null,
 	id_receptor int not null,
-	primary key (id_notificacion),
 	constraint fk_notificacion_emisor
 		foreign key (id_emisor)
 		references usuario (id_usuario)
@@ -207,21 +204,19 @@ create table if not exists notificacion (
 -- TESIS
 -- -------------------------------------------------
 --
-create table if not exists estado_tesis (
-    id_estado int generated always as identity,
-    estado varchar(45) not null,
-    primary key (id_estado)
+create table estado_tesis (
+    id_estado int auto_increment primary key,
+    estado varchar(45) not null
 );
-create table if not exists tesis (
-    id_tesis int generated always as identity,
+create table tesis (
+    id_tesis int auto_increment primary key,
     titulo varchar(255) not null,
     ruta_perfil varchar(255) not null,
     ruta_tesis varchar(255) null,
-    fecha_creacion timestamp not null default now(),
-    fecha_modificacion timestamp not null default now(),
+    fecha_creacion datetime not null default now(),
+    fecha_modificacion datetime not null default now(),
     id_estado int not null,
     id_estudiante int not null,
-    primary key (id_tesis),
     constraint fk_tesis_estado
         foreign key (id_estado)
         references estado_tesis(id_estado)
@@ -233,13 +228,12 @@ create table if not exists tesis (
         on delete restrict
 		on update cascade
 );
-create table if not exists dictamen (
-    id_dictamen int generated always as identity,
-    fecha timestamp not null default now(),
+create table dictamen (
+    id_dictamen int auto_increment primary key,
+    fecha datetime not null default now(),
     ruta_dictamen varchar(255) not null,
     id_tutor int not null,
     id_tesis int not null,
-    primary key (id_dictamen),
     constraint fk_dictamen_tutor
         foreign key (id_tutor)
         references perfil_tutor(id_tutor)
@@ -251,19 +245,17 @@ create table if not exists dictamen (
         on delete restrict
 		on update cascade
 );
-create table if not exists estado_revision (
-    id_estado int generated always as identity,
-    estado varchar(45) not null,
-    primary key (id_estado)
+create table estado_revision (
+    id_estado int auto_increment primary key,
+    estado varchar(45) not null
 );
-create table if not exists revision (
-    id_revision int generated always as identity,
-    fecha timestamp not null default now(),
+create table revision (
+    id_revision int auto_increment primary key,
+    fecha datetime not null default now(),
     detalle varchar(255) not null,
     id_tutor int not null,
     id_tesis int not null,
     id_estado_revision int not null,
-    primary key (id_revision),
     constraint fk_revision_tutor
         foreign key (id_tutor)
         references perfil_tutor(id_tutor)
