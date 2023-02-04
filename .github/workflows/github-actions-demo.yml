@@ -21,8 +21,10 @@ jobs:
               with:
                   node-version: 14
 
+            - name: Change directory web folder
+              run: cd web/
+
             - name: Install dependencies
-              run: 'cd web/'
               run: npm i
 
             - name: Build for production
