@@ -86,29 +86,29 @@ const Home = () => {
 				</Box>
 				{estacionItem2(
 					'Recepción de punto de tesis',
-					'./src/assets/img/Estacion1.png',
+					'assets/img/Estacion1.png',
 					'Flujo del proceso de recepción de tesis'
 				)}
 				{estacionItem(
 					'Curso',
 					'Inducción a la planeación científica',
-					'./src/assets/img/Estacion2.png',
+					'assets/img/Estacion2.png',
 					'Flujo del proceso del curso de inducción a la planeación científica'
 				)}
 				{estacionItem(
 					'Curso',
 					'Elaboración y presentación de tesis',
-					'./src/assets/img/Estacion2.png',
+					'assets/img/Estacion2.png',
 					'Flujo del proceso del curso de elaboración y presentación de tesis'
 				)}
 				{estacionItem2(
 					'Comisión y estilo',
-					'./src/assets/img/Estacion4.png',
+					'assets/img/Estacion4.png',
 					'Flujo del proceso de comisión y estilo'
 				)}
 				{estacionItem2(
 					'Previos internos',
-					'./src/assets/img/Estacion5.png',
+					'assets/img/Estacion5.png',
 					'Flujo del proceso de previos internos'
 				)}
 				{/* {estacionItem2(
