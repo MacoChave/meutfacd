@@ -39,7 +39,7 @@ const Home = () => {
 						objectFit: 'cover',
 					}}
 					src={img}
-					alt={alt}
+					alt={img}
 				/>
 			</Box>
 		</Box>
@@ -86,29 +86,29 @@ const Home = () => {
 				</Box>
 				{estacionItem2(
 					'Recepción de punto de tesis',
-					'assets/img/Estacion1.png',
-					'Flujo del proceso de recepción de tesis'
+					'https://i.ibb.co/mzs6FRY/Estacion1.png',
+					'Flujo del proceso de recepción del punto de tesis'
 				)}
 				{estacionItem(
 					'Curso',
 					'Inducción a la planeación científica',
-					'assets/img/Estacion2.png',
+					'https://i.ibb.co/px6CJ26/Estacion2.png',
 					'Flujo del proceso del curso de inducción a la planeación científica'
 				)}
 				{estacionItem(
 					'Curso',
 					'Elaboración y presentación de tesis',
-					'assets/img/Estacion2.png',
+					'https://i.ibb.co/px6CJ26/Estacion2.png',
 					'Flujo del proceso del curso de elaboración y presentación de tesis'
 				)}
 				{estacionItem2(
 					'Comisión y estilo',
-					'assets/img/Estacion4.png',
+					'https://i.ibb.co/mzs6FRY/Estacion1.png',
 					'Flujo del proceso de comisión y estilo'
 				)}
 				{estacionItem2(
 					'Previos internos',
-					'assets/img/Estacion5.png',
+					'https://i.ibb.co/ZXtWgL3/Estacion5.png',
 					'Flujo del proceso de previos internos'
 				)}
 				{/* {estacionItem2(
