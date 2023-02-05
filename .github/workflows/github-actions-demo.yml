@@ -21,17 +21,11 @@ jobs:
               with:
                   node-version: 14
 
-            - name: Change directory web folder
-              run: cd web/
-
-            - name: Show current folder path
-              run: pwd
-
             - name: Install dependencies
-              run: npm i
+              run: cd web && npm i
 
             - name: Build for production
-              run: npm run build
+              run:  npm run build --prefix ./web
 
             - name: Deploy to GitHub Pages
               uses: peaceiris/actions-gh-pages@v3
