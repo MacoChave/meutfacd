@@ -1,11 +1,4 @@
-import {
-	Box,
-	Button,
-	Divider,
-	FormLabel,
-	Input,
-	Typography,
-} from '@mui/material';
+import { Box, Button, FormLabel, Input, Typography } from '@mui/material';
 import { ChangeEvent, DragEvent, useState } from 'react';
 
 const FileChooser = () => {

@@ -1,9 +1,10 @@
 import { Request, Response } from 'express';
+import { handleHttp } from '../utils/error.handle';
 
 export const jornadaById = (req: Request, res: Response) => {
 	try {
 		res.status(200).json({});
 	} catch (error: any) {
-		res.status(500).json({ messae: error });
+		handleHttp(res, 'Error al obtener la jornada');
 	}
 };
