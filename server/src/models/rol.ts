@@ -22,6 +22,7 @@ const Rol = sequelize.define(
 		timestamps: false,
 		createdAt: true,
 		updatedAt: true,
+		freezeTableName: true,
 	}
 );
 

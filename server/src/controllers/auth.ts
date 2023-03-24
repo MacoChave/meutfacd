@@ -9,14 +9,7 @@ import {
 import Estudiante from '../models/estudiante';
 import Profesor from '../models/profesor';
 import Rol from '../models/rol';
-
-const buscarUsuario = (carnet: number) => {
-	return Usuario.findOne({
-		where: {
-			carnet,
-		},
-	});
-};
+import { buscarUsuario } from '../utils/auth.handler';
 
 export const logupEstudianteHandler = async (
 	{ body }: Request,
@@ -39,7 +32,7 @@ export const logupEstudianteHandler = async (
 
 		// Validar datos -> express-validator, joi, zod, etc.
 		// Validar en BD
-		const usuario = await buscarUsuario(carnet);
+		const usuario = await buscarUsuario({ carnet });
 
 		if (usuario) {
 			return res.status(400).json({
@@ -77,6 +70,7 @@ export const logupEstudianteHandler = async (
 		handleHttp(res, { msg: 'Error al crear usuario', error });
 	}
 };
+
 export const logupProfesorHandler = async (
 	{ body }: Request,
 	res: Response
@@ -93,9 +87,10 @@ export const logupProfesorHandler = async (
 			direccion,
 			fecha_nac,
 			telefono,
+			id_rol,
 		} = body;
 
-		const usuario = await buscarUsuario(carnet);
+		const usuario = await buscarUsuario({ carnet });
 
 		if (usuario)
 			return res.status(400).json({
@@ -118,13 +113,36 @@ export const logupProfesorHandler = async (
 			telefono,
 		});
 
-		const profesorNuevo = await Profesor.create({
-			id_profesor: usuarioNuevo.getDataValue('id_usuario'),
+		const profesorNuevo = await Profesor.create(
+			{
+				id_tutor: usuarioNuevo.getDataValue('id_usuario'),
+				id_rol: id_rol || 2,
+			},
+			{
+				include: {
+					model: Rol,
+					attributes: ['nombre'],
+				},
+			}
+		);
+
+		console.log('profesorNuevo', profesorNuevo.toJSON());
+
+		let token = generarToken({
+			carnet,
+			cui,
+			rol: profesorNuevo.getDataValue('id_rol'),
 		});
 
-		let token = generarToken({ carnet, cui });
-
-		res.status(200).json({ token, usuario: { nombre, correo, cui } });
+		res.status(200).json({
+			token,
+			usuario: {
+				nombre,
+				correo,
+				cui,
+				id_rol: profesorNuevo.getDataValue('id_rol'),
+			},
+		});
 	} catch (error: any) {
 		handleHttp(res, { msg: 'Error al crear usuario', error });
 	}
@@ -139,11 +157,7 @@ export const loginEstudianteHandler = async (
 		const { carnet, pass } = body;
 		// Validar datos -> express-validator, joi, zod, etc.
 		// Validar en BD
-		const usuario = await Usuario.findOne({
-			where: {
-				carnet,
-			},
-		});
+		const usuario = await buscarUsuario({ carnet });
 
 		if (!usuario) {
 			return res.status(400).json({
@@ -186,11 +200,8 @@ export const loginProfesorHandler = async (
 	try {
 		const { carnet, pass } = body;
 
-		const usuario = await Usuario.findOne({
-			where: {
-				carnet,
-			},
-		});
+		const usuario = await buscarUsuario({ carnet });
+
 		if (!usuario) {
 			return res.status(400).json({
 				msg: 'El usuario no existe',
@@ -203,15 +214,16 @@ export const loginProfesorHandler = async (
 				attributes: ['nombre'],
 			},
 			where: {
-				id_profesor: usuario.getDataValue('id_usuario'),
+				id_tutor: usuario.getDataValue('id_usuario'),
 			},
 		});
 
-		console.log('Profesor->', profesor?.dataValues);
+		console.log('profeso', profesor?.toJSON());
 
 		const token = generarToken({
 			carnet,
 			cui: usuario.getDataValue('cui'),
+			rol: profesor?.getDataValue('id_rol') || 4,
 		});
 
 		res.status(200).json({
@@ -220,6 +232,7 @@ export const loginProfesorHandler = async (
 				nombre: usuario.getDataValue('nombre'),
 				correo: usuario.getDataValue('correo'),
 				cui: usuario.getDataValue('cui'),
+				id_rol: profesor?.getDataValue('id_rol') || 4,
 			},
 		});
 	} catch (error: any) {
@@ -227,9 +240,9 @@ export const loginProfesorHandler = async (
 	}
 };
 
-export const profileHandler = (req: Request, res: Response) => {
+export const profileHandler = ({ body }: Request, res: Response) => {
 	try {
-		return res.status(200).json({ profile: req.user });
+		return res.status(200).json({ profile: body });
 	} catch (error: any) {
 		handleHttp(res, { msg: 'Error al obtener el perfil', error });
 	}

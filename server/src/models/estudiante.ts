@@ -21,6 +21,7 @@ const Estudiante = sequelize.define(
 		timestamps: true,
 		createdAt: true,
 		updatedAt: true,
+		freezeTableName: true,
 	}
 );
 

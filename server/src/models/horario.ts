@@ -26,6 +26,7 @@ const Horario = sequelize.define(
 		timestamps: true,
 		createdAt: true,
 		updatedAt: true,
+		freezeTableName: true,
 	}
 );
 
