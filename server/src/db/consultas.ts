@@ -1,24 +1,29 @@
 import Rol from '../models/rol';
 
 export const cargarRolesTutor = () => {
-	return Rol.bulkCreate([
+	return Rol.bulkCreate(
+		[
+			{
+				nombre: 'Administrador',
+				descripcion: 'Personal encargado de administrar el sistema',
+			},
+			{
+				nombre: 'Analitica',
+				descripcion: 'Personal de soporte y soporte',
+			},
+			{
+				nombre: 'Encargado',
+				descripcion: 'Tutor encargado de una estación',
+			},
+			{
+				nombre: 'Evaluador',
+				descripcion: 'Tutor dedicado a evaluar a los estudiantes',
+			},
+		],
 		{
-			nombre: 'Administrador',
-			descripcion: 'Personal encargado de administrar el sistema',
-		},
-		{
-			nombre: 'Analitica',
-			descripcion: 'Personal de soporte y soporte',
-		},
-		{
-			nombre: 'Encargado',
-			descripcion: 'Tutor encargado de una estación',
-		},
-		{
-			nombre: 'Evaluador',
-			descripcion: 'Tutor dedicado a evaluar a los estudiantes',
-		},
-	]);
+			ignoreDuplicates: true,
+		}
+	);
 };
 
 // import promisePool from '../config/db';

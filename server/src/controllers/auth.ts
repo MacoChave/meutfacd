@@ -176,6 +176,15 @@ export const loginEstudianteHandler = async (
 			});
 		}
 
+		const estudiante = await Estudiante.findOne({
+			where: { id_estudiante: usuario.getDataValue('id_usuario') },
+		});
+		if (!estudiante) {
+			return res.status(400).json({
+				msg: 'El usuario no es estudiante',
+			});
+		}
+
 		// Generar token
 		let token = generarToken({ carnet, cui: usuario.getDataValue('cui') });
 
@@ -208,6 +217,16 @@ export const loginProfesorHandler = async (
 			});
 		}
 
+		const validPassword = await compararPassword(
+			pass,
+			usuario.getDataValue('pass')
+		);
+		if (!validPassword) {
+			return res.status(400).json({
+				msg: 'Contraseña incorrecta',
+			});
+		}
+
 		const profesor = await Profesor.findOne({
 			include: {
 				model: Rol,
@@ -217,6 +236,11 @@ export const loginProfesorHandler = async (
 				id_tutor: usuario.getDataValue('id_usuario'),
 			},
 		});
+		if (!profesor) {
+			return res.status(400).json({
+				msg: 'El usuario no es profesor',
+			});
+		}
 
 		console.log('profeso', profesor?.toJSON());
 

@@ -36,7 +36,7 @@ export const router = createBrowserRouter([
 		errorElement: <ErrorPage />,
 	},
 	{
-		path: '/login',
+		path: '/login/:tipo',
 		element: <Login />,
 	},
 	{

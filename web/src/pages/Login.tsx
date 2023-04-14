@@ -7,7 +7,7 @@ import {
 	Typography,
 } from '@mui/material';
 import { ToolbarWithoutSesion } from '../components/Toolbar';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { AuthContext } from '../contexts/AuthContext';
 import { useContext } from 'react';
@@ -19,7 +19,10 @@ type FormData = {
 
 const Login = () => {
 	const navigate = useNavigate();
+	const { tipo } = useParams();
 	const context = useContext(AuthContext);
+
+	console.log('Tipo login', tipo);
 
 	const {
 		control,
@@ -28,16 +31,9 @@ const Login = () => {
 	} = useForm<FormData>();
 
 	const onSubmit: SubmitHandler<FormData> = (data) => {
-		console.log(data);
-		if (data.correo.includes('estudiante'))
-			navigate('/estudiante', { replace: true });
-		else if (data.correo.includes('encargado'))
-			navigate('/encargado', { replace: true });
-		else if (data.correo.includes('profesor'))
-			navigate('/evaluador', { replace: true });
-		else if (data.correo.includes('admin'))
-			navigate('/admin', { replace: true });
-		else navigate('/analiticas', { replace: true });
+		console.log('Login', data);
+		if (tipo === '1') {
+		}
 	};
 
 	return (

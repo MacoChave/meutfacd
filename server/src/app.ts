@@ -21,7 +21,7 @@ db.authenticate()
 		console.log('Database connected');
 		// Cargar roles de profesor
 		// await db.sync({ force: true });
-		// await cargarRolesTutor();
+		await cargarRolesTutor();
 		console.log('Roles cargados');
 	})
 	.catch((err) => console.log('Error: ' + err));

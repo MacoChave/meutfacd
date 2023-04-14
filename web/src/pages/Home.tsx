@@ -1,9 +1,58 @@
-import { Box, Typography } from '@mui/material';
+import { Box, Menu, MenuItem, Typography } from '@mui/material';
 import Button from '@mui/material/Button';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-const Home = () => {
+const LoginMenu = ({
+	handleLogin,
+}: {
+	handleLogin: (tipo: number) => void;
+}) => {
+	const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+	const open = Boolean(anchorEl);
+
+	const handleClose = () => {
+		setAnchorEl(null);
+	};
+
+	return (
+		<div>
+			<Button
+				id='login-boton'
+				aria-controls={open ? 'login-menu' : undefined}
+				aria-haspopup='true'
+				aria-expanded={open ? 'true' : undefined}
+				onClick={(event) => setAnchorEl(event.currentTarget)}>
+				Iniciar sesión
+			</Button>
+			<Menu
+				id='login-menu'
+				aria-labelledby='login-boton'
+				anchorEl={anchorEl}
+				open={open}
+				onClose={handleClose}
+				anchorOrigin={{
+					vertical: 'bottom',
+					horizontal: 'center',
+				}}
+				transformOrigin={{
+					vertical: 'top',
+					horizontal: 'center',
+				}}>
+				<MenuItem onClick={() => handleLogin(1)}>Estudiante</MenuItem>
+				<MenuItem onClick={() => handleLogin(2)}>Profesor</MenuItem>
+			</Menu>
+		</div>
+	);
+};
+
+const Home = (props: any) => {
 	const navigate = useNavigate();
+
+	const handleLogin = (tipo: number) => {
+		navigate(`/login/${tipo}`, { replace: true });
+	};
+
 	const estacionItem = (
 		title: string,
 		subtitle: string = '',
@@ -44,6 +93,7 @@ const Home = () => {
 			</Box>
 		</Box>
 	);
+
 	const estacionItem2 = (title: string, img: string, alt: string) => {
 		return estacionItem(title, '', img, alt);
 	};
@@ -62,18 +112,7 @@ const Home = () => {
 				/>
 			</Box>
 			<Box sx={{ textAlign: 'right' }}>
-				<Button
-					variant='text'
-					color='primary'
-					onClick={() =>
-						navigate('/login', {
-							state: {
-								from: '/',
-							},
-						})
-					}>
-					Iniciar sesión
-				</Button>
+				<LoginMenu handleLogin={handleLogin} />
 			</Box>
 			<Box>
 				<Box sx={{ py: 4, textAlign: 'center' }}>
