@@ -20,7 +20,7 @@ import { useState } from 'react';
 import { ChevronLeft, ChevronRight } from '@mui/icons-material';
 import { Controller, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { UsuarioType, schemaUsuario } from '../propTypes/logup';
+import { UsuarioType, schemaUsuario } from '../propTypes/Logup';
 
 const steps = [
 	'Datos personales',

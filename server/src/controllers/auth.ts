@@ -109,7 +109,7 @@ export const logupProfesorHandler = async (
 			cui,
 			direccion,
 			fecha_nac,
-			estado: 1,
+			estado: 0,
 			telefono,
 		});
 
@@ -154,10 +154,10 @@ export const loginEstudianteHandler = async (
 ) => {
 	try {
 		// Procesar datos de req.body
-		const { carnet, pass } = body;
+		const { correo, pass } = body;
 		// Validar datos -> express-validator, joi, zod, etc.
 		// Validar en BD
-		const usuario = await buscarUsuario({ carnet });
+		const usuario = await buscarUsuario({ correo });
 
 		if (!usuario) {
 			return res.status(400).json({
@@ -186,7 +186,10 @@ export const loginEstudianteHandler = async (
 		}
 
 		// Generar token
-		let token = generarToken({ carnet, cui: usuario.getDataValue('cui') });
+		let token = generarToken({
+			carnet: correo,
+			cui: usuario.getDataValue('cui'),
+		});
 
 		// Devolver token
 		res.status(200).json({
@@ -207,9 +210,9 @@ export const loginProfesorHandler = async (
 	res: Response
 ) => {
 	try {
-		const { carnet, pass } = body;
+		const { correo, pass } = body;
 
-		const usuario = await buscarUsuario({ carnet });
+		const usuario = await buscarUsuario({ correo });
 
 		if (!usuario) {
 			return res.status(400).json({
@@ -245,7 +248,7 @@ export const loginProfesorHandler = async (
 		console.log('profeso', profesor?.toJSON());
 
 		const token = generarToken({
-			carnet,
+			correo,
 			cui: usuario.getDataValue('cui'),
 			rol: profesor?.getDataValue('id_rol') || 4,
 		});

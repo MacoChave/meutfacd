@@ -3,7 +3,7 @@ import express from 'express';
 import cors from 'cors';
 import { router } from './routes';
 import db from './config/db';
-import { cargarRolesTutor } from './db/consultas';
+import { cargarRolesTutor, crearUsuarioAdministrador } from './db/consultas';
 
 const PORT = process.env.PORT || 3000;
 
@@ -19,9 +19,12 @@ app.use(cors());
 db.authenticate()
 	.then(async () => {
 		console.log('Database connected');
-		// Cargar roles de profesor
+		// Sincronizar modelos con la base de datos
 		// await db.sync({ force: true });
+		// Cargar roles de profesor
 		await cargarRolesTutor();
+		// Crear usuario administrador
+		await crearUsuarioAdministrador();
 		console.log('Roles cargados');
 	})
 	.catch((err) => console.log('Error: ' + err));

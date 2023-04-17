@@ -9,30 +9,58 @@ import {
 import { ToolbarWithoutSesion } from '../components/Toolbar';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
-import { AuthContext } from '../contexts/AuthContext';
-import { useContext } from 'react';
-
-type FormData = {
-	correo: string;
-	pass: string;
-};
+import { LoginType, schemaLoginType } from '../propTypes/Login';
+import { useAuthStore } from '../hooks/useAuthStore';
+import { postData } from '../services/fetching';
+import { URL } from '../api/server';
+import { AuthState } from '../interfaces/AuthState';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { AxiosError, AxiosResponse } from 'axios';
+import { errorHandler } from '../helpers/errorHandler';
+import { useState } from 'react';
+import Loader from '../components/Loader';
 
 const Login = () => {
 	const navigate = useNavigate();
+	const { setEstado } = useAuthStore();
 	const { tipo } = useParams();
-	const context = useContext(AuthContext);
-
-	console.log('Tipo login', tipo);
+	const [loading, setLoading] = useState(false);
 
 	const {
 		control,
 		handleSubmit,
 		formState: { errors },
-	} = useForm<FormData>();
+	} = useForm<LoginType>({
+		defaultValues: {
+			correo: '',
+			pass: '',
+		},
+		mode: 'onBlur',
+		resolver: yupResolver(schemaLoginType),
+	});
 
-	const onSubmit: SubmitHandler<FormData> = (data) => {
-		console.log('Login', data);
-		if (tipo === '1') {
+	const onSubmit: SubmitHandler<LoginType> = async (body) => {
+		try {
+			setLoading(true);
+			if (tipo === '1') {
+				// Estudiante - /login/estudiante
+				const response = await postData<AuthState>({
+					path: URL.AUTH.LOGIN_ESTUDIANTE,
+					body,
+				});
+				setEstado(response);
+			} else {
+				// Profesor - /login/profesor
+				const response = await postData<AuthState>({
+					path: URL.AUTH.LOGIN_PROFESOR,
+					body,
+				});
+				setEstado(response);
+			}
+		} catch (error: any) {
+			errorHandler(error);
+		} finally {
+			setLoading(false);
 		}
 	};
 
@@ -72,6 +100,10 @@ const Login = () => {
 										label='Correo electrónico'
 										variant='filled'
 										type='email'
+										error={!!errors.correo}
+										helperText={
+											errors.correo?.message || ''
+										}
 									/>
 								)}
 							/>
@@ -84,6 +116,8 @@ const Login = () => {
 										label='Contraseña'
 										variant='filled'
 										type='password'
+										error={!!errors.pass}
+										helperText={errors.pass?.message || ''}
 									/>
 								)}
 							/>
@@ -122,6 +156,7 @@ const Login = () => {
 					</Box>
 				</Box>
 			</Box>
+			{loading && <Loader />}
 		</>
 	);
 };

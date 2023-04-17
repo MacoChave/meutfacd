@@ -12,6 +12,7 @@ const Rol = sequelize.define(
 		nombre: {
 			type: DataTypes.STRING(50),
 			allowNull: false,
+			unique: true,
 		},
 		descripcion: {
 			type: DataTypes.STRING(200),

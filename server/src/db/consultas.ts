@@ -1,4 +1,7 @@
+import Profesor from '../models/profesor';
 import Rol from '../models/rol';
+import Usuario from '../models/usuario';
+import { encriptarPassword } from '../utils/token';
 
 export const cargarRolesTutor = () => {
 	return Rol.bulkCreate(
@@ -26,48 +29,44 @@ export const cargarRolesTutor = () => {
 	);
 };
 
-// import promisePool from '../config/db';
+export const crearUsuarioAdministrador = async () => {
+	const adminPass = await encriptarPassword(
+		process.env.ADMIN_PASSWORD || 'Admin123.'
+	);
 
-// export interface ISQLParametros {
-// 	tabla: string | string[];
-// 	datos: Object;
-// 	condicion?: Object;
-// 	orden?: String[];
-// 	direccion?: String[];
-// }
+	const adminUser = await Usuario.findOrCreate({
+		where: {
+			correo: 'admin@derecho.cloud',
+		},
+		defaults: {
+			nombre: 'Administrador',
+			apellido: 'Derecho',
+			genero: '-',
+			correo: 'admin@derecho.cloud',
+			pass: adminPass,
+			carnet: '000000000',
+			cui: '0000000000000',
+			direccion: 'Guatemala',
+			fecha_nac: '2023-01-01',
+			estado: 1,
+			telefono: '00000000',
+		},
+	});
 
-// const separarClaveValor = (datos: Object) => {
-// 	let columnas = Object.keys(datos);
-// 	let valores = Object.values(datos);
-// 	return { columnas, valores };
-// };
+	const adminRol = await Rol.findOne({
+		where: {
+			nombre: 'Administrador',
+		},
+		attributes: ['id_rol'],
+	});
 
-// export const insertar = async ({ tabla, datos }: ISQLParametros) => {
-// 	let _datos = separarClaveValor(datos);
-// 	let sql = `INSERT INTO ${tabla}
-// 	(${_datos.columnas.join(', ')})
-// 	VALUES (${_datos.valores.map((v, index) => `$${index}`).join(', ')})`;
-// 	return await promisePool.query(sql, _datos.valores);
-// };
-
-// // TODO: Paginar resultados
-
-// export const seleccionar = async ({
-// 	tabla,
-// 	datos,
-// 	condicion,
-// 	orden,
-// 	direccion,
-// }: ISQLParametros) => {};
-
-// export const seleccionarJoin = ({
-// 	tabla,
-// 	datos,
-// 	condicion,
-// 	orden,
-// 	direccion,
-// }: ISQLParametros) => {};
-
-// export const actualizar = ({ tabla, datos, condicion }: ISQLParametros) => {};
-
-// export const eliminar = ({ tabla, datos, condicion }: ISQLParametros) => {};
+	await Profesor.findOrCreate({
+		where: {
+			id_tutor: adminUser[0].getDataValue('id_usuario'),
+		},
+		defaults: {
+			id_tutor: adminUser[0].getDataValue('id_usuario'),
+			id_rol: adminRol?.getDataValue('id_rol') || 1,
+		},
+	});
+};
