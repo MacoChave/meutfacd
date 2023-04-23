@@ -1,24 +1,28 @@
 import { NextFunction, Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
+import { validarToken } from '../utils/token';
 
 export const requireAuth = (
 	req: Request,
 	res: Response,
 	next: NextFunction
 ) => {
-	let authHeader = req.headers.authorization;
+	const authHeader = req.headers.authorization;
 
-	if (!authHeader)
-		return res.status(401).json({ message: 'Usuario no autorizado' });
+	if (!authHeader || !authHeader.startsWith('Bearer')) {
+		return res.status(401).json({ message: 'Autenticación no enviada' });
+	}
 
-	let token = authHeader.split(' ')[1];
-	if (!token)
-		return res.status(401).json({ message: 'Usuario no autorizado' });
+	const token = authHeader.split(' ')[1];
 
-	jwt.verify(token, 'secret', (err, user) => {
-		if (err)
-			return res.status(403).json({ message: 'Usuario no autorizado' });
-		req.user = user;
-		next();
-	});
+	if (!token || token === 'null')
+		return res.status(401).json({ message: 'Token no encontrado' });
+
+	const decodedToken = validarToken(token);
+
+	if (!decodedToken)
+		return res.status(401).json({ message: 'Token no válido' });
+
+	req.user = decodedToken;
+	next();
 };

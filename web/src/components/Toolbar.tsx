@@ -3,6 +3,7 @@ import {
 	Alert,
 	AppBar,
 	Box,
+	Button,
 	IconButton,
 	Snackbar,
 	Toolbar,
@@ -10,6 +11,7 @@ import {
 } from '@mui/material';
 import { MouseEvent, SyntheticEvent, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAuthStore } from '../hooks/useAuthStore';
 
 interface ToolbarProps {
 	children?: React.ReactNode;
@@ -43,17 +45,17 @@ export const ToolbarWithoutSesion = ({ children }: ToolbarProps) => {
 
 export const ToolbarWithSesion = () => {
 	const navigate = useNavigate();
+	const { resetEstado } = useAuthStore();
 	const [openSb, setOpensb] = useState(true);
 
 	const handleLogout = (_: MouseEvent) => {
-		console.log('Cerrar sesión');
-		navigate('/login', { replace: true });
+		resetEstado();
+		navigate('/', { replace: true });
 	};
 	const handleProfile = (_: MouseEvent) => {
-		console.log('Perfil');
-		// Navegar a profile a partir de ruta actual
-		navigate('perfil', { replace: true });
+		navigate('perfil');
 	};
+
 	const handleCloseSnackbar = (
 		_: SyntheticEvent | Event,
 		reason?: string

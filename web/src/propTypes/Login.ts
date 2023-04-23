@@ -1,11 +1,11 @@
 import * as yup from 'yup';
 
-export type LoginType = {
+export type Tipo_Login = {
 	correo: string;
 	pass: string;
 };
 
-export const schemaLoginType = yup.object().shape({
+export const schemaLogin = yup.object().shape({
 	correo: yup
 		.string()
 		.email()

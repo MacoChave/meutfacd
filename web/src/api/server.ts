@@ -11,6 +11,7 @@ export const URL = {
 		LOGIN_PROFESOR: '/auth/login/profesor',
 		LOGUP_ESTUDIANTE: '/auth/logup/estudiante',
 		LOGUP_PROFESOR: '/auth/logup/profesor',
+		PROFILE: '/auth/perfil',
 	},
 	CURSO: '/curso',
 	ESTUDIANTE: '/estudiante',

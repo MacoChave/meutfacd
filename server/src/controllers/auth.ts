@@ -260,6 +260,7 @@ export const loginProfesorHandler = async (
 				correo: usuario.getDataValue('correo'),
 				cui: usuario.getDataValue('cui'),
 				id_rol: profesor?.getDataValue('id_rol') || 4,
+				rol: profesor.getDataValue('rol').nombre || '',
 			},
 		});
 	} catch (error: any) {
@@ -267,9 +268,16 @@ export const loginProfesorHandler = async (
 	}
 };
 
-export const profileHandler = ({ body }: Request, res: Response) => {
+export const profileHandler = async (req: Request, res: Response) => {
 	try {
-		return res.status(200).json({ profile: body });
+		const { correo, rol } = req.user;
+		const response = await Usuario.findOne({
+			where: { correo },
+			include: {
+				model: rol ? Profesor : Estudiante,
+			},
+		});
+		return res.status(200).json(response?.toJSON());
 	} catch (error: any) {
 		handleHttp(res, { msg: 'Error al obtener el perfil', error });
 	}

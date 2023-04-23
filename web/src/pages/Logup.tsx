@@ -20,7 +20,7 @@ import { useState } from 'react';
 import { ChevronLeft, ChevronRight } from '@mui/icons-material';
 import { Controller, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { UsuarioType, schemaUsuario } from '../propTypes/Logup';
+import { Tipo_Logup, schemaLogup } from '../propTypes/Logup';
 
 const steps = [
 	'Datos personales',
@@ -37,8 +37,8 @@ const Logup = () => {
 		getValues,
 		handleSubmit,
 		formState: { errors },
-	} = useForm<UsuarioType>({
-		resolver: yupResolver(schemaUsuario),
+	} = useForm<Tipo_Logup>({
+		resolver: yupResolver(schemaLogup),
 		mode: 'onBlur',
 	});
 

@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
+import { createJSONStorage, persist } from 'zustand/middleware';
 import { AuthState } from '../interfaces/AuthState';
 
 type Estado = {
@@ -11,33 +11,30 @@ type Actions = {
 	resetEstado: () => void;
 };
 
+const initialState: Estado = {
+	estado: {
+		token: '',
+		usuario: {
+			nombre: '',
+			correo: '',
+			cui: '',
+		},
+	},
+};
+
 export const useAuthStore = create(
 	persist<Estado & Actions>(
 		(set) => ({
-			estado: {
-				token: '',
-				usuario: {
-					nombre: '',
-					correo: '',
-					cui: '',
-				},
-			},
+			...initialState,
 			setEstado: (estado: AuthState) =>
 				set({
 					estado,
 				}),
-			resetEstado: () =>
-				set({
-					estado: {
-						token: '',
-						usuario: {
-							nombre: '',
-							correo: '',
-							cui: '',
-						},
-					},
-				}),
+			resetEstado: () => set(initialState),
 		}),
-		{ name: 'MEUT' }
+		{
+			name: 'MEUT',
+			storage: createJSONStorage(() => sessionStorage),
+		}
 	)
 );

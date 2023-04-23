@@ -9,13 +9,12 @@ import {
 import { ToolbarWithoutSesion } from '../components/Toolbar';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
-import { LoginType, schemaLoginType } from '../propTypes/Login';
+import { Tipo_Login, schemaLogin } from '../propTypes/Login';
 import { useAuthStore } from '../hooks/useAuthStore';
 import { postData } from '../services/fetching';
 import { URL } from '../api/server';
 import { AuthState } from '../interfaces/AuthState';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { AxiosError, AxiosResponse } from 'axios';
 import { errorHandler } from '../helpers/errorHandler';
 import { useState } from 'react';
 import Loader from '../components/Loader';
@@ -30,16 +29,16 @@ const Login = () => {
 		control,
 		handleSubmit,
 		formState: { errors },
-	} = useForm<LoginType>({
+	} = useForm<Tipo_Login>({
 		defaultValues: {
 			correo: '',
 			pass: '',
 		},
 		mode: 'onBlur',
-		resolver: yupResolver(schemaLoginType),
+		resolver: yupResolver(schemaLogin),
 	});
 
-	const onSubmit: SubmitHandler<LoginType> = async (body) => {
+	const onSubmit: SubmitHandler<Tipo_Login> = async (body) => {
 		try {
 			setLoading(true);
 			if (tipo === '1') {
@@ -49,6 +48,11 @@ const Login = () => {
 					body,
 				});
 				setEstado(response);
+				console.log('>Login Response', response);
+				navigate('/estudiante', {
+					replace: true,
+					state: {},
+				});
 			} else {
 				// Profesor - /login/profesor
 				const response = await postData<AuthState>({
@@ -56,6 +60,11 @@ const Login = () => {
 					body,
 				});
 				setEstado(response);
+				console.log('>Login Response', response);
+				navigate(`/${response.usuario.rol}` || '/evaluador', {
+					replace: true,
+					state: {},
+				});
 			}
 		} catch (error: any) {
 			errorHandler(error);

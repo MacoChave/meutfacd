@@ -28,6 +28,7 @@ import RevisionDocumento from '../pages/evaluador/RevisionDoc';
 import ByEstacion from '../pages/analitica/ByEstacion';
 import ByRol from '../pages/analitica/ByRol';
 import Profile from '../pages/Profile';
+import HomeAdministrador from '../pages/administrador';
 
 export const router = createBrowserRouter([
 	{
@@ -206,7 +207,7 @@ export const router = createBrowserRouter([
 		],
 	},
 	{
-		path: '/analiticas',
+		path: '/analitica',
 		element: (
 			<ProtectedRoute isAllowed={true}>{<HomeReporte />}</ProtectedRoute>
 		),
@@ -240,6 +241,24 @@ export const router = createBrowserRouter([
 				element: (
 					<ProtectedRoute isAllowed={true}>
 						{<ByRol />}
+					</ProtectedRoute>
+				),
+			},
+		],
+	},
+	{
+		path: '/administrador',
+		element: (
+			<ProtectedRoute isAllowed={true}>
+				{<HomeAdministrador />}
+			</ProtectedRoute>
+		),
+		children: [
+			{
+				path: 'perfil',
+				element: (
+					<ProtectedRoute isAllowed={true}>
+						<Profile />
 					</ProtectedRoute>
 				),
 			},

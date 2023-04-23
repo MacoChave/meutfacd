@@ -40,7 +40,9 @@ const LoginMenu = ({
 					horizontal: 'center',
 				}}>
 				<MenuItem onClick={() => handleLogin(1)}>Estudiante</MenuItem>
-				<MenuItem onClick={() => handleLogin(2)}>Profesor</MenuItem>
+				<MenuItem onClick={() => handleLogin(2)}>
+					Administrativo
+				</MenuItem>
 			</Menu>
 		</div>
 	);

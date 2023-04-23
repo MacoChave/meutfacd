@@ -1,5 +1,6 @@
 import { Box, Card, Divider, Typography } from '@mui/material';
 import { ReactNode } from 'react';
+import { useAuthStore } from '../hooks/useAuthStore';
 
 const Contenedor = ({
 	title,
@@ -9,6 +10,8 @@ const Contenedor = ({
 	title: string;
 	children: ReactNode;
 }) => {
+	const { estado } = useAuthStore();
+
 	return (
 		<>
 			<Card sx={{ p: 4 }}>
@@ -16,7 +19,7 @@ const Contenedor = ({
 					{title}
 				</Typography>
 				<Typography variant='body1' component='p' textAlign='center'>
-					Usuario x
+					{estado.usuario.nombre || 'Usuario X'}
 				</Typography>
 				<Box sx={{ py: 2, width: { xs: '60vw', md: '50vw' } }} />
 				{children}
