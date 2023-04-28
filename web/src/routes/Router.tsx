@@ -6,7 +6,6 @@ import {
 } from 'react-router-dom';
 import ProtectedRoute from '../components/ProtectedRoute';
 import Home from '../pages/Home/Home';
-import ErrorPage from '../pages/ErrorPage';
 import Login from '../pages/Sesion/Login';
 import Logup from '../pages/Sesion/Logup';
 import Recovery from '../pages/Sesion/Recovery';
@@ -27,19 +26,25 @@ import HomeReporte from '../pages/analitica';
 import Resumen from '../pages/analitica/Resumen';
 import ByEstacion from '../pages/analitica/ByEstacion';
 import ByRol from '../pages/analitica/ByRol';
-import HomeAdministrador from '../pages/administrador/Index';
+import HomeAdministrador from '../pages/administrador';
 import Usuarios from '../pages/administrador/Usuarios';
 import Permisos from '../pages/administrador/Permisos';
 import Actividades from '../pages/administrador/Actividades';
 import Aplicacion from '../pages/administrador/Aplicacion';
 import Problemas from '../pages/administrador/Problemas';
 import Perfil from '../pages/Sesion/Profile';
+import { ErrorPage } from '@/pages/ErrorPage';
 
 export const router = createBrowserRouter([
 	{
 		path: '/',
 		element: <Home />,
-		errorElement: <ErrorPage />,
+		errorElement: (
+			<ErrorPage
+				codigo={404}
+				mensaje='Intentaste entrar a alguna ruta o vienes de un error. De cualquier manera, intenta usar la navegación'
+			/>
+		),
 	},
 	{
 		path: '/login/:tipo',

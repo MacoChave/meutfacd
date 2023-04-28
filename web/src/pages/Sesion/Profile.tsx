@@ -1,8 +1,6 @@
+import { yupResolver } from '@hookform/resolvers/yup';
 import { Box, Button, Divider, TextField, Typography } from '@mui/material';
-import Contenedor from '../../components/Card';
-import { useFetch } from '../../hooks/useFetch';
-import { URL } from '../../api/server';
-import { useAuthStore } from '../../hooks/useAuthStore';
+import { SyntheticEvent, useEffect, useState } from 'react';
 import {
 	Controller,
 	FormProvider,
@@ -10,17 +8,17 @@ import {
 	useForm,
 	useFormContext,
 } from 'react-hook-form';
+import { URL } from '../../api/server';
+import Contenedor from '../../components/Card';
+import { useAuthStore } from '../../hooks/useAuthStore';
+import { useFetch } from '../../hooks/useFetch';
 import {
 	Tipo_PerfilEstudiante,
 	Tipo_PerfilTutor,
 	Tipo_Usuario,
 	schemaUsuario,
 } from '../../models/Perfil';
-import { yupResolver } from '@hookform/resolvers/yup';
-import { SyntheticEvent, useEffect, useState } from 'react';
-import { AxiosError } from 'axios';
-import { errorHandler } from '../../utils/errorHandler';
-import ErrorPage from '../ErrorPage';
+import { ErrorPage } from '../ErrorPage';
 
 type PerfilProps = {
 	modoEdicion: boolean;
@@ -344,7 +342,13 @@ export const Perfil = (): JSX.Element => {
 
 	if (isLoading) return <>Cargando datos...</>;
 
-	if (error) return <ErrorPage />;
+	if (error)
+		return (
+			<ErrorPage
+				codigo={500}
+				mensaje='No se pudo obtener los datos del perfil'
+			/>
+		);
 
 	return (
 		<FormProvider {...methods}>
