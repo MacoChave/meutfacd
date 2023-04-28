@@ -2,7 +2,7 @@ import { Response } from 'express';
 
 const handleHttp = (
 	res: Response,
-	{ error, msg }: { error: string; msg: string }
+	{ error, msg }: { error: any; msg: string }
 ) => {
 	console.log({ error, msg });
 	res.status(500);
