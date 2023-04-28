@@ -5,30 +5,35 @@ import {
 	createBrowserRouter,
 } from 'react-router-dom';
 import ProtectedRoute from '../components/ProtectedRoute';
-import Logup from '../pages/Logup';
-import Recovery from '../pages/Recovery';
-import HomeReporte from '../pages/analitica/Home';
-import HomeEncargado from '../pages/encargado/Home';
-import HomeEstudiante from '../pages/estudiante/Home';
-import HomeEvaluador from '../pages/evaluador/Home';
-import Home from '../pages/Home';
-import Login from '../pages/Login';
+import Home from '../pages/Home/Home';
 import ErrorPage from '../pages/ErrorPage';
+import Login from '../pages/Sesion/Login';
+import Logup from '../pages/Sesion/Logup';
+import Recovery from '../pages/Sesion/Recovery';
+import HomeEstudiante from '../pages/estudiante';
 import Progress from '../pages/estudiante/Progress';
 import Estacion1 from '../pages/estudiante/Station1';
 import Estacion2 from '../pages/estudiante/Station2';
 import Estacion3 from '../pages/estudiante/Station3';
 import Estacion4 from '../pages/estudiante/Station4';
 import Estacion5 from '../pages/estudiante/Station5';
+import HomeEncargado from '../pages/encargado';
 import Asignar from '../pages/encargado/Asignar';
 import Citas from '../pages/encargado/Citas';
-import Resumen from '../pages/analitica/Resumen';
-import RevisionCurso from '../pages/evaluador/RevisionCurso';
+import HomeEvaluador from '../pages/evaluador';
 import RevisionDocumento from '../pages/evaluador/RevisionDoc';
+import RevisionCurso from '../pages/evaluador/RevisionCurso';
+import HomeReporte from '../pages/analitica';
+import Resumen from '../pages/analitica/Resumen';
 import ByEstacion from '../pages/analitica/ByEstacion';
 import ByRol from '../pages/analitica/ByRol';
-import Profile from '../pages/Profile';
-import HomeAdministrador from '../pages/administrador';
+import HomeAdministrador from '../pages/administrador/Index';
+import Usuarios from '../pages/administrador/Usuarios';
+import Permisos from '../pages/administrador/Permisos';
+import Actividades from '../pages/administrador/Actividades';
+import Aplicacion from '../pages/administrador/Aplicacion';
+import Problemas from '../pages/administrador/Problemas';
+import Perfil from '../pages/Sesion/Profile';
 
 export const router = createBrowserRouter([
 	{
@@ -60,7 +65,7 @@ export const router = createBrowserRouter([
 				path: 'perfil',
 				element: (
 					<ProtectedRoute isAllowed={true}>
-						{<Profile />}
+						<Perfil />
 					</ProtectedRoute>
 				),
 			},
@@ -134,7 +139,7 @@ export const router = createBrowserRouter([
 				path: 'perfil',
 				element: (
 					<ProtectedRoute isAllowed={true}>
-						{<Profile />}
+						<Perfil />
 					</ProtectedRoute>
 				),
 			},
@@ -168,7 +173,7 @@ export const router = createBrowserRouter([
 				path: 'perfil',
 				element: (
 					<ProtectedRoute isAllowed={true}>
-						{<Profile />}
+						<Perfil />
 					</ProtectedRoute>
 				),
 			},
@@ -216,7 +221,7 @@ export const router = createBrowserRouter([
 				path: 'perfil',
 				element: (
 					<ProtectedRoute isAllowed={true}>
-						{<Profile />}
+						<Perfil />
 					</ProtectedRoute>
 				),
 			},
@@ -258,7 +263,47 @@ export const router = createBrowserRouter([
 				path: 'perfil',
 				element: (
 					<ProtectedRoute isAllowed={true}>
-						<Profile />
+						<Perfil />
+					</ProtectedRoute>
+				),
+			},
+			{
+				path: 'usuarios',
+				element: (
+					<ProtectedRoute isAllowed={true}>
+						<Usuarios />
+					</ProtectedRoute>
+				),
+			},
+			{
+				path: 'permisos',
+				element: (
+					<ProtectedRoute isAllowed={true}>
+						<Permisos />
+					</ProtectedRoute>
+				),
+			},
+			{
+				path: 'actividades',
+				element: (
+					<ProtectedRoute isAllowed={true}>
+						<Actividades />
+					</ProtectedRoute>
+				),
+			},
+			{
+				path: 'aplicacion',
+				element: (
+					<ProtectedRoute isAllowed={true}>
+						<Aplicacion />
+					</ProtectedRoute>
+				),
+			},
+			{
+				path: 'problemas',
+				element: (
+					<ProtectedRoute isAllowed={true}>
+						<Problemas />
 					</ProtectedRoute>
 				),
 			},

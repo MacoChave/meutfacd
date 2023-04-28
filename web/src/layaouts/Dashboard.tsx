@@ -1,8 +1,8 @@
 import { Box } from '@mui/material';
 import { ReactNode, useState } from 'react';
-import Sidebar from '../components/Sidebar';
+import Sidebar from '../components/navegacion/Sidebar';
 import { MenuItem } from '../propTypes/Appbar';
-import { ToolbarWithSesion } from '../components/Toolbar';
+import { ToolbarWithSesion } from '../components/navegacion/Toolbar';
 
 const Dashboard = ({
 	menuArray,

@@ -1,5 +1,5 @@
 import { AppBar, Toolbar, Typography } from '@mui/material';
-import { AppbarProps } from '../propTypes/Appbar';
+import { AppbarProps } from '../../propTypes/Appbar';
 
 const Appbar = ({ open, setOpen }: AppbarProps) => {
 	const handleDrawerOpen = (e: any) => {

@@ -11,7 +11,7 @@ import {
 } from '@mui/material';
 import { MouseEvent, SyntheticEvent, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuthStore } from '../hooks/useAuthStore';
+import { useAuthStore } from '../../hooks/useAuthStore';
 
 interface ToolbarProps {
 	children?: React.ReactNode;

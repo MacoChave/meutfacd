@@ -47,12 +47,12 @@ const menuArray: MenuItem[] = [
 		path: 'estacion5',
 		icon: <Groups />,
 	},
-	// {
-	// 	text: 'Finalizar',
-	// 	description: 'Finalizar proceso',
-	// 	path: 'finalizar',
-	// 	icon: <Assignment />,
-	// },
+	{
+		text: 'Finalizar',
+		description: 'Finalizar proceso',
+		path: 'finalizar',
+		icon: <Assignment />,
+	},
 ];
 
 const HomeEstudiante = () => {

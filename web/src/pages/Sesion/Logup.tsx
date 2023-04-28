@@ -14,13 +14,13 @@ import {
 	Toolbar,
 	Typography,
 } from '@mui/material';
-import { ToolbarWithoutSesion } from '../components/Toolbar';
+import { ToolbarWithoutSesion } from '../../components/navegacion/Toolbar';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import { ChevronLeft, ChevronRight } from '@mui/icons-material';
 import { Controller, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Tipo_Logup, schemaLogup } from '../propTypes/Logup';
+import { Tipo_Logup, schemaLogup } from '../../models/Logup';
 
 const steps = [
 	'Datos personales',

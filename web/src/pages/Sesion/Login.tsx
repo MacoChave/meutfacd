@@ -6,18 +6,18 @@ import {
 	Toolbar,
 	Typography,
 } from '@mui/material';
-import { ToolbarWithoutSesion } from '../components/Toolbar';
+import { ToolbarWithoutSesion } from '../../components/navegacion/Toolbar';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
-import { Tipo_Login, schemaLogin } from '../propTypes/Login';
-import { useAuthStore } from '../hooks/useAuthStore';
-import { postData } from '../services/fetching';
-import { URL } from '../api/server';
-import { AuthState } from '../interfaces/AuthState';
+import { Tipo_Login, schemaLogin } from '../../models/Login';
+import { useAuthStore } from '../../hooks/useAuthStore';
+import { postData } from '../../services/fetching';
+import { URL } from '../../api/server';
+import { AuthState } from '../../interfaces/AuthState';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { errorHandler } from '../helpers/errorHandler';
+import { errorHandler } from '../../utils/errorHandler';
 import { useState } from 'react';
-import Loader from '../components/Loader';
+import Loader from '../../components/Loader';
 
 const Login = () => {
 	const navigate = useNavigate();

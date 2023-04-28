@@ -13,6 +13,7 @@ export const URL = {
 		LOGUP_PROFESOR: '/auth/logup/profesor',
 		PROFILE: '/auth/perfil',
 	},
+	USUARIO: '/usuario',
 	CURSO: '/curso',
 	ESTUDIANTE: '/estudiante',
 	HORARIO: '/horario',

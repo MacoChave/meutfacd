@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import { ToolbarWithoutSesion } from '../components/Toolbar';
+import { ToolbarWithoutSesion } from '../../components/navegacion/Toolbar';
 import {
 	Box,
 	Button,

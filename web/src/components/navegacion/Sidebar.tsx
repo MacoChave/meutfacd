@@ -8,9 +8,8 @@ import {
 	ListItemText,
 	Toolbar,
 	Tooltip,
-	makeStyles,
 } from '@mui/material';
-import { DrawerProps } from '../propTypes/Appbar';
+import { DrawerProps } from '../../propTypes/Appbar';
 import { useNavigate } from 'react-router-dom';
 
 const drawerWidth = 200;

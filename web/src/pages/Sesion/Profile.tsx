@@ -1,8 +1,8 @@
 import { Box, Button, Divider, TextField, Typography } from '@mui/material';
-import Contenedor from '../components/Card';
-import { useFetch } from '../hooks/useFetch';
-import { URL } from '../api/server';
-import { useAuthStore } from '../hooks/useAuthStore';
+import Contenedor from '../../components/Card';
+import { useFetch } from '../../hooks/useFetch';
+import { URL } from '../../api/server';
+import { useAuthStore } from '../../hooks/useAuthStore';
 import {
 	Controller,
 	FormProvider,
@@ -15,11 +15,18 @@ import {
 	Tipo_PerfilTutor,
 	Tipo_Usuario,
 	schemaUsuario,
-} from '../propTypes/Perfil';
+} from '../../models/Perfil';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { SyntheticEvent, useEffect, useState } from 'react';
+import { AxiosError } from 'axios';
+import { errorHandler } from '../../utils/errorHandler';
+import ErrorPage from '../ErrorPage';
 
-const Personales = () => {
+type PerfilProps = {
+	modoEdicion: boolean;
+};
+
+const Personales = ({ modoEdicion }: PerfilProps) => {
 	const {
 		control,
 		formState: { errors },
@@ -39,6 +46,10 @@ const Personales = () => {
 						{...field}
 						label='Nombres'
 						variant='standard'
+						InputProps={{
+							readOnly: !modoEdicion,
+							disabled: !modoEdicion,
+						}}
 						error={!!errors.nombre}
 						helperText={errors.nombre?.message}
 					/>
@@ -52,6 +63,10 @@ const Personales = () => {
 						{...field}
 						label='Apellidos'
 						variant='standard'
+						InputProps={{
+							readOnly: !modoEdicion,
+							disabled: !modoEdicion,
+						}}
 						error={!!errors.apellido}
 						helperText={errors.apellido?.message}
 					/>
@@ -65,6 +80,10 @@ const Personales = () => {
 						{...field}
 						label='Género'
 						variant='standard'
+						InputProps={{
+							readOnly: !modoEdicion,
+							disabled: !modoEdicion,
+						}}
 						error={!!errors.genero}
 						helperText={errors.genero?.message}
 					/>
@@ -79,6 +98,10 @@ const Personales = () => {
 						type='date'
 						label='Fecha de nacimiento'
 						variant='standard'
+						InputProps={{
+							readOnly: !modoEdicion,
+							disabled: !modoEdicion,
+						}}
 						error={!!errors.fecha_nac}
 						helperText={errors.fecha_nac?.message}
 					/>
@@ -88,7 +111,7 @@ const Personales = () => {
 	);
 };
 
-const Contacto = () => {
+const Contacto = ({ modoEdicion }: PerfilProps) => {
 	const {
 		control,
 		formState: { errors },
@@ -108,6 +131,10 @@ const Contacto = () => {
 						{...field}
 						label='Teléfono'
 						variant='standard'
+						InputProps={{
+							readOnly: !modoEdicion,
+							disabled: !modoEdicion,
+						}}
 						error={!!errors.telefono}
 						helperText={errors.telefono?.message}
 					/>
@@ -121,6 +148,10 @@ const Contacto = () => {
 						{...field}
 						label='Registro universitario'
 						variant='standard'
+						InputProps={{
+							readOnly: !modoEdicion,
+							disabled: !modoEdicion,
+						}}
 						error={!!errors.carnet}
 						helperText={errors.carnet?.message}
 					/>
@@ -134,6 +165,10 @@ const Contacto = () => {
 						{...field}
 						label='Código único de identificación'
 						variant='standard'
+						InputProps={{
+							readOnly: !modoEdicion,
+							disabled: !modoEdicion,
+						}}
 						error={!!errors.cui}
 						helperText={errors.cui?.message}
 					/>
@@ -147,6 +182,10 @@ const Contacto = () => {
 						{...field}
 						label='Dirección'
 						variant='standard'
+						InputProps={{
+							readOnly: !modoEdicion,
+							disabled: !modoEdicion,
+						}}
 						error={!!errors.direccion}
 						helperText={errors.direccion?.message}
 					/>
@@ -170,7 +209,7 @@ const Contacto = () => {
 	);
 };
 
-const Sesion = () => {
+const Sesion = ({ modoEdicion }: PerfilProps) => {
 	const {
 		control,
 		formState: { errors },
@@ -190,6 +229,10 @@ const Sesion = () => {
 						{...field}
 						label='Correo electrónico'
 						variant='standard'
+						InputProps={{
+							readOnly: !modoEdicion,
+							disabled: !modoEdicion,
+						}}
 						error={!!errors.correo}
 						helperText={errors.correo?.message}
 					/>
@@ -204,6 +247,11 @@ const Sesion = () => {
 						type='password'
 						label='Contraseña nueva'
 						variant='standard'
+						InputProps={{
+							autoComplete: 'new-password',
+							readOnly: !modoEdicion,
+							disabled: !modoEdicion,
+						}}
 						error={!!errors.pass}
 						helperText={errors.pass?.message}
 					/>
@@ -218,6 +266,11 @@ const Sesion = () => {
 						type='password'
 						label='Confirmar contraseña nueva'
 						variant='standard'
+						inputProps={{
+							autoComplete: 'new-password',
+							readOnly: !modoEdicion,
+							disabled: !modoEdicion,
+						}}
 						error={!!errors.passConfirm}
 						helperText={errors.passConfirm?.message}
 					/>
@@ -227,7 +280,7 @@ const Sesion = () => {
 	);
 };
 
-const Profile = () => {
+export const Perfil = (): JSX.Element => {
 	const [modoEdicion, setModoEdicion] = useState(false);
 	const { estado } = useAuthStore();
 	const {
@@ -291,7 +344,7 @@ const Profile = () => {
 
 	if (isLoading) return <>Cargando datos...</>;
 
-	if (error) return <>Error al cargar los datos</>;
+	if (error) return <ErrorPage />;
 
 	return (
 		<FormProvider {...methods}>
@@ -313,7 +366,7 @@ const Profile = () => {
 									Datos personales
 								</Typography>
 							</Box>
-							<Personales />
+							<Personales modoEdicion={modoEdicion} />
 						</Box>
 						<Divider />
 						<Box
@@ -328,7 +381,7 @@ const Profile = () => {
 									Datos de contacto
 								</Typography>
 							</Box>
-							<Contacto />
+							<Contacto modoEdicion={modoEdicion} />
 						</Box>
 						<Divider />
 						<Box
@@ -343,7 +396,7 @@ const Profile = () => {
 									Datos de sesión
 								</Typography>
 							</Box>
-							<Sesion />
+							<Sesion modoEdicion={modoEdicion} />
 						</Box>
 						<Divider />
 						<Button
@@ -368,4 +421,4 @@ const Profile = () => {
 	);
 };
 
-export default Profile;
+export default Perfil;
