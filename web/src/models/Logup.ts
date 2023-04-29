@@ -1,5 +1,21 @@
 import * as yup from 'yup';
 
+export const initialValuesLogup: Tipo_Logup = {
+	id_usuario: 0,
+	nombre: '',
+	apellido: '',
+	genero: '',
+	correo: '',
+	pass: '',
+	carnet: 0,
+	cui: '',
+	direccion: '',
+	fecha_nac: new Date(),
+	estado: '',
+	telefono: '',
+	confpass: '',
+};
+
 export type Tipo_Logup = {
 	id_usuario: number;
 	nombre: string;
@@ -13,6 +29,7 @@ export type Tipo_Logup = {
 	fecha_nac: Date;
 	estado: string;
 	telefono: string;
+	confpass: string;
 };
 
 export const schemaLogup = yup.object().shape({
@@ -34,6 +51,16 @@ export const schemaLogup = yup.object().shape({
 		.string()
 		.required('Contraseña es requerida')
 		.max(100, 'Contraseña no puede ser mayor a 100 caracteres'),
+	confpass: yup
+		.string()
+		.required('Confirmar contraseña es requerido')
+		.max(100, 'Confirmar contraseña no puede ser mayor a 100 caracteres')
+		.when('pass', {
+			is: (val: string) => (val && val.length > 0 ? true : false),
+			then: yup
+				.string()
+				.oneOf([yup.ref('pass')], 'Las contraseñas no coinciden'),
+		}),
 	carnet: yup
 		.number()
 		.required('Carnet es requerido')

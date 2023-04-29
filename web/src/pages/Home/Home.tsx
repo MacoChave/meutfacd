@@ -158,6 +158,11 @@ const Home = (props: any) => {
 					'Flujo del proceso de finalziación de proces'
 				)} */}
 			</Box>
+			<Box>
+				<Typography textAlign='center'>
+					Administración 2021-2025 Decano Henry Arraiga
+				</Typography>
+			</Box>
 		</Box>
 	);
 };

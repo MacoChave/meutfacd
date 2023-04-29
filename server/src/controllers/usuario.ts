@@ -1,9 +1,15 @@
 import { Request, Response } from 'express';
 import Usuario from '../models/usuario';
 import { handleHttp } from '../utils/error.handle';
+import Rol from '../models/rol';
 
-const obtenerItem = (req: Request, res: Response) => {
-	res.json({ message: 'Usuario' });
+const obtenerItem = async ({ params }: Request, res: Response) => {
+	try {
+		const { carnet } = params;
+		res.json({ message: 'Obtener usuario', carnet });
+	} catch (error) {
+		handleHttp(res, { error, msg: 'Error al obtener el usuario' });
+	}
 };
 
 const obtenerItems = async (req: Request, res: Response) => {

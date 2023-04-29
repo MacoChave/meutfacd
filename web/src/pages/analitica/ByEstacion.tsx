@@ -9,8 +9,8 @@ import {
 	Select,
 	Typography,
 } from '@mui/material';
-import Tabla from '../../components/Tabla';
 import { Download } from '@mui/icons-material';
+import { TablaGenerica } from '@/components/TablaGenerica';
 
 const data = [
 	{ name: 'Espera', value: 400 },
@@ -76,7 +76,13 @@ const ByEstacion = () => {
 								<Download />
 							</IconButton>
 						</Box>
-						<Tabla data={dataTable} />
+						<TablaGenerica
+							cabeceras={{ name: 'Nombre', value: 'Valor' }}
+							registros={data}
+							sumatoria={{}}
+							onDelete={() => {}}
+							onEdit={() => {}}
+						/>
 					</Box>
 				</Box>
 			</Contenedor>

@@ -1,15 +1,14 @@
-import { Box, Toolbar } from '@mui/material';
-import Dashboard from '../../layaouts/Dashboard';
-import { Outlet } from 'react-router-dom';
-import { MenuItem } from '../../propTypes/Appbar';
 import {
 	AdminPanelSettings,
 	BugReport,
 	ManageAccounts,
 	Monitor,
-	ReportProblem,
 	Settings,
 } from '@mui/icons-material';
+import { Box, Toolbar, Typography } from '@mui/material';
+import { Outlet } from 'react-router-dom';
+import Dashboard from '../../layaouts/Dashboard';
+import { MenuItem } from '../../propTypes/Appbar';
 
 const menuArray: MenuItem[] = [
 	{
@@ -53,10 +52,16 @@ const HomeAdministrador = () => {
 					flexDirection: 'column',
 					placeItems: 'center',
 					gap: 4,
-					width: '100%',
+					width: '100vw',
+					height: '95vh',
 				}}>
 				<Toolbar />
 				<Outlet />
+				<Box>
+					<Typography textAlign='center'>
+						Administración 2021-2025 Decano Henry Arraiga
+					</Typography>
+				</Box>
 			</Box>
 		</Dashboard>
 	);

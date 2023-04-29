@@ -1,3 +1,8 @@
+import { URL } from '@/api/server';
+import { postData } from '@/services/fetching';
+import { errorHandler } from '@/utils/errorHandler';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { ChevronLeft, ChevronRight } from '@mui/icons-material';
 import {
 	Box,
 	Button,
@@ -14,13 +19,16 @@ import {
 	Toolbar,
 	Typography,
 } from '@mui/material';
-import { ToolbarWithoutSesion } from '../../components/navegacion/Toolbar';
-import { useNavigate } from 'react-router-dom';
+import { AxiosError } from 'axios';
 import { useState } from 'react';
-import { ChevronLeft, ChevronRight } from '@mui/icons-material';
-import { Controller, useForm } from 'react-hook-form';
-import { yupResolver } from '@hookform/resolvers/yup';
-import { Tipo_Logup, schemaLogup } from '../../models/Logup';
+import { Controller, SubmitHandler, useForm } from 'react-hook-form';
+import { useNavigate } from 'react-router-dom';
+import { ToolbarWithoutSesion } from '../../components/navegacion/Toolbar';
+import {
+	Tipo_Logup,
+	initialValuesLogup,
+	schemaLogup,
+} from '../../models/Logup';
 
 const steps = [
 	'Datos personales',
@@ -30,19 +38,37 @@ const steps = [
 
 const Logup = () => {
 	const [activeStep, setActiveStep] = useState(0);
-	const {
-		control,
-		reset,
-		setValue,
-		getValues,
-		handleSubmit,
-		formState: { errors },
-	} = useForm<Tipo_Logup>({
+	const [sending, setSending] = useState(false);
+	const methods = useForm<Tipo_Logup>({
+		defaultValues: initialValuesLogup,
 		resolver: yupResolver(schemaLogup),
 		mode: 'onBlur',
 	});
+	const {
+		control,
+		formState: { errors },
+		handleSubmit,
+		getValues,
+		setValue,
+	} = methods;
 
 	const navigate = useNavigate();
+
+	const onSubmit: SubmitHandler<Tipo_Logup> = async (body) => {
+		try {
+			setSending(true);
+			console.log('> Sending data', body);
+			const response = await postData({
+				path: URL.AUTH.LOGIN_ESTUDIANTE,
+				body,
+			});
+			console.log('> Logup Response', response);
+		} catch (error) {
+			errorHandler(error as AxiosError);
+		} finally {
+			setSending(false);
+		}
+	};
 
 	const handleNext = () => {
 		setActiveStep((prevActiveStep) => prevActiveStep + 1);
@@ -69,7 +95,7 @@ const Logup = () => {
 									{...field}
 									required
 									label='Nombres'
-									variant='filled'
+									variant='outlined'
 									sx={{
 										width: { xs: '200px', sm: '300px' },
 										my: 2,
@@ -87,7 +113,7 @@ const Logup = () => {
 									{...field}
 									required
 									label='Apellidos'
-									variant='filled'
+									variant='outlined'
 									sx={{
 										width: { xs: '200px', sm: '300px' },
 										my: 2,
@@ -126,7 +152,8 @@ const Logup = () => {
 									{...field}
 									required
 									label='Fecha de nacimiento'
-									variant='filled'
+									variant='outlined'
+									type='date'
 									sx={{
 										width: { xs: '200px', sm: '300px' },
 										my: 2,
@@ -141,52 +168,138 @@ const Logup = () => {
 			case 1:
 				return (
 					<>
-						<TextField
-							required
-							label='Registro estudiantil (Carné)'
-							variant='filled'
-							sx={{ width: { xs: '200px', sm: '300px' }, my: 2 }}
+						<Controller
+							control={control}
+							name='carnet'
+							render={({ field }) => (
+								<TextField
+									{...field}
+									required
+									label='Registro estudiantil (Carné)'
+									variant='outlined'
+									sx={{
+										width: { xs: '200px', sm: '300px' },
+										my: 2,
+									}}
+									error={!!errors.carnet}
+									helperText={errors.carnet?.message}
+								/>
+							)}
 						/>
-						<TextField
-							required
-							label='Código único de identificación (CUI)'
-							variant='filled'
-							sx={{ width: { xs: '200px', sm: '300px' }, my: 2 }}
+						<Controller
+							control={control}
+							name='cui'
+							render={({ field }) => (
+								<TextField
+									{...field}
+									required
+									label='Código único de identificación (CUI)'
+									variant='outlined'
+									sx={{
+										width: { xs: '200px', sm: '300px' },
+										my: 2,
+									}}
+									error={!!errors.cui}
+									helperText={errors.cui?.message}
+								/>
+							)}
 						/>
-						<TextField
-							required
-							label='Dirección de residencia'
-							variant='filled'
-							sx={{ width: { xs: '200px', sm: '300px' }, my: 2 }}
+						<Controller
+							control={control}
+							name='direccion'
+							render={({ field }) => (
+								<TextField
+									{...field}
+									required
+									label='Dirección de residencia'
+									variant='outlined'
+									sx={{
+										width: { xs: '200px', sm: '300px' },
+										my: 2,
+									}}
+									error={!!errors.direccion}
+									helperText={errors.direccion?.message}
+								/>
+							)}
 						/>
-						<TextField
-							required
-							label='Teléfono'
-							variant='filled'
-							sx={{ width: { xs: '200px', sm: '300px' }, my: 2 }}
+						<Controller
+							control={control}
+							name='telefono'
+							render={({ field }) => (
+								<TextField
+									{...field}
+									required
+									label='Teléfono'
+									variant='outlined'
+									sx={{
+										width: { xs: '200px', sm: '300px' },
+										my: 2,
+									}}
+									error={!!errors.telefono}
+									helperText={errors.telefono?.message}
+								/>
+							)}
 						/>
 					</>
 				);
 			case 2:
 				return (
 					<>
-						<TextField
-							required
-							label='Correo electrónico'
-							variant='filled'
-							sx={{ width: { xs: '200px', sm: '300px' }, my: 2 }}
+						<Controller
+							control={control}
+							name='correo'
+							render={({ field }) => (
+								<TextField
+									{...field}
+									required
+									label='Correo electrónico'
+									variant='outlined'
+									sx={{
+										width: { xs: '200px', sm: '300px' },
+										my: 2,
+									}}
+									error={!!errors.correo}
+									helperText={errors.correo?.message}
+								/>
+							)}
 						/>
-						<TextField
-							required
-							label='Contraseña'
-							variant='filled'
-							sx={{ width: { xs: '200px', sm: '300px' }, my: 2 }}
+						<Controller
+							control={control}
+							name='pass'
+							render={({ field }) => (
+								<TextField
+									{...field}
+									required
+									label='Contraseña'
+									variant='outlined'
+									type='password'
+									sx={{
+										width: { xs: '200px', sm: '300px' },
+										my: 2,
+									}}
+									error={!!errors.pass}
+									helperText={errors.pass?.message}
+								/>
+							)}
 						/>
-						<TextField
-							required
-							label='Confirmar contraseña'
-							variant='filled'
-							sx={{ width: { xs: '200px', sm: '300px' }, my: 2 }}
+						<Controller
+							control={control}
+							name='confpass'
+							render={({ field }) => (
+								<TextField
+									{...field}
+									required
+									label='Confirmar contraseña'
+									variant='outlined'
+									type='password'
+									sx={{
+										width: { xs: '200px', sm: '300px' },
+										my: 2,
+									}}
+									error={!!errors.confpass}
+									helperText={errors.confpass?.message}
+								/>
+							)}
 						/>
 					</>
 				);
@@ -249,7 +362,7 @@ const Logup = () => {
 							</Box>
 						</Card>
 					) : (
-						<form>
+						<form onSubmit={handleSubmit(onSubmit)}>
 							<Card sx={{ my: 4 }}>
 								<Box
 									sx={{
@@ -279,8 +392,8 @@ const Logup = () => {
 											<Button
 												type='submit'
 												variant='contained'
-												onClick={handleNext}
-												sx={{ mt: 1, mr: 1 }}>
+												sx={{ mt: 1, mr: 1 }}
+												onClick={handleNext}>
 												Finalizar
 											</Button>
 										) : (

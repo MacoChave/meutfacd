@@ -1,12 +1,19 @@
 import { Router } from 'express';
+import {
+	actualizarItem,
+	crearItem,
+	eliminarItem,
+	obtenerItem,
+	obtenerItems,
+} from '../controllers/rol';
 
 const router = Router();
 
-router.get('/', (req, res) => {});
-router.get('/:id', (req, res) => {});
-router.post('/', (req, res) => {});
-router.put('/:id', (req, res) => {});
-router.delete('/:id', (req, res) => {});
-router.get('/search', (req, res) => {});
+router.get('/', obtenerItem);
+router.get('/todos', obtenerItems);
+// router.get('/search', );
+router.post('/', crearItem);
+router.put('/', actualizarItem);
+router.delete('/', eliminarItem);
 
 export { router };

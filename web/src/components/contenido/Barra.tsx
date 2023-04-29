@@ -1,12 +1,14 @@
 import { Add } from '@mui/icons-material';
 import { Box, Button, Typography } from '@mui/material';
 import { BotonSecundario } from '../controles/Boton';
+import { SyntheticEvent } from 'react';
 
 type BarraProps = {
 	titulo: string;
+	handleAgregar: (event: SyntheticEvent) => void;
 };
 
-const Barra = ({ titulo }: BarraProps) => {
+const Barra = ({ titulo, handleAgregar }: BarraProps) => {
 	return (
 		<Box
 			sx={{
@@ -34,12 +36,15 @@ const Barra = ({ titulo }: BarraProps) => {
 					{/* <BotonSecundario>
 						<>Cargar XLSX</>
 					</BotonSecundario> */}
-					<BotonSecundario>
+					<BotonSecundario handleClick={() => {}}>
 						<>Descargar XLSX</>
 					</BotonSecundario>
 				</Box>
 			</Box>
-			<Button variant='contained' startIcon={<Add />}>
+			<Button
+				variant='contained'
+				startIcon={<Add />}
+				onClick={handleAgregar}>
 				Agregar
 			</Button>
 		</Box>

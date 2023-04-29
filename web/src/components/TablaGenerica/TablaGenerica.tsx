@@ -1,4 +1,4 @@
-import { Delete, Edit } from '@mui/icons-material';
+import { Delete, East, Edit } from '@mui/icons-material';
 import {
 	Box,
 	Card,
@@ -24,14 +24,12 @@ const Estructura = ({ children }: PropsWithChildren) => {
 		<Card>
 			<Box
 				sx={{
-					minWidth: '100%',
-					overflowX: 'scroll',
-					scrollbarWidth: 'none',
+					maxWidth: '100%',
+					maxHeight: '70vh',
+					overflow: 'auto',
 				}}
 				className='no-scrollbar'>
-				<Table stickyHeader sx={{ minWidth: 650 }}>
-					{children}
-				</Table>
+				<Table stickyHeader>{children}</Table>
 			</Box>
 		</Card>
 	);
@@ -53,12 +51,12 @@ const Headers = ({ cabeceras }: { cabeceras: object }) => {
 const Body = ({
 	cabeceras,
 	registros,
-	onDelete,
+	onDetail,
 	onEdit,
 }: {
 	cabeceras: object;
 	registros: object[];
-	onDelete: (registro: object) => void;
+	onDetail: (registro: object) => void;
 	onEdit: (registro: object) => void;
 }) => {
 	return (
@@ -71,11 +69,15 @@ const Body = ({
 						</TableCell>
 					))}
 					<TableCell>
-						<IconButton color='secondary' onClick={onEdit}>
+						<IconButton
+							color='secondary'
+							onClick={() => onEdit(registro)}>
 							<Edit />
 						</IconButton>
-						<IconButton color='warning' onClick={onDelete}>
-							<Delete />
+						<IconButton
+							color='secondary'
+							onClick={() => onDetail(registro)}>
+							<East />
 						</IconButton>
 					</TableCell>
 				</TableRow>
@@ -148,7 +150,7 @@ const TablaGenerica: React.FC<TablaGenericaProps> = ({
 			<Body
 				cabeceras={cabeceras}
 				registros={registros}
-				onDelete={onDelete}
+				onDetail={onDelete}
 				onEdit={onEdit}
 			/>
 			<Footer
