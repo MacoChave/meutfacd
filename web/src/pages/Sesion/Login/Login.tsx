@@ -7,21 +7,9 @@ import { Tipo_Login, schemaLogin } from '@/models/Login';
 import { postData } from '@/services/fetching';
 import { errorHandler } from '@/utils/errorHandler';
 import { yupResolver } from '@hookform/resolvers/yup';
-import {
-	Box,
-	Button,
-	Card,
-	TextField,
-	Toolbar,
-	Typography,
-} from '@mui/material';
+import { Box, Button, Card, Toolbar, Typography } from '@mui/material';
 import React, { SyntheticEvent, useState } from 'react';
-import {
-	Controller,
-	FormProvider,
-	SubmitHandler,
-	useForm,
-} from 'react-hook-form';
+import { FormProvider, SubmitHandler, useForm } from 'react-hook-form';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Seguridad } from './Seguridad';
 
