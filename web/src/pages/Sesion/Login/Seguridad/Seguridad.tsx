@@ -1,4 +1,4 @@
-import { Tipo_Logup } from '@/models/Logup';
+import { Tipo_Login } from '@/models/Login';
 import { Box, TextField } from '@mui/material';
 import React from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
@@ -9,7 +9,7 @@ const Seguridad: React.FC<SeguridadProps> = () => {
 	const {
 		control,
 		formState: { errors },
-	} = useFormContext<Tipo_Logup>();
+	} = useFormContext<Tipo_Login>();
 
 	return (
 		<Box
@@ -25,9 +25,9 @@ const Seguridad: React.FC<SeguridadProps> = () => {
 				render={({ field }) => (
 					<TextField
 						{...field}
-						sx={{ width: { xs: '200px', sm: '300px' } }}
 						label='Correo electrónico'
-						variant='outlined'
+						variant='filled'
+						type='email'
 						error={!!errors.correo}
 						helperText={errors.correo?.message || ''}
 					/>
@@ -39,27 +39,11 @@ const Seguridad: React.FC<SeguridadProps> = () => {
 				render={({ field }) => (
 					<TextField
 						{...field}
-						sx={{ width: { xs: '200px', sm: '300px' } }}
 						label='Contraseña'
-						variant='outlined'
+						variant='filled'
 						type='password'
 						error={!!errors.pass}
 						helperText={errors.pass?.message || ''}
-					/>
-				)}
-			/>
-			<Controller
-				control={control}
-				name='confpass'
-				render={({ field }) => (
-					<TextField
-						{...field}
-						sx={{ width: { xs: '200px', sm: '300px' } }}
-						label='Confirmar contraseña'
-						variant='outlined'
-						type='password'
-						error={!!errors.confpass}
-						helperText={errors.confpass?.message || ''}
 					/>
 				)}
 			/>

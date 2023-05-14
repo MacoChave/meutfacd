@@ -1,12 +1,15 @@
 import { Response } from 'express';
 
-const handleHttp = (
-	res: Response,
-	{ error, msg }: { error: any; msg: string }
-) => {
+type errorHttpType = {
+	msg: string;
+	error?: any;
+	code?: number;
+};
+
+const errorHttp = (res: Response, { error, msg, code }: errorHttpType) => {
 	console.log({ error, msg });
-	res.status(500);
+	res.status(code || 500);
 	res.json({ message: msg });
 };
 
-export { handleHttp };
+export { errorHttp };

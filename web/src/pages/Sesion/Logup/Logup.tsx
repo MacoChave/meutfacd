@@ -1,57 +1,22 @@
-import { URL } from '@/api/server';
 import { ToolbarWithoutSesion } from '@/components/navegacion/Toolbar';
 import { Tipo_Logup, initialValuesLogup, schemaLogup } from '@/models/Logup';
-import { postData } from '@/services/fetching';
 import { errorHandler } from '@/utils/errorHandler';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { ChevronLeft, ChevronRight } from '@mui/icons-material';
-import {
-	Box,
-	Button,
-	Card,
-	IconButton,
-	Step,
-	StepLabel,
-	Stepper,
-	Toolbar,
-	Typography,
-} from '@mui/material';
+import { Box, Button, Card, Divider, Toolbar, Typography } from '@mui/material';
 import { AxiosError } from 'axios';
-import React, { PropsWithChildren, useState } from 'react';
-import { SubmitHandler, useForm } from 'react-hook-form';
+import React, { SyntheticEvent, useState } from 'react';
+import { FormProvider, SubmitHandler, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import { Contacto } from './Contacto';
 import { Personales } from './Personales';
 import { Seguridad } from './Seguridad';
+import { postData } from '@/services/fetching';
+import { URL } from '@/api/server';
+import Loader from '@/components/Loader';
 
 export type LogupProps = {};
 
-const steps = [
-	'Datos personales',
-	'Datos para contacto',
-	'Datos para inicio de sesión',
-];
-
-export const StepperContenedor = ({ children }: PropsWithChildren) => {
-	return (
-		<Card>
-			<Box
-				sx={{
-					display: 'flex',
-					justifyContent: 'space-around',
-					alignItems: 'center',
-					flexDirection: 'column',
-					gap: 4,
-					p: 3,
-				}}>
-				{children}
-			</Box>
-		</Card>
-	);
-};
-
 const Logup: React.FC<LogupProps> = () => {
-	const [pasoActivo, setPasoActivo] = useState(0);
 	const [enviando, setEnviando] = useState(false);
 	const methods = useForm<Tipo_Logup>({
 		defaultValues: initialValuesLogup,
@@ -64,33 +29,24 @@ const Logup: React.FC<LogupProps> = () => {
 	const onSubmit: SubmitHandler<Tipo_Logup> = async (data) => {
 		try {
 			setEnviando(true);
-			console.log('> Enviando datos:', data);
 			const response = await postData({
-				path: URL.AUTH.LOGIN_ESTUDIANTE,
+				path: URL.AUTH.LOGUP_ESTUDIANTE,
 				body: data,
 			});
+			console.log('Logup response', response);
+			alert('Cuenta creada con éxito');
+			methods.reset();
 		} catch (error) {
 			errorHandler(error as AxiosError);
+			alert('Error al crear la cuenta');
 		} finally {
 			setEnviando(false);
 		}
 	};
 
-	const handleNext = () => setPasoActivo(pasoActivo + 1);
-
-	const handleBack = () => setPasoActivo(pasoActivo - 1);
-
-	const handleReset = () => setPasoActivo(0);
-
-	const RenderizarControl = () => {
-		if (pasoActivo === 0) return <Personales />;
-		if (pasoActivo === 1) return <Contacto />;
-		if (pasoActivo === 2) return <Seguridad />;
-		return (
-			<Box>
-				<Typography>Paso desconocido</Typography>
-			</Box>
-		);
+	const handleLogin = (e: SyntheticEvent) => {
+		e.preventDefault();
+		navigate('/login/1');
 	};
 
 	return (
@@ -102,76 +58,79 @@ const Logup: React.FC<LogupProps> = () => {
 					sx={{
 						width: {
 							xs: '90vw',
-							sm: '70vw',
-							md: '50vw',
-							lg: '40vw',
-							xl: '30vw',
+							sm: '80vw',
+							md: '70vw',
+							lg: '60vw',
 						},
 						mx: 'auto',
+						height: '100%',
 					}}>
-					<Typography variant='h4'>Crear una cuenta</Typography>
-					<Stepper sx={{ my: 4 }} activeStep={pasoActivo}>
-						{steps.map((label, index) => (
-							<Step key={label}>
-								<StepLabel>{label}</StepLabel>
-							</Step>
-						))}
-					</Stepper>
-					{pasoActivo === steps.length ? (
-						<StepperContenedor>
-							<Typography>
-								¡Tu cuenta ha sido creada con éxito!
-							</Typography>
-							<Button
-								variant='contained'
-								onClick={() =>
-									console.log('Navegar a la página inicio')
-								}>
-								Regresar
-							</Button>
-						</StepperContenedor>
-					) : (
-						<StepperContenedor>
-							<form onSubmit={methods.handleSubmit(onSubmit)}>
-								<RenderizarControl />
+					<FormProvider {...methods}>
+						<form onSubmit={methods.handleSubmit(onSubmit)}>
+							<Card
+								sx={{
+									display: 'flex',
+									flexDirection: 'column',
+									p: 2,
+									gap: 2,
+								}}>
+								<Typography variant='h4'>Registro</Typography>
+								<Typography variant='body1' color='GrayText'>
+									¿Ya tienes una cuenta?{' '}
+									<Button
+										variant='text'
+										color='primary'
+										onClick={handleLogin}>
+										Inicia sesión
+									</Button>
+								</Typography>
 								<Box
 									sx={{
 										display: 'flex',
-										justifyContent: 'space-around',
 										flexDirection: 'row',
-										gap: 16,
-										p: 3,
+										flexWrap: 'wrap',
 									}}>
-									<IconButton
-										sx={{ mt: 1, mr: 1 }}
-										type='button'
-										disabled={pasoActivo === 0}
-										onClick={handleBack}>
-										<ChevronLeft />
-									</IconButton>
-									{pasoActivo === steps.length - 1 ? (
-										<Button
-											sx={{ mt: 1, mr: 1 }}
-											type='submit'
-											variant='contained'
-											onClick={handleNext}>
-											Finalizar
-										</Button>
-									) : (
-										<IconButton
-											sx={{ mt: 1, mr: 1 }}
-											type='button'
-											disabled={pasoActivo === 0}
-											onClick={handleNext}>
-											<ChevronRight />
-										</IconButton>
-									)}
+									<Typography sx={{ flex: 1 }}>
+										Personal
+									</Typography>
+									<Personales />
 								</Box>
-							</form>
-						</StepperContenedor>
-					)}
+								<Box
+									sx={{
+										display: 'flex',
+										flexDirection: 'row',
+										flexWrap: 'wrap',
+									}}>
+									<Typography sx={{ flex: 1 }}>
+										Contacto
+									</Typography>
+									<Contacto />
+								</Box>
+								<Box
+									sx={{
+										display: 'flex',
+										flexDirection: 'row',
+										flexWrap: 'wrap',
+									}}>
+									<Typography sx={{ flex: 1 }}>
+										Seguridad
+									</Typography>
+									<Seguridad />
+								</Box>
+								<Button
+									fullWidth
+									type='submit'
+									variant='contained'
+									color='primary'
+									disabled={!methods.formState.isValid}>
+									Crear cuenta
+								</Button>
+							</Card>
+						</form>
+					</FormProvider>
 				</Box>
 			</Box>
+			{enviando && <Loader />}
 		</>
 	);
 };

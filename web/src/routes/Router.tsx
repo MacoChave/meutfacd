@@ -1,14 +1,27 @@
+import { ErrorPage } from '@/pages/ErrorPage';
+import { Logup } from '@/pages/Sesion/Logup';
 import {
 	BrowserRouter,
-	Routes,
 	Route,
+	Routes,
 	createBrowserRouter,
 } from 'react-router-dom';
 import ProtectedRoute from '../components/ProtectedRoute';
 import Home from '../pages/Home/Home';
-import Login from '../pages/Sesion/Login';
-import Logup from '../pages/Sesion/Logup';
-import Recovery from '../pages/Sesion/Recovery';
+import Perfil from '../pages/Sesion/Profile';
+import HomeAdministrador from '../pages/administrador';
+import Actividades from '../pages/administrador/Actividades';
+import Aplicacion from '../pages/administrador/Aplicacion';
+import Permisos from '../pages/administrador/Permisos';
+import Problemas from '../pages/administrador/Problemas';
+import Usuarios from '../pages/administrador/Usuarios';
+import HomeReporte from '../pages/analitica';
+import ByEstacion from '../pages/analitica/ByEstacion';
+import ByRol from '../pages/analitica/ByRol';
+import Resumen from '../pages/analitica/Resumen';
+import HomeEncargado from '../pages/encargado';
+import Asignar from '../pages/encargado/Asignar';
+import Citas from '../pages/encargado/Citas';
 import HomeEstudiante from '../pages/estudiante';
 import Progress from '../pages/estudiante/Progress';
 import Estacion1 from '../pages/estudiante/Station1';
@@ -16,24 +29,10 @@ import Estacion2 from '../pages/estudiante/Station2';
 import Estacion3 from '../pages/estudiante/Station3';
 import Estacion4 from '../pages/estudiante/Station4';
 import Estacion5 from '../pages/estudiante/Station5';
-import HomeEncargado from '../pages/encargado';
-import Asignar from '../pages/encargado/Asignar';
-import Citas from '../pages/encargado/Citas';
 import HomeEvaluador from '../pages/evaluador';
-import RevisionDocumento from '../pages/evaluador/RevisionDoc';
 import RevisionCurso from '../pages/evaluador/RevisionCurso';
-import HomeReporte from '../pages/analitica';
-import Resumen from '../pages/analitica/Resumen';
-import ByEstacion from '../pages/analitica/ByEstacion';
-import ByRol from '../pages/analitica/ByRol';
-import HomeAdministrador from '../pages/administrador';
-import Usuarios from '../pages/administrador/Usuarios';
-import Permisos from '../pages/administrador/Permisos';
-import Actividades from '../pages/administrador/Actividades';
-import Aplicacion from '../pages/administrador/Aplicacion';
-import Problemas from '../pages/administrador/Problemas';
-import Perfil from '../pages/Sesion/Profile';
-import { ErrorPage } from '@/pages/ErrorPage';
+import RevisionDocumento from '../pages/evaluador/RevisionDoc';
+import { Login, Recuperar } from '@/pages/Sesion';
 
 export const router = createBrowserRouter([
 	{
@@ -56,7 +55,7 @@ export const router = createBrowserRouter([
 	},
 	{
 		path: '/recovery',
-		element: <Recovery />,
+		element: <Recuperar />,
 	},
 	{
 		path: '/estudiante',
@@ -323,7 +322,7 @@ const Rutas = () => {
 				<Route path='/' element={<Home />} />
 				<Route path='/login' element={<Login />} />
 				<Route path='/logup' element={<Logup />} />
-				<Route path='/recovery' element={<Recovery />} />
+				<Route path='/recovery' element={<Recuperar />} />
 				<Route
 					path='/estudiante'
 					element={

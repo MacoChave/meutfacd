@@ -75,7 +75,7 @@ export const schemaLogup = yup.object().shape({
 		.required('Dirección es requerido')
 		.max(200, 'Dirección no puede ser mayor a 200 caracteres'),
 	fecha_nac: yup.string().required('Fecha de nacimiento es requerido'),
-	estado: yup.string().required('Estado es requerido'),
+	estado: yup.string().notRequired(),
 	telefono: yup
 		.string()
 		.required('Telefono es requerido')

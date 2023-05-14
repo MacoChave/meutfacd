@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { handleHttp } from '../utils/error.handle';
+import { errorHttp } from '../utils/error.handle';
 import Usuario from '../models/usuario';
 import {
 	compararPassword,
@@ -35,9 +35,11 @@ export const logupEstudianteHandler = async (
 		const usuario = await buscarUsuario({ carnet });
 
 		if (usuario) {
-			return res.status(400).json({
+			errorHttp(res, {
 				msg: 'El usuario ya existe',
+				code: 400,
 			});
+			return;
 		}
 		// Encriptar contraseña
 		const hash = await encriptarPassword(pass);
@@ -61,13 +63,9 @@ export const logupEstudianteHandler = async (
 			id_estudiante: usuarioNuevo.getDataValue('id_usuario'),
 		});
 
-		// Generar token
-		let token = generarToken({ carnet, cui });
-
-		// Devolver token
-		res.status(200).json({ token, usuario: { nombre, correo, cui } });
+		res.status(200).json({ msg: 'Usuario creado' });
 	} catch (error: any) {
-		handleHttp(res, { msg: 'Error al crear usuario', error });
+		errorHttp(res, { msg: 'Error al crear usuario', error });
 	}
 };
 
@@ -92,10 +90,13 @@ export const logupProfesorHandler = async (
 
 		const usuario = await buscarUsuario({ carnet });
 
-		if (usuario)
-			return res.status(400).json({
+		if (usuario) {
+			errorHttp(res, {
 				msg: 'El usuario ya existe',
+				code: 400,
 			});
+			return;
+		}
 
 		const hash = await encriptarPassword(pass);
 
@@ -126,25 +127,9 @@ export const logupProfesorHandler = async (
 			}
 		);
 
-		console.log('profesorNuevo', profesorNuevo.toJSON());
-
-		let token = generarToken({
-			carnet,
-			cui,
-			rol: profesorNuevo.getDataValue('id_rol'),
-		});
-
-		res.status(200).json({
-			token,
-			usuario: {
-				nombre,
-				correo,
-				cui,
-				id_rol: profesorNuevo.getDataValue('id_rol'),
-			},
-		});
+		res.status(200).json({ msg: 'Usuario creado' });
 	} catch (error: any) {
-		handleHttp(res, { msg: 'Error al crear usuario', error });
+		errorHttp(res, { msg: 'Error al crear usuario', error });
 	}
 };
 
@@ -160,9 +145,11 @@ export const loginEstudianteHandler = async (
 		const usuario = await buscarUsuario({ correo });
 
 		if (!usuario) {
-			return res.status(400).json({
+			errorHttp(res, {
 				msg: 'El usuario no existe',
+				code: 400,
 			});
+			return;
 		}
 
 		// Validar contraseña
@@ -171,18 +158,22 @@ export const loginEstudianteHandler = async (
 			usuario.getDataValue('pass')
 		);
 		if (!validPassword) {
-			return res.status(400).json({
+			errorHttp(res, {
 				msg: 'Contraseña incorrecta',
+				code: 400,
 			});
+			return;
 		}
 
 		const estudiante = await Estudiante.findOne({
 			where: { id_estudiante: usuario.getDataValue('id_usuario') },
 		});
 		if (!estudiante) {
-			return res.status(400).json({
-				msg: 'El usuario no es estudiante',
+			errorHttp(res, {
+				msg: 'El usuario no existe',
+				code: 400,
 			});
+			return;
 		}
 
 		// Generar token
@@ -201,7 +192,7 @@ export const loginEstudianteHandler = async (
 			},
 		});
 	} catch (error: any) {
-		handleHttp(res, { msg: 'Error al iniciar sesión', error });
+		errorHttp(res, { msg: 'Error al iniciar sesión', error });
 	}
 };
 
@@ -215,9 +206,11 @@ export const loginProfesorHandler = async (
 		const usuario = await buscarUsuario({ correo });
 
 		if (!usuario) {
-			return res.status(400).json({
+			errorHttp(res, {
 				msg: 'El usuario no existe',
+				code: 400,
 			});
+			return;
 		}
 
 		const validPassword = await compararPassword(
@@ -225,9 +218,11 @@ export const loginProfesorHandler = async (
 			usuario.getDataValue('pass')
 		);
 		if (!validPassword) {
-			return res.status(400).json({
+			errorHttp(res, {
 				msg: 'Contraseña incorrecta',
+				code: 400,
 			});
+			return;
 		}
 
 		const profesor = await Profesor.findOne({
@@ -240,12 +235,12 @@ export const loginProfesorHandler = async (
 			},
 		});
 		if (!profesor) {
-			return res.status(400).json({
-				msg: 'El usuario no es profesor',
+			errorHttp(res, {
+				msg: 'El usuario no existe',
+				code: 400,
 			});
+			return;
 		}
-
-		console.log('profeso', profesor?.toJSON());
 
 		const token = generarToken({
 			correo,
@@ -264,7 +259,7 @@ export const loginProfesorHandler = async (
 			},
 		});
 	} catch (error: any) {
-		handleHttp(res, { msg: 'Error al iniciar sesión', error });
+		errorHttp(res, { msg: 'Error al iniciar sesión', error });
 	}
 };
 
@@ -279,6 +274,6 @@ export const profileHandler = async (req: Request, res: Response) => {
 		});
 		return res.status(200).json(response?.toJSON());
 	} catch (error: any) {
-		handleHttp(res, { msg: 'Error al obtener el perfil', error });
+		errorHttp(res, { msg: 'Error al obtener el perfil', error });
 	}
 };

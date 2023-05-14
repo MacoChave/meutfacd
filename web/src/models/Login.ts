@@ -1,5 +1,10 @@
 import * as yup from 'yup';
 
+export const initialValuesLogin: Tipo_Login = {
+	correo: '',
+	pass: '',
+};
+
 export type Tipo_Login = {
 	correo: string;
 	pass: string;

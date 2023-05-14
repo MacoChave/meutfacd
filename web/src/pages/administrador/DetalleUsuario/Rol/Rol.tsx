@@ -1,6 +1,6 @@
 import { Box, Typography } from '@mui/material';
 import React from 'react';
-import { TabsProps } from '../models/tabsProps';
+import { TabsProps } from '../propTypes/tabsProps';
 
 const Rol: React.FC<TabsProps> = ({ usuario, index, ...other }) => {
 	console.log('> Rol.tsx: RolProps: usuario: ', usuario);

@@ -1,6 +1,6 @@
 import { Box, TextField, Typography } from '@mui/material';
 import React from 'react';
-import { TabsProps } from '../models/tabsProps';
+import { TabsProps } from '../propTypes/tabsProps';
 
 const Informacion: React.FC<TabsProps> = ({ usuario, index, ...other }) => {
 	console.log('> Informacion.tsx: InformacionProps: usuario: ', usuario);
