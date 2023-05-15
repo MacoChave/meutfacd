@@ -1,5 +1,6 @@
-import { Cell, Legend, Pie, PieChart } from 'recharts';
-import Contenedor from '../../components/Card';
+import { Contenedor } from '@/components';
+import { TablaGenerica } from '@/components/TablaGenerica';
+import { Download } from '@mui/icons-material';
 import {
 	Box,
 	FormControl,
@@ -9,8 +10,7 @@ import {
 	Select,
 	Typography,
 } from '@mui/material';
-import { Download } from '@mui/icons-material';
-import { TablaGenerica } from '@/components/TablaGenerica';
+import { Cell, Legend, Pie, PieChart } from 'recharts';
 
 const data = [
 	{ name: 'Espera', value: 400 },

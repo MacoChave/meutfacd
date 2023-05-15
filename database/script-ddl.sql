@@ -51,19 +51,43 @@ create table horario (
 -- PERFILES
 -- -------------------------------------------------
 --
+create table departameto (
+	id_departamento integer unsigned auto_increment primary key,
+	nombre varchar(50) unique not null
+);
+create table municipio (
+	id_municipio integer unsigned auto_increment primary key,
+	id_departamento integer unsigned not null,
+	municipio varchar(50) not null,
+	constraint fk_municipio_depto foreign key (id_departamento) references departameto (id_departamento)
+);
 create table usuario (
-	id_usuario int auto_increment primary key,
+	id_usuario int unsigned auto_increment primary key,
 	nombre varchar(50) not null,
-	apellido varchar(75) not null,
+	apellidos varchar(75) not null,
 	genero char(1) not null,
 	correo varchar(100) not null,
 	pass varchar(200) not null,
-	carnet int,
-	cui varchar(20) not null,
 	direccion varchar(200) not null,
 	fecha_nac date not null,
 	estado char(1) not null,
-	telefono varchar(25)
+	fecha_creacion datetime not null default now(),
+	id_municipio integer unsigned not null,
+	doc_cui varchar(75) null,
+	carnet int unsigned unique null,
+	cui varchar(20) unique null,
+);
+create table rol (
+	id_rol int unsigned auto_increment primary key,
+	nombre varchar(45) not null,
+	descripcion varchar(255) not null
+);
+create table usuario_rol (
+	id_usuario integer unsigned,
+	id_rol integer unsigned,
+	constraint pk_usuario_rol primary key (id_usuario, id_rol),
+	constraint fk_usuario_rol_u foreign key (id_usuario) references usuario (id_usuario),
+	constraint fk_usuario_rol_r foreign key (id_rol) references rol (id_rol)
 );
 create table perfil_estudiante (
 	id_estudiante int auto_increment primary key,
@@ -75,11 +99,6 @@ create table perfil_estudiante (
 		constraint fk_estudiante_horario foreign key (id_horario, id_jornada) references horario (id_horario, id_jornada) on
 	delete restrict on
 	update cascade
-);
-create table rol (
-	id_rol int auto_increment primary key,
-	nombre varchar(45) not null,
-	descripcion varchar(255) not null
 );
 create table perfil_tutor (
 	id_tutor int auto_increment primary key,

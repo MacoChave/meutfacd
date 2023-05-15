@@ -13,7 +13,16 @@ const Dashboard = ({
 }) => {
 	const [open, setOpen] = useState(false);
 	return (
-		<Box sx={{ display: 'flex' }}>
+		<Box
+			component='main'
+			sx={{
+				display: 'grid',
+				gridTemplateAreas:
+					"'header header' 'sidebar main' 'sidebar footer'",
+				gridTemplateRows: 'auto 1fr auto',
+				gridTemplateColumns: '200px 1fr',
+				minHeight: '100vh',
+			}}>
 			<>
 				<ToolbarWithSesion />
 				{menuArray.length > 0 && (
@@ -24,9 +33,16 @@ const Dashboard = ({
 					/>
 				)}
 				{children}
-				<Box>
+				<Box
+					sx={{
+						gridArea: 'footer',
+						position: 'fixed',
+						bottom: 0,
+						width: '100%',
+						p: 1,
+					}}>
 					<Typography textAlign='center'>
-						Administración 2021-2025 Decano Henry Arraiga
+						Administración 2021-2025 © Decano Henry Arriaga
 					</Typography>
 				</Box>
 			</>

@@ -22,7 +22,10 @@ export const ToolbarWithoutSesion = ({ children }: ToolbarProps) => {
 		<AppBar
 			position='fixed'
 			color='primary'
-			sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}>
+			sx={{
+				gridArea: 'header',
+				zIndex: (theme) => theme.zIndex.drawer + 1,
+			}}>
 			<Toolbar>
 				<IconButton
 					color='inherit'
@@ -91,14 +94,14 @@ export const ToolbarWithSesion = () => {
 					Cerrar sesión
 				</IconButton>
 			</ToolbarWithoutSesion>
-			<Snackbar
+			{/* <Snackbar
 				anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
 				open={openSb}
 				autoHideDuration={6000}
 				onClose={handleCloseSnackbar}
 				message='Lorem ipsum dolor sit amet consectetur adipisicing elit.'
 				action={action}
-			/>
+			/> */}
 		</>
 	);
 };

@@ -1,6 +1,6 @@
+import { Contenedor } from '@/components';
 import { Download, FileDownload, UploadFile } from '@mui/icons-material';
 import { Box, Chip, IconButton, TextField, Typography } from '@mui/material';
-import Contenedor from '../../components/Card';
 
 const style = {
 	display: 'grid' as 'grid',

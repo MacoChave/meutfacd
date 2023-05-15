@@ -1,3 +1,4 @@
+import { Contenedor } from '@/components';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Box, Button, Divider, TextField, Typography } from '@mui/material';
 import { SyntheticEvent, useEffect, useState } from 'react';
@@ -9,7 +10,6 @@ import {
 	useFormContext,
 } from 'react-hook-form';
 import { URL } from '../../api/server';
-import Contenedor from '../../components/Card';
 import { useAuthStore } from '../../hooks/useAuthStore';
 import { useFetch } from '../../hooks/useFetch';
 import {
