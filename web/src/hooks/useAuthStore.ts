@@ -14,11 +14,8 @@ type Actions = {
 const initialState: Estado = {
 	estado: {
 		token: '',
-		usuario: {
-			nombre: '',
-			correo: '',
-			cui: '',
-		},
+		name: '',
+		rol: '',
 	},
 };
 

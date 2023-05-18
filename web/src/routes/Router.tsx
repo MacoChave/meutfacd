@@ -41,15 +41,15 @@ export const router = createBrowserRouter([
 		),
 	},
 	{
-		path: '/login/:tipo',
+		path: '/login/:rol',
 		element: <Login />,
 	},
 	{
-		path: '/logup',
+		path: '/logup/:rol',
 		element: <Logup />,
 	},
 	{
-		path: '/recovery',
+		path: '/recuperar',
 		element: <Recuperar />,
 	},
 	{

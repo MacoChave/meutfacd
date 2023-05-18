@@ -7,10 +7,8 @@ export const api = axios.create({
 export const URL = {
 	AUTH: {
 		_: '/auth',
-		LOGIN_ESTUDIANTE: '/auth/login/estudiante',
-		LOGIN_PROFESOR: '/auth/login/profesor',
-		LOGUP_ESTUDIANTE: '/auth/logup/estudiante',
-		LOGUP_PROFESOR: '/auth/logup/profesor',
+		LOGIN: '/auth/login',
+		LOGUP: '/auth/logup',
 		PROFILE: '/auth/perfil',
 	},
 	USUARIO: '/usuario',

@@ -6,7 +6,7 @@ import { Box, Button, Card, Divider, Toolbar, Typography } from '@mui/material';
 import { AxiosError } from 'axios';
 import React, { SyntheticEvent, useState } from 'react';
 import { FormProvider, SubmitHandler, useForm } from 'react-hook-form';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { Contacto } from './Contacto';
 import { Personales } from './Personales';
 import { Seguridad } from './Seguridad';
@@ -18,6 +18,7 @@ export type LogupProps = {};
 
 const Logup: React.FC<LogupProps> = () => {
 	const [enviando, setEnviando] = useState(false);
+	const { rol } = useParams();
 	const methods = useForm<Tipo_Logup>({
 		defaultValues: initialValuesLogup,
 		resolver: yupResolver(schemaLogup),
@@ -30,7 +31,7 @@ const Logup: React.FC<LogupProps> = () => {
 		try {
 			setEnviando(true);
 			const response = await postData({
-				path: URL.AUTH.LOGUP_ESTUDIANTE,
+				path: URL.AUTH.LOGUP,
 				body: data,
 			});
 			console.log('Logup response', response);
@@ -46,7 +47,9 @@ const Logup: React.FC<LogupProps> = () => {
 
 	const handleLogin = (e: SyntheticEvent) => {
 		e.preventDefault();
-		navigate('/login/1');
+		navigate('/login', {
+			replace: true,
+		});
 	};
 
 	return (

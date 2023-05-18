@@ -17,8 +17,8 @@ export type LoginProps = {};
 
 const Login: React.FC<LoginProps> = () => {
 	const navigate = useNavigate();
+	const { rol } = useParams();
 	const { setEstado } = useAuthStore();
-	const { tipo } = useParams();
 	const [loading, setLoading] = useState(false);
 
 	const methods = useForm<Tipo_Login>({
@@ -33,19 +33,18 @@ const Login: React.FC<LoginProps> = () => {
 	const onSubmit: SubmitHandler<Tipo_Login> = async (body) => {
 		try {
 			setLoading(true);
-			const path =
-				tipo === '1'
-					? URL.AUTH.LOGIN_ESTUDIANTE
-					: URL.AUTH.LOGIN_PROFESOR;
 			const response = await postData<AuthState>({
-				path,
+				path: URL.AUTH.LOGIN,
 				body,
 			});
 			setEstado(response);
-			navigate(`/${response.usuario.rol?.toString() || 'estudiante'}`, {
-				replace: true,
-				state: {},
-			});
+			navigate(
+				`/${response.rol.toString().toLowerCase() || 'estudiante'}`,
+				{
+					replace: true,
+					state: {},
+				}
+			);
 		} catch (error: any) {
 			errorHandler(error);
 		} finally {
@@ -55,7 +54,7 @@ const Login: React.FC<LoginProps> = () => {
 
 	const handleRecuperar = (e: SyntheticEvent) => {
 		e.preventDefault();
-		navigate('/recovery', {
+		navigate('/recuperar', {
 			replace: true,
 			state: { email: 'email' },
 		});

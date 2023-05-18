@@ -57,11 +57,6 @@ const HomeAdministrador = () => {
 				}}>
 				<Toolbar />
 				<Outlet />
-				<Box>
-					<Typography textAlign='center'>
-						Administración 2021-2025 Decano Henry Arraiga
-					</Typography>
-				</Box>
 			</Box>
 		</Dashboard>
 	);
