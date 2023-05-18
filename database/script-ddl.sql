@@ -240,7 +240,8 @@ delimiter $$ create procedure if not exists sp_ut_crear_usuario (
 	in p_fecha_nac date,
 	in p_municipio int unsigned,
 	in p_carnet int unsigned,
-	in p_cui varchar(20)
+	in p_cui varchar(20),
+	in p_rol int unsigned
 )
 begin
 declare v_id_usuario int unsigned;
@@ -269,15 +270,8 @@ values (
 		p_cui
 	);
 set v_id_usuario = last_insert_id();
-insert into ut_perfil (id_usuario)
-values (v_id_usuario);
 insert into usuario_rol (id_usuario, id_rol)
-values (
-		v_id_usuario,
-		select id_rol
-		from rol
-		where rol = 'Estudiante'
-	);
+values (v_id_usuario, p_rol);
 end $$ delimiter;
 -- 
 -- -------------------------------------------------

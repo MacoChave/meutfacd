@@ -1,20 +1,17 @@
 import { Request, Response } from 'express';
-import { errorHttp } from '../utils/error.handle';
+import { sqlEjecutar, sqlSelect } from '../db/consultas';
+import Estudiante from '../models/estudiante';
+import Profesor from '../models/profesor';
 import Usuario from '../models/usuario';
+import { errorHttp } from '../utils/error.handle';
 import {
 	compararPassword,
 	encriptarPassword,
 	generarToken,
 } from '../utils/token';
-import Estudiante from '../models/estudiante';
-import Profesor from '../models/profesor';
-import Rol from '../models/rol';
-import { buscarUsuario } from '../utils/auth.handler';
+import { v_usuarios } from '../models/v_usuarios';
 
-export const logupEstudianteHandler = async (
-	{ body }: Request,
-	res: Response
-) => {
+export const logupHandler = async ({ body }: Request, res: Response) => {
 	try {
 		// Procesar datos de req.body
 		const {
@@ -23,128 +20,65 @@ export const logupEstudianteHandler = async (
 			genero,
 			correo,
 			pass,
+			direccion,
 			carnet,
 			cui,
-			direccion,
 			fecha_nac,
-			telefono,
 		} = body;
 
-		// Validar datos -> express-validator, joi, zod, etc.
-		// Validar en BD
-		const usuario = await buscarUsuario({ carnet });
-
-		if (usuario) {
-			errorHttp(res, {
-				msg: 'El usuario ya existe',
-				code: 400,
-			});
-			return;
-		}
-		// Encriptar contraseña
 		const hash = await encriptarPassword(pass);
 
 		// Almacenar en BD
-		const usuarioNuevo = await Usuario.create({
-			nombre,
-			apellido,
-			genero,
-			correo,
-			pass: hash,
-			carnet,
-			cui,
-			direccion,
-			fecha_nac,
-			estado: 1,
-			telefono,
-		});
+		const usuarioNuevo = await sqlEjecutar(
+			`call sp_ut_crear_usuario(${Object.keys({
+				nombre,
+				apellido,
+				genero,
+				correo,
+				hash,
+				direccion,
+				fecha_nac,
+				id_municipio: 1,
+				carnet,
+				cui,
+				rol: 2,
+			})
+				.map(() => '?')
+				.join(',')})`
+		);
 
-		const estudianteNuevo = await Estudiante.create({
-			id_estudiante: usuarioNuevo.getDataValue('id_usuario'),
-		});
+		console.log('[Logup][Usuario]', usuarioNuevo);
 
-		res.status(200).json({ msg: 'Usuario creado' });
-	} catch (error: any) {
-		errorHttp(res, { msg: 'Error al crear usuario', error });
-	}
-};
-
-export const logupProfesorHandler = async (
-	{ body }: Request,
-	res: Response
-) => {
-	try {
-		const {
-			nombre,
-			apellido,
-			genero,
-			correo,
-			pass,
-			carnet,
-			cui,
-			direccion,
-			fecha_nac,
-			telefono,
-			id_rol,
-		} = body;
-
-		const usuario = await buscarUsuario({ carnet });
-
-		if (usuario) {
+		if (usuarioNuevo.affectedRows === 0) {
 			errorHttp(res, {
-				msg: 'El usuario ya existe',
+				msg: 'Error al crear usuario',
 				code: 400,
 			});
 			return;
 		}
 
-		const hash = await encriptarPassword(pass);
-
-		const usuarioNuevo = await Usuario.create({
-			nombre,
-			apellido,
-			genero,
-			correo,
-			pass: hash,
-			carnet,
-			cui,
-			direccion,
-			fecha_nac,
-			estado: 0,
-			telefono,
-		});
-
-		const profesorNuevo = await Profesor.create(
-			{
-				id_tutor: usuarioNuevo.getDataValue('id_usuario'),
-				id_rol: id_rol || 2,
-			},
-			{
-				include: {
-					model: Rol,
-					attributes: ['nombre'],
-				},
-			}
-		);
-
 		res.status(200).json({ msg: 'Usuario creado' });
 	} catch (error: any) {
 		errorHttp(res, { msg: 'Error al crear usuario', error });
 	}
 };
 
-export const loginEstudianteHandler = async (
-	{ body }: Request,
-	res: Response
-) => {
+export const loginHandler = async ({ body }: Request, res: Response) => {
 	try {
 		// Procesar datos de req.body
 		const { correo, pass } = body;
 		// Validar datos -> express-validator, joi, zod, etc.
 		// Validar en BD
-		const usuario = await buscarUsuario({ correo });
+		const usuarios: v_usuarios[] = await sqlSelect({
+			table: 'ut_v_usuarios',
+			columns: [],
+			conditions: { correo },
+			orden: {},
+		});
 
-		if (!usuario) {
+		console.log('[Login][Usuarios]', usuarios);
+
+		if (usuarios.length === 0) {
 			errorHttp(res, {
 				msg: 'El usuario no existe',
 				code: 400,
@@ -152,25 +86,13 @@ export const loginEstudianteHandler = async (
 			return;
 		}
 
+		const usuario = usuarios[0];
+
 		// Validar contraseña
-		const validPassword = await compararPassword(
-			pass,
-			usuario.getDataValue('pass')
-		);
+		const validPassword = await compararPassword(pass, usuario.pass);
 		if (!validPassword) {
 			errorHttp(res, {
 				msg: 'Contraseña incorrecta',
-				code: 400,
-			});
-			return;
-		}
-
-		const estudiante = await Estudiante.findOne({
-			where: { id_estudiante: usuario.getDataValue('id_usuario') },
-		});
-		if (!estudiante) {
-			errorHttp(res, {
-				msg: 'El usuario no existe',
 				code: 400,
 			});
 			return;
@@ -178,85 +100,17 @@ export const loginEstudianteHandler = async (
 
 		// Generar token
 		let token = generarToken({
-			carnet: correo,
-			cui: usuario.getDataValue('cui'),
+			cui: usuario.cui,
+			carnet: usuario.carnet,
+			primaryKey: usuario.id_usuario,
+			rol: usuario.rol,
 		});
 
 		// Devolver token
 		res.status(200).json({
 			token,
-			usuario: {
-				nombre: usuario.getDataValue('nombre'),
-				correo: usuario.getDataValue('correo'),
-				cui: usuario.getDataValue('cui'),
-			},
-		});
-	} catch (error: any) {
-		errorHttp(res, { msg: 'Error al iniciar sesión', error });
-	}
-};
-
-export const loginProfesorHandler = async (
-	{ body }: Request,
-	res: Response
-) => {
-	try {
-		const { correo, pass } = body;
-
-		const usuario = await buscarUsuario({ correo });
-
-		if (!usuario) {
-			errorHttp(res, {
-				msg: 'El usuario no existe',
-				code: 400,
-			});
-			return;
-		}
-
-		const validPassword = await compararPassword(
-			pass,
-			usuario.getDataValue('pass')
-		);
-		if (!validPassword) {
-			errorHttp(res, {
-				msg: 'Contraseña incorrecta',
-				code: 400,
-			});
-			return;
-		}
-
-		const profesor = await Profesor.findOne({
-			include: {
-				model: Rol,
-				attributes: ['nombre'],
-			},
-			where: {
-				id_tutor: usuario.getDataValue('id_usuario'),
-			},
-		});
-		if (!profesor) {
-			errorHttp(res, {
-				msg: 'El usuario no existe',
-				code: 400,
-			});
-			return;
-		}
-
-		const token = generarToken({
-			correo,
-			cui: usuario.getDataValue('cui'),
-			rol: profesor?.getDataValue('id_rol') || 4,
-		});
-
-		res.status(200).json({
-			token,
-			usuario: {
-				nombre: usuario.getDataValue('nombre'),
-				correo: usuario.getDataValue('correo'),
-				cui: usuario.getDataValue('cui'),
-				id_rol: profesor?.getDataValue('id_rol') || 4,
-				rol: profesor.getDataValue('rol').nombre || '',
-			},
+			name: usuario.nombre,
+			rol: usuario.rol,
 		});
 	} catch (error: any) {
 		errorHttp(res, { msg: 'Error al iniciar sesión', error });
