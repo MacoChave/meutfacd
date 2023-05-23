@@ -63,70 +63,52 @@ export const logupHandler = async ({ body }: Request, res: Response) => {
 	}
 };
 
+//  TODO: Se podría eliminar este endpoint
 export const loginHandler = async ({ body }: Request, res: Response) => {
-	try {
-		// Procesar datos de req.body
-		const { correo, pass } = body;
-		// Validar datos -> express-validator, joi, zod, etc.
-		// Validar en BD
-		const usuarios: v_usuarios[] = await sqlSelect({
-			table: 'ut_v_usuarios',
-			columns: [],
-			conditions: { correo },
-			orden: {},
+	const options = {
+		headers: { 'Content-Type': 'application/json' },
+		method: 'POST',
+		body: JSON.stringify(body),
+	};
+	fetch('http://127.0.0.1:4000/login', options)
+		.then((response) => response.json())
+		.then((data) => {
+			console.log(data);
+			res.status(200).json(data);
+		})
+		.catch((error) => {
+			console.error(error);
+			res.status(400).json(error);
 		});
-
-		console.log('[Login][Usuarios]', usuarios);
-
-		if (usuarios.length === 0) {
-			errorHttp(res, {
-				msg: 'El usuario no existe',
-				code: 400,
-			});
-			return;
-		}
-
-		const usuario = usuarios[0];
-
-		// Validar contraseña
-		const validPassword = await compararPassword(pass, usuario.pass);
-		if (!validPassword) {
-			errorHttp(res, {
-				msg: 'Contraseña incorrecta',
-				code: 400,
-			});
-			return;
-		}
-
-		// Generar token
-		let token = generarToken({
-			cui: usuario.cui,
-			carnet: usuario.carnet,
-			primaryKey: usuario.id_usuario,
-			rol: usuario.rol,
-		});
-
-		// Devolver token
-		res.status(200).json({
-			token,
-			name: usuario.nombre,
-			rol: usuario.rol,
-		});
-	} catch (error: any) {
-		errorHttp(res, { msg: 'Error al iniciar sesión', error });
-	}
 };
 
 export const profileHandler = async (req: Request, res: Response) => {
 	try {
-		const { correo, rol } = req.user;
-		const response = await Usuario.findOne({
-			where: { correo },
-			include: {
-				model: rol ? Profesor : Estudiante,
-			},
+		const { primaryKey } = req.user;
+		const response: v_usuarios[] = await sqlSelect({
+			table: 'ut_v_usuarios',
+			columns: [],
+			conditions: { id_usuario: primaryKey },
+			orden: {},
 		});
-		return res.status(200).json(response?.toJSON());
+		if (response.length === 0) {
+			errorHttp(res, {
+				msg: 'Error al obtener el perfil',
+				code: 400,
+			});
+			return;
+		}
+		const currentUser: v_usuarios = response[0];
+		return res.status(200).json({
+			nombre: currentUser.nombre,
+			apellidos: currentUser.apellidos,
+			correo: currentUser.correo,
+			estado: currentUser.estado,
+			carnet: currentUser.carnet,
+			cui: currentUser.cui,
+			id_rol: currentUser.id_rol,
+			rol: currentUser.rol,
+		});
 	} catch (error: any) {
 		errorHttp(res, { msg: 'Error al obtener el perfil', error });
 	}

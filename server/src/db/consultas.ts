@@ -1,6 +1,5 @@
 import { conectar } from '../config/mysql';
 import { DATA_SOURCES } from '../config/vars.config';
-import { v_usuarios } from '../models/v_usuarios';
 import { encriptarPassword } from '../utils/token';
 
 export const cargarRolesTutor = () => {
