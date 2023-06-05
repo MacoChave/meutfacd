@@ -20,12 +20,18 @@ readdirSync(PATH_ROUTER).filter((file) => {
 
 router.get('/', (req, res) => {
 	res.json({
-		message: 'Hello World',
+		message: 'MEUT API - v1.0.0',
+		rutas: readdirSync(PATH_ROUTER).map((file) => {
+			return `/${cleanFilename(file)}`;
+		}),
 	});
 });
 
-router.get('*', (req, res) => {
-	res.status(404).send('Not Found');
-});
+// router.get('*', (req, res) => {
+// 	res.status(404).json({
+// 		message: 'No se encontró la ruta',
+// 		ruta: req.originalUrl,
+// 	});
+// });
 
 export { router };

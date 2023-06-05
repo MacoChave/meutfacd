@@ -1,6 +1,6 @@
+import { Contenedor } from '@/components';
 import { Box, TextField, Typography } from '@mui/material';
-import FileChooser from '../../components/FileChooser';
-import Contenedor from '../../components/Card';
+import FileChooser from '../../components/controles/FileChooser';
 
 const style = {
 	display: 'grid' as 'grid',

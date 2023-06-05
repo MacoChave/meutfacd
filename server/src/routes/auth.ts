@@ -1,19 +1,15 @@
 import { Router } from 'express';
 import {
-	loginEstudianteHandler,
-	loginProfesorHandler,
-	logupEstudianteHandler,
-	logupProfesorHandler,
+	loginHandler,
+	logupHandler,
 	profileHandler,
 } from '../controllers/auth';
 import { requireAuth } from '../middlewares/requireAuth';
 
 const router = Router();
 
-router.post('/logup/estudiante', logupEstudianteHandler);
-router.post('/login/estudiante', loginEstudianteHandler);
-router.post('/logup/profesor', logupProfesorHandler);
-router.post('/login/profesor', loginProfesorHandler);
-router.get('/profile', requireAuth, profileHandler);
+router.get('/perfil', requireAuth, profileHandler);
+router.post('/logup', logupHandler);
+router.post('/login', loginHandler);
 
 export { router };

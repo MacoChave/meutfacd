@@ -1,5 +1,6 @@
-import { Cell, Legend, Pie, PieChart } from 'recharts';
-import Contenedor from '../../components/Card';
+import { Contenedor } from '@/components';
+import { TablaGenerica } from '@/components/TablaGenerica';
+import { Download } from '@mui/icons-material';
 import {
 	Box,
 	FormControl,
@@ -9,8 +10,7 @@ import {
 	Select,
 	Typography,
 } from '@mui/material';
-import Tabla from '../../components/Tabla';
-import { Download } from '@mui/icons-material';
+import { Cell, Legend, Pie, PieChart } from 'recharts';
 
 const data = [
 	{ name: 'Espera', value: 400 },
@@ -76,7 +76,13 @@ const ByEstacion = () => {
 								<Download />
 							</IconButton>
 						</Box>
-						<Tabla data={dataTable} />
+						<TablaGenerica
+							cabeceras={{ name: 'Nombre', value: 'Valor' }}
+							registros={data}
+							sumatoria={{}}
+							onDelete={() => {}}
+							onEdit={() => {}}
+						/>
 					</Box>
 				</Box>
 			</Contenedor>

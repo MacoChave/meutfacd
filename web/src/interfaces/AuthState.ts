@@ -1,6 +1,5 @@
-export interface AuthState {
-	carnet: string | null;
-	token: string | null;
-	loading: boolean;
-	error: string | null;
-}
+export type AuthState = {
+	token: string;
+	name: string;
+	rol: string;
+};

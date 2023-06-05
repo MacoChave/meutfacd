@@ -1,33 +1,63 @@
-import { useQuery } from '@tanstack/react-query';
-import api from '../api/server';
+import { QueryFunctionContext, useQuery } from '@tanstack/react-query';
+import { api } from '../api/server';
 
-export const postDate = async (url: string, data: any) => {
-	return await api.post(url, data);
-};
-
-const fetchData = async ({ queryKey }: any) => {
-	return await api.get(queryKey[1], {
-		params: {
-			page: queryKey[2],
-			limit: queryKey[3],
-			search: queryKey[4],
-			sort: queryKey[5],
-			order: queryKey[6],
+const fetchData = async ({ queryKey }: QueryFunctionContext) => {
+	const { data } = await api.get(queryKey[1] as string, {
+		params: queryKey[3] as Object,
+		headers: {
+			authorization: `Bearer ${queryKey[2]}`,
 		},
 	});
+	return data;
 };
 
-export const useFetchData = (
-	url: string,
-	page: number,
-	limit: number,
-	search: string,
-	sort: string,
-	order: string
-) => {
-	return useQuery(['data', url, page, limit, search, sort, order], fetchData);
+const fetchDataPaginado = async ({ queryKey }: QueryFunctionContext) => {
+	const { data } = await api.get(queryKey[1] as string, {
+		params: {
+			page: queryKey[3] as number,
+			limit: queryKey[4] as number,
+			search: queryKey[5] as string,
+			sort: queryKey[6] as string,
+			order: queryKey[7] as string,
+		},
+		headers: {
+			authorization: `Bearer ${queryKey[2]}`,
+		},
+	});
+	return data;
 };
 
-export const useFetchDataWithoutQuery = (url: string) => {
-	return useQuery(['data', url], fetchData);
+export const useFetch = ({
+	url,
+	token,
+	params,
+}: {
+	url: string;
+	token: string;
+	params?: Object;
+}) => {
+	return useQuery(['data', url, token, params || {}], fetchData);
+};
+
+export const useFetchPaginado = ({
+	url,
+	token,
+	page,
+	limit,
+	sort,
+	order,
+	search,
+}: {
+	url: string;
+	token: string;
+	page: number;
+	limit: number;
+	sort: string;
+	order: string;
+	search: string;
+}) => {
+	return useQuery(
+		['data', url, token, page, limit, sort, order, search],
+		fetchDataPaginado
+	);
 };

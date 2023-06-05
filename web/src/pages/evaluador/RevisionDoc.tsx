@@ -1,3 +1,5 @@
+import { Contenedor } from '@/components';
+import { Check, Download, MenuBook, Message } from '@mui/icons-material';
 import {
 	Box,
 	IconButton,
@@ -9,13 +11,10 @@ import {
 	TableHead,
 	TableRow,
 } from '@mui/material';
-import Contenedor from '../../components/Card';
-import { Check, Download, MenuBook, Message } from '@mui/icons-material';
 import { ReactNode, useState } from 'react';
-import Dialogo from '../../components/Modal';
-import FijarFecha from '../../components/Comentar';
-import ShowPDF from '../../components/ShowPDF';
 import AgregarComentario from '../../components/FijarFecha';
+import Dialogo from '../../components/Modal';
+import ShowPDF from '../../components/ShowPDF';
 
 type TesisListType = {
 	carnet: number;

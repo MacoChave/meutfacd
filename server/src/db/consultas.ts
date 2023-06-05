@@ -1,45 +1,209 @@
-import promisePool from '../config/db';
+import { conectar } from '../config/mysql';
+import { DATA_SOURCES } from '../config/vars.config';
+import { encriptarPassword } from '../utils/token';
 
-export interface ISQLParametros {
-	tabla: string | string[];
+export const cargarRolesTutor = () => {
+	const roles = [
+		{
+			nombre: 'Administrador',
+			descripcion: 'Personal encargado de administrar el sistema',
+		},
+		{
+			nombre: 'Analitica',
+			descripcion: 'Personal de soporte y soporte',
+		},
+		{
+			nombre: 'Encargado',
+			descripcion: 'Tutor encargado de una estación',
+		},
+		{
+			nombre: 'Evaluador',
+			descripcion: 'Tutor dedicado a evaluar a los estudiantes',
+		},
+	];
+};
+
+export const crearUsuarioAdministrador = async () => {
+	const adminPass = await encriptarPassword(DATA_SOURCES.ADMIN_PASSWORD);
+
+	const adminUser = {
+		nombre: 'Administrador',
+		apellido: 'Derecho',
+		genero: '-',
+		correo: 'admin@derecho.cloud',
+		pass: adminPass,
+		direccion: 'Guatemala',
+		fecha_nac: '2023-01-01',
+		municipio: 0,
+		carnet: '000000000',
+		cui: '0000000000000',
+		rol: 1,
+	};
+
+	const sql = `call sp_ut_crear_usuario(${Object.keys(adminUser)
+		.map(() => '?')
+		.join(',')})`;
+
+	const conn = await conectar();
+
+	conn.query(sql, Object.values(adminUser))
+		.then((res) => {
+			console.log('[Crear admin][Insertar]', res);
+		})
+		.catch((err) => {
+			console.log('Error al crear usuario administrador');
+		});
+};
+
+type formarOrdenType = {
+	[key: string]: 'ASC' | 'DESC';
+};
+
+type sqlSelectType = {
+	table: string;
+	columns: string[];
+	conditions: Object;
+	orden: formarOrdenType;
+};
+
+type sqlInsertType = {
+	table: string;
 	datos: Object;
-	condicion?: Object;
-	orden?: String[];
-	direccion?: String[];
-}
-
-const separarClaveValor = (datos: Object) => {
-	let columnas = Object.keys(datos);
-	let valores = Object.values(datos);
-	return { columnas, valores };
 };
 
-export const insertar = async ({ tabla, datos }: ISQLParametros) => {
-	let _datos = separarClaveValor(datos);
-	let sql = `INSERT INTO ${tabla} 
-	(${_datos.columnas.join(', ')}) 
-	VALUES (${_datos.valores.map((v, index) => `$${index}`).join(', ')})`;
-	return await promisePool.query(sql, _datos.valores);
+type sqlUpdateType = {
+	table: string;
+	datos: Object;
+	conditions: Object;
 };
 
-// TODO: Paginar resultados
+type sqlDeleteType = {
+	table: string;
+	conditions: Object;
+};
 
-export const seleccionar = async ({
-	tabla,
-	datos,
-	condicion,
+const formarWhere = (conditions: Object) => {
+	const keys = Object.keys(conditions);
+	const values = Object.values(conditions);
+
+	const str =
+		keys.length > 0
+			? `WHERE ${keys.map((key) => `${key} = ?`).join(' AND ')}`
+			: '';
+	return { str, values };
+};
+
+const formarOrdenamiento = (orden: formarOrdenType) => {
+	if (orden === undefined) return '';
+	const entries = Object.entries(orden);
+
+	const str =
+		entries.keys.length > 0
+			? `ORDER BY ${entries
+					.map(([key, values]) => `${key} ${values}`)
+					.join(', ')}`
+			: '';
+	return str;
+};
+
+const formarUpdateSet = (datos: Object) => {
+	const keys = Object.keys(datos);
+	const values = Object.values(datos);
+
+	const str =
+		keys.length > 0
+			? `SET ${keys.map((key) => `${key} = ?`).join(', ')}`
+			: '';
+	return { str, values };
+};
+
+const showQuery = (sql: string, values: any[]) => console.log(sql, values);
+
+export const sqlEjecutar = async (sql: string) => {
+	showQuery(sql, []);
+	const conn = await conectar();
+	const rows = await conn.query(sql);
+
+	return rows;
+};
+
+export const sqlSelect = async ({
+	table,
+	columns,
+	conditions,
 	orden,
-	direccion,
-}: ISQLParametros) => {};
+}: sqlSelectType) => {
+	const clausula_where = formarWhere(conditions);
+	const clausula_orden = formarOrdenamiento(orden);
 
-export const seleccionarJoin = ({
-	tabla,
+	const sql: string = `SELECT 
+	${columns.length !== 0 ? columns.join(', ') : '*'} 
+	FROM ${table} 
+	${clausula_where.str}
+	${clausula_orden}`;
+
+	showQuery(sql, [...clausula_where.values]);
+
+	const conn = await conectar();
+	const [results, fields] = await conn.query(sql, [...clausula_where.values]);
+	console.log('[sqlSelect][results]', results);
+	return results;
+};
+
+export const sqlInsert = async ({ table, datos }: sqlInsertType) => {
+	const keys = Object.keys(datos);
+	const values = Object.values(datos);
+
+	const sql: string = `INSERT 
+	INTO ${table} 
+	(${keys.join(', ')}) 
+	VALUES (${keys.map(() => `?`).join(', ')})`;
+
+	showQuery(sql, values);
+
+	const conn = await conectar();
+	const [results, fields] = await conn.query(sql, values);
+	return results;
+};
+
+export const sqlUpdate = async ({
+	table,
 	datos,
-	condicion,
-	orden,
-	direccion,
-}: ISQLParametros) => {};
+	conditions,
+}: sqlUpdateType) => {
+	const clausula_set = formarUpdateSet({ datos, anterior: 0 });
+	const clausula_where = formarWhere({
+		conditions,
+		anterior: clausula_set.values.length,
+	});
 
-export const actualizar = ({ tabla, datos, condicion }: ISQLParametros) => {};
+	const sql: string = `UPDATE ${table} 
+	${clausula_set.str} 
+	${clausula_where.str}`;
 
-export const eliminar = ({ tabla, datos, condicion }: ISQLParametros) => {};
+	showQuery(sql, [...clausula_set.values, ...clausula_where.values]);
+
+	const conn = await conectar();
+	const [results, fields] = await conn.query(sql, [
+		...clausula_set.values,
+		...clausula_where.values,
+	]);
+	return results;
+};
+
+export const sqlDelete = async ({ table, conditions }: sqlDeleteType) => {
+	const clausula_where = formarWhere({
+		conditions: conditions || {},
+		anterior: 0,
+	});
+
+	const sql: string = `DELETE 
+	FROM ${table} 
+	${clausula_where.str}`;
+
+	showQuery(sql, [...clausula_where.values]);
+
+	const conn = await conectar();
+	const [results, fields] = await conn.query(sql, [...clausula_where.values]);
+	return results;
+};

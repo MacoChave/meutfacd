@@ -1,5 +1,5 @@
 import { DataTypes } from 'sequelize';
-import sequelize from '../config/db';
+import sequelize from '../config/sequelize';
 
 const Profesor = sequelize.define(
 	'perfil_tutor',
@@ -10,7 +10,7 @@ const Profesor = sequelize.define(
 		},
 		no_colegiado: {
 			type: DataTypes.STRING(20),
-			allowNull: false,
+			allowNull: true,
 		},
 		id_rol: {
 			type: DataTypes.INTEGER,
@@ -21,14 +21,15 @@ const Profesor = sequelize.define(
 		timestamps: true,
 		createdAt: true,
 		updatedAt: true,
+		freezeTableName: true,
 	}
 );
 
 // Crear relación un usuario tiene un perfil de profesor
 import Usuario from './usuario';
 
-Usuario.hasOne(Profesor, { foreignKey: 'id_usuario' });
-Profesor.belongsTo(Usuario, { foreignKey: 'id_usuario' });
+Usuario.hasOne(Profesor, { foreignKey: 'id_tutor' });
+Profesor.belongsTo(Usuario, { foreignKey: 'id_tutor' });
 
 // Crear relación un rol tiene muchos profesores
 import Rol from './rol';

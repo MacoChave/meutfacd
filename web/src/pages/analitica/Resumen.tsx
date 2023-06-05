@@ -1,6 +1,6 @@
+import { Contenedor } from '@/components';
 import {
 	Box,
-	Card,
 	FormControl,
 	InputLabel,
 	MenuItem,
@@ -8,7 +8,6 @@ import {
 	TextField,
 	Typography,
 } from '@mui/material';
-import Contenedor from '../../components/Card';
 
 const style = {
 	display: 'flex' as 'flex',

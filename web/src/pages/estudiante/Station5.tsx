@@ -1,5 +1,5 @@
+import { Contenedor } from '@/components';
 import { Box, TextField } from '@mui/material';
-import Contenedor from '../../components/Card';
 
 const style = {
 	display: 'grid' as 'grid',

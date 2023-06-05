@@ -1,8 +1,8 @@
+import { Contenedor } from '@/components';
 import { Add, Remove } from '@mui/icons-material';
 import {
 	Box,
 	Button,
-	Card,
 	IconButton,
 	List,
 	ListItem,
@@ -12,7 +12,6 @@ import {
 	Typography,
 } from '@mui/material';
 import { useState } from 'react';
-import Contenedor from '../../components/Card';
 
 const style = {
 	display: 'grid' as 'grid',

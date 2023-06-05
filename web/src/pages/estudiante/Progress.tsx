@@ -1,18 +1,17 @@
+import { Contenedor } from '@/components';
 import { Visibility } from '@mui/icons-material';
 import {
 	Chip,
 	IconButton,
-	Paper,
 	Table,
 	TableBody,
 	TableCell,
-	TableContainer,
 	TableHead,
 	TableRow,
 	Typography,
 } from '@mui/material';
-import Dialogo from '../../components/Modal';
 import { useState } from 'react';
+import Dialogo from '../../components/Modal';
 
 type ProgressType = {
 	estacion: string;
@@ -50,14 +49,7 @@ const Progress = () => {
 
 	return (
 		<>
-			<TableContainer component={Paper}>
-				<Typography
-					variant='h4'
-					component='h2'
-					textAlign='center'
-					py={4}>
-					Mi progreso
-				</Typography>
+			<Contenedor title='Mi progreso'>
 				<Table
 					sx={{ minWidth: 250, maxWidth: 600, mx: 'auto' }}
 					aria-label='simple table'>
@@ -98,7 +90,7 @@ const Progress = () => {
 						))}
 					</TableBody>
 				</Table>
-			</TableContainer>
+			</Contenedor>
 			<Dialogo open={open} title='Observaciones' setOpen={setOpen}>
 				<Typography variant='body2'>{row.fecha_carga}</Typography>
 				<Typography variant='body1'>{row.observacion}</Typography>

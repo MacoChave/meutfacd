@@ -1,5 +1,5 @@
 import { DataTypes } from 'sequelize';
-import sequelize from '../config/db';
+import sequelize from '../config/sequelize';
 
 const Horario = sequelize.define(
 	'horario',
@@ -26,6 +26,7 @@ const Horario = sequelize.define(
 		timestamps: true,
 		createdAt: true,
 		updatedAt: true,
+		freezeTableName: true,
 	}
 );
 

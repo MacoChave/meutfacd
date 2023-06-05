@@ -1,5 +1,5 @@
 import { DataTypes } from 'sequelize';
-import sequelize from '../config/db';
+import sequelize from '../config/sequelize';
 
 const Jornada = sequelize.define(
 	'jornada',
@@ -18,6 +18,7 @@ const Jornada = sequelize.define(
 		timestamps: true,
 		createdAt: true,
 		updatedAt: true,
+		freezeTableName: true,
 	}
 );
 

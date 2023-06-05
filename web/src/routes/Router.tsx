@@ -1,56 +1,61 @@
-import {
-	BrowserRouter,
-	Routes,
-	Route,
-	createBrowserRouter,
-} from 'react-router-dom';
+import { ErrorPage } from '@/pages/ErrorPage';
+import { Login, Recuperar } from '@/pages/Sesion';
+import { Logup } from '@/pages/Sesion/Logup';
+import { createBrowserRouter } from 'react-router-dom';
 import ProtectedRoute from '../components/ProtectedRoute';
-import Logup from '../pages/Logup';
-import Recovery from '../pages/Recovery';
-import HomeReporte from '../pages/analitica/Home';
-import HomeEncargado from '../pages/encargado/Home';
-import HomeEstudiante from '../pages/estudiante/Home';
-import HomeEvaluador from '../pages/evaluador/Home';
-import Home from '../pages/Home';
-import Login from '../pages/Login';
-import ErrorPage from '../pages/ErrorPage';
+import Home from '../pages/Home/Home';
+import Perfil from '../pages/Sesion/Profile';
+import HomeAdministrador from '../pages/administrador';
+import Actividades from '../pages/administrador/Actividades';
+import Aplicacion from '../pages/administrador/Aplicacion';
+import Permisos from '../pages/administrador/Permisos';
+import Problemas from '../pages/administrador/Problemas';
+import Usuarios from '../pages/administrador/Usuarios';
+import HomeReporte from '../pages/analitica';
+import ByEstacion from '../pages/analitica/ByEstacion';
+import ByRol from '../pages/analitica/ByRol';
+import Resumen from '../pages/analitica/Resumen';
+import HomeEncargado from '../pages/encargado';
+import Asignar from '../pages/encargado/Asignar';
+import Citas from '../pages/encargado/Citas';
+import HomeEstudiante from '../pages/estudiante';
 import Progress from '../pages/estudiante/Progress';
 import Estacion1 from '../pages/estudiante/Station1';
 import Estacion2 from '../pages/estudiante/Station2';
 import Estacion3 from '../pages/estudiante/Station3';
 import Estacion4 from '../pages/estudiante/Station4';
 import Estacion5 from '../pages/estudiante/Station5';
-import Asignar from '../pages/encargado/Asignar';
-import Citas from '../pages/encargado/Citas';
-import Resumen from '../pages/analitica/Resumen';
+import HomeEvaluador from '../pages/evaluador';
 import RevisionCurso from '../pages/evaluador/RevisionCurso';
 import RevisionDocumento from '../pages/evaluador/RevisionDoc';
-import ByEstacion from '../pages/analitica/ByEstacion';
-import ByRol from '../pages/analitica/ByRol';
-import Profile from '../pages/Profile';
 
 export const router = createBrowserRouter([
 	{
 		path: '/',
 		element: <Home />,
-		errorElement: <ErrorPage />,
+		errorElement: (
+			<ErrorPage
+				codigo={404}
+				mensaje='Intentaste entrar a alguna ruta o vienes de un error. De cualquier manera, intenta usar la navegación'
+			/>
+		),
 	},
 	{
-		path: '/login',
+		path: '/login/:rol',
 		element: <Login />,
 	},
 	{
-		path: '/logup',
+		path: '/logup/:rol',
 		element: <Logup />,
 	},
 	{
-		path: '/recovery',
-		element: <Recovery />,
+		path: '/recuperar',
+		element: <Recuperar />,
 	},
 	{
 		path: '/estudiante',
 		element: (
-			<ProtectedRoute isAllowed={true}>
+			<ProtectedRoute rol='estudiante'>
 				{<HomeEstudiante />}
 			</ProtectedRoute>
 		),
@@ -58,15 +63,15 @@ export const router = createBrowserRouter([
 			{
 				path: 'perfil',
 				element: (
-					<ProtectedRoute isAllowed={true}>
-						{<Profile />}
+					<ProtectedRoute rol='estudiante'>
+						<Perfil />
 					</ProtectedRoute>
 				),
 			},
 			{
 				path: 'progreso',
 				element: (
-					<ProtectedRoute isAllowed={true}>
+					<ProtectedRoute rol='estudiante'>
 						{<Progress />}
 					</ProtectedRoute>
 				),
@@ -74,7 +79,7 @@ export const router = createBrowserRouter([
 			{
 				path: 'estacion1',
 				element: (
-					<ProtectedRoute isAllowed={true}>
+					<ProtectedRoute rol='estudiante'>
 						{<Estacion1 />}
 					</ProtectedRoute>
 				),
@@ -82,7 +87,7 @@ export const router = createBrowserRouter([
 			{
 				path: 'estacion2',
 				element: (
-					<ProtectedRoute isAllowed={true}>
+					<ProtectedRoute rol='estudiante'>
 						{<Estacion2 />}
 					</ProtectedRoute>
 				),
@@ -90,7 +95,7 @@ export const router = createBrowserRouter([
 			{
 				path: 'estacion3',
 				element: (
-					<ProtectedRoute isAllowed={true}>
+					<ProtectedRoute rol='estudiante'>
 						{<Estacion3 />}
 					</ProtectedRoute>
 				),
@@ -98,7 +103,7 @@ export const router = createBrowserRouter([
 			{
 				path: 'estacion4',
 				element: (
-					<ProtectedRoute isAllowed={true}>
+					<ProtectedRoute rol='estudiante'>
 						{<Estacion4 />}
 					</ProtectedRoute>
 				),
@@ -106,7 +111,7 @@ export const router = createBrowserRouter([
 			{
 				path: 'estacion5',
 				element: (
-					<ProtectedRoute isAllowed={true}>
+					<ProtectedRoute rol='estudiante'>
 						{<Estacion5 />}
 					</ProtectedRoute>
 				),
@@ -114,7 +119,7 @@ export const router = createBrowserRouter([
 			{
 				path: 'finalizar',
 				element: (
-					<ProtectedRoute isAllowed={true}>
+					<ProtectedRoute rol='estudiante'>
 						{<Estacion5 />}
 					</ProtectedRoute>
 				),
@@ -124,23 +129,21 @@ export const router = createBrowserRouter([
 	{
 		path: '/encargado',
 		element: (
-			<ProtectedRoute isAllowed={true}>
-				{<HomeEncargado />}
-			</ProtectedRoute>
+			<ProtectedRoute rol='encargado'>{<HomeEncargado />}</ProtectedRoute>
 		),
 		children: [
 			{
 				path: 'perfil',
 				element: (
-					<ProtectedRoute isAllowed={true}>
-						{<Profile />}
+					<ProtectedRoute rol='encargado'>
+						<Perfil />
 					</ProtectedRoute>
 				),
 			},
 			{
 				path: 'asignar',
 				element: (
-					<ProtectedRoute isAllowed={true}>
+					<ProtectedRoute rol='encargado'>
 						{<Asignar />}
 					</ProtectedRoute>
 				),
@@ -148,9 +151,7 @@ export const router = createBrowserRouter([
 			{
 				path: 'citas',
 				element: (
-					<ProtectedRoute isAllowed={true}>
-						{<Citas />}
-					</ProtectedRoute>
+					<ProtectedRoute rol='encargado'>{<Citas />}</ProtectedRoute>
 				),
 			},
 		],
@@ -158,23 +159,21 @@ export const router = createBrowserRouter([
 	{
 		path: '/evaluador',
 		element: (
-			<ProtectedRoute isAllowed={true}>
-				{<HomeEvaluador />}
-			</ProtectedRoute>
+			<ProtectedRoute rol='profesor'>{<HomeEvaluador />}</ProtectedRoute>
 		),
 		children: [
 			{
 				path: 'perfil',
 				element: (
-					<ProtectedRoute isAllowed={true}>
-						{<Profile />}
+					<ProtectedRoute rol='profesor'>
+						<Perfil />
 					</ProtectedRoute>
 				),
 			},
 			{
 				path: 'estacion1',
 				element: (
-					<ProtectedRoute isAllowed={true}>
+					<ProtectedRoute rol='profesor'>
 						{<RevisionDocumento />}
 					</ProtectedRoute>
 				),
@@ -182,7 +181,7 @@ export const router = createBrowserRouter([
 			{
 				path: 'estacion2',
 				element: (
-					<ProtectedRoute isAllowed={true}>
+					<ProtectedRoute rol='profesor'>
 						{<RevisionCurso />}
 					</ProtectedRoute>
 				),
@@ -190,7 +189,7 @@ export const router = createBrowserRouter([
 			{
 				path: 'estacion3',
 				element: (
-					<ProtectedRoute isAllowed={true}>
+					<ProtectedRoute rol='profesor'>
 						{<RevisionCurso />}
 					</ProtectedRoute>
 				),
@@ -198,7 +197,7 @@ export const router = createBrowserRouter([
 			{
 				path: 'estacion4',
 				element: (
-					<ProtectedRoute isAllowed={true}>
+					<ProtectedRoute rol='profesor'>
 						{<RevisionDocumento />}
 					</ProtectedRoute>
 				),
@@ -206,23 +205,23 @@ export const router = createBrowserRouter([
 		],
 	},
 	{
-		path: '/analiticas',
+		path: '/analitica',
 		element: (
-			<ProtectedRoute isAllowed={true}>{<HomeReporte />}</ProtectedRoute>
+			<ProtectedRoute rol='analitica'>{<HomeReporte />}</ProtectedRoute>
 		),
 		children: [
 			{
 				path: 'perfil',
 				element: (
-					<ProtectedRoute isAllowed={true}>
-						{<Profile />}
+					<ProtectedRoute rol='analitica'>
+						<Perfil />
 					</ProtectedRoute>
 				),
 			},
 			{
 				path: 'resumen',
 				element: (
-					<ProtectedRoute isAllowed={true}>
+					<ProtectedRoute rol='analitica'>
 						{<Resumen />}
 					</ProtectedRoute>
 				),
@@ -230,7 +229,7 @@ export const router = createBrowserRouter([
 			{
 				path: 'por-estacion',
 				element: (
-					<ProtectedRoute isAllowed={true}>
+					<ProtectedRoute rol='analitica'>
 						{<ByEstacion />}
 					</ProtectedRoute>
 				),
@@ -238,58 +237,67 @@ export const router = createBrowserRouter([
 			{
 				path: 'por-rol',
 				element: (
-					<ProtectedRoute isAllowed={true}>
-						{<ByRol />}
+					<ProtectedRoute rol='analitica'>{<ByRol />}</ProtectedRoute>
+				),
+			},
+		],
+	},
+	{
+		path: '/administrador',
+		element: (
+			<ProtectedRoute rol='administrador'>
+				{<HomeAdministrador />}
+			</ProtectedRoute>
+		),
+		children: [
+			{
+				path: 'perfil',
+				element: (
+					<ProtectedRoute rol='administrador'>
+						<Perfil />
+					</ProtectedRoute>
+				),
+			},
+			{
+				path: 'usuarios',
+				element: (
+					<ProtectedRoute rol='administrador'>
+						<Usuarios />
+					</ProtectedRoute>
+				),
+			},
+			{
+				path: 'permisos',
+				element: (
+					<ProtectedRoute rol='administrador'>
+						<Permisos />
+					</ProtectedRoute>
+				),
+			},
+			{
+				path: 'actividades',
+				element: (
+					<ProtectedRoute rol='administrador'>
+						<Actividades />
+					</ProtectedRoute>
+				),
+			},
+			{
+				path: 'aplicacion',
+				element: (
+					<ProtectedRoute rol='administrador'>
+						<Aplicacion />
+					</ProtectedRoute>
+				),
+			},
+			{
+				path: 'problemas',
+				element: (
+					<ProtectedRoute rol='administrador'>
+						<Problemas />
 					</ProtectedRoute>
 				),
 			},
 		],
 	},
 ]);
-
-const Rutas = () => {
-	return (
-		<BrowserRouter>
-			<Routes>
-				<Route path='/' element={<Home />} />
-				<Route path='/login' element={<Login />} />
-				<Route path='/logup' element={<Logup />} />
-				<Route path='/recovery' element={<Recovery />} />
-				<Route
-					path='/estudiante'
-					element={
-						<ProtectedRoute isAllowed={true}>
-							{<HomeEstudiante />}
-						</ProtectedRoute>
-					}
-				/>
-				<Route
-					path='/encargado'
-					element={
-						<ProtectedRoute isAllowed={true}>
-							{<HomeEncargado />}
-						</ProtectedRoute>
-					}
-				/>
-				<Route
-					path='/evaluador'
-					element={
-						<ProtectedRoute isAllowed={true}>
-							{<HomeEvaluador />}
-						</ProtectedRoute>
-					}
-				/>
-				<Route
-					path='/analiticas'
-					element={
-						<ProtectedRoute isAllowed={true}>
-							{<HomeReporte />}
-						</ProtectedRoute>
-					}
-				/>
-			</Routes>
-		</BrowserRouter>
-	);
-};
-
-export default Rutas;

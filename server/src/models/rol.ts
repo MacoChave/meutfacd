@@ -1,5 +1,5 @@
 import { DataTypes } from 'sequelize';
-import sequelize from '../config/db';
+import sequelize from '../config/sequelize';
 
 const Rol = sequelize.define(
 	'rol',
@@ -12,6 +12,7 @@ const Rol = sequelize.define(
 		nombre: {
 			type: DataTypes.STRING(50),
 			allowNull: false,
+			unique: true,
 		},
 		descripcion: {
 			type: DataTypes.STRING(200),
@@ -22,6 +23,7 @@ const Rol = sequelize.define(
 		timestamps: false,
 		createdAt: true,
 		updatedAt: true,
+		freezeTableName: true,
 	}
 );
 

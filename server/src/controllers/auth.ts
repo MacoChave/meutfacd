@@ -1,27 +1,17 @@
 import { Request, Response } from 'express';
-import { handleHttp } from '../utils/error.handle';
+import { sqlEjecutar, sqlSelect } from '../db/consultas';
+import Estudiante from '../models/estudiante';
+import Profesor from '../models/profesor';
 import Usuario from '../models/usuario';
+import { errorHttp } from '../utils/error.handle';
 import {
 	compararPassword,
 	encriptarPassword,
 	generarToken,
 } from '../utils/token';
-import Estudiante from '../models/estudiante';
-import Profesor from '../models/profesor';
-import Rol from '../models/rol';
+import { v_usuarios } from '../models/v_usuarios';
 
-const buscarUsuario = (carnet: number) => {
-	return Usuario.findOne({
-		where: {
-			carnet,
-		},
-	});
-};
-
-export const logupEstudianteHandler = async (
-	{ body }: Request,
-	res: Response
-) => {
+export const logupHandler = async ({ body }: Request, res: Response) => {
 	try {
 		// Procesar datos de req.body
 		const {
@@ -30,207 +20,96 @@ export const logupEstudianteHandler = async (
 			genero,
 			correo,
 			pass,
+			direccion,
 			carnet,
 			cui,
-			direccion,
 			fecha_nac,
-			telefono,
 		} = body;
 
-		// Validar datos -> express-validator, joi, zod, etc.
-		// Validar en BD
-		const usuario = await buscarUsuario(carnet);
-
-		if (usuario) {
-			return res.status(400).json({
-				msg: 'El usuario ya existe',
-			});
-		}
-		// Encriptar contraseña
 		const hash = await encriptarPassword(pass);
 
 		// Almacenar en BD
-		const usuarioNuevo = await Usuario.create({
-			nombre,
-			apellido,
-			genero,
-			correo,
-			pass: hash,
-			carnet,
-			cui,
-			direccion,
-			fecha_nac,
-			estado: 1,
-			telefono,
-		});
-
-		const estudianteNuevo = await Estudiante.create({
-			id_estudiante: usuarioNuevo.getDataValue('id_usuario'),
-		});
-
-		// Generar token
-		let token = generarToken({ carnet, cui });
-
-		// Devolver token
-		res.status(200).json({ token, usuario: { nombre, correo, cui } });
-	} catch (error: any) {
-		handleHttp(res, { msg: 'Error al crear usuario', error });
-	}
-};
-export const logupProfesorHandler = async (
-	{ body }: Request,
-	res: Response
-) => {
-	try {
-		const {
-			nombre,
-			apellido,
-			genero,
-			correo,
-			pass,
-			carnet,
-			cui,
-			direccion,
-			fecha_nac,
-			telefono,
-		} = body;
-
-		const usuario = await buscarUsuario(carnet);
-
-		if (usuario)
-			return res.status(400).json({
-				msg: 'El usuario ya existe',
-			});
-
-		const hash = await encriptarPassword(pass);
-
-		const usuarioNuevo = await Usuario.create({
-			nombre,
-			apellido,
-			genero,
-			correo,
-			pass: hash,
-			carnet,
-			cui,
-			direccion,
-			fecha_nac,
-			estado: 1,
-			telefono,
-		});
-
-		const profesorNuevo = await Profesor.create({
-			id_profesor: usuarioNuevo.getDataValue('id_usuario'),
-		});
-
-		let token = generarToken({ carnet, cui });
-
-		res.status(200).json({ token, usuario: { nombre, correo, cui } });
-	} catch (error: any) {
-		handleHttp(res, { msg: 'Error al crear usuario', error });
-	}
-};
-
-export const loginEstudianteHandler = async (
-	{ body }: Request,
-	res: Response
-) => {
-	try {
-		// Procesar datos de req.body
-		const { carnet, pass } = body;
-		// Validar datos -> express-validator, joi, zod, etc.
-		// Validar en BD
-		const usuario = await Usuario.findOne({
-			where: {
+		const usuarioNuevo = await sqlEjecutar(
+			`call sp_ut_crear_usuario(${Object.keys({
+				nombre,
+				apellido,
+				genero,
+				correo,
+				hash,
+				direccion,
+				fecha_nac,
+				id_municipio: 1,
 				carnet,
-			},
-		});
-
-		if (!usuario) {
-			return res.status(400).json({
-				msg: 'El usuario no existe',
-			});
-		}
-
-		// Validar contraseña
-		const validPassword = await compararPassword(
-			pass,
-			usuario.getDataValue('pass')
+				cui,
+				rol: 2,
+			})
+				.map(() => '?')
+				.join(',')})`
 		);
-		if (!validPassword) {
-			return res.status(400).json({
-				msg: 'Contraseña incorrecta',
+
+		console.log('[Logup][Usuario]', usuarioNuevo);
+
+		if (usuarioNuevo.affectedRows === 0) {
+			errorHttp(res, {
+				msg: 'Error al crear usuario',
+				code: 400,
 			});
+			return;
 		}
 
-		// Generar token
-		let token = generarToken({ carnet, cui: usuario.getDataValue('cui') });
-
-		// Devolver token
-		res.status(200).json({
-			token,
-			usuario: {
-				nombre: usuario.getDataValue('nombre'),
-				correo: usuario.getDataValue('correo'),
-				cui: usuario.getDataValue('cui'),
-			},
-		});
+		res.status(200).json({ msg: 'Usuario creado' });
 	} catch (error: any) {
-		handleHttp(res, { msg: 'Error al iniciar sesión', error });
+		errorHttp(res, { msg: 'Error al crear usuario', error });
 	}
 };
 
-export const loginProfesorHandler = async (
-	{ body }: Request,
-	res: Response
-) => {
-	try {
-		const { carnet, pass } = body;
-
-		const usuario = await Usuario.findOne({
-			where: {
-				carnet,
-			},
+//  TODO: Se podría eliminar este endpoint
+export const loginHandler = async ({ body }: Request, res: Response) => {
+	const options = {
+		headers: { 'Content-Type': 'application/json' },
+		method: 'POST',
+		body: JSON.stringify(body),
+	};
+	fetch('http://127.0.0.1:4000/login', options)
+		.then((response) => response.json())
+		.then((data) => {
+			console.log(data);
+			res.status(200).json(data);
+		})
+		.catch((error) => {
+			console.error(error);
+			res.status(400).json(error);
 		});
-		if (!usuario) {
-			return res.status(400).json({
-				msg: 'El usuario no existe',
-			});
-		}
-
-		const profesor = await Profesor.findOne({
-			include: {
-				model: Rol,
-				attributes: ['nombre'],
-			},
-			where: {
-				id_profesor: usuario.getDataValue('id_usuario'),
-			},
-		});
-
-		console.log('Profesor->', profesor?.dataValues);
-
-		const token = generarToken({
-			carnet,
-			cui: usuario.getDataValue('cui'),
-		});
-
-		res.status(200).json({
-			token,
-			usuario: {
-				nombre: usuario.getDataValue('nombre'),
-				correo: usuario.getDataValue('correo'),
-				cui: usuario.getDataValue('cui'),
-			},
-		});
-	} catch (error: any) {
-		handleHttp(res, { msg: 'Error al iniciar sesión', error });
-	}
 };
 
-export const profileHandler = (req: Request, res: Response) => {
+export const profileHandler = async (req: Request, res: Response) => {
 	try {
-		return res.status(200).json({ profile: req.user });
+		const { primaryKey } = req.user;
+		const response: v_usuarios[] = await sqlSelect({
+			table: 'ut_v_usuarios',
+			columns: [],
+			conditions: { id_usuario: primaryKey },
+			orden: {},
+		});
+		if (response.length === 0) {
+			errorHttp(res, {
+				msg: 'Error al obtener el perfil',
+				code: 400,
+			});
+			return;
+		}
+		const currentUser: v_usuarios = response[0];
+		return res.status(200).json({
+			nombre: currentUser.nombre,
+			apellidos: currentUser.apellidos,
+			correo: currentUser.correo,
+			estado: currentUser.estado,
+			carnet: currentUser.carnet,
+			cui: currentUser.cui,
+			id_rol: currentUser.id_rol,
+			rol: currentUser.rol,
+		});
 	} catch (error: any) {
-		handleHttp(res, { msg: 'Error al obtener el perfil', error });
+		errorHttp(res, { msg: 'Error al obtener el perfil', error });
 	}
 };
