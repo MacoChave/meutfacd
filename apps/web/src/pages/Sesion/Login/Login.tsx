@@ -62,7 +62,7 @@ const Login: React.FC<LoginProps> = () => {
 
 	const handleLogup = (e: SyntheticEvent) => {
 		e.preventDefault();
-		navigate('/logup', {
+		navigate('/logup/' + rol, {
 			replace: true,
 			state: {},
 		});

@@ -1,4 +1,4 @@
-import { api } from '../api/server';
+import axios from 'axios';
 
 type postProps = {
 	path: string;
@@ -13,7 +13,7 @@ export async function getData<T>({
 	Authorization,
 	Params,
 }: postProps): Promise<T> {
-	const { data } = await api.get(path, {
+	const { data } = await axios.get(path, {
 		headers: {
 			'Content-Type': 'application/json',
 			Authorization,
@@ -30,7 +30,7 @@ export async function postData<T>({
 	Authorization,
 	Params,
 }: postProps): Promise<T> {
-	const { data } = await api.post(path, body, {
+	const { data } = await axios.post(path, body, {
 		headers: {
 			Authorization,
 			Params,
@@ -46,7 +46,7 @@ export async function putData<T>({
 	Authorization,
 	Params,
 }: postProps): Promise<T> {
-	const { data } = await api.put(path, body, {
+	const { data } = await axios.put(path, body, {
 		headers: {
 			Authorization,
 			Params,
@@ -61,7 +61,7 @@ export async function deleteData<T>({
 	Authorization,
 	Params,
 }: postProps): Promise<T> {
-	const { data } = await api.delete(path, {
+	const { data } = await axios.delete(path, {
 		headers: {
 			Authorization,
 			Params,

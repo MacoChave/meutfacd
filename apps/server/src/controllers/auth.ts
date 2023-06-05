@@ -68,18 +68,21 @@ export const loginHandler = async ({ body }: Request, res: Response) => {
 	const options = {
 		headers: { 'Content-Type': 'application/json' },
 		method: 'POST',
-		body: JSON.stringify(body),
+		body: JSON.stringify({
+			user: body.correo,
+			password: body.pass,
+		}),
 	};
-	fetch('http://127.0.0.1:4000/login', options)
-		.then((response) => response.json())
-		.then((data) => {
-			console.log(data);
-			res.status(200).json(data);
-		})
-		.catch((error) => {
-			console.error(error);
-			res.status(400).json(error);
-		});
+	const response = await fetch('http://127.0.0.1:4000/login', options);
+	console.log(
+		'[auth.js][login]',
+		response.status,
+		response.statusText,
+		response.ok
+	);
+	const { data } = await response.json();
+	console.log('[auth.js][login]', data);
+	return res.status(response.status).json(data);
 };
 
 export const profileHandler = async (req: Request, res: Response) => {

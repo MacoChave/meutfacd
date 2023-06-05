@@ -1,6 +1,5 @@
-import { Person } from '@mui/icons-material';
-import { Box, Button, Menu, MenuItem, Typography } from '@mui/material';
-import React, { useId, useState } from 'react';
+import { Box, Button, Menu } from '@mui/material';
+import React, { useState } from 'react';
 import { SesionPorRol } from '../SesionPorRol';
 
 export type SesionMenuProps = {

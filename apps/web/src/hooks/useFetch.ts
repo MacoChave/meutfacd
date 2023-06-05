@@ -1,8 +1,8 @@
 import { QueryFunctionContext, useQuery } from '@tanstack/react-query';
-import { api } from '../api/server';
+import axios from 'axios';
 
 const fetchData = async ({ queryKey }: QueryFunctionContext) => {
-	const { data } = await api.get(queryKey[1] as string, {
+	const { data } = await axios.get(queryKey[1] as string, {
 		params: queryKey[3] as Object,
 		headers: {
 			authorization: `Bearer ${queryKey[2]}`,
@@ -12,7 +12,7 @@ const fetchData = async ({ queryKey }: QueryFunctionContext) => {
 };
 
 const fetchDataPaginado = async ({ queryKey }: QueryFunctionContext) => {
-	const { data } = await api.get(queryKey[1] as string, {
+	const { data } = await axios.get(queryKey[1] as string, {
 		params: {
 			page: queryKey[3] as number,
 			limit: queryKey[4] as number,
