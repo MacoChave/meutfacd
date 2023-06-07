@@ -1,25 +1,26 @@
 import { URL } from '@/api/server';
 import Loader from '@/components/Loader';
 import { ToolbarWithoutSesion } from '@/components/navegacion/Toolbar';
-import { useAuthStore } from '@/hooks/useAuthStore';
 import { AuthState } from '@/interfaces/AuthState';
 import { Tipo_Login, schemaLogin } from '@/models/Login';
+import store from '@/redux/store';
 import { postData } from '@/services/fetching';
-import { errorHandler } from '@/utils/errorHandler';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Box, Button, Card, Toolbar, Typography } from '@mui/material';
-import React, { SyntheticEvent, useState } from 'react';
+import React, { SyntheticEvent } from 'react';
 import { FormProvider, SubmitHandler, useForm } from 'react-hook-form';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Seguridad } from './Seguridad';
+import { useDispatch } from 'react-redux';
+import { setLogged } from '@/redux/states';
 
-export type LoginProps = {};
+export type LoginProps = Record<string, never>;
 
 const Login: React.FC<LoginProps> = () => {
 	const navigate = useNavigate();
+	const control = store.getState().control;
+	const dispatch = useDispatch();
 	const { rol } = useParams();
-	const { setEstado } = useAuthStore();
-	const [loading, setLoading] = useState(false);
 
 	const methods = useForm<Tipo_Login>({
 		defaultValues: {
@@ -31,25 +32,19 @@ const Login: React.FC<LoginProps> = () => {
 	});
 
 	const onSubmit: SubmitHandler<Tipo_Login> = async (body) => {
-		try {
-			setLoading(true);
-			const response = await postData<AuthState>({
-				path: URL.AUTH.LOGIN,
-				body,
-			});
-			setEstado(response);
-			navigate(
-				`/${response.rol.toString().toLowerCase() || 'estudiante'}`,
-				{
-					replace: true,
-					state: {},
-				}
-			);
-		} catch (error: any) {
-			errorHandler(error);
-		} finally {
-			setLoading(false);
-		}
+		const response = await postData<AuthState>({
+			path: URL.AUTH.LOGIN,
+			body,
+		});
+		console.table(response);
+
+		if (response.token === undefined) return;
+
+		dispatch(setLogged(response));
+		navigate(`/${response.rol.toString().toLowerCase() || 'estudiante'}`, {
+			replace: true,
+			state: {},
+		});
 	};
 
 	const handleRecuperar = (e: SyntheticEvent) => {
@@ -120,7 +115,7 @@ const Login: React.FC<LoginProps> = () => {
 					</FormProvider>
 				</Box>
 			</Box>
-			{loading && <Loader />}
+			{control.loading && <Loader />}
 		</>
 	);
 };

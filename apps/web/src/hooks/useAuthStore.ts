@@ -2,31 +2,23 @@ import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
 import { AuthState } from '../interfaces/AuthState';
 
-type Estado = {
-	estado: AuthState;
-};
-
 type Actions = {
 	setEstado: (estado: AuthState) => void;
 	resetEstado: () => void;
 };
 
-const initialState: Estado = {
-	estado: {
-		token: '',
-		name: '',
-		rol: '',
-	},
+const initialState: AuthState = {
+	token: '',
+	name: '',
+	rol: '',
+	paginas: [],
 };
 
 export const useAuthStore = create(
-	persist<Estado & Actions>(
+	persist<AuthState & Actions>(
 		(set) => ({
 			...initialState,
-			setEstado: (estado: AuthState) =>
-				set({
-					estado,
-				}),
+			setEstado: (estado: AuthState) => set(estado),
 			resetEstado: () => set(initialState),
 		}),
 		{

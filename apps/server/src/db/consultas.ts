@@ -22,7 +22,6 @@ export const cargarRolesTutor = () => {
 		},
 	];
 };
-
 export const crearUsuarioAdministrador = async () => {
 	const adminPass = await encriptarPassword(DATA_SOURCES.ADMIN_PASSWORD);
 
@@ -119,10 +118,10 @@ const formarUpdateSet = (datos: Object) => {
 
 const showQuery = (sql: string, values: any[]) => console.log(sql, values);
 
-export const sqlEjecutar = async (sql: string) => {
-	showQuery(sql, []);
+export const sqlEjecutar = async (sql: string, values?: any[]) => {
+	showQuery(sql, values || []);
 	const conn = await conectar();
-	const rows = await conn.query(sql);
+	const rows = await conn.query(sql, values || []);
 
 	return rows;
 };

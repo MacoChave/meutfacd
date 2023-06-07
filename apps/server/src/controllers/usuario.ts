@@ -1,7 +1,6 @@
 import { Request, Response } from 'express';
 import Usuario from '../models/usuario';
 import { errorHttp } from '../utils/error.handle';
-import Rol from '../models/rol';
 
 const obtenerItem = async ({ params }: Request, res: Response) => {
 	try {
@@ -36,4 +35,4 @@ const eliminarItem = (req: Request, res: Response) => {
 	res.json({ message: 'Eliminar usuario' });
 };
 
-export { obtenerItem, obtenerItems, crearItem, actualizarItem, eliminarItem };
+export { actualizarItem, crearItem, eliminarItem, obtenerItem, obtenerItems };

@@ -1,15 +1,11 @@
 import { Request, Response } from 'express';
 import { sqlEjecutar, sqlSelect } from '../db/consultas';
-import Estudiante from '../models/estudiante';
-import Profesor from '../models/profesor';
-import Usuario from '../models/usuario';
-import { errorHttp } from '../utils/error.handle';
-import {
-	compararPassword,
-	encriptarPassword,
-	generarToken,
-} from '../utils/token';
 import { v_usuarios } from '../models/v_usuarios';
+import { errorHttp } from '../utils/error.handle';
+import { encriptarPassword } from '../utils/token';
+import { DATA_SOURCES } from '../config/vars.config';
+import axios, { AxiosError } from 'axios';
+import { logger } from '../utils/logger';
 
 export const logupHandler = async ({ body }: Request, res: Response) => {
 	try {
@@ -24,32 +20,39 @@ export const logupHandler = async ({ body }: Request, res: Response) => {
 			carnet,
 			cui,
 			fecha_nac,
+			rol,
 		} = body;
 
 		const hash = await encriptarPassword(pass);
 
+		const usuario = {
+			nombre,
+			apellido,
+			genero,
+			correo,
+			hash,
+			direccion,
+			fecha_nac,
+			id_municipio: 1,
+			carnet,
+			cui,
+			rol: rol || 2,
+		};
+
+		// Crear variables para almacenar en BD
+		const values = Object.values(usuario).map((value) => value);
+
 		// Almacenar en BD
 		const usuarioNuevo = await sqlEjecutar(
-			`call sp_ut_crear_usuario(${Object.keys({
-				nombre,
-				apellido,
-				genero,
-				correo,
-				hash,
-				direccion,
-				fecha_nac,
-				id_municipio: 1,
-				carnet,
-				cui,
-				rol: 2,
-			})
-				.map(() => '?')
-				.join(',')})`
+			`call sp_ut_crear_usuario(${Object.keys(usuario)
+				.map((_value) => '?')
+				.join(',')})`,
+			values
 		);
 
-		console.log('[Logup][Usuario]', usuarioNuevo);
+		console.log(`${__dirname} [logup]`, usuarioNuevo[0]);
 
-		if (usuarioNuevo.affectedRows === 0) {
+		if (usuarioNuevo[0].affectedRows === 0) {
 			errorHttp(res, {
 				msg: 'Error al crear usuario',
 				code: 400,
@@ -59,30 +62,42 @@ export const logupHandler = async ({ body }: Request, res: Response) => {
 
 		res.status(200).json({ msg: 'Usuario creado' });
 	} catch (error: any) {
-		errorHttp(res, { msg: 'Error al crear usuario', error });
+		res.status(400).json({ msg: 'Error al crear usuario', error });
 	}
 };
 
 //  TODO: Se podría eliminar este endpoint
 export const loginHandler = async ({ body }: Request, res: Response) => {
-	const options = {
-		headers: { 'Content-Type': 'application/json' },
-		method: 'POST',
-		body: JSON.stringify({
+	try {
+		const userData = {
 			user: body.correo,
 			password: body.pass,
-		}),
-	};
-	const response = await fetch('http://127.0.0.1:4000/login', options);
-	console.log(
-		'[auth.js][login]',
-		response.status,
-		response.statusText,
-		response.ok
-	);
-	const { data } = await response.json();
-	console.log('[auth.js][login]', data);
-	return res.status(response.status).json(data);
+		};
+		const response = await axios.post(
+			`${DATA_SOURCES.AUTH_HOST}:${DATA_SOURCES.AUTH_PORT}/login`,
+			userData,
+			{
+				headers: {
+					'Content-Type': 'application/json',
+				},
+			}
+		);
+		logger({
+			dirname: __dirname,
+			proc: 'loginHandler',
+			message: response.data,
+		});
+		res.status(200).json(response.data);
+	} catch (error: any) {
+		const { response } = error as AxiosError;
+		logger({
+			dirname: __dirname,
+			proc: 'loginHandler',
+			message: `${response?.data}`,
+		});
+		console.log(error.response.data);
+		res.status(error.response.status).json(error.response.data);
+	}
 };
 
 export const profileHandler = async (req: Request, res: Response) => {
