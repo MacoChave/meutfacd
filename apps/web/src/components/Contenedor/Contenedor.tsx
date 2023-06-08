@@ -1,4 +1,5 @@
 import { useAuthStore } from '@/hooks/useAuthStore';
+import store from '@/redux/store';
 import { Box, Card, Typography } from '@mui/material';
 import React from 'react';
 
@@ -8,7 +9,8 @@ export type ContenedorProps = {
 };
 
 const Contenedor: React.FC<ContenedorProps> = ({ title, children }) => {
-	const { estado } = useAuthStore();
+	const { auth } = store.getState().control;
+
 	return (
 		<>
 			<Card
@@ -25,7 +27,7 @@ const Contenedor: React.FC<ContenedorProps> = ({ title, children }) => {
 					{title}
 				</Typography>
 				<Typography variant='body1' component='p' textAlign='center'>
-					{estado.usuario.nombre || 'Usuario X'}
+					{auth.name || 'Usuario X'}
 				</Typography>
 				<Box
 					sx={{

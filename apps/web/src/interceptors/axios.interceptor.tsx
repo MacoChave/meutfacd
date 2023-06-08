@@ -50,7 +50,6 @@ const onResponse = (response: AxiosResponse): AxiosResponse => {
 
 const onErrorResponse = (error: AxiosError | Error): Promise<AxiosError> => {
 	if (axios.isAxiosError(error)) {
-		const { message } = error;
 		const { method, url } = error.config as AxiosRequestConfig;
 		const { statusText, status, data } =
 			(error.response as AxiosResponse) ?? {};

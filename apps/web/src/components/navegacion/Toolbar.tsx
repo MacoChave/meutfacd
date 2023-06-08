@@ -1,17 +1,9 @@
+import { setLogout } from '@/redux/states';
 import { AccountCircle, Close, Menu, Notifications } from '@mui/icons-material';
-import {
-	Alert,
-	AppBar,
-	Box,
-	Button,
-	IconButton,
-	Snackbar,
-	Toolbar,
-	Typography,
-} from '@mui/material';
+import { AppBar, Box, IconButton, Toolbar, Typography } from '@mui/material';
 import { MouseEvent, SyntheticEvent, useState } from 'react';
+import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { useAuthStore } from '../../hooks/useAuthStore';
 
 interface ToolbarProps {
 	children?: React.ReactNode;
@@ -48,11 +40,11 @@ export const ToolbarWithoutSesion = ({ children }: ToolbarProps) => {
 
 export const ToolbarWithSesion = () => {
 	const navigate = useNavigate();
-	const { resetEstado } = useAuthStore();
+	const dispatch = useDispatch();
 	const [openSb, setOpensb] = useState(true);
 
 	const handleLogout = (_: MouseEvent) => {
-		resetEstado();
+		dispatch(setLogout());
 		navigate('/', { replace: true });
 	};
 	const handleProfile = (_: MouseEvent) => {
@@ -94,14 +86,6 @@ export const ToolbarWithSesion = () => {
 					Cerrar sesión
 				</IconButton>
 			</ToolbarWithoutSesion>
-			{/* <Snackbar
-				anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
-				open={openSb}
-				autoHideDuration={6000}
-				onClose={handleCloseSnackbar}
-				message='Lorem ipsum dolor sit amet consectetur adipisicing elit.'
-				action={action}
-			/> */}
 		</>
 	);
 };
