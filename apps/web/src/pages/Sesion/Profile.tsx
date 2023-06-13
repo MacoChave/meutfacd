@@ -10,12 +10,10 @@ import {
 	useFormContext,
 } from 'react-hook-form';
 import { URL } from '../../api/server';
-import { useAuthStore } from '../../hooks/useAuthStore';
 import { useFetch } from '../../hooks/useFetch';
 import {
-	Tipo_PerfilEstudiante,
-	Tipo_PerfilTutor,
 	Tipo_Usuario,
+	defaultProfile,
 	schemaUsuario,
 } from '../../models/Perfil';
 import { ErrorPage } from '../ErrorPage';
@@ -55,7 +53,7 @@ const Personales = ({ modoEdicion }: PerfilProps) => {
 			/>
 			<Controller
 				control={control}
-				name='apellido'
+				name='apellidos'
 				render={({ field }) => (
 					<TextField
 						{...field}
@@ -65,8 +63,8 @@ const Personales = ({ modoEdicion }: PerfilProps) => {
 							readOnly: !modoEdicion,
 							disabled: !modoEdicion,
 						}}
-						error={!!errors.apellido}
-						helperText={errors.apellido?.message}
+						error={!!errors.apellidos}
+						helperText={errors.apellidos?.message}
 					/>
 				)}
 			/>
@@ -280,7 +278,6 @@ const Sesion = ({ modoEdicion }: PerfilProps) => {
 
 export const Perfil = (): JSX.Element => {
 	const [modoEdicion, setModoEdicion] = useState(false);
-	const { estado } = useAuthStore();
 	const {
 		data: perfil,
 		error,
@@ -288,26 +285,9 @@ export const Perfil = (): JSX.Element => {
 		isPreviousData,
 	} = useFetch({
 		url: URL.AUTH.PROFILE,
-		token: estado.token,
 	});
 	const methods = useForm<Tipo_Usuario>({
-		defaultValues: {
-			id_usuario: 0,
-			nombre: '',
-			apellido: '',
-			genero: '',
-			correo: '',
-			pass: '',
-			passConfirm: '',
-			carnet: 0,
-			cui: '',
-			direccion: '',
-			fecha_nac: new Date(),
-			estado: '',
-			telefono: '',
-			perfil_tutor: {} as Tipo_PerfilTutor,
-			perfil_estudiante: {} as Tipo_PerfilEstudiante,
-		},
+		defaultValues: defaultProfile,
 		mode: 'onBlur',
 		resolver: yupResolver(schemaUsuario),
 	});
@@ -326,7 +306,7 @@ export const Perfil = (): JSX.Element => {
 		if (perfil) {
 			methods.setValue('id_usuario', perfil.id_usuario);
 			methods.setValue('nombre', perfil.nombre);
-			methods.setValue('apellido', perfil.apellido);
+			methods.setValue('apellidos', perfil.apellidos);
 			methods.setValue('genero', perfil.genero);
 			methods.setValue('correo', perfil.correo);
 			methods.setValue('carnet', perfil.carnet);
@@ -335,8 +315,8 @@ export const Perfil = (): JSX.Element => {
 			methods.setValue('fecha_nac', perfil.fecha_nac);
 			methods.setValue('estado', perfil.estado);
 			methods.setValue('telefono', perfil.telefono);
-			methods.setValue('perfil_tutor', perfil.perfil_tutor);
-			methods.setValue('perfil_estudiante', perfil.perfil_estudiante);
+			methods.setValue('id_rol', perfil.id_rol);
+			methods.setValue('rol', perfil.rol);
 		}
 	}, [isPreviousData]);
 

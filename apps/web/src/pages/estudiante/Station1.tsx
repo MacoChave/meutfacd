@@ -1,4 +1,6 @@
 import { Contenedor } from '@/components';
+import { UploadFile } from '@/interfaces/UploadFile';
+import { postData } from '@/services/fetching';
 import { Box, TextField, Typography } from '@mui/material';
 import FileChooser from '../../components/controles/FileChooser';
 
@@ -12,6 +14,16 @@ const style = {
 };
 
 const Estacion1 = () => {
+	const onUpload = async (file: File) => {
+		console.log('[Station1.tsx][onUpload]', file);
+		const formData = new FormData();
+		formData.append('draft', file);
+		const data = await postData<UploadFile>({
+			path: 'tesis/draft',
+			body: formData,
+		});
+	};
+
 	return (
 		<>
 			<Contenedor title='Presentar punto de tesis'>
@@ -44,7 +56,7 @@ const Estacion1 = () => {
 							justifySelf: 'center',
 							alignSelf: 'center',
 						}}>
-						<FileChooser />
+						<FileChooser onUpload={onUpload} />
 					</Box>
 				</Box>
 			</Contenedor>

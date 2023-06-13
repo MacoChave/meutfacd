@@ -2,25 +2,29 @@ import { conectar } from '../config/mysql';
 import { DATA_SOURCES } from '../config/vars.config';
 import { encriptarPassword } from '../utils/token';
 
-export const cargarRolesTutor = () => {
-	const roles = [
-		{
-			nombre: 'Administrador',
-			descripcion: 'Personal encargado de administrar el sistema',
-		},
-		{
-			nombre: 'Analitica',
-			descripcion: 'Personal de soporte y soporte',
-		},
-		{
-			nombre: 'Encargado',
-			descripcion: 'Tutor encargado de una estación',
-		},
-		{
-			nombre: 'Evaluador',
-			descripcion: 'Tutor dedicado a evaluar a los estudiantes',
-		},
-	];
+export const cargarRolesTutor = async () => {
+	const roles = [];
+	roles.push({
+		nombre: 'Administrador',
+		descripcion: 'Personal encargado de administrar el sistema',
+	});
+	roles.push({
+		nombre: 'Analitica',
+		descripcion: 'Personal de soporte y soporte',
+	});
+	roles.push({
+		nombre: 'Encargado',
+		descripcion: 'Tutor encargado de una estación',
+	});
+	roles.push({
+		nombre: 'Evaluador',
+		descripcion: 'Tutor dedicado a evaluar a los estudiantes',
+	});
+
+	await sqlInsertMany({
+		table: 'rol',
+		datos: roles,
+	});
 };
 export const crearUsuarioAdministrador = async () => {
 	const adminPass = await encriptarPassword(DATA_SOURCES.ADMIN_PASSWORD);
@@ -33,7 +37,7 @@ export const crearUsuarioAdministrador = async () => {
 		pass: adminPass,
 		direccion: 'Guatemala',
 		fecha_nac: '2023-01-01',
-		municipio: 0,
+		municipio: 1,
 		carnet: '000000000',
 		cui: '0000000000000',
 		rol: 1,
@@ -50,7 +54,7 @@ export const crearUsuarioAdministrador = async () => {
 			console.log('[Crear admin][Insertar]', res);
 		})
 		.catch((err) => {
-			console.log('Error al crear usuario administrador');
+			console.log('Error al crear usuario administrador', err.sqlMessage);
 		});
 };
 
@@ -68,6 +72,11 @@ type sqlSelectType = {
 type sqlInsertType = {
 	table: string;
 	datos: Object;
+};
+
+type sqlInsertManyType = {
+	table: string;
+	datos: Object[];
 };
 
 type sqlUpdateType = {
@@ -162,6 +171,22 @@ export const sqlInsert = async ({ table, datos }: sqlInsertType) => {
 
 	const conn = await conectar();
 	const [results, fields] = await conn.query(sql, values);
+	return results;
+};
+
+export const sqlInsertMany = async ({ table, datos }: sqlInsertManyType) => {
+	const keys = Object.keys(datos[0]);
+	const values = datos.map((dato) => Object.values(dato));
+
+	const sql: string = `INSERT 
+	INTO ${table} 
+	(${keys.join(', ')}) 
+	VALUES ?`;
+
+	showQuery(sql, [values]);
+
+	const conn = await conectar();
+	const [results, fields] = await conn.query(sql, [values]);
 	return results;
 };
 

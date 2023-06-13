@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import Usuario from '../models/usuario';
 import { errorHttp } from '../utils/error.handle';
+import { sqlSelect } from '../db/consultas';
 
 const obtenerItem = async ({ params }: Request, res: Response) => {
 	try {
@@ -13,7 +14,12 @@ const obtenerItem = async ({ params }: Request, res: Response) => {
 
 const obtenerItems = async (req: Request, res: Response) => {
 	try {
-		const results = await Usuario.findAll();
+		const results = await sqlSelect({
+			table: 'usuario',
+			columns: ['*'],
+			conditions: {},
+			orden: {},
+		});
 		res.status(200).json(results);
 	} catch (error) {
 		errorHttp(res, {

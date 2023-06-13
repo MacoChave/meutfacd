@@ -3,7 +3,7 @@ import { DATA_SOURCES } from './config/vars.config';
 import cors from 'cors';
 import express from 'express';
 import { router } from './routes';
-import { crearUsuarioAdministrador } from './db/consultas';
+import { cargarRolesTutor, crearUsuarioAdministrador } from './db/consultas';
 import { conectar } from './config/mysql';
 
 const PORT = DATA_SOURCES.PORT;
@@ -32,9 +32,12 @@ app.listen(PORT, () => {
 const conectarBD = async () => {
 	const conn = await conectar();
 	conn.getConnection()
-		.then(() => {
-			console.log('Database connected');
-			crearUsuarioAdministrador();
+		.then(async () => {
+			console.log('Database connected...');
+			// await cargarRolesTutor();
+			// console.log('Roles loaded...');
+			// await crearUsuarioAdministrador();
+			// console.log('Admin user created...');
 		})
 		.catch((err) => console.log('Error connecting to database', err));
 };

@@ -33,7 +33,7 @@ const Informacion: React.FC<TabsProps> = ({ usuario, index, ...other }) => {
 					<TextField
 						variant='outlined'
 						label='Apellidos'
-						value={usuario.apellido}
+						value={usuario.apellidos}
 						InputProps={{ readOnly: true }}
 					/>
 					<TextField

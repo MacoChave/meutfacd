@@ -3,24 +3,29 @@
 --  DROP TABLES
 -- -----------------------------------------------
 -- 
-drop table if exists departamento,
-municipio,
-ut_jornada,
-ut_horario,
-usuario,
-rol,
-usuario_rol,
-ut_perfil,
-ut_curso,
-ut_curso_tutor,
-ut_asignacion,
-ut_bitacora,
-ut_estado_notificacion,
-ut_notificacion,
-ut_estacion,
-ut_tesis,
-ut_estado_revision,
-ut_revision;
+drop table if exists 
+	departamento,
+	municipio,
+	ut_jornada,
+	ut_horario,
+	usuario,
+	rol,
+	usuario_rol,
+	ut_perfil,
+	ut_curso,
+	ut_curso_tutor,
+	ut_asignacion,
+	ut_bitacora,
+	ut_estado_notificacion,
+	ut_notificacion,
+	ut_estacion,
+	ut_tesis,
+	ut_estado_revision,
+	ut_revision;
+
+drop view if exists 
+	ut_v_revision_history, 
+	ut_v_usuarios ;
 -- 
 -- -------------------------------------------------
 -- PERFILES
@@ -62,7 +67,7 @@ create table if not exists usuario (
 	direccion varchar(200) not null,
 	fecha_nac date not null,
 	estado char(1) not null,
-	fecha_creacion datetime not null default (curdate()),
+	fecha_creacion datetime not null default now(),
 	id_municipio integer unsigned not null,
 	doc_cui varchar(75) null,
 	carnet integer unsigned unique null,
@@ -82,14 +87,18 @@ create table if not exists usuario_rol (
 );
 create table if not exists ut_perfil (
 	id_usuario integer unsigned primary key,
-	id_horario integer unsigned not null,
-	id_jornada integer unsigned not null,
-	constraint fk_perfil_usuario foreign key (id_usuario) references usuario (id_usuario) on
-	delete restrict on
-	update cascade,
-		constraint fk_perfil_horario foreign key (id_horario, id_jornada) references ut_horario (id_horario, id_jornada) on
-	delete restrict on
-	update cascade
+	id_horario integer unsigned,
+	id_jornada integer unsigned,
+	constraint fk_perfil_usuario 
+		foreign key (id_usuario) 
+		references usuario (id_usuario) on
+		delete restrict on
+		update cascade,
+	constraint fk_perfil_horario 
+		foreign key (id_horario, id_jornada) 
+		references ut_horario (id_horario, id_jornada) on
+		delete restrict on
+		update cascade
 );
 -- 
 -- -------------------------------------------------
@@ -171,10 +180,6 @@ create table if not exists ut_notificacion (
 -- TESIS
 -- -------------------------------------------------
 -- 
-create table if not exists ut_estacion (
-	id_estacion integer unsigned auto_increment primary key,
-	estacion varchar(45) not null
-);
 create table if not exists ut_tesis (
 	id_tesis integer unsigned auto_increment primary key,
 	titulo varchar(255) not null,
@@ -183,11 +188,7 @@ create table if not exists ut_tesis (
 	ruta_asesor varchar(255) null,
 	fecha_creacion datetime not null default now(),
 	fecha_modificacion datetime not null default now(),
-	id_estacion integer unsigned not null,
 	id_estudiante integer unsigned not null,
-	constraint fk_tesis_estado foreign key (id_estacion) references ut_estacion(id_estacion) on
-	delete restrict on
-	update cascade,
 		constraint fk_tesis_estudiante foreign key (id_estudiante) references usuario(id_usuario) on
 	delete restrict on
 	update cascade
@@ -195,6 +196,10 @@ create table if not exists ut_tesis (
 create table if not exists ut_estado_revision (
 	id_estado integer unsigned auto_increment primary key,
 	estado varchar(45) not null
+);
+create table if not exists ut_estacion (
+	id_estacion integer unsigned auto_increment primary key,
+	estacion varchar(45) not null
 );
 create table if not exists ut_revision (
 	id_revision integer unsigned auto_increment primary key,
@@ -204,6 +209,7 @@ create table if not exists ut_revision (
 	id_tutor integer unsigned not null,
 	id_tesis integer unsigned not null,
 	id_estado integer unsigned not null,
+	id_estacion integer unsigned not null,
 	constraint fk_revision_tutor foreign key (id_tutor) references usuario(id_usuario) on
 	delete restrict on
 	update cascade,
@@ -212,25 +218,29 @@ create table if not exists ut_revision (
 	update cascade,
 		constraint fk_revision_estado foreign key (id_estado) references ut_estado_revision(id_estado) on
 	delete restrict on
+	update cascade, 
+	constraint fk_tesis_estado foreign key (id_estacion) references ut_estacion(id_estacion) on
+	delete restrict on
 	update cascade
 );
 -- 
 -- -------------------------------------------------
 -- TRIGGERS
 -- -------------------------------------------------
---
-delimiter $$ create trigger if not exists ut_usuario_insert after
-insert on usuario for each row
+-- 
+create trigger if not exists ut_nuevo_usuario
+after insert on usuario
+for each row
 begin
-insert into ut_perfil (id_usuario)
-values (new .id_usuario);
-end $$ delimiter;
+	insert into ut_perfil (id_usuario) values (new.id_usuario);
+end;
 -- 
 -- -------------------------------------------------
 -- PROCEDURES
 -- -------------------------------------------------
 -- 
-delimiter $$ create procedure if not exists sp_ut_crear_usuario (
+-- Crear un usuario
+create procedure if not exists sp_ut_crear_usuario (
 	in p_nombre varchar(50),
 	in p_apellido varchar(75),
 	in p_genero char(1),
@@ -244,35 +254,33 @@ delimiter $$ create procedure if not exists sp_ut_crear_usuario (
 	in p_rol int unsigned
 )
 begin
-declare v_id_usuario int unsigned;
-insert into usuario (
-		nombre,
-		apellido,
-		genero,
-		correo,
-		pass,
-		direccion,
-		fecha_nac,
-		municipio,
-		carnet,
-		cui
-	)
-values (
-		p_nombre,
-		p_apellido,
-		p_genero,
-		p_correo,
-		p_pass,
-		p_direccion,
-		p_fecha_nac,
-		p_municipio,
-		p_carnet,
-		p_cui
-	);
-set v_id_usuario = last_insert_id();
-insert into usuario_rol (id_usuario, id_rol)
-values (v_id_usuario, p_rol);
-end $$ delimiter;
+	declare exist_user int;
+	declare v_id_usuario int unsigned;
+	
+	select count(*) into exist_user
+	from usuario u 
+	where
+		u.nombre = p_nombre and 
+		u.correo = p_correo ;
+	
+	if (exist_user > 0) then 
+		signal sqlstate '45000'
+			set message_text = 'Ya existe un usuario con ese correo';
+	end if;
+
+	insert ignore into usuario 
+		(nombre, apellidos, genero, correo, pass, direccion, fecha_nac, id_municipio, carnet, cui)
+	values 
+		(p_nombre, p_apellido, p_genero, p_correo, p_pass, p_direccion, p_fecha_nac, p_municipio, p_carnet, p_cui);
+	
+	select id_usuario 
+	into v_id_usuario
+	from usuario u 
+	where u.correo = p_correo ;
+
+	insert ignore into usuario_rol (id_usuario, id_rol)
+	values (v_id_usuario, p_rol);
+end ;
 -- 
 -- -------------------------------------------------
 -- FUNCIONES
@@ -283,22 +291,35 @@ end $$ delimiter;
 -- VISTAS
 -- -------------------------------------------------
 -- 
-create view if not exists ut_v_revision_por_usuario as
-select t.titulo,
-	t.ruta_perfil,
-	t.ruta_tesis,
-	t.ruta_asesor,
-	t.fecha_creacion,
-	t.fecha_modificacion,
-	e.estacion,
-	r.id_revision,
-	r.fecha,
-	r.detalle,
-	r.ruta_dictamen,
-	r.id_tutor,
-	r.id_tesis,
-	re.estado,
-	from ut_revision r
-	inner join ut_tesis t on r.id_tesis = t.id_tesis
-	inner join ut_estacion e on t.id_estacion = e.id_estacion
-	inner join ut_estado_revision re on r.id_estado = re.id_estado;
+-- Historial de revisiones
+create view ut_v_revision_history as
+select 
+	ut.id_tesis ,
+	ur.id_revision ,
+	ut.titulo ,
+	ut.ruta_perfil ,
+	ut.ruta_tesis ,
+	ut.ruta_asesor ,
+	ur.ruta_dictamen ,
+	ut.fecha_creacion ,
+	ut.fecha_modificacion ,
+	ur.fecha as fecha_revision ,
+	ut.id_estudiante ,
+	concat(u.apellidos , ', ', u.nombre) as tutor ,
+	ur.detalle as detalle_revision ,
+	uer.estado , 
+	ue.estacion 
+from ut_revision ur 
+	inner join ut_tesis ut using(id_tesis) 
+	inner join ut_estado_revision uer using(id_estado) 
+	inner join ut_estacion ue using(id_estacion) 
+	inner join usuario u on ur.id_tutor = u.id_usuario ;
+-- Usuarios
+create view ut_v_usuarios as 
+select 
+	u.id_usuario , u.nombre , u.apellidos , 
+	u.correo , u.pass , u.estado , u.carnet , u.cui ,
+	r.id_rol , r.nombre as rol
+from usuario_rol ur 
+inner join usuario u on ur.id_usuario = u.id_usuario 
+inner join rol r on ur.id_rol = r.id_rol ;

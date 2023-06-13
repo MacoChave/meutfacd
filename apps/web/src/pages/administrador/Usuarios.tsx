@@ -12,8 +12,7 @@ const Usuarios = () => {
 	const [openModal, setOpenModal] = useState(false);
 	const [usuario, setUsuario] = useState<Tipo_Usuario>({} as Tipo_Usuario);
 	const { data, isSuccess, error } = useFetch({
-		url: URL.USUARIO + '/todos',
-		token: '1234',
+		url: URL.USUARIO + '/all',
 		params: {},
 	});
 

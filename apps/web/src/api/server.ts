@@ -1,9 +1,12 @@
 export const URL = {
 	AUTH: {
-		_: '/api/auth',
 		LOGIN: '/api/auth/login',
 		LOGUP: '/api/auth/logup',
 		PROFILE: '/api/auth/perfil',
+	},
+	TESIS: {
+		HISTORY: '/api/tesis/history',
+		DRAFT: '/api/tesis/draft',
 	},
 	USUARIO: '/api/usuario',
 	CURSO: '/api/curso',

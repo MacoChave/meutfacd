@@ -15,7 +15,7 @@ export type Tipo_PerfilEstudiante = {
 export type Tipo_Usuario = {
 	id_usuario: number;
 	nombre: string;
-	apellido: string;
+	apellidos: string;
 	genero: string;
 	correo: string;
 	pass: string;
@@ -26,8 +26,26 @@ export type Tipo_Usuario = {
 	fecha_nac: Date;
 	estado: string;
 	telefono: string;
-	perfil_tutor?: Tipo_PerfilTutor;
-	perfil_estudiante?: Tipo_PerfilEstudiante;
+	id_rol: number;
+	rol: string;
+};
+
+export const defaultProfile: Tipo_Usuario = {
+	id_usuario: 0,
+	nombre: '',
+	apellidos: '',
+	genero: '',
+	correo: '',
+	pass: '',
+	passConfirm: '',
+	carnet: 0,
+	cui: '',
+	direccion: '',
+	fecha_nac: new Date(),
+	estado: '',
+	telefono: '',
+	id_rol: 0,
+	rol: '',
 };
 
 export const schemaUsuario = yup.object().shape({

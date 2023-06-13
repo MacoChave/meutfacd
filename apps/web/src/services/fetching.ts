@@ -8,15 +8,10 @@ type postProps = {
 };
 
 // GET DATA
-export async function getData<T>({
-	path,
-	Authorization,
-	Params,
-}: postProps): Promise<T> {
+export async function getData<T>({ path, Params }: postProps): Promise<T> {
 	const { data } = await axios.get(path, {
 		headers: {
 			'Content-Type': 'application/json',
-			Authorization,
 			Params,
 		},
 	});
@@ -27,12 +22,10 @@ export async function getData<T>({
 export async function postData<T>({
 	path,
 	body,
-	Authorization,
 	Params,
 }: postProps): Promise<T> {
 	const { data } = await axios.post(path, body, {
 		headers: {
-			Authorization,
 			Params,
 		},
 	});
@@ -43,12 +36,10 @@ export async function postData<T>({
 export async function putData<T>({
 	path,
 	body,
-	Authorization,
 	Params,
 }: postProps): Promise<T> {
 	const { data } = await axios.put(path, body, {
 		headers: {
-			Authorization,
 			Params,
 		},
 	});
@@ -56,14 +47,9 @@ export async function putData<T>({
 }
 
 // DELETE DATA
-export async function deleteData<T>({
-	path,
-	Authorization,
-	Params,
-}: postProps): Promise<T> {
+export async function deleteData<T>({ path, Params }: postProps): Promise<T> {
 	const { data } = await axios.delete(path, {
 		headers: {
-			Authorization,
 			Params,
 		},
 	});

@@ -1,10 +1,14 @@
 import { Box, Button, FormLabel, Input, Typography } from '@mui/material';
 import { ChangeEvent, DragEvent, useState } from 'react';
 
-const FileChooser = () => {
+interface fileChooserProps {
+	onUpload: (file: File) => void;
+}
+
+const FileChooser = ({ onUpload }: fileChooserProps) => {
 	const [active, setActive] = useState(false);
 	const onChange = (e: ChangeEvent<HTMLInputElement>) => {
-		console.log('Selecting file', e.target.files);
+		if (e.target.files?.length) onUpload(e.target.files[0]);
 	};
 	const onDragOver = (e: DragEvent<HTMLDivElement>) => {
 		e.preventDefault();
@@ -19,7 +23,7 @@ const FileChooser = () => {
 	const onDrop = (e: DragEvent<HTMLDivElement>) => {
 		e.preventDefault();
 		e.stopPropagation();
-		console.log('Dropping file', e.dataTransfer.files);
+		if (e.dataTransfer.files.length) onUpload(e.dataTransfer.files[0]);
 	};
 
 	return (
