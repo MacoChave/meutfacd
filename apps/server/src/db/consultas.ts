@@ -20,6 +20,10 @@ export const cargarRolesTutor = async () => {
 		nombre: 'Evaluador',
 		descripcion: 'Tutor dedicado a evaluar a los estudiantes',
 	});
+	roles.push({
+		nombre: 'Estudiante',
+		descripcion: 'Usuario estudiante del sistema de tesis',
+	});
 
 	await sqlInsertMany({
 		table: 'rol',

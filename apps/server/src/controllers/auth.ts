@@ -36,7 +36,7 @@ export const logupHandler = async ({ body }: Request, res: Response) => {
 			id_municipio: 1,
 			carnet,
 			cui,
-			rol: rol || 2,
+			rol: rol || 9,
 		};
 
 		// Crear variables para almacenar en BD
