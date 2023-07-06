@@ -1,12 +1,11 @@
 import { Router } from 'express';
-import { subirPuntoTesis, subirTesis } from '../controllers/storage';
+import { getFile, uploadDraft, uploadTesis } from '../controllers/storage';
 import { requireAuth } from '../middlewares/requireAuth';
-import { upload } from '../middlewares/upload';
 
 const router = Router();
 
-router.post('/punto', [upload.single('archivo')], subirPuntoTesis);
-
-router.post('/tesis', [upload.single('archivo')], subirTesis);
+router.get('/', requireAuth, getFile);
+router.post('/draft', requireAuth, uploadDraft);
+router.post('/tesis', requireAuth, uploadTesis);
 
 export { router };

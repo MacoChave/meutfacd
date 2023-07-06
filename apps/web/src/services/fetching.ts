@@ -1,19 +1,23 @@
+import { TypeWithKey } from '@/models/TypeWithKey';
 import axios from 'axios';
 
-type postProps = {
+type axiosProps = {
 	path: string;
-	body: any;
-	Authorization?: string;
-	Params?: string;
+	body?: any;
+	params?: TypeWithKey<string>;
+	headers?: TypeWithKey<string>;
 };
 
 // GET DATA
-export async function getData<T>({ path, Params }: postProps): Promise<T> {
+export async function getData<T>({
+	path,
+	params = {},
+}: axiosProps): Promise<T> {
 	const { data } = await axios.get(path, {
 		headers: {
 			'Content-Type': 'application/json',
-			Params,
 		},
+		params,
 	});
 	return data;
 }
@@ -21,13 +25,18 @@ export async function getData<T>({ path, Params }: postProps): Promise<T> {
 // POST DATA
 export async function postData<T>({
 	path,
-	body,
-	Params,
-}: postProps): Promise<T> {
+	body = {},
+	params = {},
+	headers = {
+		'Content-Type': 'application/json',
+	},
+}: axiosProps): Promise<T> {
+	console.log('headers', headers);
 	const { data } = await axios.post(path, body, {
 		headers: {
-			Params,
+			...headers,
 		},
+		params,
 	});
 	return data;
 }
@@ -35,23 +44,22 @@ export async function postData<T>({
 // PUT DATA
 export async function putData<T>({
 	path,
-	body,
-	Params,
-}: postProps): Promise<T> {
+	body = {},
+	params = {},
+}: axiosProps): Promise<T> {
 	const { data } = await axios.put(path, body, {
-		headers: {
-			Params,
-		},
+		params,
 	});
 	return data;
 }
 
 // DELETE DATA
-export async function deleteData<T>({ path, Params }: postProps): Promise<T> {
+export async function deleteData<T>({
+	path,
+	params = {},
+}: axiosProps): Promise<T> {
 	const { data } = await axios.delete(path, {
-		headers: {
-			Params,
-		},
+		params,
 	});
 	return data;
 }

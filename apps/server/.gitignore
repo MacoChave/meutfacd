@@ -142,5 +142,6 @@ dist
 
 # Archivos pdf
 *.pdf
+storage/*
 
 # End of https://www.toptal.com/developers/gitignore/api/node

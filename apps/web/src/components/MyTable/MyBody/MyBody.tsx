@@ -1,6 +1,17 @@
-import { formatByDataType, getAlignByDataType } from '@/utils/formatHandler';
+import { TypeWithKey } from '@/models/TypeWithKey';
+import {
+	formatByDataType,
+	getAlignByDataType,
+	getChipLabel,
+} from '@/utils/formatHandler';
 import { Delete, Edit, Print } from '@mui/icons-material';
-import { IconButton, TableBody, TableCell, TableRow } from '@mui/material';
+import {
+	Chip,
+	IconButton,
+	TableBody,
+	TableCell,
+	TableRow,
+} from '@mui/material';
 import React from 'react';
 
 export type MyBodyProps = {
@@ -9,6 +20,15 @@ export type MyBodyProps = {
 	onEdit?: (row: object) => void;
 	onDelete?: (row: object) => void;
 	onPrint?: (row: object) => void;
+};
+
+export const getValue = (key: string, cellValue: any): React.ReactNode => {
+	if (key === 'estado') {
+		return <Chip color='primary' label={getChipLabel(cellValue)} />;
+	} else {
+		const text = formatByDataType({ [key]: cellValue });
+		return <>{text}</>;
+	}
 };
 
 const MyBody: React.FC<MyBodyProps> = ({
@@ -26,9 +46,7 @@ const MyBody: React.FC<MyBodyProps> = ({
 						<TableCell
 							key={`cell-${key}${index}`}
 							align={getAlignByDataType(key)}>
-							{formatByDataType({
-								[key]: row[key as keyof typeof row],
-							})}
+							{getValue(key, row[key as keyof typeof row])}
 						</TableCell>
 					))}
 					<TableCell>

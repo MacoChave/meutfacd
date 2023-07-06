@@ -21,44 +21,40 @@ const MyTable: React.FC<MyTableProps> = ({
 	onDelete,
 	onPrint,
 }) => {
-	if (rows.length === 0) {
-		return (
-			<Card>
-				<Box
-					sx={{
-						maxWidth: '100%',
-						maxHeight: '70vh',
-						overflow: 'auth',
-					}}
-					className='no-scrollbar'>
-					<Table stickyHeader>
-						<MyHeaders
-							headers={headers}
-							hasActions={
-								onDelete !== undefined ||
-								onEdit !== undefined ||
-								onPrint !== undefined
-							}
-						/>
-						<MyBody
-							headers={headers}
-							rows={rows}
-							onEdit={onEdit}
-							onDelete={onDelete}
-							onPrint={onPrint}
-						/>
-						<MyFooter
-							headers={headers}
-							rows={rows}
-							totalCols={totalCols}
-						/>
-					</Table>
-				</Box>
-			</Card>
-		);
-	}
-
-	return <div>MyTable</div>;
+	return (
+		<Card>
+			<Box
+				sx={{
+					maxWidth: '100%',
+					maxHeight: '70vh',
+					overflow: 'auth',
+				}}
+				className='no-scrollbar'>
+				<Table stickyHeader>
+					<MyHeaders
+						headers={headers}
+						hasActions={
+							onDelete !== undefined ||
+							onEdit !== undefined ||
+							onPrint !== undefined
+						}
+					/>
+					<MyBody
+						headers={headers}
+						rows={rows}
+						onEdit={onEdit}
+						onDelete={onDelete}
+						onPrint={onPrint}
+					/>
+					<MyFooter
+						headers={headers}
+						rows={rows}
+						totalCols={totalCols}
+					/>
+				</Table>
+			</Box>
+		</Card>
+	);
 };
 
 export default MyTable;

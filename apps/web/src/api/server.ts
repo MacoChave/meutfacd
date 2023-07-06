@@ -5,6 +5,7 @@ export const URL = {
 		PROFILE: '/api/auth/perfil',
 	},
 	TESIS: {
+		_: '/api/tesis',
 		HISTORY: '/api/tesis/history',
 		DRAFT: '/api/tesis/draft',
 	},
@@ -16,5 +17,9 @@ export const URL = {
 	MENSAJERIA: '/api/mensajeria',
 	PROFESOR: '/api/profesor',
 	ROL: '/api/rol',
-	STORAGE: '/api/storage',
+	STORAGE: {
+		DRAFT: '/api/storage/draft',
+		TESIS: '/api/storage/tesis',
+	},
+	GENERIC: '/api/generic',
 };

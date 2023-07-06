@@ -1,6 +1,21 @@
 import { TypeWithKey } from '@/models/TypeWithKey';
 
-const getDataType = (key: string): string => {
+export const getChipLabel = (code: string) => {
+	switch (code) {
+		case 'E':
+			return 'En espera';
+		case 'A':
+			return 'Aprobado';
+		case 'R':
+			return 'Rechazado';
+		case 'P':
+			return 'Previa';
+		default:
+			return 'En espera';
+	}
+};
+
+export const getDataType = (key: string): string => {
 	if (key.includes('fecha')) return 'date';
 	return 'string';
 };

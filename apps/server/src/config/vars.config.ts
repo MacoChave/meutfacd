@@ -14,6 +14,10 @@ export const DATA_SOURCES = {
 	SALT: Number(process.env.SALT) || 10,
 	MAIL_HOST: process.env.MAIL_HOST || '',
 	MAIL_PORT: process.env.MAIL_PORT || '',
+	AWS_BUCKET_NAME: process.env.AWS_BUCKET_NAME || '',
+	AWS_BUCKET_REGION: process.env.AWS_BUCKET_REGION || '',
+	AWS_PUBLIC_KEY: process.env.AWS_PUBLIC_KEY || '',
+	AWS_SECRET_KEY: process.env.AWS_SECRET_KEY || '',
 };
 
 console.log('DATA_SOURCES', DATA_SOURCES);

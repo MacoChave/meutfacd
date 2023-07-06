@@ -1,17 +1,49 @@
 import { Request, Response } from 'express';
-import { sqlSelect } from '../db/consultas';
+import { sqlInsert, sqlSelect } from '../db/consultas';
 import { logger } from '../utils/logger';
+import { errorHttp } from '../utils/error.handle';
 
-export const uploadTesisDraft = (
-	{ body, user, file }: Request,
-	res: Response
-) => {
-	console.log({ body, user, file });
-	res.json({ message: 'Tesis guardada' });
+// export const uploadTesisDraft = (
+// 	{ body, user, files }: Request,
+// 	res: Response
+// ) => {
+// 	logger({
+// 		dirname: __dirname,
+// 		proc: 'uploadTesisDraft',
+// 		message: JSON.stringify({ body, user, files }),
+// 	});
+// 	res.json({ message: 'Tesis guardada' });
+// };
+
+export const getTesis = ({ query }: Request, res: Response) => {
+	try {
+		const results = sqlSelect({
+			table: 'ut_v_tesis',
+			columns: [],
+			conditions: query,
+			orden: {},
+		});
+	} catch (error) {}
+};
+
+export const postTesis = ({ body, user }: Request, res: Response) => {
+	try {
+		const results = sqlInsert({
+			table: 'ut_tesis',
+			datos: { ...body, id_estudiante: user.primaryKey },
+		});
+		res.status(200).json({ message: 'Tesis guardada', results });
+	} catch (error) {
+		errorHttp(res, {
+			error,
+			msg: 'No se puede guardar el progreso',
+			code: 500,
+		});
+	}
 };
 
 export const getRevisionHistory = async (
-	{ body, user }: Request,
+	{ body, query, user }: Request,
 	res: Response
 ) => {
 	try {
@@ -21,19 +53,17 @@ export const getRevisionHistory = async (
 			columns: body.columns,
 			conditions: body.conditions ?? {
 				id_estudiante: user?.primaryKey,
+				...query,
 			},
 			orden: body.orden ?? {},
 		});
 		console.log(responses);
-		res.json(responses);
+		res.status(200).json(responses);
 	} catch (error) {
-		logger({
-			dirname: __dirname,
-			proc: 'getRevisionHistory',
-			message: `${error}`,
-		});
-		res.status(500).json({
-			error: 'Ha ocurrido un error de nuestra parte',
+		errorHttp(res, {
+			error,
+			msg: 'No se puede obtener el historial',
+			code: 500,
 		});
 	}
 };

@@ -7,33 +7,16 @@ import Dialogo from '../../components/Modal';
 import { URL } from '@/api/server';
 import { ProgressType } from '@/interfaces/ProgressType';
 
-const getChipColor = (estado: string) => {
-	switch (estado) {
-		case 'Enviado':
-			return 'primary';
-		case 'Aprobado':
-			return 'success';
-		case 'Previo':
-			return 'error';
-	}
-};
-
-const chipsByState = (estado: string) => {
-	return (
-		<Chip sx={{ width: 100 }} label={estado} color={getChipColor(estado)} />
-	);
-};
-
 const Progress = () => {
 	const [open, setOpen] = useState(false);
 	const [row, setRow] = useState({} as ProgressType);
-	const { data, isLoading, error } = useCustomFetch({
-		url: URL.TESIS.HISTORY,
+	const { data, isLoading, isError } = useCustomFetch({
+		url: URL.GENERIC,
 		method: 'post',
 		body: {
+			table: 'ut_v_revision',
 			columns: [
 				'id_revision',
-				'tutor',
 				'fecha_creacion',
 				'fecha_modificacion',
 				'fecha_revision',
@@ -49,7 +32,7 @@ const Progress = () => {
 	};
 
 	if (isLoading) return <div>Cargando...</div>;
-	if (error) return <div>Error al cargar los datos</div>;
+	if (isError) return <div>Error al cargar los datos</div>;
 
 	return (
 		<>
@@ -57,9 +40,8 @@ const Progress = () => {
 				<MyTable
 					headers={{
 						estacion: 'Estación',
-						tutor: 'Evaluador',
 						fecha_creacion: 'Creación',
-						fecha_modifiacion: 'Modificación',
+						fecha_modificacion: 'Modificación',
 						fecha_revision: 'Revisión',
 						estado: 'Estado',
 					}}
