@@ -1,4 +1,6 @@
+import { URL } from '@/api/server';
 import { Contenedor } from '@/components';
+import { useCustomFetch } from '@/hooks/useFetch';
 import { style } from '@/themes/styles';
 import { Download, FileDownload, UploadFile } from '@mui/icons-material';
 import { Box, Chip, IconButton, TextField, Typography } from '@mui/material';
@@ -11,6 +13,35 @@ const boxStyle = {
 };
 
 const Estacion2 = () => {
+	const {
+		data: revision,
+		isLoading,
+		isError,
+	} = useCustomFetch({
+		url: URL.TESIS.HISTORY,
+		method: 'post',
+		body: {
+			table: 'ut_v_revision',
+			columns: [
+				'id_revision',
+				'titulo',
+				'fecha_revision',
+				'detalle',
+				'estado',
+				'estacion',
+			],
+			order: {
+				fecha_revision: 'DESC',
+			},
+			limit: 1,
+		},
+		params: {
+			estacion: 2,
+		},
+	});
+
+	console.log({ revision });
+
 	return (
 		<>
 			<Contenedor title='Curso: Introducción a la planeación científica'>

@@ -1,4 +1,6 @@
+import { URL } from '@/api/server';
 import { Contenedor } from '@/components';
+import { useCustomFetch } from '@/hooks/useFetch';
 import { Box, TextField } from '@mui/material';
 
 const style = {
@@ -19,6 +21,35 @@ const boxStyle = {
 };
 
 const Estacion5 = () => {
+	const {
+		data: revision,
+		isLoading,
+		isError,
+	} = useCustomFetch({
+		url: URL.TESIS.HISTORY,
+		method: 'post',
+		body: {
+			table: 'ut_v_revision',
+			columns: [
+				'id_revision',
+				'titulo',
+				'fecha_revision',
+				'detalle',
+				'estado',
+				'estacion',
+			],
+			order: {
+				fecha_revision: 'DESC',
+			},
+			limit: 1,
+		},
+		params: {
+			estacion: 2,
+		},
+	});
+
+	console.log({ revision });
+
 	return (
 		<>
 			<Contenedor title='Cita a previos internos'>
