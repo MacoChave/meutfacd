@@ -106,7 +106,7 @@ export const profileHandler = async (req: Request, res: Response) => {
 		const response: v_usuarios[] = await sqlSelect({
 			table: 'ut_v_usuarios',
 			columns: [],
-			conditions: { id_usuario: primaryKey },
+			query: { id_usuario: primaryKey },
 			orden: {},
 		});
 		if (response.length === 0) {

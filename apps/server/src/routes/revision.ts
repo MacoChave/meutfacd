@@ -1,17 +1,17 @@
 import { Router } from 'express';
+import { requireAuth } from '../middlewares/requireAuth';
 import {
 	deleteItem,
 	getItem,
 	getItems,
 	postItem,
 	putItem,
-} from '../controllers/tesis';
-import { requireAuth } from '../middlewares/requireAuth';
+} from '../controllers/revision';
 
 const router = Router();
 
 router.get('/:id', requireAuth, getItem);
-router.post('/history', requireAuth, getItems);
+router.get('', requireAuth, getItems);
 router.post('', requireAuth, postItem);
 router.put('', requireAuth, putItem);
 router.delete('', requireAuth, deleteItem);

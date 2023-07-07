@@ -8,13 +8,8 @@ export const getItem = async (
 ) => {
 	try {
 		const responses = await sqlSelect({
-			table: body.table,
-			columns: body.columns,
-			conditions: body.conditions ?? {
-				id_estudiante: user?.primaryKey,
-				...query,
-			},
-			orden: body.orden ?? {},
+			...body,
+			...query,
 		});
 		res.status(200).json(responses);
 	} catch (error) {

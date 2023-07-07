@@ -5,8 +5,8 @@ import { errorHttp } from '../utils/error.handle';
 export const getItem = async ({ params }: Request, res: Response) => {
 	try {
 		const result = await sqlSelectOne({
-			table: 'ut_tesis',
-			query: { id_estudiante: params.id },
+			table: 'ut_revision',
+			query: { id_tesis: params.id },
 		});
 		res.status(200).json(result);
 	} catch (error) {
@@ -40,31 +40,28 @@ export const getItems = async (
 export const postItem = async ({ body, user }: Request, res: Response) => {
 	try {
 		const results = await sqlInsert({
-			table: 'ut_tesis',
-			datos: { ...body, id_estudiante: user.primaryKey },
+			table: 'ut_revision',
+			datos: { ...body },
 		});
-		res.status(200).json({ message: 'Tesis guardada', results });
-	} catch (error) {
-		errorHttp(res, {
-			error,
-			msg: 'No se puede guardar el progreso',
-			code: 500,
-		});
-	}
+		res.status(200).json(results);
+	} catch (error) {}
 };
 
-export const putItem = async ({ body, user }: Request, res: Response) => {
+export const putItem = async (
+	{ query, body, user }: Request,
+	res: Response
+) => {
 	try {
 		const results = await sqlUpdate({
-			table: 'ut_tesis',
-			query: { id_estudiante: user.primaryKey },
-			datos: body,
+			table: 'ut_revision',
+			query,
+			datos: { ...body },
 		});
 		res.status(200).json(results);
 	} catch (error) {
 		errorHttp(res, {
 			error,
-			msg: 'No se puede guardar el progreso',
+			msg: 'No se puede actualizar el registro',
 			code: 500,
 		});
 	}
@@ -73,15 +70,15 @@ export const putItem = async ({ body, user }: Request, res: Response) => {
 export const deleteItem = async ({ query, user }: Request, res: Response) => {
 	try {
 		const results = await sqlUpdate({
-			table: 'ut_tesis',
-			query: { id_estudiante: user.primaryKey },
-			datos: { estado: 'I' },
+			table: 'ut_revision',
+			query,
+			datos: { estado: 'D' },
 		});
 		res.status(200).json(results);
 	} catch (error) {
 		errorHttp(res, {
 			error,
-			msg: 'No se puede guardar el progreso',
+			msg: 'No se puede eliminar el registro',
 			code: 500,
 		});
 	}

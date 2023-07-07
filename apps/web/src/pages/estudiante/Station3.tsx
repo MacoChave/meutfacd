@@ -1,16 +1,7 @@
 import { Contenedor } from '@/components';
+import { style } from '@/themes/styles';
 import { FileDownload } from '@mui/icons-material';
 import { Box, Chip, IconButton, TextField, Typography } from '@mui/material';
-
-const style = {
-	display: 'grid' as 'grid',
-	gridTemplateColumns: 'repeat(2, 1fr)',
-	gap: 4,
-	minWidth: 250,
-	maxWidth: 600,
-	mx: 'auto',
-	pb: 4,
-};
 
 const boxStyle = {
 	display: 'flex',

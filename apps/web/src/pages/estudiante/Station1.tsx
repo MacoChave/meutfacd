@@ -1,34 +1,29 @@
 import { URL } from '@/api/server';
 import { Contenedor } from '@/components';
+import { SpinLoader } from '@/components/Loader/SpinLoader';
 import { useCustomFetch } from '@/hooks/useFetch';
 import { UploadFile } from '@/interfaces/UploadFile';
 import { Draft, draftDefault, draftSchema } from '@/models/Draft';
-import { postData } from '@/services/fetching';
+import { postData, putData } from '@/services/fetching';
 import { errorHandler } from '@/utils/errorHandler';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Box, Button, TextField, Typography } from '@mui/material';
 import { AxiosError } from 'axios';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import swal from 'sweetalert';
 import FileChooser from '../../components/controles/FileChooser';
-import { SpinLoader } from '@/components/Loader/SpinLoader';
-import { isError } from '@tanstack/react-query';
-
-const style = {
-	display: 'grid' as 'grid',
-	gridTemplateColumns: 'repeat(2, 1fr)',
-	gap: 4,
-	minWidth: 250,
-	maxWidth: 600,
-	mx: 'auto',
-};
+import { style } from '@/themes/styles';
 
 const Estacion1 = () => {
 	const [isUploading, setIsUploading] = useState(false);
 	const [isUploaded, setIsUploaded] = useState(false);
-	const { data, isLoading, isError } = useCustomFetch({
-		url: URL.GENERIC,
+	const {
+		data: revision,
+		isLoading,
+		isError,
+	} = useCustomFetch({
+		url: URL.TESIS.HISTORY,
 		method: 'post',
 		body: {
 			table: 'ut_v_revision',
@@ -43,6 +38,7 @@ const Estacion1 = () => {
 			order: {
 				fecha_revision: 'DESC',
 			},
+			limit: 1,
 		},
 		params: {
 			estacion: 1,
@@ -58,6 +54,8 @@ const Estacion1 = () => {
 		mode: 'onBlur',
 		resolver: yupResolver(draftSchema),
 	});
+
+	console.log({ revision });
 
 	const onUpload = async (file: File) => {
 		try {
@@ -88,15 +86,24 @@ const Estacion1 = () => {
 
 	const onSubmit: SubmitHandler<Draft> = async (draft) => {
 		try {
-			console.log('send draft', draft);
-			const data = await postData({
-				path: URL.TESIS._,
-				body: {
-					titulo: draft.titulo,
-					ruta_perfil: draft.name,
-				},
-			});
-			console.log(data);
+			if (revision[0].estado === 'P') {
+				await putData({
+					path: URL.TESIS._,
+					body: {
+						titulo: draft.titulo,
+						ruta_perfil: draft.name,
+					},
+				});
+			} else {
+				await postData({
+					path: URL.TESIS._,
+					body: {
+						titulo: draft.titulo,
+						ruta_perfil: draft.name,
+					},
+				});
+			}
+
 			swal(
 				'¡Bien hecho!',
 				'El punto de tesis se presentó correctamente',
@@ -108,11 +115,11 @@ const Estacion1 = () => {
 	};
 
 	useEffect(() => {
-		if (data) {
-			const draft = data[0];
+		if (revision && revision.length > 0) {
+			const draft = revision[0];
 			setValue('titulo', draft.titulo);
 		}
-	}, [data, setValue]);
+	}, [revision]);
 
 	if (isLoading) return <>Cargando revisión...</>;
 	if (isError) return <>No se pudo cargar la revisión...</>;
@@ -127,7 +134,9 @@ const Estacion1 = () => {
 								Detalle del previo
 							</Typography>
 							<Typography>
-								{data[0].detalle || 'Sin revisión'}
+								{revision.length > 0
+									? revision[0].detalle
+									: 'Sin revisión'}
 							</Typography>
 						</Box>
 						<Box>
@@ -180,7 +189,7 @@ const Estacion1 = () => {
 					</Box>
 				</form>
 			</Contenedor>
-			{isUploading && <SpinLoader message='Subiendo archivo' />}
+			{isUploading && <SpinLoader message='Subiendo tu punto de tesis' />}
 		</>
 	);
 };
