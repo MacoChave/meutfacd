@@ -1,17 +1,17 @@
+import { URL } from '@/api/server';
 import { Contenedor } from '@/components';
 import { MyTable } from '@/components/MyTable';
 import { useCustomFetch } from '@/hooks/useFetch';
-import { Chip, Typography } from '@mui/material';
+import { ProgressType } from '@/interfaces/ProgressType';
+import { Typography } from '@mui/material';
 import { useState } from 'react';
 import Dialogo from '../../components/Modal';
-import { URL } from '@/api/server';
-import { ProgressType } from '@/interfaces/ProgressType';
 
 const Progress = () => {
 	const [open, setOpen] = useState(false);
 	const [row, setRow] = useState({} as ProgressType);
 	const { data, isLoading, isError } = useCustomFetch({
-		url: URL.GENERIC,
+		url: `${URL.REVISION}/all`,
 		method: 'post',
 		body: {
 			table: 'ut_v_revision',

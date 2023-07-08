@@ -13,8 +13,26 @@ import { Seguridad } from './Seguridad';
 import { postData } from '@/services/fetching';
 import { URL } from '@/api/server';
 import Loader from '@/components/Loader';
+import swal from 'sweetalert';
 
 export type LogupProps = {};
+
+const getIdRol = (rol: string = '') => {
+	switch (rol) {
+		case 'administrador':
+			return 1;
+		case 'analitica':
+			return 2;
+		case 'encargado':
+			return 3;
+		case 'docente':
+			return 4;
+		case 'estudiante':
+			return 9;
+		default:
+			return 9;
+	}
+};
 
 const Logup: React.FC<LogupProps> = () => {
 	const [enviando, setEnviando] = useState(false);
@@ -33,13 +51,17 @@ const Logup: React.FC<LogupProps> = () => {
 			const response = await postData({
 				path: URL.AUTH.LOGUP,
 				body: data,
+				params: { rol: getIdRol(rol) },
 			});
 			console.log('Logup response', response);
-			alert('Cuenta creada con éxito');
+			swal(
+				'¡Cuenta creada!',
+				'Verifica tu correo electrónico para activar tu cuenta',
+				'success'
+			);
 			methods.reset();
 		} catch (error) {
 			errorHandler(error as AxiosError);
-			alert('Error al crear la cuenta');
 		} finally {
 			setEnviando(false);
 		}

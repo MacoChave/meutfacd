@@ -20,8 +20,9 @@ const Dashboard = ({
 				gridTemplateAreas:
 					"'header header' 'sidebar main' 'sidebar footer'",
 				gridTemplateRows: 'auto 1fr auto',
-				gridTemplateColumns: '200px 1fr',
-				minHeight: '100vh',
+				gridTemplateColumns: { xs: '50px 1fr', md: '200px 1fr' },
+				height: '100vh',
+				width: '100vw',
 			}}>
 			<>
 				<ToolbarWithSesion />
@@ -36,12 +37,17 @@ const Dashboard = ({
 				<Box
 					sx={{
 						gridArea: 'footer',
-						position: 'fixed',
-						bottom: 0,
-						width: '100%',
+						// position: 'fixed',
+						// bottom: 0,
+						width: '90%',
+						mx: 'auto',
 						p: 1,
 					}}>
-					<Typography textAlign='center'>
+					<Typography
+						sx={{
+							textAlign: 'center',
+							fontSize: { xs: '0.6rem', md: '0.8rem' },
+						}}>
 						Administración 2021-2025 © Decano Henry Arriaga
 					</Typography>
 				</Box>

@@ -40,27 +40,10 @@ export const getItems = async (
 	}
 };
 
-export const postItem = async ({ body, user }: Request, res: Response) => {
+export const postItem = async ({ body }: Request, res: Response) => {
 	try {
 		const results = await sqlInsert({
-			table: 'ut_tesis',
-			datos: { ...body, id_estudiante: user.primaryKey },
-		});
-		res.status(200).json(results);
-	} catch (error) {
-		errorHttp(res, {
-			error,
-			msg: 'No se puede guardar el progreso',
-			code: 500,
-		});
-	}
-};
-
-export const putItem = async ({ body, user }: Request, res: Response) => {
-	try {
-		const results = await sqlUpdate({
-			table: 'ut_tesis',
-			query: { id_estudiante: user.primaryKey },
+			table: 'ut_asignacion',
 			datos: body,
 		});
 		res.status(200).json(results);
@@ -73,12 +56,32 @@ export const putItem = async ({ body, user }: Request, res: Response) => {
 	}
 };
 
-export const deleteItem = async ({ query, user }: Request, res: Response) => {
+export const putItem = async (
+	{ query, body, user }: Request,
+	res: Response
+) => {
 	try {
 		const results = await sqlUpdate({
-			table: 'ut_tesis',
+			table: 'ut_asignacion',
 			query,
-			datos: { estado: 'I' },
+			datos: body,
+		});
+		res.status(200).json(results);
+	} catch (error) {
+		errorHttp(res, {
+			error,
+			msg: 'No se puede guardar el progreso',
+			code: 500,
+		});
+	}
+};
+
+export const deleteItem = ({ query }: Request, res: Response) => {
+	try {
+		const results = sqlUpdate({
+			table: 'ut_asignacion',
+			query,
+			datos: { estado: 0 },
 		});
 		res.status(200).json(results);
 	} catch (error) {

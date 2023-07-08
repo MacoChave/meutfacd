@@ -7,7 +7,7 @@ import { DATA_SOURCES } from '../config/vars.config';
 import axios, { AxiosError } from 'axios';
 import { logger } from '../utils/logger';
 
-export const logupHandler = async ({ body }: Request, res: Response) => {
+export const logupHandler = async ({ body, query }: Request, res: Response) => {
 	try {
 		// Procesar datos de req.body
 		const {
@@ -20,8 +20,9 @@ export const logupHandler = async ({ body }: Request, res: Response) => {
 			carnet,
 			cui,
 			fecha_nac,
-			rol,
 		} = body;
+
+		const { rol } = query;
 
 		const hash = await encriptarPassword(pass);
 
@@ -43,7 +44,7 @@ export const logupHandler = async ({ body }: Request, res: Response) => {
 		const values = Object.values(usuario).map((value) => value);
 
 		// Almacenar en BD
-		const usuarioNuevo = await sqlEjecutar(
+		const usuarioNuevo: any[] = await sqlEjecutar(
 			`call sp_ut_crear_usuario(${Object.keys(usuario)
 				.map((_value) => '?')
 				.join(',')})`,

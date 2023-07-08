@@ -12,7 +12,7 @@ import {
 import { DrawerProps } from '../../propTypes/Appbar';
 import { useNavigate } from 'react-router-dom';
 
-const drawerWidth = 200;
+const drawerWidth = '200px';
 
 const Sidebar = ({ menuArray, open, setOpen }: DrawerProps) => {
 	const navigate = useNavigate();
@@ -22,10 +22,10 @@ const Sidebar = ({ menuArray, open, setOpen }: DrawerProps) => {
 				variant='permanent'
 				open={open}
 				sx={{
-					width: { xs: 50, md: drawerWidth },
+					width: { xs: '50px', md: drawerWidth },
 					flexShrink: 0,
 					[`& .MuiDrawer-paper`]: {
-						width: { xs: 50, md: drawerWidth },
+						width: { xs: '50px', md: drawerWidth },
 						boxSizing: 'border-box',
 					},
 					scrollbarWidth: 'none' /* Firefox */,

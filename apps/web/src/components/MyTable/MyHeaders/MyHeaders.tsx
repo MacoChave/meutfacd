@@ -3,20 +3,18 @@ import React from 'react';
 
 export type MyHeadersProps = {
 	headers: object;
-	hasActions: boolean;
 };
 
-const MyHeaders: React.FC<MyHeadersProps> = ({
-	headers,
-	hasActions = false,
-}) => {
+const MyHeaders: React.FC<MyHeadersProps> = ({ headers }) => {
 	return (
 		<TableHead>
 			<TableRow>
 				{Object.entries(headers).map(([key, value]) => (
-					<TableCell key={key}>{value}</TableCell>
+					<TableCell key={key} align='center'>
+						{value}
+					</TableCell>
 				))}
-				{hasActions && <TableCell>Acciones</TableCell>}
+				<TableCell>Acciones</TableCell>
 			</TableRow>
 		</TableHead>
 	);

@@ -60,12 +60,10 @@ const HomeEstudiante = () => {
 		<Dashboard menuArray={menuArray}>
 			<Box
 				sx={{
-					display: 'flex',
-					flexDirection: 'column',
-					placeItems: 'center',
-					gap: 4,
-					width: '100%',
+					width: '90%',
+					mx: 'auto',
 				}}>
+				<Toolbar />
 				<Toolbar />
 				<Outlet />
 			</Box>

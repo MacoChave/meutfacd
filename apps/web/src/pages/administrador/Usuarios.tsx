@@ -4,15 +4,17 @@ import { ModalGenerica } from '@/components/ModalGenerica';
 import { TablaGenerica } from '@/components/TablaGenerica';
 import Principal from '@/components/contenido/Principal';
 import { useFetch } from '@/hooks/useFetch';
-import { useState } from 'react';
+import { SetStateAction, useState } from 'react';
 import { DetalleUsuario } from './DetalleUsuario';
 import { Tipo_Usuario } from '@/models/Perfil';
+import { MyTable } from '@/components/MyTable';
+import { Contenedor } from '@/components';
 
 const Usuarios = () => {
 	const [openModal, setOpenModal] = useState(false);
 	const [usuario, setUsuario] = useState<Tipo_Usuario>({} as Tipo_Usuario);
 	const { data, isSuccess, error } = useFetch({
-		url: URL.USUARIO + '/all',
+		url: `${URL.USUARIO}/all`,
 		params: {},
 	});
 
@@ -37,12 +39,9 @@ const Usuarios = () => {
 
 	return (
 		<>
-			<Principal
-				titulo='Gestión de usuarios'
-				handleAgregar={() => setOpenModal(true)}>
-				<TablaGenerica
-					registros={data}
-					cabeceras={{
+			<Contenedor title='Gestión de usuarios'>
+				<MyTable
+					headers={{
 						nombre: 'Nombre',
 						apellido: 'Apellido',
 						genero: 'Género',
@@ -50,17 +49,20 @@ const Usuarios = () => {
 						carnet: 'Carnet',
 						cui: 'CUI',
 					}}
-					sumatoria={{}}
+					rows={data || []}
+					totalCols={{}}
 					onEdit={onEdit}
 					onDelete={onDetail}
 				/>
-			</Principal>
-			<ModalGenerica
-				title='Detalle registro'
-				open={openModal}
-				setOpen={setOpenModal}>
-				<DetalleUsuario registro={usuario} />
-			</ModalGenerica>
+			</Contenedor>
+			{openModal && (
+				<ModalGenerica
+					title='Detalle del usuario'
+					open={openModal}
+					setOpen={setOpenModal}>
+					<DetalleUsuario registro={usuario} />
+				</ModalGenerica>
+			)}
 		</>
 	);
 };

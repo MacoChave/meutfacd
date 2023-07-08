@@ -31,7 +31,7 @@ const Estacion4 = () => {
 		isLoading,
 		isError,
 	} = useCustomFetch({
-		url: URL.TESIS.HISTORY,
+		url: `${URL.REVISION}/one`,
 		method: 'post',
 		body: {
 			table: 'ut_v_revision',
@@ -52,8 +52,6 @@ const Estacion4 = () => {
 			estacion: 4,
 		},
 	});
-
-	console.log({ revision });
 
 	const {
 		control,
@@ -95,7 +93,7 @@ const Estacion4 = () => {
 
 	const onSubmit: SubmitHandler<Draft> = async (draft) => {
 		try {
-			if (revision[0].estado === 'P') {
+			if (revision.estado === 'P') {
 				await putData({
 					path: URL.TESIS._,
 					body: {
@@ -124,9 +122,8 @@ const Estacion4 = () => {
 	};
 
 	useEffect(() => {
-		if (revision && revision.length > 0) {
-			const draft = revision[0];
-			setValue('titulo', draft.titulo);
+		if (revision) {
+			setValue('titulo', revision.titulo);
 		}
 	}, [revision]);
 
@@ -143,9 +140,7 @@ const Estacion4 = () => {
 								Detalle del previo
 							</Typography>
 							<Typography>
-								{revision.length > 0
-									? revision[0].detalle
-									: 'Sin revisión'}
+								{revision.detalle ?? 'Sin revisión'}
 							</Typography>
 						</Box>
 						<Box>
@@ -164,36 +159,25 @@ const Estacion4 = () => {
 								)}
 							/>
 						</Box>
-						{!isUploaded ? (
-							<Box
-								sx={{
-									gridColumnStart: 2,
-									gridRow: '1 / span 2',
-									p: 2,
-									placeSelf: 'center',
-								}}>
+						<Box
+							sx={{
+								gridColumn: { xs: '1', sm: '2' },
+								gridRow: { xs: '1', sm: '1 / span 2' },
+							}}>
+							{!isUploaded ? (
 								<FileChooser
 									title='Tesis'
 									onUpload={onUpload}
 								/>
-							</Box>
-						) : (
-							<Box
-								sx={{
-									gridColumnStart: 2,
-									gridRow: '1 / span 2',
-									p: 2,
-									placeSelf: 'center',
-									alignSelf: 'center',
-								}}>
+							) : (
 								<Button
 									variant='contained'
 									color='primary'
 									type='submit'>
 									Enviar
 								</Button>
-							</Box>
-						)}
+							)}
+						</Box>
 					</Box>
 				</form>
 			</Contenedor>

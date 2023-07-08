@@ -4,7 +4,7 @@ import axios from 'axios';
 type axiosProps = {
 	path: string;
 	body?: any;
-	params?: TypeWithKey<string>;
+	params?: TypeWithKey<any>;
 	headers?: TypeWithKey<string>;
 };
 

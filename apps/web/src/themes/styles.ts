@@ -1,8 +1,10 @@
 export const style = {
 	display: 'grid' as 'grid',
-	gridTemplateColumns: 'repeat(2, 1fr)',
+	gridTemplateColumns: {
+		xs: '1fr',
+		sm: '1fr 1fr',
+	},
+	alignItems: 'start',
+	justifyItems: 'stretch',
 	gap: 4,
-	minWidth: 250,
-	maxWidth: 600,
-	mx: 'auto',
 };

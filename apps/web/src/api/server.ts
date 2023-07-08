@@ -1,4 +1,5 @@
 export const URL = {
+	USUARIO: '/api/usuario',
 	AUTH: {
 		LOGIN: '/api/auth/login',
 		LOGUP: '/api/auth/logup',
@@ -9,8 +10,12 @@ export const URL = {
 		HISTORY: '/api/tesis/history',
 		DRAFT: '/api/tesis/draft',
 	},
-	USUARIO: '/api/usuario',
-	CURSO: '/api/curso',
+	REVISION: '/api/revision',
+	ASIGNACION: '/api/asignacion',
+	CURSO: {
+		_: '/api/curso',
+		ASIGNACION: '/api/curso/asignacion',
+	},
 	ESTUDIANTE: '/api/estudiante',
 	HORARIO: '/api/horario',
 	JORNADA: '/api/jornada',

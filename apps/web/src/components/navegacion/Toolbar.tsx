@@ -12,7 +12,7 @@ interface ToolbarProps {
 export const ToolbarWithoutSesion = ({ children }: ToolbarProps) => {
 	return (
 		<AppBar
-			position='fixed'
+			// position='fixed'
 			color='primary'
 			sx={{
 				gridArea: 'header',

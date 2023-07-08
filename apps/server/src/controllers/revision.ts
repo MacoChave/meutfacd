@@ -2,11 +2,14 @@ import { Request, Response } from 'express';
 import { sqlInsert, sqlSelect, sqlSelectOne, sqlUpdate } from '../db/consultas';
 import { errorHttp } from '../utils/error.handle';
 
-export const getItem = async ({ params }: Request, res: Response) => {
+export const getItem = async (
+	{ query, body, user }: Request,
+	res: Response
+) => {
 	try {
 		const result = await sqlSelectOne({
-			table: 'ut_revision',
-			query: { id_tesis: params.id },
+			...body,
+			query: { id_estudiante: user.primaryKey, ...query },
 		});
 		res.status(200).json(result);
 	} catch (error) {
@@ -37,14 +40,20 @@ export const getItems = async (
 	}
 };
 
-export const postItem = async ({ body, user }: Request, res: Response) => {
+export const postItem = async ({ body }: Request, res: Response) => {
 	try {
 		const results = await sqlInsert({
 			table: 'ut_revision',
-			datos: { ...body },
+			datos: body,
 		});
 		res.status(200).json(results);
-	} catch (error) {}
+	} catch (error) {
+		errorHttp(res, {
+			error,
+			msg: 'No se puede guardar el progreso',
+			code: 500,
+		});
+	}
 };
 
 export const putItem = async (
@@ -55,7 +64,7 @@ export const putItem = async (
 		const results = await sqlUpdate({
 			table: 'ut_revision',
 			query,
-			datos: { ...body },
+			datos: body,
 		});
 		res.status(200).json(results);
 	} catch (error) {

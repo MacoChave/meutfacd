@@ -17,28 +17,23 @@ const MyTable: React.FC<MyTableProps> = ({
 	rows,
 	headers,
 	totalCols,
-	onEdit,
-	onDelete,
-	onPrint,
+	onEdit = undefined,
+	onDelete = undefined,
+	onPrint = undefined,
 }) => {
 	return (
-		<Card>
+		<>
 			<Box
 				sx={{
-					maxWidth: '100%',
-					maxHeight: '70vh',
-					overflow: 'auth',
+					mx: 'auto',
+					width: '60vw',
+					maxHeight: '60vh',
+					overflowX: 'scroll',
+					scrollbarWidth: 'none',
 				}}
 				className='no-scrollbar'>
-				<Table stickyHeader>
-					<MyHeaders
-						headers={headers}
-						hasActions={
-							onDelete !== undefined ||
-							onEdit !== undefined ||
-							onPrint !== undefined
-						}
-					/>
+				<Table>
+					<MyHeaders headers={headers} />
 					<MyBody
 						headers={headers}
 						rows={rows}
@@ -53,7 +48,7 @@ const MyTable: React.FC<MyTableProps> = ({
 					/>
 				</Table>
 			</Box>
-		</Card>
+		</>
 	);
 };
 

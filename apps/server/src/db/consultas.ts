@@ -1,4 +1,4 @@
-import { conectar } from '../config/mysql';
+import { connection } from '../config/mysql';
 import { DATA_SOURCES } from '../config/vars.config';
 import { logger } from '../utils/logger';
 import { encriptarPassword } from '../utils/token';
@@ -52,7 +52,7 @@ export const crearUsuarioAdministrador = async () => {
 		.map(() => '?')
 		.join(',')})`;
 
-	const conn = await conectar();
+	const conn = await connection();
 
 	conn.query(sql, Object.values(adminUser))
 		.then((res) => {
@@ -60,6 +60,9 @@ export const crearUsuarioAdministrador = async () => {
 		})
 		.catch((err) => {
 			console.log('Error al crear usuario administrador', err.sqlMessage);
+		})
+		.finally(() => {
+			conn.end();
 		});
 };
 
@@ -152,7 +155,7 @@ const showQuery = (sql: string, values: any[]) => console.log(sql, values);
 
 export const sqlEjecutar = async (sql: string, values?: any[]) => {
 	showQuery(sql, values || []);
-	const conn = await conectar();
+	const conn = await connection();
 	const rows = await conn.query(sql, values || []);
 
 	return rows;
@@ -237,19 +240,20 @@ export const sqlSelect = async ({
 		message: JSON.stringify({ sql, values }),
 	});
 
-	const conn = await conectar();
+	const conn = await connection();
 	const [results, fields] = await conn.query(sql, values);
+	conn.end();
 	console.log('[sqlSelect][results]', results);
 	return results;
 };
 
-export const sqlSelectOne = ({
+export const sqlSelectOne = async ({
 	table,
 	columns = [],
 	query = {},
 	sort = {},
 }: sqlSelectType) => {
-	return sqlSelect({
+	const results: any = await sqlSelect({
 		table,
 		columns,
 		query,
@@ -257,6 +261,7 @@ export const sqlSelectOne = ({
 		limit: 1,
 		offset: 0,
 	});
+	return results[0];
 };
 
 export const sqlInsert = async ({ table, datos }: sqlInsertType) => {
@@ -273,8 +278,9 @@ export const sqlInsert = async ({ table, datos }: sqlInsertType) => {
 		message: JSON.stringify({ sql, values }),
 	});
 
-	const conn = await conectar();
+	const conn = await connection();
 	const [results, fields] = await conn.query(sql, values);
+	conn.end();
 	return results;
 };
 
@@ -293,8 +299,9 @@ export const sqlInsertMany = async ({ table, datos }: sqlInsertManyType) => {
 		message: JSON.stringify({ sql, values }),
 	});
 
-	const conn = await conectar();
+	const conn = await connection();
 	const [results, fields] = await conn.query(sql, [values]);
+	conn.end();
 	return results;
 };
 
@@ -313,8 +320,9 @@ export const sqlUpdate = async ({ table, datos, query }: sqlUpdateType) => {
 		message: JSON.stringify({ sql, values: [...valsSet, ...valsWhere] }),
 	});
 
-	const conn = await conectar();
+	const conn = await connection();
 	const [results, fields] = await conn.query(sql, [...valsSet, ...valsWhere]);
+	conn.end();
 	return results;
 };
 
@@ -331,7 +339,8 @@ export const sqlDelete = async ({ table, query }: sqlDeleteType) => {
 		message: JSON.stringify({ sql, values: valsWhere }),
 	});
 
-	const conn = await conectar();
+	const conn = await connection();
 	const [results, fields] = await conn.query(sql, valsWhere);
+	conn.end();
 	return results;
 };

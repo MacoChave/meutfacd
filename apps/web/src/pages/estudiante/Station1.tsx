@@ -23,7 +23,7 @@ const Estacion1 = () => {
 		isLoading,
 		isError,
 	} = useCustomFetch({
-		url: URL.TESIS.HISTORY,
+		url: `${URL.REVISION}/one`,
 		method: 'post',
 		body: {
 			table: 'ut_v_revision',
@@ -44,6 +44,7 @@ const Estacion1 = () => {
 			estacion: 1,
 		},
 	});
+
 	const {
 		control,
 		formState: { errors },
@@ -54,8 +55,6 @@ const Estacion1 = () => {
 		mode: 'onBlur',
 		resolver: yupResolver(draftSchema),
 	});
-
-	console.log({ revision });
 
 	const onUpload = async (file: File) => {
 		try {
@@ -86,7 +85,7 @@ const Estacion1 = () => {
 
 	const onSubmit: SubmitHandler<Draft> = async (draft) => {
 		try {
-			if (revision[0].estado === 'P') {
+			if (revision.estado === 'P') {
 				await putData({
 					path: URL.TESIS._,
 					body: {
@@ -115,9 +114,8 @@ const Estacion1 = () => {
 	};
 
 	useEffect(() => {
-		if (revision && revision.length > 0) {
-			const draft = revision[0];
-			setValue('titulo', draft.titulo);
+		if (revision) {
+			setValue('titulo', revision.titulo);
 		}
 	}, [revision]);
 
@@ -134,9 +132,7 @@ const Estacion1 = () => {
 								Detalle del previo
 							</Typography>
 							<Typography>
-								{revision.length > 0
-									? revision[0].detalle
-									: 'Sin revisión'}
+								{revision?.detalle ?? 'Sin revisión'}
 							</Typography>
 						</Box>
 						<Box>
@@ -155,37 +151,25 @@ const Estacion1 = () => {
 								)}
 							/>
 						</Box>
-						{!isUploaded ? (
-							<Box
-								sx={{
-									gridColumnStart: 2,
-									gridRow: '1 / span 2',
-									p: 2,
-									justifySelf: 'center',
-									alignSelf: 'center',
-								}}>
+						<Box
+							sx={{
+								gridColumn: { xs: '1', sm: '2' },
+								gridRow: { xs: '1', sm: '1 / span 2' },
+							}}>
+							{!isUploaded ? (
 								<FileChooser
 									title='Punto de tesis'
 									onUpload={onUpload}
 								/>
-							</Box>
-						) : (
-							<Box
-								sx={{
-									gridColumnStart: 2,
-									gridRow: '1 / span 2',
-									p: 2,
-									justifySelf: 'center',
-									alignSelf: 'center',
-								}}>
+							) : (
 								<Button
 									variant='contained'
 									color='primary'
 									type='submit'>
 									Enviar
 								</Button>
-							</Box>
-						)}
+							)}
+						</Box>
 					</Box>
 				</form>
 			</Contenedor>
