@@ -21,8 +21,7 @@ const Dashboard = ({
 					"'header header' 'sidebar main' 'sidebar footer'",
 				gridTemplateRows: 'auto 1fr auto',
 				gridTemplateColumns: { xs: '50px 1fr', md: '200px 1fr' },
-				height: '100vh',
-				width: '100vw',
+				height: '95vh',
 			}}>
 			<>
 				<ToolbarWithSesion />
