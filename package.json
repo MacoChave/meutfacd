@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "turbo dev",
     "build": "turbo build",
+    "start_win": "turbo run start_win",
     "clean": "turbo run clean",
     "format": "prettier --write \"**/*.{ts,tsx,json,md}\"",
     "lint": "turbo run lint",

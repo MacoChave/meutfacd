@@ -24,6 +24,12 @@
         "dev": {
             "cache": false
         },
+        "start_win": {
+            "dependsOn": [
+                "^build"
+            ],
+            "cache": false
+        },
         "clean": {
             "cache": false
         }
