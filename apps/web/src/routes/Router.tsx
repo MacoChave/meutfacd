@@ -127,7 +127,7 @@ export const router = createBrowserRouter([
 		],
 	},
 	{
-		path: '/encargado',
+		path: '/encargado/:estacion',
 		element: (
 			<ProtectedRoute rol='encargado'>{<HomeEncargado />}</ProtectedRoute>
 		),

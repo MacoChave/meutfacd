@@ -28,7 +28,7 @@ export const getItem = async (
 	try {
 		const response = await sqlSelectOne({
 			...body,
-			...query,
+			query,
 		});
 		res.status(200).json(response);
 	} catch (error) {

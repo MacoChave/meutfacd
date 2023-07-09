@@ -17,6 +17,7 @@ import {
 	schemaUsuario,
 } from '../../models/Perfil';
 import { ErrorPage } from '../ErrorPage';
+import { style } from '@/themes/styles';
 
 type PerfilProps = {
 	modoEdicion: boolean;
@@ -277,52 +278,51 @@ const Sesion = ({ modoEdicion }: PerfilProps) => {
 };
 
 export const Perfil = (): JSX.Element => {
-	const [modoEdicion, setModoEdicion] = useState(false);
+	const [isEditing, setIsEditing] = useState(false);
 	const {
 		data: perfil,
-		error,
+		isError,
 		isLoading,
-		isPreviousData,
 	} = useFetch({
 		url: URL.AUTH.PROFILE,
 	});
 	const methods = useForm<Tipo_Usuario>({
-		defaultValues: defaultProfile,
+		defaultValues: perfil,
 		mode: 'onBlur',
 		resolver: yupResolver(schemaUsuario),
 	});
 
-	const handleModoEdicion = (event: SyntheticEvent) => {
+	const toggleEditing = (event: SyntheticEvent) => {
 		event.preventDefault();
-		setModoEdicion(true);
+		setIsEditing(!isEditing);
 	};
 
 	const onSubmit: SubmitHandler<Tipo_Usuario> = async (data) => {
 		console.log('> Form perfil', data);
-		setModoEdicion(false);
+		setIsEditing(false);
 	};
 
-	useEffect(() => {
-		if (perfil) {
-			methods.setValue('id_usuario', perfil.id_usuario);
-			methods.setValue('nombre', perfil.nombre);
-			methods.setValue('apellidos', perfil.apellidos);
-			methods.setValue('genero', perfil.genero);
-			methods.setValue('correo', perfil.correo);
-			methods.setValue('carnet', perfil.carnet);
-			methods.setValue('cui', perfil.cui);
-			methods.setValue('direccion', perfil.direccion);
-			methods.setValue('fecha_nac', perfil.fecha_nac);
-			methods.setValue('estado', perfil.estado);
-			methods.setValue('telefono', perfil.telefono);
-			methods.setValue('id_rol', perfil.id_rol);
-			methods.setValue('rol', perfil.rol);
-		}
-	}, [isPreviousData]);
+	// useEffect(() => {
+	// 	if (perfil) {
+	// 		methods.setValue('id_usuario', perfil.id_usuario);
+	// 		methods.setValue('nombre', perfil.nombre);
+	// 		methods.setValue('apellidos', perfil.apellidos);
+	// 		methods.setValue('genero', perfil.genero);
+	// 		methods.setValue('correo', perfil.correo);
+	// 		methods.setValue('carnet', perfil.carnet);
+	// 		methods.setValue('cui', perfil.cui);
+	// 		methods.setValue('direccion', perfil.direccion);
+	// 		methods.setValue('fecha_nac', perfil.fecha_nac);
+	// 		methods.setValue('estado', perfil.estado);
+	// 		methods.setValue('telefono', perfil.telefono);
+	// 		methods.setValue('id_rol', perfil.id_rol);
+	// 		methods.setValue('rol', perfil.rol);
+	// 	}
+	// }, [isPreviousData]);
 
 	if (isLoading) return <>Cargando datos...</>;
 
-	if (error)
+	if (isError)
 		return (
 			<ErrorPage
 				codigo={500}
@@ -332,75 +332,44 @@ export const Perfil = (): JSX.Element => {
 
 	return (
 		<FormProvider {...methods}>
-			<form onSubmit={methods.handleSubmit(onSubmit)}>
-				<Contenedor title='Perfil de usuario'>
+			<Contenedor title='Perfil de usuario'>
+				<form onSubmit={methods.handleSubmit(onSubmit)}>
 					<Box
 						component='article'
 						sx={{
-							width: '100%',
-							display: 'flex',
-							flexDirection: 'column',
+							display: 'grid',
 							gap: 4,
+							gridTemplateColumns: {
+								xs: '1fr',
+								sm: '2fr 1fr',
+							},
 						}}>
-						<Box
-							component='section'
-							sx={{ display: 'flex', flexWrap: 'wrap', gap: 4 }}>
-							<Box component='header' sx={{ flex: 1 }}>
-								<Typography variant='h6'>
-									Datos personales
-								</Typography>
-							</Box>
-							<Personales modoEdicion={modoEdicion} />
-						</Box>
-						<Divider />
-						<Box
-							component='section'
-							sx={{
-								display: 'flex',
-								flexWrap: 'wrap',
-								gap: 4,
-							}}>
-							<Box component='header' sx={{ flex: 1 }}>
-								<Typography variant='h6'>
-									Datos de contacto
-								</Typography>
-							</Box>
-							<Contacto modoEdicion={modoEdicion} />
-						</Box>
-						<Divider />
-						<Box
-							component='section'
-							sx={{
-								display: 'flex',
-								flexWrap: 'wrap',
-								gap: 4,
-							}}>
-							<Box component='header' sx={{ flex: 1 }}>
-								<Typography variant='h6'>
-									Datos de sesión
-								</Typography>
-							</Box>
-							<Sesion modoEdicion={modoEdicion} />
-						</Box>
-						<Divider />
+						<Typography variant='h6'>Datos personales</Typography>
+						<Personales modoEdicion={isEditing} />
+						<Divider sx={{ gridColumn: '1 / span 2' }} />
+						<Typography variant='h6'>Datos de contacto</Typography>
+						<Contacto modoEdicion={isEditing} />
+						<Divider sx={{ gridColumn: '1 / span 2' }} />
+						<Typography variant='h6'>Datos de sesión</Typography>
+						<Sesion modoEdicion={isEditing} />
+						<Divider sx={{ gridColumn: '1 / span 2' }} />
 						<Button
-							variant='contained'
-							color='primary'
+							variant={isEditing ? 'outlined' : 'contained'}
+							color={isEditing ? 'secondary' : 'primary'}
 							type='button'
-							sx={{ display: modoEdicion ? 'none' : 'block' }}
-							onClick={handleModoEdicion}>
-							Editar
+							onClick={toggleEditing}>
+							{isEditing ? 'Cancelar' : 'Editar'}
 						</Button>
 						<Button
 							variant='contained'
 							color='primary'
 							type='submit'
-							sx={{ display: modoEdicion ? 'block' : 'none' }}>
+							sx={{ display: isEditing ? 'block' : 'none' }}>
 							Guardar
 						</Button>
 					</Box>
-				</Contenedor>
-			</form>
+				</form>
+			</Contenedor>
 		</FormProvider>
 	);
 };

@@ -1,5 +1,6 @@
 export const URL = {
 	USUARIO: '/api/usuario',
+	USER_ROL: '/api/user_rol',
 	AUTH: {
 		LOGIN: '/api/auth/login',
 		LOGUP: '/api/auth/logup',

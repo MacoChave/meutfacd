@@ -197,7 +197,7 @@ export const sqlSelect = async ({
 	}
 
 	let sql: string = `SELECT 
-	${columns ? columns.join(', ') : '*'}
+	${columns.length !== 0 ? columns.join(', ') : '*'}
 	FROM ${strTableName}`;
 
 	if (conditions.length > 0) {

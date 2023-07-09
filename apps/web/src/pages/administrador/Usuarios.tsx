@@ -1,14 +1,12 @@
 import { URL } from '@/api/server';
+import { Contenedor } from '@/components';
 import { ErrorOperacion } from '@/components/ErrorOperacion';
 import { ModalGenerica } from '@/components/ModalGenerica';
-import { TablaGenerica } from '@/components/TablaGenerica';
-import Principal from '@/components/contenido/Principal';
-import { useFetch } from '@/hooks/useFetch';
-import { SetStateAction, useState } from 'react';
-import { DetalleUsuario } from './DetalleUsuario';
-import { Tipo_Usuario } from '@/models/Perfil';
 import { MyTable } from '@/components/MyTable';
-import { Contenedor } from '@/components';
+import { useFetch } from '@/hooks/useFetch';
+import { Tipo_Usuario } from '@/models/Perfil';
+import { useState } from 'react';
+import { DetalleUsuario } from './DetalleUsuario';
 
 const Usuarios = () => {
 	const [openModal, setOpenModal] = useState(false);
@@ -43,11 +41,10 @@ const Usuarios = () => {
 				<MyTable
 					headers={{
 						nombre: 'Nombre',
-						apellido: 'Apellido',
-						genero: 'Género',
+						apellidos: 'Apellido',
+						fecha_nac: 'Fecha de nacimiento',
 						correo: 'Correo',
 						carnet: 'Carnet',
-						cui: 'CUI',
 					}}
 					rows={data || []}
 					totalCols={{}}
