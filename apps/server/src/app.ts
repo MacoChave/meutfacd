@@ -3,8 +3,9 @@ import { DATA_SOURCES } from './config/vars.config';
 import cors from 'cors';
 import express from 'express';
 import { router } from './routes';
-import { cargarRolesTutor, crearUsuarioAdministrador } from './db/consultas';
+// import { cargarRolesTutor, crearUsuarioAdministrador } from './db/consultas';
 import { conectar } from './config/mysql';
+import fileUpload from 'express-fileupload';
 
 const PORT = DATA_SOURCES.PORT;
 
@@ -18,6 +19,14 @@ app.use(
 	cors({
 		origin: '*',
 		allowedHeaders: ['Content-Type', 'Authorization'],
+	})
+);
+app.use(
+	fileUpload({
+		useTempFiles: true,
+		tempFileDir: './storage',
+		limits: { fileSize: 50 * 1024 * 1024 },
+		debug: true,
 	})
 );
 

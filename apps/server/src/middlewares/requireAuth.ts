@@ -8,7 +8,6 @@ export const requireAuth = (
 	next: NextFunction
 ) => {
 	try {
-		console.log('[REQUIRE AUTH][REQUIRE AUTH] req.headers', req.headers);
 		const authHeader = req.headers.authorization;
 
 		if (!authHeader || !authHeader.startsWith('Bearer')) {

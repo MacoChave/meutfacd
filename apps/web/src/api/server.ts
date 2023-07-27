@@ -1,20 +1,31 @@
 export const URL = {
+	USUARIO: '/api/usuario',
+	USER_ROL: '/api/user_rol',
 	AUTH: {
 		LOGIN: '/api/auth/login',
 		LOGUP: '/api/auth/logup',
 		PROFILE: '/api/auth/perfil',
 	},
 	TESIS: {
+		_: '/api/tesis',
 		HISTORY: '/api/tesis/history',
 		DRAFT: '/api/tesis/draft',
 	},
-	USUARIO: '/api/usuario',
-	CURSO: '/api/curso',
+	REVISION: '/api/revision',
+	ASIGNACION: '/api/asignacion',
+	CURSO: {
+		_: '/api/curso',
+		ASIGNACION: '/api/curso/asignacion',
+	},
 	ESTUDIANTE: '/api/estudiante',
 	HORARIO: '/api/horario',
 	JORNADA: '/api/jornada',
 	MENSAJERIA: '/api/mensajeria',
 	PROFESOR: '/api/profesor',
 	ROL: '/api/rol',
-	STORAGE: '/api/storage',
+	STORAGE: {
+		DRAFT: '/api/storage/draft',
+		TESIS: '/api/storage/tesis',
+	},
+	GENERIC: '/api/generic',
 };

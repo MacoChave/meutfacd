@@ -45,8 +45,7 @@ const Informacion: React.FC<TabsProps> = ({ usuario, index, ...other }) => {
 					<TextField
 						variant='outlined'
 						label='Fecha de nacimiento'
-						value={usuario.fecha_nac}
-						type='date'
+						value={new Date(usuario.fecha_nac).toLocaleDateString()}
 						InputProps={{ readOnly: true }}
 					/>
 				</Box>

@@ -16,12 +16,12 @@ const Contenedor: React.FC<ContenedorProps> = ({ title, children }) => {
 			<Card
 				sx={{
 					p: 2,
-					m: 2,
-					display: 'flex',
-					flexDirection: 'column',
-					placeContent: 'center',
-					placeItems: 'center',
-					width: { xs: '90vw', md: '80vw' },
+					// mx: 'auto',
+					// display: 'flex',
+					// flexDirection: 'column',
+					// placeContent: 'center',
+					// placeItems: 'center',
+					// width: { xs: '90%', md: '80%' },
 				}}>
 				<Typography variant='h4' component='h2' textAlign='center'>
 					{title}
@@ -32,7 +32,7 @@ const Contenedor: React.FC<ContenedorProps> = ({ title, children }) => {
 				<Box
 					sx={{
 						py: 2,
-						width: { xs: '60vw', md: '50vw' },
+						// width: { xs: '60vw', md: '50vw' },
 					}}>
 					{children}
 				</Box>

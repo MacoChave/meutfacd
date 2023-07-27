@@ -9,7 +9,7 @@ import { requireAuth } from '../middlewares/requireAuth';
 const router = Router();
 
 router.get('/perfil', requireAuth, profileHandler);
-router.post('/logup', logupHandler);
+router.post('/logup/', logupHandler);
 router.post('/login', loginHandler);
 
 export { router };

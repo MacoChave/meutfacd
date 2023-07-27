@@ -5,7 +5,7 @@ import {
 	Monitor,
 	Settings,
 } from '@mui/icons-material';
-import { Box, Toolbar, Typography } from '@mui/material';
+import { Box, Toolbar } from '@mui/material';
 import { Outlet } from 'react-router-dom';
 import Dashboard from '../../layaouts/Dashboard';
 import { MenuItem } from '../../propTypes/Appbar';
@@ -52,8 +52,7 @@ const HomeAdministrador = () => {
 					flexDirection: 'column',
 					placeItems: 'center',
 					gap: 4,
-					width: '100vw',
-					height: '95vh',
+					width: '100%',
 				}}>
 				<Toolbar />
 				<Outlet />

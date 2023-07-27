@@ -21,7 +21,7 @@ const onRequest = (config: AxiosRequestConfig): any => {
 	const { method, url } = config;
 
 	config.headers = {
-		'Content-Type': 'application/json',
+		...config.headers,
 		Authorization: `Bearer ${auth ? auth.token : ''}`,
 	};
 

@@ -17,7 +17,7 @@ export const logger = ({ dirname, proc, message }: loggerType) => {
 		` ========== ========== ========== >
 > ${new Date().toISOString()}
 > [${filename}] [${proc}] 
-${message}
+${JSON.stringify(message)}
 < ========== ========== ==========\n`,
 		(err) => {
 			if (err) throw err;

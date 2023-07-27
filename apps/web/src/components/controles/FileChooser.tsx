@@ -2,10 +2,14 @@ import { Box, Button, FormLabel, Input, Typography } from '@mui/material';
 import { ChangeEvent, DragEvent, useState } from 'react';
 
 interface fileChooserProps {
+	title?: string;
 	onUpload: (file: File) => void;
 }
 
-const FileChooser = ({ onUpload }: fileChooserProps) => {
+const FileChooser: React.FC<fileChooserProps> = ({
+	title = 'Arrastra tu archivo',
+	onUpload,
+}) => {
 	const [active, setActive] = useState(false);
 	const onChange = (e: ChangeEvent<HTMLInputElement>) => {
 		if (e.target.files?.length) onUpload(e.target.files[0]);
@@ -50,6 +54,7 @@ const FileChooser = ({ onUpload }: fileChooserProps) => {
 				onDragOver={onDragOver}
 				onDragLeave={onDragLeave}
 				onDrop={onDrop}>
+				<Typography variant='h5'>{title}</Typography>
 				<Typography variant='body1'>Arrastra tu archivo</Typography>
 				<Box
 					sx={{

@@ -17,8 +17,8 @@ const obtenerItems = async (req: Request, res: Response) => {
 		const results = await sqlSelect({
 			table: 'usuario',
 			columns: ['*'],
-			conditions: {},
-			orden: {},
+			query: {},
+			sort: {},
 		});
 		res.status(200).json(results);
 	} catch (error) {

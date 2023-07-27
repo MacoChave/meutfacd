@@ -1,5 +1,6 @@
-import { conectar } from '../config/mysql';
+import { connection } from '../config/mysql';
 import { DATA_SOURCES } from '../config/vars.config';
+import { logger } from '../utils/logger';
 import { encriptarPassword } from '../utils/token';
 
 export const cargarRolesTutor = async () => {
@@ -19,6 +20,10 @@ export const cargarRolesTutor = async () => {
 	roles.push({
 		nombre: 'Evaluador',
 		descripcion: 'Tutor dedicado a evaluar a los estudiantes',
+	});
+	roles.push({
+		nombre: 'Estudiante',
+		descripcion: 'Usuario estudiante del sistema de tesis',
 	});
 
 	await sqlInsertMany({
@@ -47,7 +52,7 @@ export const crearUsuarioAdministrador = async () => {
 		.map(() => '?')
 		.join(',')})`;
 
-	const conn = await conectar();
+	const conn = await connection();
 
 	conn.query(sql, Object.values(adminUser))
 		.then((res) => {
@@ -55,18 +60,29 @@ export const crearUsuarioAdministrador = async () => {
 		})
 		.catch((err) => {
 			console.log('Error al crear usuario administrador', err.sqlMessage);
+		})
+		.finally(() => {
+			conn.end();
 		});
 };
 
-type formarOrdenType = {
-	[key: string]: 'ASC' | 'DESC';
+type conditionsType = {
+	column: string;
+	value: any;
+	operator: string;
 };
 
 type sqlSelectType = {
 	table: string;
-	columns: string[];
-	conditions: Object;
-	orden: formarOrdenType;
+	columns?: string[];
+	query?: Object;
+	sort?: Object;
+	limit?: number;
+	offset?: number;
+	conditions?: conditionsType[];
+	q?: any;
+	pageNumber?: number;
+	pageSize?: number;
 };
 
 type sqlInsertType = {
@@ -82,54 +98,64 @@ type sqlInsertManyType = {
 type sqlUpdateType = {
 	table: string;
 	datos: Object;
-	conditions: Object;
+	query: Object;
 };
 
 type sqlDeleteType = {
 	table: string;
-	conditions: Object;
+	query: Object;
 };
 
-const formarWhere = (conditions: Object) => {
-	const keys = Object.keys(conditions);
-	const values = Object.values(conditions);
-
-	const str =
-		keys.length > 0
-			? `WHERE ${keys.map((key) => `${key} = ?`).join(' AND ')}`
-			: '';
-	return { str, values };
+const getWhereClause = (query: Object) => {
+	const values: any[] = [];
+	const where = Object.entries(query)
+		.map(([key, value]) => {
+			values.push(value);
+			return `${key} = ?`;
+		})
+		.join(' AND ');
+	return [where, values];
 };
 
-const formarOrdenamiento = (orden: formarOrdenType) => {
-	if (orden === undefined) return '';
-	const entries = Object.entries(orden);
-
-	const str =
-		entries.keys.length > 0
-			? `ORDER BY ${entries
-					.map(([key, values]) => `${key} ${values}`)
-					.join(', ')}`
-			: '';
-	return str;
+const getFilterWhere = (table: string, q: any) => {
+	return ['', []];
 };
 
-const formarUpdateSet = (datos: Object) => {
-	const keys = Object.keys(datos);
-	const values = Object.values(datos);
+const getSortClause = (sort: Object) => {
+	return Object.entries(sort)
+		.map(([key, value]) => {
+			return `${key} ${value}`;
+		})
+		.join(', ');
+};
 
-	const str =
-		keys.length > 0
-			? `SET ${keys.map((key) => `${key} = ?`).join(', ')}`
-			: '';
-	return { str, values };
+const getSetClause = (datos: Object) => {
+	const values: any[] = [];
+	const str: string = Object.entries(datos)
+		.map(([key, value]) => {
+			values.push(value);
+			return `${key} = ?`;
+		})
+		.join(', ');
+	return [str, values];
+};
+
+const getConditionsWhere = (conditions: conditionsType[]) => {
+	const values: any[] = [];
+	const where = conditions
+		.map((cond) => {
+			values.push(cond.value);
+			return `${cond.column} ${cond.operator} ?`;
+		})
+		.join(' OR ');
+	return [where, values];
 };
 
 const showQuery = (sql: string, values: any[]) => console.log(sql, values);
 
 export const sqlEjecutar = async (sql: string, values?: any[]) => {
 	showQuery(sql, values || []);
-	const conn = await conectar();
+	const conn = await connection();
 	const rows = await conn.query(sql, values || []);
 
 	return rows;
@@ -137,40 +163,124 @@ export const sqlEjecutar = async (sql: string, values?: any[]) => {
 
 export const sqlSelect = async ({
 	table,
-	columns,
-	conditions,
-	orden,
+	columns = [],
+	query = {},
+	sort = {},
+	limit = NaN,
+	offset = NaN,
+	conditions = [],
+	q = NaN,
+	pageNumber = NaN,
+	pageSize = NaN,
 }: sqlSelectType) => {
-	const clausula_where = formarWhere(conditions);
-	const clausula_orden = formarOrdenamiento(orden);
+	const filters = [];
+	const values = [];
 
-	const sql: string = `SELECT 
-	${columns.length !== 0 ? columns.join(', ') : '*'} 
-	FROM ${table} 
-	${clausula_where.str}
-	${clausula_orden}`;
+	let strTableName = table;
 
-	showQuery(sql, [...clausula_where.values]);
+	if (table.includes('fn_')) {
+		strTableName += `(
+			${Object.values(query)
+				.map((value) => {
+					values.push(value);
+					return `?`;
+				})
+				.join(', ')}
+		)`;
+	} else {
+		const [strWhere, valsWhere] = getWhereClause(query);
 
-	const conn = await conectar();
-	const [results, fields] = await conn.query(sql, [...clausula_where.values]);
+		if (valsWhere.length > 0) {
+			filters.push(strWhere);
+			values.push(...valsWhere);
+		}
+	}
+
+	let sql: string = `SELECT 
+	${columns.length !== 0 ? columns.join(', ') : '*'}
+	FROM ${strTableName}`;
+
+	if (conditions.length > 0) {
+		const [strConditions, valsConditions] = getConditionsWhere(conditions);
+		filters.push(`(${strConditions})`);
+		values.push(...valsConditions);
+	}
+
+	if (q) {
+		const [strQ, valsQ] = await getFilterWhere(table, q);
+		filters.push(`(${strQ})`);
+		values.push(...valsQ);
+	}
+
+	const sortClause = getSortClause(sort);
+
+	if (filters.length > 0) {
+		sql += ` WHERE ${filters.join(' AND ')}`;
+	}
+
+	if (sortClause) {
+		sql += ` ORDER BY ${sortClause}`;
+	}
+
+	if (pageNumber && pageSize) {
+		sql += ` LIMIT ${pageSize} OFFSET ${pageNumber * pageSize}`;
+	} else {
+		if (limit) {
+			sql += ` LIMIT ${limit}`;
+		}
+
+		if (offset) {
+			sql += ` OFFSET ${offset}`;
+		}
+	}
+
+	logger({
+		dirname: __dirname,
+		proc: 'sqlSelect',
+		message: JSON.stringify({ sql, values }),
+	});
+
+	const conn = await connection();
+	const [results, fields] = await conn.query(sql, values);
+	conn.end();
 	console.log('[sqlSelect][results]', results);
 	return results;
+};
+
+export const sqlSelectOne = async ({
+	table,
+	columns = [],
+	query = {},
+	sort = {},
+}: sqlSelectType) => {
+	const results: any = await sqlSelect({
+		table,
+		columns,
+		query,
+		sort,
+		limit: 1,
+		offset: 0,
+	});
+	return results[0];
 };
 
 export const sqlInsert = async ({ table, datos }: sqlInsertType) => {
 	const keys = Object.keys(datos);
 	const values = Object.values(datos);
 
-	const sql: string = `INSERT 
-	INTO ${table} 
+	const sql: string = `INSERT INTO ${table} 
 	(${keys.join(', ')}) 
 	VALUES (${keys.map(() => `?`).join(', ')})`;
 
-	showQuery(sql, values);
+	logger({
+		dirname: __dirname,
+		proc: 'sqlInsert',
+		message: JSON.stringify({ sql, values }),
+	});
 
-	const conn = await conectar();
+	const conn = await connection();
 	const [results, fields] = await conn.query(sql, values);
+	conn.end();
 	return results;
 };
 
@@ -183,51 +293,54 @@ export const sqlInsertMany = async ({ table, datos }: sqlInsertManyType) => {
 	(${keys.join(', ')}) 
 	VALUES ?`;
 
-	showQuery(sql, [values]);
+	logger({
+		dirname: __dirname,
+		proc: 'sqlInsert',
+		message: JSON.stringify({ sql, values }),
+	});
 
-	const conn = await conectar();
+	const conn = await connection();
 	const [results, fields] = await conn.query(sql, [values]);
+	conn.end();
 	return results;
 };
 
-export const sqlUpdate = async ({
-	table,
-	datos,
-	conditions,
-}: sqlUpdateType) => {
-	const clausula_set = formarUpdateSet({ datos, anterior: 0 });
-	const clausula_where = formarWhere({
-		conditions,
-		anterior: clausula_set.values.length,
+export const sqlUpdate = async ({ table, datos, query }: sqlUpdateType) => {
+	const [strSet, valsSet] = getSetClause(datos);
+
+	const [strWhere, valsWhere] = getWhereClause(query);
+
+	let sql: string = `UPDATE ${table}
+	SET ${strSet}
+	WHERE ${strWhere}`;
+
+	logger({
+		dirname: __dirname,
+		proc: 'sqlInsert',
+		message: JSON.stringify({ sql, values: [...valsSet, ...valsWhere] }),
 	});
 
-	const sql: string = `UPDATE ${table} 
-	${clausula_set.str} 
-	${clausula_where.str}`;
-
-	showQuery(sql, [...clausula_set.values, ...clausula_where.values]);
-
-	const conn = await conectar();
-	const [results, fields] = await conn.query(sql, [
-		...clausula_set.values,
-		...clausula_where.values,
-	]);
+	const conn = await connection();
+	const [results, fields] = await conn.query(sql, [...valsSet, ...valsWhere]);
+	conn.end();
 	return results;
 };
 
-export const sqlDelete = async ({ table, conditions }: sqlDeleteType) => {
-	const clausula_where = formarWhere({
-		conditions: conditions || {},
-		anterior: 0,
-	});
+export const sqlDelete = async ({ table, query }: sqlDeleteType) => {
+	const [strWhere, valsWhere] = getWhereClause(query);
 
 	const sql: string = `DELETE 
 	FROM ${table} 
-	${clausula_where.str}`;
+	WHERE ${strWhere}`;
 
-	showQuery(sql, [...clausula_where.values]);
+	logger({
+		dirname: __dirname,
+		proc: 'sqlInsert',
+		message: JSON.stringify({ sql, values: valsWhere }),
+	});
 
-	const conn = await conectar();
-	const [results, fields] = await conn.query(sql, [...clausula_where.values]);
+	const conn = await connection();
+	const [results, fields] = await conn.query(sql, valsWhere);
+	conn.end();
 	return results;
 };

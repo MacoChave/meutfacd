@@ -1,4 +1,5 @@
 import { Contenedor } from '@/components';
+import { style } from '@/themes/styles';
 import {
 	Box,
 	FormControl,
@@ -8,14 +9,6 @@ import {
 	TextField,
 	Typography,
 } from '@mui/material';
-
-const style = {
-	display: 'flex' as 'flex',
-	flexDirection: 'column' as 'column',
-	gap: 4,
-	width: '70vw',
-	mx: 'auto',
-};
 
 const Resumen = () => {
 	return (

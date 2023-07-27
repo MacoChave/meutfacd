@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { sqlEjecutar, sqlSelect } from '../db/consultas';
+import { sqlEjecutar, sqlSelect, sqlSelectOne } from '../db/consultas';
 import { v_usuarios } from '../models/v_usuarios';
 import { errorHttp } from '../utils/error.handle';
 import { encriptarPassword } from '../utils/token';
@@ -7,7 +7,7 @@ import { DATA_SOURCES } from '../config/vars.config';
 import axios, { AxiosError } from 'axios';
 import { logger } from '../utils/logger';
 
-export const logupHandler = async ({ body }: Request, res: Response) => {
+export const logupHandler = async ({ body, query }: Request, res: Response) => {
 	try {
 		// Procesar datos de req.body
 		const {
@@ -20,8 +20,9 @@ export const logupHandler = async ({ body }: Request, res: Response) => {
 			carnet,
 			cui,
 			fecha_nac,
-			rol,
 		} = body;
+
+		const { rol } = query;
 
 		const hash = await encriptarPassword(pass);
 
@@ -36,14 +37,14 @@ export const logupHandler = async ({ body }: Request, res: Response) => {
 			id_municipio: 1,
 			carnet,
 			cui,
-			rol: rol || 2,
+			rol: rol || 9,
 		};
 
 		// Crear variables para almacenar en BD
 		const values = Object.values(usuario).map((value) => value);
 
 		// Almacenar en BD
-		const usuarioNuevo = await sqlEjecutar(
+		const usuarioNuevo: any[] = await sqlEjecutar(
 			`call sp_ut_crear_usuario(${Object.keys(usuario)
 				.map((_value) => '?')
 				.join(',')})`,
@@ -100,32 +101,27 @@ export const loginHandler = async ({ body }: Request, res: Response) => {
 	}
 };
 
-export const profileHandler = async (req: Request, res: Response) => {
+export const profileHandler = async ({ user }: Request, res: Response) => {
 	try {
-		const { primaryKey } = req.user;
-		const response: v_usuarios[] = await sqlSelect({
+		const result = await sqlSelectOne({
 			table: 'ut_v_usuarios',
 			columns: [],
-			conditions: { id_usuario: primaryKey },
-			orden: {},
+			query: { id_usuario: user.primaryKey },
 		});
-		if (response.length === 0) {
-			errorHttp(res, {
-				msg: 'Error al obtener el perfil',
-				code: 400,
-			});
-			return;
+
+		if (!result) {
+			throw new Error('No se encontró el usuario');
 		}
-		const currentUser: v_usuarios = response[0];
+
 		return res.status(200).json({
-			nombre: currentUser.nombre,
-			apellidos: currentUser.apellidos,
-			correo: currentUser.correo,
-			estado: currentUser.estado,
-			carnet: currentUser.carnet,
-			cui: currentUser.cui,
-			id_rol: currentUser.id_rol,
-			rol: currentUser.rol,
+			nombre: result.nombre,
+			apellidos: result.apellidos,
+			correo: result.correo,
+			estado: result.estado,
+			carnet: result.carnet,
+			cui: result.cui,
+			id_rol: result.id_rol,
+			rol: result.rol,
 		});
 	} catch (error: any) {
 		errorHttp(res, { msg: 'Error al obtener el perfil', error });

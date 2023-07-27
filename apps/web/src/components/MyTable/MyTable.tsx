@@ -17,48 +17,39 @@ const MyTable: React.FC<MyTableProps> = ({
 	rows,
 	headers,
 	totalCols,
-	onEdit,
-	onDelete,
-	onPrint,
+	onEdit = undefined,
+	onDelete = undefined,
+	onPrint = undefined,
 }) => {
-	if (rows.length === 0) {
-		return (
-			<Card>
-				<Box
-					sx={{
-						maxWidth: '100%',
-						maxHeight: '70vh',
-						overflow: 'auth',
-					}}
-					className='no-scrollbar'>
-					<Table stickyHeader>
-						<MyHeaders
-							headers={headers}
-							hasActions={
-								onDelete !== undefined ||
-								onEdit !== undefined ||
-								onPrint !== undefined
-							}
-						/>
-						<MyBody
-							headers={headers}
-							rows={rows}
-							onEdit={onEdit}
-							onDelete={onDelete}
-							onPrint={onPrint}
-						/>
-						<MyFooter
-							headers={headers}
-							rows={rows}
-							totalCols={totalCols}
-						/>
-					</Table>
-				</Box>
-			</Card>
-		);
-	}
-
-	return <div>MyTable</div>;
+	return (
+		<>
+			<Box
+				sx={{
+					mx: 'auto',
+					width: '60vw',
+					maxHeight: '60vh',
+					overflowX: 'scroll',
+					scrollbarWidth: 'none',
+				}}
+				className='no-scrollbar'>
+				<Table>
+					<MyHeaders headers={headers} />
+					<MyBody
+						headers={headers}
+						rows={rows}
+						onEdit={onEdit}
+						onDelete={onDelete}
+						onPrint={onPrint}
+					/>
+					<MyFooter
+						headers={headers}
+						rows={rows}
+						totalCols={totalCols}
+					/>
+				</Table>
+			</Box>
+		</>
+	);
 };
 
 export default MyTable;
