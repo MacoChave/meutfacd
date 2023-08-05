@@ -1,5 +1,5 @@
 import { Box, Toolbar } from '@mui/material';
-import Dashboard from '../../layaouts/Dashboard';
+import Dashboard from '../../layouts/Dashboard';
 import { Outlet } from 'react-router-dom';
 import { Assignment, PlaylistAddCheck } from '@mui/icons-material';
 

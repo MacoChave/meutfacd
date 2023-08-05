@@ -1,38 +1,38 @@
 import { Box, Toolbar } from '@mui/material';
-import Dashboard from '../../layaouts/Dashboard';
+import Dashboard from '../../layouts/Dashboard';
 import { Outlet } from 'react-router-dom';
 import { Assignment, Description, Groups, Preview } from '@mui/icons-material';
 import { MenuItem } from '../../propTypes/Appbar';
 
 const menuArray: MenuItem[] = [
 	{
-		text: 'Estación 1',
+		nombre: 'Estación 1',
 		description: 'Revisar puntos de tesis',
-		path: 'estacion1',
+		ruta: 'estacion1',
 		icon: <Description />,
 	},
 	{
-		text: 'Estación 2',
+		nombre: 'Estación 2',
 		description: 'Asignar curso 1',
-		path: 'estacion2',
+		ruta: 'estacion2',
 		icon: <Assignment />,
 	},
 	{
-		text: 'Estación 3',
+		nombre: 'Estación 3',
 		description: 'Asignar curso 2',
-		path: 'estacion3',
+		ruta: 'estacion3',
 		icon: <Assignment />,
 	},
 	{
-		text: 'Estación 4',
+		nombre: 'Estación 4',
 		description: 'Revisión de comisión y estilo',
-		path: 'estacion4',
+		ruta: 'estacion4',
 		icon: <Preview />,
 	},
 	{
-		text: 'Estación 5',
+		nombre: 'Estación 5',
 		description: 'Revisión de previos internos',
-		path: 'estacion5',
+		ruta: 'estacion5',
 		icon: <Groups />,
 	},
 ];

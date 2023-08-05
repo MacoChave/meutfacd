@@ -23,7 +23,7 @@ const Estacion1 = () => {
 		isLoading,
 		isError,
 	} = useCustomFetch({
-		url: `${URL.REVISION}/one`,
+		url: `${URL.REVIEW}/one`,
 		method: 'post',
 		body: {
 			table: 'ut_v_revision',
@@ -87,7 +87,7 @@ const Estacion1 = () => {
 		try {
 			if (revision.estado === 'P') {
 				await putData({
-					path: URL.TESIS._,
+					path: URL.THESIS,
 					body: {
 						titulo: draft.titulo,
 						ruta_perfil: draft.name,
@@ -95,7 +95,7 @@ const Estacion1 = () => {
 				});
 			} else {
 				await postData({
-					path: URL.TESIS._,
+					path: URL.THESIS,
 					body: {
 						titulo: draft.titulo,
 						ruta_perfil: draft.name,

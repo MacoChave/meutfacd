@@ -17,23 +17,6 @@ import swal from 'sweetalert';
 
 export type LogupProps = {};
 
-const getIdRol = (rol: string = '') => {
-	switch (rol) {
-		case 'administrador':
-			return 1;
-		case 'analitica':
-			return 2;
-		case 'encargado':
-			return 3;
-		case 'docente':
-			return 4;
-		case 'estudiante':
-			return 9;
-		default:
-			return 9;
-	}
-};
-
 const Logup: React.FC<LogupProps> = () => {
 	const [enviando, setEnviando] = useState(false);
 	const { rol } = useParams();
@@ -51,7 +34,7 @@ const Logup: React.FC<LogupProps> = () => {
 			const response = await postData({
 				path: URL.AUTH.LOGUP,
 				body: data,
-				params: { rol: getIdRol(rol) },
+				params: { rol: rol },
 			});
 			console.log('Logup response', response);
 			swal(

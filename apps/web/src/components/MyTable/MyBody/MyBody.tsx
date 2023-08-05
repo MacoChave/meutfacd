@@ -52,14 +52,14 @@ const MyBody: React.FC<MyBodyProps> = ({
 					<TableCell>
 						{onEdit && (
 							<IconButton
-								color='primary'
+								color='secondary'
 								onClick={() => onEdit(row)}>
 								<Edit />
 							</IconButton>
 						)}
 						{onDelete && (
 							<IconButton
-								color='primary'
+								color='warning'
 								onClick={() => onDelete(row)}>
 								<Delete />
 							</IconButton>

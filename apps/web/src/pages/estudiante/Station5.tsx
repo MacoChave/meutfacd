@@ -17,7 +17,7 @@ const Estacion5 = () => {
 		isLoading,
 		isError,
 	} = useCustomFetch({
-		url: URL.TESIS.HISTORY,
+		url: URL.THESIS.HISTORY,
 		method: 'post',
 		body: {
 			table: 'ut_v_revision',

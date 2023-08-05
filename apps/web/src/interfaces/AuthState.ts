@@ -8,6 +8,6 @@ export interface Permisos {
 export type AuthState = {
 	token: string;
 	name: string;
-	rol: string;
+	roles: string;
 	paginas: Permisos[];
 };

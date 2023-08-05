@@ -7,43 +7,48 @@ import {
 } from '@mui/icons-material';
 import { Box, Toolbar } from '@mui/material';
 import { Outlet } from 'react-router-dom';
-import Dashboard from '../../layaouts/Dashboard';
+import Dashboard from '../../layouts/Dashboard';
 import { MenuItem } from '../../propTypes/Appbar';
+import { useFetch } from '@/hooks/useFetch';
+import { URL } from '@/api/server';
 
 const menuArray: MenuItem[] = [
 	{
-		text: 'Usuarios',
+		nombre: 'Usuarios',
 		description: 'Creación y gestión de cuentas de usuarios',
-		path: 'usuarios',
+		ruta: 'usuarios',
 		icon: <ManageAccounts />,
 	},
 	{
-		text: 'Permisos',
+		nombre: 'Permisos',
 		description: 'Configuración de permisos',
-		path: 'permisos',
+		ruta: 'permisos',
 		icon: <AdminPanelSettings />,
 	},
 	{
-		text: 'Actividades',
+		nombre: 'Actividades',
 		description: 'Monitorio de actividades',
-		path: 'actividades',
+		ruta: 'actividades',
 		icon: <Monitor />,
 	},
 	{
-		text: 'Aplicación',
+		nombre: 'Aplicación',
 		description: 'Configuración de la aplicación',
-		path: 'aplicacion',
+		ruta: 'aplicacion',
 		icon: <Settings />,
 	},
 	{
-		text: 'Problemas',
+		nombre: 'Problemas',
 		description: 'Gestión de problemas técnicos',
-		path: 'problemas',
+		ruta: 'problemas',
 		icon: <BugReport />,
 	},
 ];
 
 const HomeAdministrador = () => {
+	const { data, isLoading, isError } = useFetch({
+		url: `${URL.PERMISSION}/all`,
+	});
 	return (
 		<Dashboard menuArray={menuArray}>
 			<Box

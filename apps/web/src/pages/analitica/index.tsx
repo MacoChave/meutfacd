@@ -6,21 +6,21 @@ import {
 	Preview,
 } from '@mui/icons-material';
 import { MenuItem } from '../../propTypes/Appbar';
-import Dashboard from '../../layaouts/Dashboard';
+import Dashboard from '../../layouts/Dashboard';
 import { Outlet } from 'react-router-dom';
 import { Box, Toolbar } from '@mui/material';
 
 const menuArray: MenuItem[] = [
 	{
-		text: 'Resumen',
+		nombre: 'Resumen',
 		description: 'Resumen por ciclo lectivo',
-		path: 'resumen',
+		ruta: 'resumen',
 		icon: <Home />,
 	},
 	{
-		text: 'Estaciones',
+		nombre: 'Estaciones',
 		description: 'Resumen por estaciones',
-		path: 'por-estacion',
+		ruta: 'por-estacion',
 		icon: <Description />,
 	},
 	// {

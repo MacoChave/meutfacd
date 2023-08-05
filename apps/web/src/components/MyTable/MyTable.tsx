@@ -22,33 +22,26 @@ const MyTable: React.FC<MyTableProps> = ({
 	onPrint = undefined,
 }) => {
 	return (
-		<>
-			<Box
-				sx={{
-					mx: 'auto',
-					width: '60vw',
-					maxHeight: '60vh',
-					overflowX: 'scroll',
-					scrollbarWidth: 'none',
-				}}
-				className='no-scrollbar'>
-				<Table>
-					<MyHeaders headers={headers} />
-					<MyBody
-						headers={headers}
-						rows={rows}
-						onEdit={onEdit}
-						onDelete={onDelete}
-						onPrint={onPrint}
-					/>
-					<MyFooter
-						headers={headers}
-						rows={rows}
-						totalCols={totalCols}
-					/>
-				</Table>
-			</Box>
-		</>
+		<Box
+			sx={{
+				mx: 'auto',
+				// width: '100%',
+				// maxHeight: '100%',
+				overflowX: 'scroll',
+				scrollbarWidth: 'none',
+			}}>
+			<Table>
+				<MyHeaders headers={headers} />
+				<MyBody
+					headers={headers}
+					rows={rows}
+					onEdit={onEdit}
+					onDelete={onDelete}
+					onPrint={onPrint}
+				/>
+				<MyFooter headers={headers} rows={rows} totalCols={totalCols} />
+			</Table>
+		</Box>
 	);
 };
 

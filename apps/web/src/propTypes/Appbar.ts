@@ -4,10 +4,10 @@ export interface AppbarProps {
 }
 
 export interface MenuItem {
-	text: string;
+	nombre: string;
 	description: string;
 	icon: JSX.Element;
-	path: string;
+	ruta: string;
 }
 
 export interface DrawerProps {

@@ -32,7 +32,7 @@ const Contenedor: React.FC<ContenedorProps> = ({ title, children }) => {
 				<Box
 					sx={{
 						py: 2,
-						// width: { xs: '60vw', md: '50vw' },
+						width: { xs: '60vw', md: '60vw', lg: '60vw' },
 					}}>
 					{children}
 				</Box>

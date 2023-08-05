@@ -7,23 +7,25 @@ export const cargarRolesTutor = async () => {
 	const roles = [];
 	roles.push({
 		nombre: 'Administrador',
-		descripcion: 'Personal encargado de administrar el sistema',
+		descripcion:
+			'Personal encargado de administrar el sistema de tesis de pregrado',
 	});
 	roles.push({
 		nombre: 'Analitica',
-		descripcion: 'Personal de soporte y soporte',
+		descripcion: 'Personal de soporte del sistema de tesis de pregrado',
 	});
 	roles.push({
 		nombre: 'Encargado',
-		descripcion: 'Tutor encargado de una estación',
+		descripcion: 'Tutor encargado de una estación de tesis de pregrado',
 	});
 	roles.push({
 		nombre: 'Evaluador',
-		descripcion: 'Tutor dedicado a evaluar a los estudiantes',
+		descripcion:
+			'Tutor dedicado a evaluar a los estudiantes de tesis de pregrado',
 	});
 	roles.push({
 		nombre: 'Estudiante',
-		descripcion: 'Usuario estudiante del sistema de tesis',
+		descripcion: 'Usuario estudiante del sistema de tesis de pregrado',
 	});
 
 	await sqlInsertMany({
@@ -85,6 +87,11 @@ type sqlSelectType = {
 	pageSize?: number;
 };
 
+type sqlEjectType = {
+	sql: string;
+	values?: any[];
+};
+
 type sqlInsertType = {
 	table: string;
 	datos: Object;
@@ -139,7 +146,6 @@ const getSetClause = (datos: Object) => {
 		.join(', ');
 	return [str, values];
 };
-
 const getConditionsWhere = (conditions: conditionsType[]) => {
 	const values: any[] = [];
 	const where = conditions
@@ -153,12 +159,12 @@ const getConditionsWhere = (conditions: conditionsType[]) => {
 
 const showQuery = (sql: string, values: any[]) => console.log(sql, values);
 
-export const sqlEjecutar = async (sql: string, values?: any[]) => {
+export const sqlEjecutar = async ({ sql, values = [] }: sqlEjectType) => {
 	showQuery(sql, values || []);
 	const conn = await connection();
-	const rows = await conn.query(sql, values || []);
+	const [results, fields] = await conn.query(sql, values || []);
 
-	return rows;
+	return results;
 };
 
 export const sqlSelect = async ({

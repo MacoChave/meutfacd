@@ -40,26 +40,28 @@ const Login: React.FC<LoginProps> = () => {
 
 		if (response.token === undefined) return;
 
+		const rol = response.roles.split(' ')[0];
+		console.log(rol);
+
 		dispatch(setLogged(response));
-		navigate(`/${response.rol.toString().toLowerCase() || 'estudiante'}`, {
+		navigate(`/${rol || 'estudiante'}`.toLowerCase(), {
 			replace: true,
 			state: {},
 		});
 	};
 
-	const handleRecuperar = (e: SyntheticEvent) => {
+	const handleRecovery = (e: SyntheticEvent) => {
 		e.preventDefault();
-		navigate('/recuperar', {
+		navigate(`/recovery/${rol}`, {
 			replace: true,
-			state: { email: 'email' },
+			state: { email: methods.getValues('correo') },
 		});
 	};
 
 	const handleLogup = (e: SyntheticEvent) => {
 		e.preventDefault();
-		navigate('/logup/' + rol, {
+		navigate(`/logup/${rol}`, {
 			replace: true,
-			state: {},
 		});
 	};
 
@@ -106,7 +108,7 @@ const Login: React.FC<LoginProps> = () => {
 								<Box>
 									<Button
 										variant='text'
-										onClick={handleRecuperar}>
+										onClick={handleRecovery}>
 										Recuperar contraseña
 									</Button>
 								</Box>

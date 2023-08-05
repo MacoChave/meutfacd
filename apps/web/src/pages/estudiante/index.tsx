@@ -1,5 +1,5 @@
 import { Outlet } from 'react-router-dom';
-import Dashboard from '../../layaouts/Dashboard';
+import Dashboard from '../../layouts/Dashboard';
 import { MenuItem } from '../../propTypes/Appbar';
 import {
 	Assignment,
@@ -9,53 +9,68 @@ import {
 	Preview,
 } from '@mui/icons-material';
 import { Box, Toolbar } from '@mui/material';
+import { useFetch } from '@/hooks/useFetch';
+import { Loader } from '@/components';
+import { URL } from '@/api/server';
 
 const menuArray: MenuItem[] = [
 	{
-		text: 'Progreso',
+		nombre: 'Progreso',
 		description: 'Ver mi progreso del proceso',
-		path: 'progreso',
+		ruta: 'progreso',
 		icon: <Home />,
 	},
 	{
-		text: 'Estación 1',
+		nombre: 'Estación 1',
 		description: 'Enviar punto de tesis',
-		path: 'estacion1',
+		ruta: 'estacion1',
 		icon: <Description />,
 	},
 	{
-		text: 'Estación 2',
+		nombre: 'Estación 2',
 		description: 'Curso 1',
-		path: 'estacion2',
+		ruta: 'estacion2',
 		icon: <Assignment />,
 	},
 	{
-		text: 'Estación 3',
+		nombre: 'Estación 3',
 		description: 'Curso 2',
-		path: 'estacion3',
+		ruta: 'estacion3',
 		icon: <Assignment />,
 	},
 	{
-		text: 'Estación 4',
+		nombre: 'Estación 4',
 		description: 'Comisión y estilo',
-		path: 'estacion4',
+		ruta: 'estacion4',
 		icon: <Preview />,
 	},
 	{
-		text: 'Estación 5',
+		nombre: 'Estación 5',
 		description: 'Previos internos',
-		path: 'estacion5',
+		ruta: 'estacion5',
 		icon: <Groups />,
 	},
 	{
-		text: 'Finalizar',
+		nombre: 'Finalizar',
 		description: 'Finalizar proceso',
-		path: 'finalizar',
+		ruta: 'finalizar',
 		icon: <Assignment />,
 	},
 ];
 
 const HomeEstudiante = () => {
+	const {
+		data: options,
+		isLoading,
+		isError,
+	} = useFetch({
+		url: `${URL.PERMISSION}/ALL`,
+		params: {},
+	});
+
+	if (isLoading) return <Loader />;
+	if (isError) return <div>Error</div>;
+
 	return (
 		<Dashboard menuArray={menuArray}>
 			<Box

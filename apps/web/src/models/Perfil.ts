@@ -12,7 +12,7 @@ export type Tipo_PerfilEstudiante = {
 	id_jornada: number;
 };
 
-export type Tipo_Usuario = {
+export type UserType = {
 	id_usuario: number;
 	nombre: string;
 	apellidos: string;
@@ -28,9 +28,10 @@ export type Tipo_Usuario = {
 	telefono: string;
 	id_rol: number;
 	rol: string;
+	roles: string;
 };
 
-export const defaultProfile: Tipo_Usuario = {
+export const defaultProfile: UserType = {
 	id_usuario: 0,
 	nombre: '',
 	apellidos: '',

@@ -70,7 +70,7 @@ const Estacion4 = () => {
 			const formData = new FormData();
 			formData.append('draft', file);
 			const data = await postData<UploadFile>({
-				path: URL.STORAGE.TESIS,
+				path: URL.STORAGE.THESIS,
 				body: formData,
 				headers: {
 					'Content-Type': 'multipart/form-data',
@@ -95,7 +95,7 @@ const Estacion4 = () => {
 		try {
 			if (revision.estado === 'P') {
 				await putData({
-					path: URL.TESIS._,
+					path: URL.THESIS._,
 					body: {
 						titulo: draft.titulo,
 						ruta_tesis: draft.name,
@@ -103,7 +103,7 @@ const Estacion4 = () => {
 				});
 			} else {
 				await postData({
-					path: URL.TESIS._,
+					path: URL.THESIS._,
 					body: {
 						titulo: draft.titulo,
 						ruta_tesis: draft.name,
