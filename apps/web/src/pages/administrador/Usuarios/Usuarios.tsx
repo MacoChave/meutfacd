@@ -1,8 +1,8 @@
 import { URL } from '@/api/server';
 import { Contenedor, McModal } from '@/components';
 import { ErrorOperacion } from '@/components/ErrorOperacion';
-import { MyTable } from '@/components/MyTable';
-import { useCustomFetch, useFetch } from '@/hooks/useFetch';
+import { McTable } from '@/components/MyTable';
+import { useCustomFetch } from '@/hooks/useFetch';
 import { UserType } from '@/models/Perfil';
 import { useState } from 'react';
 import { DetalleUsuario } from './DetalleUsuario';
@@ -43,7 +43,7 @@ const Usuarios = () => {
 	return (
 		<>
 			<Contenedor title='Gestión de usuarios'>
-				<MyTable
+				<McTable
 					headers={{
 						nombre: 'Nombre',
 						correo: 'Correo',

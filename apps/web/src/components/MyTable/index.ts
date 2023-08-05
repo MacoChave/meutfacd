@@ -1,4 +1,4 @@
-export * from './MyBody';
-export * from './MyFooter';
-export * from './MyHeaders';
-export { default as MyTable } from './MyTable';
+export * from './McBody';
+export * from './McFooter';
+export * from './McHeaders';
+export { default as McTable } from './McTable';

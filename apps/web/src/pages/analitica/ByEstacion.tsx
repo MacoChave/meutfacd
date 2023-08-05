@@ -1,5 +1,5 @@
 import { Contenedor } from '@/components';
-import { MyTable } from '@/components/MyTable';
+import { McTable } from '@/components/MyTable';
 import { Download } from '@mui/icons-material';
 import {
 	Box,
@@ -76,7 +76,7 @@ const ByEstacion = () => {
 								<Download />
 							</IconButton>
 						</Box>
-						<MyTable
+						<McTable
 							headers={{ name: 'Nombre', value: 'Valor' }}
 							rows={data}
 							totalCols={{}}

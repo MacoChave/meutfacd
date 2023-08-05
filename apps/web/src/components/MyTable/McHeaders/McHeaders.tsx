@@ -1,11 +1,11 @@
 import { TableCell, TableHead, TableRow } from '@mui/material';
 import React from 'react';
 
-export type MyHeadersProps = {
+export type McHeadersProps = {
 	headers: object;
 };
 
-const MyHeaders: React.FC<MyHeadersProps> = ({ headers }) => {
+const McHeaders: React.FC<McHeadersProps> = ({ headers }) => {
 	return (
 		<TableHead>
 			<TableRow>
@@ -20,4 +20,4 @@ const MyHeaders: React.FC<MyHeadersProps> = ({ headers }) => {
 	);
 };
 
-export default MyHeaders;
+export default McHeaders;

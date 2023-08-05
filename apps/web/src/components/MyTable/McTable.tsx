@@ -1,10 +1,10 @@
-import { Box, Card, Table } from '@mui/material';
+import { Box, Table } from '@mui/material';
 import React from 'react';
-import { MyBody } from './MyBody';
-import { MyFooter } from './MyFooter';
-import { MyHeaders } from './MyHeaders';
+import { McBody } from './McBody';
+import { McFooter } from './McFooter';
+import { McHeaders } from './McHeaders';
 
-export type MyTableProps = {
+export type McTableProps = {
 	rows: object[];
 	headers: object;
 	totalCols: object;
@@ -13,7 +13,7 @@ export type MyTableProps = {
 	onPrint?: (row: object) => void;
 };
 
-const MyTable: React.FC<MyTableProps> = ({
+const McTable: React.FC<McTableProps> = ({
 	rows,
 	headers,
 	totalCols,
@@ -31,18 +31,18 @@ const MyTable: React.FC<MyTableProps> = ({
 				scrollbarWidth: 'none',
 			}}>
 			<Table>
-				<MyHeaders headers={headers} />
-				<MyBody
+				<McHeaders headers={headers} />
+				<McBody
 					headers={headers}
 					rows={rows}
 					onEdit={onEdit}
 					onDelete={onDelete}
 					onPrint={onPrint}
 				/>
-				<MyFooter headers={headers} rows={rows} totalCols={totalCols} />
+				<McFooter headers={headers} rows={rows} totalCols={totalCols} />
 			</Table>
 		</Box>
 	);
 };
 
-export default MyTable;
+export default McTable;

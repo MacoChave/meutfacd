@@ -14,7 +14,7 @@ import {
 } from '@mui/material';
 import React from 'react';
 
-export type MyBodyProps = {
+export type McBodyProps = {
 	headers: object;
 	rows: object[];
 	onEdit?: (row: object) => void;
@@ -31,7 +31,7 @@ export const getValue = (key: string, cellValue: any): React.ReactNode => {
 	}
 };
 
-const MyBody: React.FC<MyBodyProps> = ({
+const McBody: React.FC<McBodyProps> = ({
 	headers,
 	rows,
 	onEdit,
@@ -78,4 +78,4 @@ const MyBody: React.FC<MyBodyProps> = ({
 	);
 };
 
-export default MyBody;
+export default McBody;

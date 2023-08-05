@@ -1,7 +1,7 @@
 import { URL } from '@/api/server';
 import { McAutocomplete } from '@/components/McWithForms/McAutocomplete';
 import { Option } from '@/components/McWithForms/McAutocomplete/McAutocomplete';
-import { MyTable } from '@/components/MyTable';
+import { McTable } from '@/components/MyTable';
 import { useCustomFetch } from '@/hooks/useFetch';
 import { RolType, defaultRol } from '@/models/Rol';
 import { deleteData, postData } from '@/services/fetching';
@@ -130,7 +130,7 @@ const Rol: React.FC<TabsProps> = ({ usuario, index, ...other }) => {
 						</Button>
 					</Box>
 				</form>
-				<MyTable
+				<McTable
 					rows={vRol}
 					headers={{
 						r_nombre: 'Rol',

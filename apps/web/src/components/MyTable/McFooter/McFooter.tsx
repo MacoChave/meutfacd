@@ -2,13 +2,13 @@ import { formatByDataType } from '@/utils/formatHandler';
 import { TableCell, TableFooter, TableRow } from '@mui/material';
 import React from 'react';
 
-export type MyFooterProps = {
+export type McFooterProps = {
 	headers: object;
 	rows: object[];
 	totalCols: object;
 };
 
-const MyFooter: React.FC<MyFooterProps> = ({ headers, rows, totalCols }) => {
+const McFooter: React.FC<McFooterProps> = ({ headers, rows, totalCols }) => {
 	return (
 		<TableFooter>
 			<TableRow>
@@ -35,4 +35,4 @@ const MyFooter: React.FC<MyFooterProps> = ({ headers, rows, totalCols }) => {
 	);
 };
 
-export default MyFooter;
+export default McFooter;

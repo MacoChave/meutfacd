@@ -1,6 +1,6 @@
 import { URL } from '@/api/server';
 import { Contenedor } from '@/components';
-import { MyTable } from '@/components/MyTable';
+import { McTable } from '@/components/MyTable';
 import { useCustomFetch } from '@/hooks/useFetch';
 import { ProgressType } from '@/interfaces/ProgressType';
 import { Typography } from '@mui/material';
@@ -11,7 +11,7 @@ const Progress = () => {
 	const [open, setOpen] = useState(false);
 	const [row, setRow] = useState({} as ProgressType);
 	const { data, isLoading, isError } = useCustomFetch({
-		url: `${URL.REVISION}/all`,
+		url: `${URL.REVIEW}/all`,
 		method: 'post',
 		body: {
 			table: 'ut_v_revision',
@@ -37,7 +37,7 @@ const Progress = () => {
 	return (
 		<>
 			<Contenedor title='Mi progreso'>
-				<MyTable
+				<McTable
 					headers={{
 						estacion: 'Estación',
 						fecha_creacion: 'Creación',
