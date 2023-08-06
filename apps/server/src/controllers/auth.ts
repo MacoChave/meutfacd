@@ -54,6 +54,7 @@ export const logupHandler = async ({ body, query }: Request, res: Response) => {
 				.join(',')})`,
 			values,
 		});
+		console.log(usuarioNuevo);
 
 		if (usuarioNuevo.affectedRows === 0) {
 			errorHttp(res, {
