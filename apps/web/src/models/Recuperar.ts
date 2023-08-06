@@ -1,14 +1,14 @@
 import * as yup from 'yup';
 
-export type Tipo_Recuperar = {
+export type RecoveryType = {
 	correo: string;
 };
 
-export const initialValuesRecuperar: Tipo_Recuperar = {
+export const initialValues: RecoveryType = {
 	correo: '',
 };
 
-export const schemaRecuperar = yup.object().shape({
+export const schemaRecovery = yup.object().shape({
 	correo: yup
 		.string()
 		.email()

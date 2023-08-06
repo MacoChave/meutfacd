@@ -1,45 +1,43 @@
 import { Box, Toolbar } from '@mui/material';
-import Dashboard from '../../layaouts/Dashboard';
 import { Outlet } from 'react-router-dom';
-import { Assignment, Description, Groups, Preview } from '@mui/icons-material';
-import { MenuItem } from '../../propTypes/Appbar';
+import Dashboard from '../../layouts/Dashboard';
 
-const menuArray: MenuItem[] = [
-	{
-		text: 'Estación 1',
-		description: 'Revisar puntos de tesis',
-		path: 'estacion1',
-		icon: <Description />,
-	},
-	{
-		text: 'Estación 2',
-		description: 'Asignar curso 1',
-		path: 'estacion2',
-		icon: <Assignment />,
-	},
-	{
-		text: 'Estación 3',
-		description: 'Asignar curso 2',
-		path: 'estacion3',
-		icon: <Assignment />,
-	},
-	{
-		text: 'Estación 4',
-		description: 'Revisión de comisión y estilo',
-		path: 'estacion4',
-		icon: <Preview />,
-	},
-	{
-		text: 'Estación 5',
-		description: 'Revisión de previos internos',
-		path: 'estacion5',
-		icon: <Groups />,
-	},
-];
+// const menuArray: MenuItem[] = [
+// 	{
+// 		nombre: 'Estación 1',
+// 		description: 'Revisar puntos de tesis',
+// 		ruta: 'estacion1',
+// 		icon: <Description />,
+// 	},
+// 	{
+// 		nombre: 'Estación 2',
+// 		description: 'Asignar curso 1',
+// 		ruta: 'estacion2',
+// 		icon: <Assignment />,
+// 	},
+// 	{
+// 		nombre: 'Estación 3',
+// 		description: 'Asignar curso 2',
+// 		ruta: 'estacion3',
+// 		icon: <Assignment />,
+// 	},
+// 	{
+// 		nombre: 'Estación 4',
+// 		description: 'Revisión de comisión y estilo',
+// 		ruta: 'estacion4',
+// 		icon: <Preview />,
+// 	},
+// 	{
+// 		nombre: 'Estación 5',
+// 		description: 'Revisión de previos internos',
+// 		ruta: 'estacion5',
+// 		icon: <Groups />,
+// 	},
+// ];
 
 const HomeEvaluador = () => {
 	return (
-		<Dashboard menuArray={menuArray}>
+		<Dashboard>
 			<Box
 				sx={{
 					display: 'flex',

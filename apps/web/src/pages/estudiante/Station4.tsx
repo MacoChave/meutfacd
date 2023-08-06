@@ -31,7 +31,7 @@ const Estacion4 = () => {
 		isLoading,
 		isError,
 	} = useCustomFetch({
-		url: `${URL.REVISION}/one`,
+		url: `${URL.REVIEW}/one`,
 		method: 'post',
 		body: {
 			table: 'ut_v_revision',
@@ -70,7 +70,7 @@ const Estacion4 = () => {
 			const formData = new FormData();
 			formData.append('draft', file);
 			const data = await postData<UploadFile>({
-				path: URL.STORAGE.TESIS,
+				path: URL.STORAGE.THESIS,
 				body: formData,
 				headers: {
 					'Content-Type': 'multipart/form-data',
@@ -84,7 +84,7 @@ const Estacion4 = () => {
 				'success'
 			);
 			setIsUploaded(true);
-		} catch (error) {
+		} catch (error: any) {
 			errorHandler(error as AxiosError);
 		} finally {
 			setIsUploading(false);
@@ -95,7 +95,7 @@ const Estacion4 = () => {
 		try {
 			if (revision.estado === 'P') {
 				await putData({
-					path: URL.TESIS._,
+					path: URL.THESIS,
 					body: {
 						titulo: draft.titulo,
 						ruta_tesis: draft.name,
@@ -103,7 +103,7 @@ const Estacion4 = () => {
 				});
 			} else {
 				await postData({
-					path: URL.TESIS._,
+					path: URL.THESIS,
 					body: {
 						titulo: draft.titulo,
 						ruta_tesis: draft.name,
@@ -116,7 +116,7 @@ const Estacion4 = () => {
 				'La tesis se ha guardado correctamente',
 				'success'
 			);
-		} catch (error) {
+		} catch (error: any) {
 			errorHandler(error as AxiosError);
 		}
 	};

@@ -1,11 +1,10 @@
 import './utils/environment';
-import { DATA_SOURCES } from './config/vars.config';
 import cors from 'cors';
 import express from 'express';
-import { router } from './routes';
-// import { cargarRolesTutor, crearUsuarioAdministrador } from './db/consultas';
-import { conectar } from './config/mysql';
 import fileUpload from 'express-fileupload';
+import { conectar } from './config/mysql';
+import { DATA_SOURCES } from './config/vars.config';
+import { router } from './routes';
 
 const PORT = DATA_SOURCES.PORT;
 

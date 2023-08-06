@@ -1,5 +1,5 @@
 import { Contenedor } from '@/components';
-import { TablaGenerica } from '@/components/TablaGenerica';
+import { McTable } from '@/components/MyTable';
 import { Download } from '@mui/icons-material';
 import {
 	Box,
@@ -76,10 +76,10 @@ const ByEstacion = () => {
 								<Download />
 							</IconButton>
 						</Box>
-						<TablaGenerica
-							cabeceras={{ name: 'Nombre', value: 'Valor' }}
-							registros={data}
-							sumatoria={{}}
+						<McTable
+							headers={{ name: 'Nombre', value: 'Valor' }}
+							rows={data}
+							totalCols={{}}
 							onDelete={() => {}}
 							onEdit={() => {}}
 						/>

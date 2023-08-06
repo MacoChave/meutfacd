@@ -18,7 +18,7 @@ const Estacion2 = () => {
 		isLoading,
 		isError,
 	} = useCustomFetch({
-		url: `${URL.ASIGNACION}/one`,
+		url: `${URL.ASSIGNMENT}/one`,
 		method: 'post',
 		body: {
 			table: 'ut_v_asignacion',

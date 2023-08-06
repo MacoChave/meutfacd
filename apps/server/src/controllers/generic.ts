@@ -7,17 +7,14 @@ import {
 } from '../db/consultas';
 import { errorHttp } from '../utils/error.handle';
 
-export const getItems = async (
-	{ body, query, user }: Request,
-	res: Response
-) => {
+export const getItem = async ({ body, query }: Request, res: Response) => {
 	try {
-		const responses = await sqlSelect({
+		const response = await sqlSelectOne({
 			...body,
-			...query,
+			query,
 		});
-		res.status(200).json(responses);
-	} catch (error) {
+		res.status(200).json(response);
+	} catch (error: any) {
 		errorHttp(res, {
 			error,
 			msg: 'No se puede obtener el item',
@@ -26,17 +23,14 @@ export const getItems = async (
 	}
 };
 
-export const getItem = async (
-	{ body, query, user }: Request,
-	res: Response
-) => {
+export const getItems = async ({ body, query }: Request, res: Response) => {
 	try {
-		const response = await sqlSelectOne({
+		const responses = await sqlSelect({
 			...body,
-			query,
+			...query,
 		});
-		res.status(200).json(response);
-	} catch (error) {
+		res.status(200).json(responses);
+	} catch (error: any) {
 		errorHttp(res, {
 			error,
 			msg: 'No se puede obtener el item',
@@ -52,7 +46,7 @@ export const createItem = async ({ body }: Request, res: Response) => {
 			datos: body.datos,
 		});
 		res.status(200).json(response);
-	} catch (error) {
+	} catch (error: any) {
 		errorHttp(res, {
 			error,
 			msg: 'No se puede obtener el item',
@@ -68,7 +62,7 @@ export const createItems = async ({ body }: Request, res: Response) => {
 			datos: body.datos,
 		});
 		res.status(200).json(response);
-	} catch (error) {
+	} catch (error: any) {
 		errorHttp(res, {
 			error,
 			msg: 'No se puede obtener el item',

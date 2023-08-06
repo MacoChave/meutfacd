@@ -9,7 +9,7 @@ import axios, {
 } from 'axios';
 import swal from 'sweetalert';
 
-const logOnDev = (message: string) => {
+const logOnDev = (message: Object) => {
 	if (import.meta.env.MODE === 'development') {
 		console.log(message);
 	}
@@ -25,8 +25,7 @@ const onRequest = (config: AxiosRequestConfig): any => {
 		Authorization: `Bearer ${auth ? auth.token : ''}`,
 	};
 
-	// dispatch(setLoading(true));
-	logOnDev(`[API] ${method?.toUpperCase()} ${url} | Request`);
+	// logOnDev({ method: method?.toUpperCase(), url, Request });
 
 	if (method === 'get') {
 		config.timeout = 15000;
@@ -42,9 +41,7 @@ const onResponse = (response: AxiosResponse): AxiosResponse => {
 	// dispatch(setLoading(true));
 	// HANDLE RESPONSE DATA
 	// ERROR HANDLING WHEN RETURN SUCCESS WITH ERROR
-	logOnDev(
-		`[API] ${method?.toUpperCase()} ${url} | Response ${status} | ${data}`
-	);
+	// logOnDev({ method: method?.toUpperCase(), url, Response, status, data });
 	return response;
 };
 
@@ -56,9 +53,14 @@ const onErrorResponse = (error: AxiosError | Error): Promise<AxiosError> => {
 
 		const errorMessage = getValidatorError(statusText) || data.error;
 
-		logOnDev(
-			`[API] ${method?.toUpperCase()} ${url} | Error ${status} ${statusText} ${errorMessage}`
-		);
+		logOnDev({
+			method: method?.toUpperCase(),
+			url,
+			Error,
+			status,
+			statusText,
+			errorMessage,
+		});
 
 		swal({
 			title: 'Oops!',

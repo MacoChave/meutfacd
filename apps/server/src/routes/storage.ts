@@ -6,6 +6,6 @@ const router = Router();
 
 router.get('/', requireAuth, getFile);
 router.post('/draft', requireAuth, uploadDraft);
-router.post('/tesis', requireAuth, uploadTesis);
+router.post('/thesis', requireAuth, uploadTesis);
 
 export { router };

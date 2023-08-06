@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import { validarToken } from '../utils/token';
+import { errorHttp } from '../utils/error.handle';
 
 // TODO: Evaluar pros y contras de evaluar token en cada sistema o en microservicio autenticación
 export const requireAuth = (
@@ -10,27 +11,21 @@ export const requireAuth = (
 	try {
 		const authHeader = req.headers.authorization;
 
-		if (!authHeader || !authHeader.startsWith('Bearer')) {
-			return res.status(401).json({ error: 'Autenticación no enviada' });
-		}
+		if (!authHeader || !authHeader.startsWith('Bearer'))
+			throw new Error('Autenticación no enviada');
 
 		const token = authHeader.split(' ')[1];
-		console.log('[REQUIRE AUTH][REQUIRE AUTH] token', token);
 
-		if (!token || token === 'null')
-			return res.status(401).json({ error: 'Token no encontrado' });
+		if (!token || token === 'null') throw new Error('Token no encontrado');
 
 		const decodedToken = validarToken(token);
 
-		if (!decodedToken)
-			return res.status(401).json({ error: 'Token no válido' });
+		if (!decodedToken) throw new Error('Token no válido');
 
 		req.user = decodedToken;
 		console.log('[REQUIRE AUTH][REQUIRE AUTH] User', decodedToken);
 		next();
-	} catch (error) {
-		return res
-			.status(404)
-			.json({ error: 'Sesión expirada, inicie sesión nuevamente' });
+	} catch (error: any) {
+		errorHttp(res, error as any);
 	}
 };
