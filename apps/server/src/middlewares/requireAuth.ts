@@ -25,7 +25,7 @@ export const requireAuth = (
 		req.user = decodedToken;
 		console.log('[REQUIRE AUTH][REQUIRE AUTH] User', decodedToken);
 		next();
-	} catch (error) {
+	} catch (error: any) {
 		errorHttp(res, error as any);
 	}
 };

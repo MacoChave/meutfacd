@@ -5,7 +5,7 @@ import { sqlEjecutar } from '../db/consultas';
 const getItem = ({ query, user }: Request, res: Response) => {
 	try {
 		res.status(200).json({ msg: 'OK' });
-	} catch (error) {
+	} catch (error: any) {
 		errorHttp(res, error as any);
 	}
 };
@@ -32,7 +32,7 @@ where r.id_rol in (
 		const rows = await sqlEjecutar({ sql, values: [user.primaryKey] });
 		console.log(rows);
 		res.status(200).json(rows);
-	} catch (error) {
+	} catch (error: any) {
 		errorHttp(res, error as any);
 	}
 };
@@ -40,7 +40,7 @@ where r.id_rol in (
 const createItem = ({ body }: Request, res: Response) => {
 	try {
 		res.status(200).json({ msg: 'OK' });
-	} catch (error) {
+	} catch (error: any) {
 		errorHttp(res, error as any);
 	}
 };
@@ -48,7 +48,7 @@ const createItem = ({ body }: Request, res: Response) => {
 const updateItem = ({ query, body }: Request, res: Response) => {
 	try {
 		res.status(200).json({ msg: 'OK' });
-	} catch (error) {
+	} catch (error: any) {
 		errorHttp(res, error as any);
 	}
 };
@@ -56,7 +56,7 @@ const updateItem = ({ query, body }: Request, res: Response) => {
 const deleteItem = ({ query }: Request, res: Response) => {
 	try {
 		res.status(200).json({ msg: 'OK' });
-	} catch (error) {
+	} catch (error: any) {
 		errorHttp(res, error as any);
 	}
 };

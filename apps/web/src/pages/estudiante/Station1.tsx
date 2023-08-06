@@ -76,7 +76,7 @@ const Estacion1 = () => {
 				'success'
 			);
 			setIsUploaded(true);
-		} catch (error) {
+		} catch (error: any) {
 			errorHandler(error as AxiosError);
 		} finally {
 			setIsUploading(false);
@@ -108,7 +108,7 @@ const Estacion1 = () => {
 				'El punto de tesis se presentó correctamente',
 				'success'
 			);
-		} catch (error) {
+		} catch (error: any) {
 			errorHandler(error as AxiosError);
 		}
 	};

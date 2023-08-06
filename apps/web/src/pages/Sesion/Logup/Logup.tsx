@@ -43,7 +43,7 @@ const Logup: React.FC<LogupProps> = () => {
 				'success'
 			);
 			methods.reset();
-		} catch (error) {
+		} catch (error: any) {
 			errorHandler(error as AxiosError);
 		} finally {
 			setEnviando(false);

@@ -4,7 +4,7 @@ import { sqlSelect } from '../db/consultas';
 
 const obtenerItem = (req: Request, res: Response) => {
 	try {
-	} catch (error) {
+	} catch (error: any) {
 		errorHttp(res, { error, msg: 'Error al obtener el item' });
 	}
 };
@@ -15,28 +15,28 @@ const obtenerItems = async ({ query, user }: Request, res: Response) => {
 			table: 'ut_v_rol',
 		});
 		res.status(200).json(results);
-	} catch (error) {
+	} catch (error: any) {
 		errorHttp(res, { error, msg: 'Error al obtener los items' });
 	}
 };
 
 const crearItem = (req: Request, res: Response) => {
 	try {
-	} catch (error) {
+	} catch (error: any) {
 		errorHttp(res, { error, msg: 'Error al crear el item' });
 	}
 };
 
 const actualizarItem = (req: Request, res: Response) => {
 	try {
-	} catch (error) {
+	} catch (error: any) {
 		errorHttp(res, { error, msg: 'Error al actualizar el item' });
 	}
 };
 
 const eliminarItem = (req: Request, res: Response) => {
 	try {
-	} catch (error) {
+	} catch (error: any) {
 		errorHttp(res, { error, msg: 'Error al eliminar el item' });
 	}
 };

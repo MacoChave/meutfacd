@@ -14,7 +14,7 @@ export const getItem = async ({ body, query }: Request, res: Response) => {
 			query,
 		});
 		res.status(200).json(response);
-	} catch (error) {
+	} catch (error: any) {
 		errorHttp(res, {
 			error,
 			msg: 'No se puede obtener el item',
@@ -30,7 +30,7 @@ export const getItems = async ({ body, query }: Request, res: Response) => {
 			...query,
 		});
 		res.status(200).json(responses);
-	} catch (error) {
+	} catch (error: any) {
 		errorHttp(res, {
 			error,
 			msg: 'No se puede obtener el item',
@@ -46,7 +46,7 @@ export const createItem = async ({ body }: Request, res: Response) => {
 			datos: body.datos,
 		});
 		res.status(200).json(response);
-	} catch (error) {
+	} catch (error: any) {
 		errorHttp(res, {
 			error,
 			msg: 'No se puede obtener el item',
@@ -62,7 +62,7 @@ export const createItems = async ({ body }: Request, res: Response) => {
 			datos: body.datos,
 		});
 		res.status(200).json(response);
-	} catch (error) {
+	} catch (error: any) {
 		errorHttp(res, {
 			error,
 			msg: 'No se puede obtener el item',

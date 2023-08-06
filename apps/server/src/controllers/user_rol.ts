@@ -5,7 +5,7 @@ import { sqlDelete, sqlInsert, sqlSelect, sqlUpdate } from '../db/consultas';
 export const getItem = ({ query, body, user }: Request, res: Response) => {
 	res.status(200).json({ message: 'OK' });
 	try {
-	} catch (error) {
+	} catch (error: any) {
 		errorHttp(res, {
 			error,
 			msg: 'No se puede obtener el registro',
@@ -24,7 +24,7 @@ export const getItems = async (
 			query: { id_usuario: user.primaryKey },
 		});
 		res.status(200).json(results);
-	} catch (error) {
+	} catch (error: any) {
 		errorHttp(res, {
 			error,
 			msg: 'No se puede obtener el registro',
@@ -40,7 +40,7 @@ export const postItem = async ({ body, user }: Request, res: Response) => {
 			datos: body,
 		});
 		res.status(200).json(results);
-	} catch (error) {
+	} catch (error: any) {
 		errorHttp(res, {
 			error,
 			msg: 'No se puede crear el registro',
@@ -60,7 +60,7 @@ export const putItem = async (
 			query: query,
 		});
 		res.status(200).json(results);
-	} catch (error) {
+	} catch (error: any) {
 		errorHttp(res, {
 			error,
 			msg: 'No se puede actualizar el registro',
@@ -76,7 +76,7 @@ export const deleteItem = ({ query, user }: Request, res: Response) => {
 			query: query,
 		});
 		res.status(200).json(results);
-	} catch (error) {
+	} catch (error: any) {
 		errorHttp(res, {
 			error,
 			msg: 'No se puede eliminar el registro',

@@ -38,7 +38,7 @@ const UserRecovery: React.FC<UserRecoveryProps> = ({}) => {
 	const onSubmit: SubmitHandler<RecoveryType> = async (body) => {
 		try {
 			console.log('Send email to recover password', body);
-		} catch (error) {
+		} catch (error: any) {
 			errorHandler(error as AxiosError);
 		}
 	};

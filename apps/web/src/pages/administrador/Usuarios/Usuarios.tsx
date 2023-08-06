@@ -6,6 +6,7 @@ import { useCustomFetch } from '@/hooks/useFetch';
 import { UserType } from '@/models/Perfil';
 import { useState } from 'react';
 import { DetalleUsuario } from './DetalleUsuario';
+import { deleteData } from '@/services/fetching';
 
 const Usuarios = () => {
 	const [openModal, setOpenModal] = useState(false);
@@ -21,9 +22,13 @@ const Usuarios = () => {
 		setOpenModal(true);
 	};
 
-	const onDetail = (registro: object) => {
-		setUsuario(registro as UserType);
-		setOpenModal(true);
+	const onDelete = async (registro: any) => {
+		const response = await deleteData({
+			path: `${URL.USER}`,
+			params: { id_usuario: registro['id_usuario'] },
+		});
+		console.log(response);
+		refetch();
 	};
 
 	const onClose = () => {
@@ -52,12 +57,12 @@ const Usuarios = () => {
 					rows={
 						data.map((d: UserType) => ({
 							...d,
-							roles: d.roles.split(' ')[0],
+							roles: d.roles ? d.roles.split(' ')[0] : 'Sin rol',
 						})) || []
 					}
 					totalCols={{}}
 					onEdit={onEdit}
-					onDelete={onDetail}
+					onDelete={onDelete}
 				/>
 			</Contenedor>
 			{openModal && (

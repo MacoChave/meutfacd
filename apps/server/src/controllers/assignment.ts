@@ -12,7 +12,7 @@ export const getItem = async (
 			query: { id_estudiante: user.primaryKey, ...query },
 		});
 		res.status(200).json(result);
-	} catch (error) {
+	} catch (error: any) {
 		errorHttp(res, {
 			error,
 			msg: 'No se puede obtener el registro',
@@ -31,7 +31,7 @@ export const getItems = async (
 			query: { id_estudiante: user.primaryKey, ...query },
 		});
 		res.status(200).json(results);
-	} catch (error) {
+	} catch (error: any) {
 		errorHttp(res, {
 			error,
 			msg: 'No se puede obtener el registro',
@@ -47,7 +47,7 @@ export const postItem = async ({ body }: Request, res: Response) => {
 			datos: body,
 		});
 		res.status(200).json(results);
-	} catch (error) {
+	} catch (error: any) {
 		errorHttp(res, {
 			error,
 			msg: 'No se puede guardar el progreso',
@@ -67,7 +67,7 @@ export const putItem = async (
 			datos: body,
 		});
 		res.status(200).json(results);
-	} catch (error) {
+	} catch (error: any) {
 		errorHttp(res, {
 			error,
 			msg: 'No se puede guardar el progreso',
@@ -84,7 +84,7 @@ export const deleteItem = ({ query }: Request, res: Response) => {
 			datos: { estado: 0 },
 		});
 		res.status(200).json(results);
-	} catch (error) {
+	} catch (error: any) {
 		errorHttp(res, {
 			error,
 			msg: 'No se puede guardar el progreso',

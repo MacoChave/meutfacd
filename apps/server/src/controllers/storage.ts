@@ -14,7 +14,7 @@ const uploadDraft = async ({ files, user }: Request, res: Response) => {
 		);
 		console.log({ result });
 		res.status(200).json({ name: `${user.carnet}_${files.draft.name}` });
-	} catch (error) {
+	} catch (error: any) {
 		errorHttp(res, { error, msg: 'Error al subir el borrador', code: 500 });
 	}
 };
@@ -29,7 +29,7 @@ const uploadTesis = async ({ files, user }: Request, res: Response) => {
 		);
 		console.log(result);
 		res.status(200).json({ success: 'Tesis subida correctamente' });
-	} catch (error) {
+	} catch (error: any) {
 		res.status(500).json({ error: 'Error al subir la tesis' });
 	}
 };
@@ -50,7 +50,7 @@ const getFile = async ({ query }: Request, res: Response) => {
 			success: 'Archivo descargado con éxito',
 			result,
 		});
-	} catch (error) {
+	} catch (error: any) {
 		res.status(500).json({ error: 'Error al descargar el archivo' });
 	}
 };

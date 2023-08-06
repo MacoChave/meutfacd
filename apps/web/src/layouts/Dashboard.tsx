@@ -10,7 +10,7 @@ const Dashboard = ({
 	menuArray,
 	children,
 }: {
-	menuArray: MenuItem[];
+	menuArray?: MenuItem[];
 	children: ReactNode;
 }) => {
 	const { data, isLoading, isError } = useFetch({

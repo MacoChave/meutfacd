@@ -40,7 +40,7 @@ const Login: React.FC<LoginProps> = () => {
 
 		if (response.token === undefined) return;
 
-		const rol = response.roles.split(' ')[0];
+		const rol = response.roles ? response.roles.split(' ')[0] : '';
 		console.log(rol);
 
 		dispatch(setLogged(response));

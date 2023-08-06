@@ -128,7 +128,7 @@ export const router = createBrowserRouter([
 		],
 	},
 	{
-		path: '/encargado/:estacion',
+		path: '/encargado/',
 		element: (
 			<ProtectedRoute rol='encargado'>{<HomeEncargado />}</ProtectedRoute>
 		),
@@ -142,7 +142,7 @@ export const router = createBrowserRouter([
 				),
 			},
 			{
-				path: 'asignar',
+				path: 'curso-introduccion',
 				element: (
 					<ProtectedRoute rol='encargado'>
 						{<Asignar />}

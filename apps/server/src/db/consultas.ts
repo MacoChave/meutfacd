@@ -301,7 +301,7 @@ export const sqlInsertMany = async ({ table, datos }: sqlInsertManyType) => {
 
 	logger({
 		dirname: __dirname,
-		proc: 'sqlInsert',
+		proc: 'sqlManyInsert',
 		message: JSON.stringify({ sql, values }),
 	});
 
@@ -322,7 +322,7 @@ export const sqlUpdate = async ({ table, datos, query }: sqlUpdateType) => {
 
 	logger({
 		dirname: __dirname,
-		proc: 'sqlInsert',
+		proc: 'sqlUpdate',
 		message: JSON.stringify({ sql, values: [...valsSet, ...valsWhere] }),
 	});
 
@@ -341,12 +341,15 @@ export const sqlDelete = async ({ table, query }: sqlDeleteType) => {
 
 	logger({
 		dirname: __dirname,
-		proc: 'sqlInsert',
+		proc: 'sqlDelete',
 		message: JSON.stringify({ sql, values: valsWhere }),
 	});
 
 	const conn = await connection();
 	const [results, fields] = await conn.query(sql, valsWhere);
 	conn.end();
+	console.log('**********');
+	console.log({ results, fields });
+	console.log('**********');
 	return results;
 };
