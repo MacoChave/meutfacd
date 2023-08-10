@@ -40,7 +40,7 @@ const RevisionDocumento = () => {
 				setModalContent(<AgregarComentario />);
 				break;
 			case Operation.LEER:
-				setModalContent(<ShowPDF />);
+				setModalContent(<ShowPDF curReview={{}} />);
 				break;
 			default:
 				break;

@@ -38,13 +38,6 @@ const uploadTesis = async ({ files, user }: Request, res: Response) => {
 const getFile = async ({ query }: Request, res: Response) => {
 	try {
 		const { name } = query;
-		// const result = await downloadFile(name as string);
-		// if (!result) {
-		// 	res.status(404).json({ error: 'Archivo no encontrado' });
-		// }
-
-		// result.Body.pipe(createWriteStream(`./src/storage/${name}`));
-
 		res.status(200).json({
 			url: `https://${DATA_SOURCES.AWS_BUCKET_NAME}.s3.amazonaws.com/${name}`,
 		});

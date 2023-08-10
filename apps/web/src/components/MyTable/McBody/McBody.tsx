@@ -1,10 +1,15 @@
-import { TypeWithKey } from '@/models/TypeWithKey';
 import {
 	formatByDataType,
 	getAlignByDataType,
 	getChipLabel,
 } from '@/utils/formatHandler';
-import { Delete, Edit, Print } from '@mui/icons-material';
+import {
+	Delete,
+	Edit,
+	FileOpen,
+	FilePresent,
+	Print,
+} from '@mui/icons-material';
 import {
 	Chip,
 	IconButton,
@@ -18,6 +23,7 @@ export type McBodyProps = {
 	headers: object;
 	rows: object[];
 	onEdit?: (row: object) => void;
+	onView?: (row: object) => void;
 	onDelete?: (row: object) => void;
 	onPrint?: (row: object) => void;
 };
@@ -35,6 +41,7 @@ const McBody: React.FC<McBodyProps> = ({
 	headers,
 	rows,
 	onEdit,
+	onView,
 	onDelete,
 	onPrint,
 }) => {
@@ -55,6 +62,13 @@ const McBody: React.FC<McBodyProps> = ({
 								color='secondary'
 								onClick={() => onEdit(row)}>
 								<Edit />
+							</IconButton>
+						)}
+						{onView && (
+							<IconButton
+								color='secondary'
+								onClick={() => onView(row)}>
+								<FilePresent />
 							</IconButton>
 						)}
 						{onDelete && (

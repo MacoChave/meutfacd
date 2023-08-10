@@ -1,14 +1,18 @@
 import { URL as URI } from '@/api/server';
-import { Contenedor } from '@/components';
+import { Contenedor, McModal } from '@/components';
+import AgregarComentario from '@/components/FijarFecha';
 import { McTable } from '@/components/MyTable';
 import { useCustomFetch } from '@/hooks/useFetch';
 import { getData } from '@/services/fetching';
-import React from 'react';
+import React, { useState } from 'react';
+import { ReviewDoc } from '../components/ReviewDoc';
 
 export type DraftProfessorProps = Record<string, never>;
 
 const DraftProfessor: React.FC<DraftProfessorProps> = ({}) => {
-	const { data, isLoading, isError } = useCustomFetch({
+	const [openReview, setOpenReview] = useState(false);
+	const [curReview, setCurReview] = useState({});
+	const { data, isLoading, isError, refetch } = useCustomFetch({
 		url: `${URI.REVIEW}/professor`,
 		method: 'get',
 		body: {},
@@ -21,10 +25,18 @@ const DraftProfessor: React.FC<DraftProfessorProps> = ({}) => {
 			body: {},
 			params: { name: item.ruta_perfil },
 		});
-		console.log(url);
-		// const file = new Blob([result], { type: 'application/pdf' });
-		// const fileURL = URL.createObjectURL(file);
 		window.open(url);
+	};
+
+	const setReview = (item: any) => {
+		setCurReview(item);
+		setOpenReview(true);
+	};
+
+	const onClose = () => {
+		setOpenReview(false);
+		setCurReview({});
+		refetch();
 	};
 
 	if (isLoading) return <div>Cargando...</div>;
@@ -42,9 +54,16 @@ const DraftProfessor: React.FC<DraftProfessorProps> = ({}) => {
 					}}
 					rows={data}
 					totalCols={{}}
-					onPrint={openPDF}
+					onView={openPDF}
+					onEdit={setReview}
 				/>
 			</Contenedor>
+			<McModal
+				title='Revisión de punto de tesis'
+				open={openReview}
+				onClose={onClose}>
+				<ReviewDoc curReview={curReview} onClose={onClose} />
+			</McModal>
 		</>
 	);
 };

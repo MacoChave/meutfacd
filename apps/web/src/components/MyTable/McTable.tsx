@@ -9,6 +9,7 @@ export type McTableProps = {
 	headers: object;
 	totalCols: object;
 	onEdit?: (row: object) => void;
+	onView?: (row: object) => void;
 	onDelete?: (row: object) => void;
 	onPrint?: (row: object) => void;
 };
@@ -18,6 +19,7 @@ const McTable: React.FC<McTableProps> = ({
 	headers,
 	totalCols,
 	onEdit = undefined,
+	onView = undefined,
 	onDelete = undefined,
 	onPrint = undefined,
 }) => {
@@ -34,6 +36,7 @@ const McTable: React.FC<McTableProps> = ({
 					headers={headers}
 					rows={rows}
 					onEdit={onEdit}
+					onView={onView}
 					onDelete={onDelete}
 					onPrint={onPrint}
 				/>

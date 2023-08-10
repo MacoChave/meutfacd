@@ -4,6 +4,7 @@ import {
 	createItems,
 	getItem,
 	getItems,
+	putItem,
 } from '../controllers/generic';
 import { requireAuth } from '../middlewares/requireAuth';
 
@@ -13,5 +14,6 @@ router.post('/one', requireAuth, getItem);
 router.post('/all', requireAuth, getItems);
 router.post('/', requireAuth, createItem);
 router.post('/many', requireAuth, createItems);
+router.put('/', requireAuth, putItem);
 
 export { router };
