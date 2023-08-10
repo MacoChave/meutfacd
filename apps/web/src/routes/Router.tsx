@@ -1,23 +1,24 @@
 import { ErrorPage } from '@/pages/ErrorPage';
-import { Login, Recuperar } from '@/pages/Sesion';
+import { Login } from '@/pages/Sesion';
 import { Logup } from '@/pages/Sesion/Logup';
+import { UserRecovery } from '@/pages/Sesion/UserRecovery';
 import { createBrowserRouter } from 'react-router-dom';
 import ProtectedRoute from '../components/ProtectedRoute';
 import Home from '../pages/Home/Home';
-import Perfil from '../pages/Sesion/Profile';
+import UserProfile from '../pages/Sesion/UserProfile/UserProfile';
 import HomeAdministrador from '../pages/administrador';
 import Actividades from '../pages/administrador/Actividades';
 import Aplicacion from '../pages/administrador/Aplicacion';
 import Permisos from '../pages/administrador/Permisos';
 import Problemas from '../pages/administrador/Problemas';
-import Usuarios from '../pages/administrador/Usuarios';
+import Usuarios from '../pages/administrador/Usuarios/Usuarios';
 import HomeReporte from '../pages/analitica';
 import ByEstacion from '../pages/analitica/ByEstacion';
 import ByRol from '../pages/analitica/ByRol';
 import Resumen from '../pages/analitica/Resumen';
 import HomeEncargado from '../pages/encargado';
-import Asignar from '../pages/encargado/Asignar';
-import Citas from '../pages/encargado/Citas';
+import Asignar from '../pages/encargado/Asignar/Asignar';
+import Citas from '../pages/encargado/Citas/Citas';
 import HomeEstudiante from '../pages/estudiante';
 import Progress from '../pages/estudiante/Progress';
 import Estacion1 from '../pages/estudiante/Station1';
@@ -28,6 +29,8 @@ import Estacion5 from '../pages/estudiante/Station5';
 import HomeEvaluador from '../pages/evaluador';
 import RevisionCurso from '../pages/evaluador/RevisionCurso';
 import RevisionDocumento from '../pages/evaluador/RevisionDoc';
+import { Draft } from '@/pages/encargado/Draft';
+import { DraftProfessor } from '@/pages/evaluador/DraftProfessor';
 
 export const router = createBrowserRouter([
 	{
@@ -49,8 +52,8 @@ export const router = createBrowserRouter([
 		element: <Logup />,
 	},
 	{
-		path: '/recuperar',
-		element: <Recuperar />,
+		path: '/recovery/:rol',
+		element: <UserRecovery />,
 	},
 	{
 		path: '/estudiante',
@@ -64,7 +67,7 @@ export const router = createBrowserRouter([
 				path: 'perfil',
 				element: (
 					<ProtectedRoute rol='estudiante'>
-						<Perfil />
+						<UserProfile />
 					</ProtectedRoute>
 				),
 			},
@@ -77,7 +80,7 @@ export const router = createBrowserRouter([
 				),
 			},
 			{
-				path: 'estacion1',
+				path: 'punto-tesis',
 				element: (
 					<ProtectedRoute rol='estudiante'>
 						{<Estacion1 />}
@@ -85,7 +88,7 @@ export const router = createBrowserRouter([
 				),
 			},
 			{
-				path: 'estacion2',
+				path: 'curso-introduccion',
 				element: (
 					<ProtectedRoute rol='estudiante'>
 						{<Estacion2 />}
@@ -93,7 +96,7 @@ export const router = createBrowserRouter([
 				),
 			},
 			{
-				path: 'estacion3',
+				path: 'curso-elaboracion',
 				element: (
 					<ProtectedRoute rol='estudiante'>
 						{<Estacion3 />}
@@ -101,7 +104,7 @@ export const router = createBrowserRouter([
 				),
 			},
 			{
-				path: 'estacion4',
+				path: 'tesis',
 				element: (
 					<ProtectedRoute rol='estudiante'>
 						{<Estacion4 />}
@@ -109,7 +112,7 @@ export const router = createBrowserRouter([
 				),
 			},
 			{
-				path: 'estacion5',
+				path: 'previos-internos',
 				element: (
 					<ProtectedRoute rol='estudiante'>
 						{<Estacion5 />}
@@ -117,7 +120,7 @@ export const router = createBrowserRouter([
 				),
 			},
 			{
-				path: 'finalizar',
+				path: 'finalizacion',
 				element: (
 					<ProtectedRoute rol='estudiante'>
 						{<Estacion5 />}
@@ -127,7 +130,7 @@ export const router = createBrowserRouter([
 		],
 	},
 	{
-		path: '/encargado/:estacion',
+		path: '/encargado/',
 		element: (
 			<ProtectedRoute rol='encargado'>{<HomeEncargado />}</ProtectedRoute>
 		),
@@ -136,20 +139,44 @@ export const router = createBrowserRouter([
 				path: 'perfil',
 				element: (
 					<ProtectedRoute rol='encargado'>
-						<Perfil />
+						<UserProfile />
 					</ProtectedRoute>
 				),
 			},
 			{
-				path: 'asignar',
+				path: 'punto-tesis',
 				element: (
 					<ProtectedRoute rol='encargado'>
-						{<Asignar />}
+						<Draft />
 					</ProtectedRoute>
 				),
 			},
 			{
-				path: 'citas',
+				path: 'curso-introduccion',
+				element: (
+					<ProtectedRoute rol='encargado'>
+						{<Asignar rol='Curso 1' />}
+					</ProtectedRoute>
+				),
+			},
+			{
+				path: 'curso-elaboracion',
+				element: (
+					<ProtectedRoute rol='encargado'>
+						{<Asignar rol='Curso 2' />}
+					</ProtectedRoute>
+				),
+			},
+			{
+				path: 'tesis',
+				element: (
+					<ProtectedRoute rol='encargado'>
+						{<Asignar rol='Comisión y estilo' />}
+					</ProtectedRoute>
+				),
+			},
+			{
+				path: 'previos-internos',
 				element: (
 					<ProtectedRoute rol='encargado'>{<Citas />}</ProtectedRoute>
 				),
@@ -157,7 +184,7 @@ export const router = createBrowserRouter([
 		],
 	},
 	{
-		path: '/evaluador',
+		path: '/docente',
 		element: (
 			<ProtectedRoute rol='profesor'>{<HomeEvaluador />}</ProtectedRoute>
 		),
@@ -166,28 +193,20 @@ export const router = createBrowserRouter([
 				path: 'perfil',
 				element: (
 					<ProtectedRoute rol='profesor'>
-						<Perfil />
+						<UserProfile />
 					</ProtectedRoute>
 				),
 			},
 			{
-				path: 'estacion1',
+				path: 'punto-tesis',
 				element: (
 					<ProtectedRoute rol='profesor'>
-						{<RevisionDocumento />}
+						{<DraftProfessor />}
 					</ProtectedRoute>
 				),
 			},
 			{
-				path: 'estacion2',
-				element: (
-					<ProtectedRoute rol='profesor'>
-						{<RevisionCurso />}
-					</ProtectedRoute>
-				),
-			},
-			{
-				path: 'estacion3',
+				path: 'curso-introduccion',
 				element: (
 					<ProtectedRoute rol='profesor'>
 						{<RevisionCurso />}
@@ -195,7 +214,15 @@ export const router = createBrowserRouter([
 				),
 			},
 			{
-				path: 'estacion4',
+				path: 'curso-elaboracion',
+				element: (
+					<ProtectedRoute rol='profesor'>
+						{<RevisionCurso />}
+					</ProtectedRoute>
+				),
+			},
+			{
+				path: 'tesis',
 				element: (
 					<ProtectedRoute rol='profesor'>
 						{<RevisionDocumento />}
@@ -214,7 +241,7 @@ export const router = createBrowserRouter([
 				path: 'perfil',
 				element: (
 					<ProtectedRoute rol='analitica'>
-						<Perfil />
+						<UserProfile />
 					</ProtectedRoute>
 				),
 			},
@@ -254,7 +281,7 @@ export const router = createBrowserRouter([
 				path: 'perfil',
 				element: (
 					<ProtectedRoute rol='administrador'>
-						<Perfil />
+						<UserProfile />
 					</ProtectedRoute>
 				),
 			},

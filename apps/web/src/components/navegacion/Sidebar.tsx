@@ -44,7 +44,7 @@ const Sidebar = ({ menuArray, open, setOpen }: DrawerProps) => {
 								display: 'block',
 							}}>
 							<ListItemButton
-								onClick={() => navigate(item.path)}
+								onClick={() => navigate(item.ruta)}
 								sx={{
 									minHeight: 48,
 									justifyContent: {
@@ -62,11 +62,11 @@ const Sidebar = ({ menuArray, open, setOpen }: DrawerProps) => {
 										color: 'inherit',
 									}}>
 									<Tooltip title={item.description}>
-										{item.icon}
+										<>{item.nombre.slice(0, 2)}</>
 									</Tooltip>
 								</ListItemIcon>
 								<ListItemText
-									primary={item.text}
+									primary={item.nombre}
 									sx={{
 										opacity: { xs: 0, md: 1 },
 									}}

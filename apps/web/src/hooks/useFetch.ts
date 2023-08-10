@@ -34,8 +34,14 @@ const fetchDataPaginado = async ({ queryKey }: QueryFunctionContext) => {
 	return data;
 };
 
-export const useFetch = ({ url, params }: { url: string; params?: Object }) => {
-	return useQuery(['data', url, params || {}], fetchData);
+export const useFetch = ({
+	url,
+	params = {},
+}: {
+	url: string;
+	params?: Object;
+}) => {
+	return useQuery(['data', url, params], fetchData);
 };
 
 export const useCustomFetch = ({

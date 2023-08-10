@@ -57,19 +57,6 @@ const Contacto: React.FC<ContactoProps> = () => {
 					/>
 				)}
 			/>
-			<Controller
-				control={control}
-				name='telefono'
-				render={({ field }) => (
-					<TextField
-						{...field}
-						sx={{ width: { xs: '200px', sm: '300px' } }}
-						label='Teléfono'
-						variant='outlined'
-						error={!!errors.nombre}
-					/>
-				)}
-			/>
 		</Box>
 	);
 };

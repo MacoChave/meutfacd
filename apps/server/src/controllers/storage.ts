@@ -1,8 +1,9 @@
 import { Request, Response } from 'express';
 import { logger } from '../utils/logger';
 import { downloadFile, uploadFile } from '../utils/upload';
-import { createWriteStream } from 'fs';
+import { createReadStream, createWriteStream } from 'fs';
 import { errorHttp } from '../utils/error.handle';
+import { DATA_SOURCES } from '../config/vars.config';
 
 const uploadDraft = async ({ files, user }: Request, res: Response) => {
 	try {
@@ -14,7 +15,7 @@ const uploadDraft = async ({ files, user }: Request, res: Response) => {
 		);
 		console.log({ result });
 		res.status(200).json({ name: `${user.carnet}_${files.draft.name}` });
-	} catch (error) {
+	} catch (error: any) {
 		errorHttp(res, { error, msg: 'Error al subir el borrador', code: 500 });
 	}
 };
@@ -29,29 +30,30 @@ const uploadTesis = async ({ files, user }: Request, res: Response) => {
 		);
 		console.log(result);
 		res.status(200).json({ success: 'Tesis subida correctamente' });
-	} catch (error) {
+	} catch (error: any) {
 		res.status(500).json({ error: 'Error al subir la tesis' });
 	}
 };
 
 const getFile = async ({ query }: Request, res: Response) => {
 	try {
-		const { carnet, name } = query;
-		const result = await downloadFile(
-			carnet?.toString() || '',
-			name?.toString() || ''
-		);
-		if (!result) {
-			res.status(404).json({ error: 'Archivo no encontrado' });
-		}
-		const fileDownloaded = createWriteStream('../storage/newFile.pdf');
+		const { name } = query;
+		// const result = await downloadFile(name as string);
+		// if (!result) {
+		// 	res.status(404).json({ error: 'Archivo no encontrado' });
+		// }
+
+		// result.Body.pipe(createWriteStream(`./src/storage/${name}`));
 
 		res.status(200).json({
-			success: 'Archivo descargado con éxito',
-			result,
+			url: `https://${DATA_SOURCES.AWS_BUCKET_NAME}.s3.amazonaws.com/${name}`,
 		});
-	} catch (error) {
-		res.status(500).json({ error: 'Error al descargar el archivo' });
+	} catch (error: any) {
+		errorHttp(res, {
+			error,
+			msg: 'Error al descargar el archivo',
+			code: 500,
+		});
 	}
 };
 

@@ -2,6 +2,10 @@ import { Box, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { InfoEstacion } from './components/InfoEstacion';
 import { SesionMenu } from './components/SesionMenu';
+import svgStation1 from '@/assets/svg/estacion1.svg';
+import svgStation2 from '@/assets/svg/estacion2.svg';
+import svgStation4 from '@/assets/svg/estacion4.svg';
+import svgStation5 from '@/assets/svg/estacion5.svg';
 
 const Home = (props: any) => {
 	const navigate = useNavigate();
@@ -44,34 +48,34 @@ const Home = (props: any) => {
 				</Box>
 				<InfoEstacion
 					title='Recepción de punto de tesis'
-					img='https://i.ibb.co/mzs6FRY/Estacion1.png'
+					img={svgStation1}
 					alt='Flujo del proceso de recepción del punto de tesis'
 				/>
 				<InfoEstacion
 					title='Curso'
 					subtitle='Inducción a la planeación científica'
-					img='https://i.ibb.co/px6CJ26/Estacion2.png'
+					img={svgStation2}
 					alt='Flujo del proceso del curso inducción a la planeación científica'
 				/>
 				<InfoEstacion
 					title='Curso'
 					subtitle='Elaboración y presentación de tesis'
-					img='https://i.ibb.co/px6CJ26/Estacion2.png'
+					img={svgStation2}
 					alt='Flujo del proceso del curso elaboración y presentación de tesis'
 				/>
 				<InfoEstacion
 					title='Comisión y estilo'
-					img='https://i.ibb.co/mzs6FRY/Estacion1.png'
+					img={svgStation4}
 					alt='Flujo del proceso de comisión y estilo'
 				/>
 				<InfoEstacion
 					title='Previos internos'
-					img='https://i.ibb.co/ZXtWgL3/Estacion5.png'
+					img={svgStation5}
 					alt='Flujo del proceso de previos internos'
 				/>
 				<InfoEstacion
 					title='Finalización del proceso'
-					img='https://i.ibb.co/mzs6FRY/Estacion1.png'
+					img={svgStation1}
 					alt='Flujo del proceso de finalización del proceso'
 				/>
 			</Box>

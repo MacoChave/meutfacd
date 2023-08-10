@@ -1,5 +1,5 @@
 import { Outlet } from 'react-router-dom';
-import Dashboard from '../../layaouts/Dashboard';
+import Dashboard from '../../layouts/Dashboard';
 import { MenuItem } from '../../propTypes/Appbar';
 import {
 	Assignment,
@@ -9,55 +9,70 @@ import {
 	Preview,
 } from '@mui/icons-material';
 import { Box, Toolbar } from '@mui/material';
+import { useFetch } from '@/hooks/useFetch';
+import { Loader } from '@/components';
+import { URL } from '@/api/server';
 
-const menuArray: MenuItem[] = [
-	{
-		text: 'Progreso',
-		description: 'Ver mi progreso del proceso',
-		path: 'progreso',
-		icon: <Home />,
-	},
-	{
-		text: 'Estación 1',
-		description: 'Enviar punto de tesis',
-		path: 'estacion1',
-		icon: <Description />,
-	},
-	{
-		text: 'Estación 2',
-		description: 'Curso 1',
-		path: 'estacion2',
-		icon: <Assignment />,
-	},
-	{
-		text: 'Estación 3',
-		description: 'Curso 2',
-		path: 'estacion3',
-		icon: <Assignment />,
-	},
-	{
-		text: 'Estación 4',
-		description: 'Comisión y estilo',
-		path: 'estacion4',
-		icon: <Preview />,
-	},
-	{
-		text: 'Estación 5',
-		description: 'Previos internos',
-		path: 'estacion5',
-		icon: <Groups />,
-	},
-	{
-		text: 'Finalizar',
-		description: 'Finalizar proceso',
-		path: 'finalizar',
-		icon: <Assignment />,
-	},
-];
+// const menuArray: MenuItem[] = [
+// 	{
+// 		nombre: 'Progreso',
+// 		description: 'Ver mi progreso del proceso',
+// 		ruta: 'progreso',
+// 		icon: <Home />,
+// 	},
+// 	{
+// 		nombre: 'Estación 1',
+// 		description: 'Enviar punto de tesis',
+// 		ruta: 'estacion1',
+// 		icon: <Description />,
+// 	},
+// 	{
+// 		nombre: 'Estación 2',
+// 		description: 'Curso 1',
+// 		ruta: 'estacion2',
+// 		icon: <Assignment />,
+// 	},
+// 	{
+// 		nombre: 'Estación 3',
+// 		description: 'Curso 2',
+// 		ruta: 'estacion3',
+// 		icon: <Assignment />,
+// 	},
+// 	{
+// 		nombre: 'Estación 4',
+// 		description: 'Comisión y estilo',
+// 		ruta: 'estacion4',
+// 		icon: <Preview />,
+// 	},
+// 	{
+// 		nombre: 'Estación 5',
+// 		description: 'Previos internos',
+// 		ruta: 'estacion5',
+// 		icon: <Groups />,
+// 	},
+// 	{
+// 		nombre: 'Finalizar',
+// 		description: 'Finalizar proceso',
+// 		ruta: 'finalizar',
+// 		icon: <Assignment />,
+// 	},
+// ];
 
 const HomeEstudiante = () => {
+	const {
+		data: options,
+		isLoading,
+		isError,
+	} = useFetch({
+		url: `${URL.PERMISSION}/all`,
+		params: {},
+	});
+
+	if (isLoading) return <Loader />;
+	if (isError) return <div>Error</div>;
+
 	return (
-		<Dashboard menuArray={menuArray}>
+		<Dashboard>
 			<Box
 				sx={{
 					width: '90%',

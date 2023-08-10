@@ -10,8 +10,10 @@ export const getChipLabel = (code: string) => {
 			return 'Rechazado';
 		case 'P':
 			return 'Previa';
+		case 'V':
+			return 'Revisión';
 		default:
-			return 'En espera';
+			return 'Sin datos';
 	}
 };
 
@@ -52,7 +54,9 @@ export const formatByDataType = (cellValue: TypeWithKey<string>): string => {
 		case 'number':
 			return new Intl.NumberFormat().format(Number(value));
 		case 'date':
-			return new Date(value).toLocaleDateString('es-GT');
+			return new Date(value).toLocaleDateString('es-GT', {
+				dateStyle: 'long',
+			});
 		case 'boolean':
 			return value ? 'Si' : 'No';
 		default:

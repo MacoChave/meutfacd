@@ -7,13 +7,14 @@ import { Draft, draftDefault, draftSchema } from '@/models/Draft';
 import { postData, putData } from '@/services/fetching';
 import { errorHandler } from '@/utils/errorHandler';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Box, Button, TextField, Typography } from '@mui/material';
+import { Box, Button, Chip, TextField, Typography } from '@mui/material';
 import { AxiosError } from 'axios';
 import { useEffect, useState } from 'react';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import swal from 'sweetalert';
 import FileChooser from '../../components/controles/FileChooser';
 import { style } from '@/themes/styles';
+import { getChipLabel } from '@/utils/formatHandler';
 
 const Estacion1 = () => {
 	const [isUploading, setIsUploading] = useState(false);
@@ -23,14 +24,14 @@ const Estacion1 = () => {
 		isLoading,
 		isError,
 	} = useCustomFetch({
-		url: `${URL.REVISION}/one`,
+		url: `${URL.REVIEW}/one`,
 		method: 'post',
 		body: {
 			table: 'ut_v_revision',
 			columns: [
 				'id_revision',
 				'titulo',
-				'fecha_revision',
+				'fecha',
 				'detalle',
 				'estado',
 				'estacion',
@@ -76,7 +77,7 @@ const Estacion1 = () => {
 				'success'
 			);
 			setIsUploaded(true);
-		} catch (error) {
+		} catch (error: any) {
 			errorHandler(error as AxiosError);
 		} finally {
 			setIsUploading(false);
@@ -87,7 +88,7 @@ const Estacion1 = () => {
 		try {
 			if (revision.estado === 'P') {
 				await putData({
-					path: URL.TESIS._,
+					path: URL.THESIS,
 					body: {
 						titulo: draft.titulo,
 						ruta_perfil: draft.name,
@@ -95,7 +96,7 @@ const Estacion1 = () => {
 				});
 			} else {
 				await postData({
-					path: URL.TESIS._,
+					path: URL.THESIS,
 					body: {
 						titulo: draft.titulo,
 						ruta_perfil: draft.name,
@@ -108,7 +109,7 @@ const Estacion1 = () => {
 				'El punto de tesis se presentó correctamente',
 				'success'
 			);
-		} catch (error) {
+		} catch (error: any) {
 			errorHandler(error as AxiosError);
 		}
 	};
@@ -130,6 +131,12 @@ const Estacion1 = () => {
 						<Box>
 							<Typography variant='h6'>
 								Detalle del previo
+								<Box component='span' sx={{ ml: 2 }}>
+									<Chip
+										color='primary'
+										label={getChipLabel(revision.estado)}
+									/>
+								</Box>
 							</Typography>
 							<Typography>
 								{revision?.detalle ?? 'Sin revisión'}
@@ -145,35 +152,45 @@ const Estacion1 = () => {
 										fullWidth
 										label='Título del punto de tesis'
 										variant='filled'
+										InputProps={{
+											readOnly:
+												revision.estado === 'V' ||
+												revision.estado === 'A',
+										}}
 										error={!!errors.titulo}
 										helperText={errors.titulo?.message}
 									/>
 								)}
 							/>
 						</Box>
-						<Box
-							sx={{
-								gridColumn: { xs: '1', sm: '2' },
-								gridRow: { xs: '1', sm: '1 / span 2' },
-							}}>
-							{!isUploaded ? (
-								<FileChooser
-									title='Punto de tesis'
-									onUpload={onUpload}
-								/>
-							) : (
-								<Button
-									variant='contained'
-									color='primary'
-									type='submit'>
-									Enviar
-								</Button>
-							)}
-						</Box>
+						{!(
+							revision.estado === 'V' || revision.estado === 'A'
+						) && (
+							<Box
+								sx={{
+									gridColumn: { xs: '1', sm: '2' },
+									gridRow: { xs: '1', sm: '1 / span 2' },
+								}}>
+								{!isUploaded ? (
+									<FileChooser
+										title='Punto de tesis'
+										onUpload={onUpload}
+										disabled={true}
+									/>
+								) : (
+									<Button
+										variant='contained'
+										color='primary'
+										type='submit'>
+										Enviar
+									</Button>
+								)}
+							</Box>
+						)}
 					</Box>
 				</form>
 			</Contenedor>
-			{isUploading && <SpinLoader message='Subiendo tu punto de tesis' />}
+			{isUploading && <SpinLoader message='Subiendo punto de tesis' />}
 		</>
 	);
 };

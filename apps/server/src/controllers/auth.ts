@@ -1,11 +1,10 @@
-import { Request, Response } from 'express';
-import { sqlEjecutar, sqlSelect, sqlSelectOne } from '../db/consultas';
-import { v_usuarios } from '../models/v_usuarios';
-import { errorHttp } from '../utils/error.handle';
-import { encriptarPassword } from '../utils/token';
-import { DATA_SOURCES } from '../config/vars.config';
 import axios, { AxiosError } from 'axios';
+import { Request, Response } from 'express';
+import { DATA_SOURCES } from '../config/vars.config';
+import { sqlEjecutar, sqlSelectOne } from '../db/consultas';
+import { errorHttp } from '../utils/error.handle';
 import { logger } from '../utils/logger';
+import { encriptarPassword } from '../utils/token';
 
 export const logupHandler = async ({ body, query }: Request, res: Response) => {
 	try {
@@ -26,6 +25,11 @@ export const logupHandler = async ({ body, query }: Request, res: Response) => {
 
 		const hash = await encriptarPassword(pass);
 
+		const rowRol: any = await sqlEjecutar({
+			sql: `SELECT id_rol FROM rol WHERE lower(nombre) like lower(?)`,
+			values: [`${rol}%`],
+		});
+
 		const usuario = {
 			nombre,
 			apellido,
@@ -37,23 +41,22 @@ export const logupHandler = async ({ body, query }: Request, res: Response) => {
 			id_municipio: 1,
 			carnet,
 			cui,
-			rol: rol || 9,
+			rol: rowRol[0].id_rol,
 		};
 
 		// Crear variables para almacenar en BD
 		const values = Object.values(usuario).map((value) => value);
 
 		// Almacenar en BD
-		const usuarioNuevo: any[] = await sqlEjecutar(
-			`call sp_ut_crear_usuario(${Object.keys(usuario)
+		const usuarioNuevo: any = await sqlEjecutar({
+			sql: `call sp_ut_crear_usuario(${Object.keys(usuario)
 				.map((_value) => '?')
 				.join(',')})`,
-			values
-		);
+			values,
+		});
+		console.log(usuarioNuevo);
 
-		console.log(`${__dirname} [logup]`, usuarioNuevo[0]);
-
-		if (usuarioNuevo[0].affectedRows === 0) {
+		if (usuarioNuevo.affectedRows === 0) {
 			errorHttp(res, {
 				msg: 'Error al crear usuario',
 				code: 400,
@@ -74,6 +77,7 @@ export const loginHandler = async ({ body }: Request, res: Response) => {
 			user: body.correo,
 			password: body.pass,
 		};
+
 		const response = await axios.post(
 			`${DATA_SOURCES.AUTH_HOST}:${DATA_SOURCES.AUTH_PORT}/login`,
 			userData,
@@ -90,14 +94,16 @@ export const loginHandler = async ({ body }: Request, res: Response) => {
 		});
 		res.status(200).json(response.data);
 	} catch (error: any) {
-		const { response } = error as AxiosError;
+		const { response, status } = error as AxiosError;
 		logger({
 			dirname: __dirname,
 			proc: 'loginHandler',
 			message: `${response?.data}`,
 		});
-		console.log(error.response.data);
-		res.status(error.response.status).json(error.response.data);
+		console.log(response?.data, response?.status);
+		res.status(response?.status ?? 500).json(
+			response?.data ?? 'Se produjo un error al iniciar sesión'
+		);
 	}
 };
 

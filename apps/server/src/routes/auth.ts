@@ -8,8 +8,8 @@ import { requireAuth } from '../middlewares/requireAuth';
 
 const router = Router();
 
-router.get('/perfil', requireAuth, profileHandler);
-router.post('/logup/', logupHandler);
 router.post('/login', loginHandler);
+router.post('/logup', logupHandler);
+router.get('/profile', requireAuth, profileHandler);
 
 export { router };

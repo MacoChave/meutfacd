@@ -1,40 +1,44 @@
 import { Request, Response } from 'express';
 import { errorHttp } from '../utils/error.handle';
-import Rol from '../models/rol';
+import { sqlSelect } from '../db/consultas';
 
 const obtenerItem = (req: Request, res: Response) => {
 	try {
-	} catch (error) {
+	} catch (error: any) {
 		errorHttp(res, { error, msg: 'Error al obtener el item' });
 	}
 };
 
-const obtenerItems = (req: Request, res: Response) => {
+const obtenerItems = async ({ query, user }: Request, res: Response) => {
 	try {
-	} catch (error) {
+		const results = await sqlSelect({
+			table: 'ut_v_rol',
+		});
+		res.status(200).json(results);
+	} catch (error: any) {
 		errorHttp(res, { error, msg: 'Error al obtener los items' });
 	}
 };
 
 const crearItem = (req: Request, res: Response) => {
 	try {
-	} catch (error) {
+	} catch (error: any) {
 		errorHttp(res, { error, msg: 'Error al crear el item' });
 	}
 };
 
 const actualizarItem = (req: Request, res: Response) => {
 	try {
-	} catch (error) {
+	} catch (error: any) {
 		errorHttp(res, { error, msg: 'Error al actualizar el item' });
 	}
 };
 
 const eliminarItem = (req: Request, res: Response) => {
 	try {
-	} catch (error) {
+	} catch (error: any) {
 		errorHttp(res, { error, msg: 'Error al eliminar el item' });
 	}
 };
 
-export { obtenerItem, obtenerItems, crearItem, actualizarItem, eliminarItem };
+export { actualizarItem, crearItem, eliminarItem, obtenerItem, obtenerItems };

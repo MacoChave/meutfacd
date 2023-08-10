@@ -1,39 +1,31 @@
-import {
-	Assignment,
-	Description,
-	Groups,
-	Home,
-	Preview,
-} from '@mui/icons-material';
-import { MenuItem } from '../../propTypes/Appbar';
-import Dashboard from '../../layaouts/Dashboard';
-import { Outlet } from 'react-router-dom';
 import { Box, Toolbar } from '@mui/material';
+import { Outlet } from 'react-router-dom';
+import Dashboard from '../../layouts/Dashboard';
 
-const menuArray: MenuItem[] = [
-	{
-		text: 'Resumen',
-		description: 'Resumen por ciclo lectivo',
-		path: 'resumen',
-		icon: <Home />,
-	},
-	{
-		text: 'Estaciones',
-		description: 'Resumen por estaciones',
-		path: 'por-estacion',
-		icon: <Description />,
-	},
-	// {
-	// 	text: 'Por rol',
-	// 	description: 'Resumen por rol',
-	// 	path: 'por-rol',
-	// 	icon: <Assignment />,
-	// },
-];
+// const menuArray: MenuItem[] = [
+// 	{
+// 		nombre: 'Resumen',
+// 		description: 'Resumen por ciclo lectivo',
+// 		ruta: 'resumen',
+// 		icon: <Home />,
+// 	},
+// 	{
+// 		nombre: 'Estaciones',
+// 		description: 'Resumen por estaciones',
+// 		ruta: 'por-estacion',
+// 		icon: <Description />,
+// 	},
+// {
+// 	text: 'Por rol',
+// 	description: 'Resumen por rol',
+// 	path: 'por-rol',
+// 	icon: <Assignment />,
+// },
+// ];
 
 const HomeReporte = () => {
 	return (
-		<Dashboard menuArray={menuArray}>
+		<Dashboard>
 			<Box
 				sx={{
 					display: 'flex',
