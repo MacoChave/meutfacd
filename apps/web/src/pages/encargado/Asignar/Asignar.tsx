@@ -42,7 +42,12 @@ const Asignar: React.FC<AsignarProps> = ({ rol }) => {
 		body: {
 			table: 'ut_v_revision',
 		},
-		params: { estado: 'E', estacion: 1 },
+		params: {
+			estado: 'A',
+			estacion: 1,
+			id_jornada: jornada.id_jornada,
+			id_horario: horario.id_horario,
+		},
 	});
 
 	const onSave = () => {
@@ -127,7 +132,7 @@ const Asignar: React.FC<AsignarProps> = ({ rol }) => {
 											dense>
 											<ListItemText
 												id={labelId}
-												primary={value.titulo}
+												primary={value.nombre}
 											/>
 										</ListItemButton>
 									</ListItem>
