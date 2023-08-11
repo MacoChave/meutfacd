@@ -1,19 +1,19 @@
+import { URL } from '@/api/server';
+import Loader from '@/components/Loader';
 import { ToolbarWithoutSesion } from '@/components/navegacion/Toolbar';
 import { Tipo_Logup, initialValuesLogup, schemaLogup } from '@/models/Logup';
+import { postData } from '@/services/fetching';
 import { errorHandler } from '@/utils/errorHandler';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Box, Button, Card, Divider, Toolbar, Typography } from '@mui/material';
+import { Box, Button, Card, Toolbar, Typography } from '@mui/material';
 import { AxiosError } from 'axios';
 import React, { SyntheticEvent, useState } from 'react';
 import { FormProvider, SubmitHandler, useForm } from 'react-hook-form';
 import { useNavigate, useParams } from 'react-router-dom';
+import swal from 'sweetalert';
 import { Contacto } from './Contacto';
 import { Personales } from './Personales';
 import { Seguridad } from './Seguridad';
-import { postData } from '@/services/fetching';
-import { URL } from '@/api/server';
-import Loader from '@/components/Loader';
-import swal from 'sweetalert';
 
 export type LogupProps = {};
 

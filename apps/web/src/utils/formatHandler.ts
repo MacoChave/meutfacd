@@ -64,10 +64,30 @@ export const formatByDataType = (cellValue: TypeWithKey<string>): string => {
 	}
 };
 
-export const formatDate = (date: Date, isFullDate: boolean = true): string => {
-	const year = date.toLocaleString('default', { month: 'numeric' });
-	const month = date.toLocaleString('default', { month: '2-digit' });
-	const day = date.toLocaleString('default', { day: '2-digit' });
+type formatDateType = {
+	date: Date;
+	setDay?: number;
+	setHour?: number;
+	onlyTime?: boolean;
+	onlyMonth?: boolean;
+};
 
-	return `${year}-${month}${isFullDate && `-${day}`}`;
+export const formatDateToInput = ({
+	date,
+	setDay,
+	setHour,
+	onlyTime,
+	onlyMonth,
+}: formatDateType): string => {
+	if (setDay) date.setDate(setDay);
+	if (setHour) date.setHours(setHour);
+
+	const str = date.toLocaleString('fr-CA', {
+		year: 'numeric',
+		month: '2-digit',
+		day: '2-digit',
+		timeZone: 'America/Guatemala',
+	});
+
+	return str;
 };

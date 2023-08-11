@@ -6,13 +6,14 @@ import {
 	obtenerItem,
 	obtenerItems,
 } from '../controllers/user';
+import { requireAuth } from '../middlewares/requireAuth';
 
 const router = Router();
 
-router.get('/', obtenerItem);
-router.get('/all', obtenerItems);
-router.post('/', crearItem);
-router.put('/', actualizarItem);
-router.delete('/', eliminarItem);
+router.get('/', requireAuth, obtenerItem);
+router.get('/all', requireAuth, obtenerItems);
+router.post('/', requireAuth, crearItem);
+router.put('/', requireAuth, actualizarItem);
+router.delete('/', requireAuth, eliminarItem);
 
 export { router };

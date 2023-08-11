@@ -120,14 +120,19 @@ export const profileHandler = async ({ user }: Request, res: Response) => {
 		}
 
 		return res.status(200).json({
+			fecha_nac: result.fecha_nac,
+			genero: result.genero,
+			direccion: result.direccion,
+			id_municipio: result.id_municipio,
 			nombre: result.nombre,
 			apellidos: result.apellidos,
 			correo: result.correo,
 			estado: result.estado,
 			carnet: result.carnet,
 			cui: result.cui,
-			id_rol: result.id_rol,
-			rol: result.rol,
+			roles: result.roles,
+			id_jornada: result.id_jornada,
+			id_horario: result.id_horario,
 		});
 	} catch (error: any) {
 		errorHttp(res, { msg: 'Error al obtener el perfil', error });

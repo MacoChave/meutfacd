@@ -1,3 +1,4 @@
+import { formatDateToInput } from '@/utils/formatHandler';
 import * as yup from 'yup';
 
 export type Tipo_PerfilTutor = {
@@ -23,12 +24,14 @@ export type UserType = {
 	carnet: number;
 	cui: string;
 	direccion: string;
-	fecha_nac: Date;
+	fecha_nac: string;
 	estado: string;
 	telefono: string;
 	id_rol: number;
 	rol: string;
 	roles: string;
+	id_horario: number;
+	id_jornada: number;
 };
 
 export const defaultProfile: UserType = {
@@ -42,11 +45,14 @@ export const defaultProfile: UserType = {
 	carnet: 0,
 	cui: '',
 	direccion: '',
-	fecha_nac: new Date(),
+	fecha_nac: formatDateToInput({ date: new Date() }),
 	estado: '',
 	telefono: '',
 	id_rol: 0,
 	rol: '',
+	roles: '',
+	id_horario: 0,
+	id_jornada: 0,
 };
 
 export const schemaUsuario = yup.object().shape({
@@ -54,7 +60,7 @@ export const schemaUsuario = yup.object().shape({
 		.string()
 		.required('Nombre es requerido')
 		.max(50, 'Nombre no puede ser mayor a 50 caracteres'),
-	apellido: yup
+	apellidos: yup
 		.string()
 		.required('Apellido es requerido')
 		.max(75, 'Apellido no puede ser mayor a 75 caracteres'),
@@ -93,11 +99,11 @@ export const schemaUsuario = yup.object().shape({
 			'La fecha de nacimiento debe ser menor a la fecha actual'
 		)
 		.required('Fecha de nacimiento es requerido'),
-	estado: yup.string().required('Estado es requerido'),
-	telefono: yup
-		.string()
-		.required('Telefono es requerido')
-		.max(200, 'Telefono no puede ser mayor a 200 caracteres'),
+	// estado: yup.string().required('Estado es requerido'),
+	// telefono: yup
+	// 	.string()
+	// 	.required('Telefono es requerido')
+	// 	.max(200, 'Telefono no puede ser mayor a 200 caracteres'),
 });
 
 export const schemaPerfilTutor = yup.object().shape({

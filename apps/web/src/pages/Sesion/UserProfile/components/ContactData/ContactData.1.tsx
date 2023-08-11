@@ -4,15 +4,12 @@ import { Controller, useFormContext } from 'react-hook-form';
 import { UserType } from '@/models/Perfil';
 import { Box, TextField } from '@mui/material';
 import { McAutocomplete } from '@/components/McWithForms/McAutocomplete';
-import { generos } from '@/consts/genres';
 
-const PersonalData: React.FC<DataProps> = ({ editing }) => {
+export const ContactData: React.FC<DataProps> = ({ editing }) => {
 	const {
 		control,
-		setValue,
 		formState: { errors },
 	} = useFormContext<UserType>();
-
 	return (
 		<Box
 			sx={{
@@ -22,69 +19,78 @@ const PersonalData: React.FC<DataProps> = ({ editing }) => {
 			}}>
 			<Controller
 				control={control}
-				name='nombre'
+				name='telefono'
 				render={({ field }) => (
 					<TextField
 						{...field}
-						label='Nombres'
+						label='Teléfono'
 						variant='standard'
 						InputProps={{
 							readOnly: !editing,
 							disabled: !editing,
 						}}
-						error={!!errors.nombre}
-						helperText={errors.nombre?.message}
+						error={!!errors.telefono}
+						helperText={errors.telefono?.message}
 					/>
 				)}
 			/>
 			<Controller
 				control={control}
-				name='apellidos'
+				name='carnet'
 				render={({ field }) => (
 					<TextField
 						{...field}
-						label='Apellidos'
+						label='Registro universitario'
 						variant='standard'
 						InputProps={{
 							readOnly: !editing,
 							disabled: !editing,
 						}}
-						error={!!errors.apellidos}
-						helperText={errors.apellidos?.message}
+						error={!!errors.carnet}
+						helperText={errors.carnet?.message}
+					/>
+				)}
+			/>
+			<Controller
+				control={control}
+				name='cui'
+				render={({ field }) => (
+					<TextField
+						{...field}
+						label='Código único de identificación'
+						variant='standard'
+						InputProps={{
+							readOnly: !editing,
+							disabled: !editing,
+						}}
+						error={!!errors.cui}
+						helperText={errors.cui?.message}
+					/>
+				)}
+			/>
+			<Controller
+				control={control}
+				name='direccion'
+				render={({ field }) => (
+					<TextField
+						{...field}
+						label='Dirección'
+						variant='standard'
+						InputProps={{
+							readOnly: !editing,
+							disabled: !editing,
+						}}
+						error={!!errors.direccion}
+						helperText={errors.direccion?.message}
 					/>
 				)}
 			/>
 			<McAutocomplete
-				control={control as any}
-				name='genero'
-				label='Género'
-				options={generos.map((g) => ({ id: g.value, label: g.label }))}
-				disabled={!editing}
-			/>
-			<Controller
-				control={control}
-				name='fecha_nac'
-				render={({ field }) => (
-					<TextField
-						{...field}
-						type='date'
-						label='Fecha de nacimiento'
-						variant='standard'
-						onChange={(e) => {
-							setValue('fecha_nac', e.target.value);
-							field.onChange(e);
-						}}
-						InputProps={{
-							readOnly: !editing,
-							disabled: !editing,
-						}}
-						error={!!errors.fecha_nac}
-						helperText={errors.fecha_nac?.message}
-					/>
-				)}
+				control={control as FormValues}
+				name='id_jornada'
+				label='Jornada'
+				options={[]}
 			/>
 		</Box>
 	);
 };
-
-export default PersonalData;

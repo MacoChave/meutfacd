@@ -1,11 +1,19 @@
 import { Router } from 'express';
+import {
+	deleteItem,
+	getItem,
+	getItems,
+	postItem,
+	putItem,
+} from '../controllers/messaging';
+import { requireAuth } from '../middlewares/requireAuth';
 
 const router = Router();
 
-router.get('', (req, res) => {});
-router.get('/all', (req, res) => {});
-router.post('', (req, res) => {});
-router.put('', (req, res) => {});
-router.delete('', (req, res) => {});
+router.get('', requireAuth, getItem);
+router.get('/all', requireAuth, getItems);
+router.post('', requireAuth, postItem);
+router.put('', requireAuth, putItem);
+router.delete('', requireAuth, deleteItem);
 
 export { router };

@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import Usuario from '../models/usuario';
 import { errorHttp } from '../utils/error.handle';
-import { sqlDelete, sqlSelect } from '../db/consultas';
+import { sqlDelete, sqlSelect, sqlUpdate } from '../db/consultas';
 
 const obtenerItem = async ({ params }: Request, res: Response) => {
 	try {
@@ -33,8 +33,41 @@ const crearItem = (req: Request, res: Response) => {
 	res.json({ message: 'Crear usuario' });
 };
 
-const actualizarItem = (req: Request, res: Response) => {
-	res.json({ message: 'Actualizar usuario' });
+const actualizarItem = async (
+	{ body, query, user }: Request,
+	res: Response
+) => {
+	try {
+		const results = await Promise.all([
+			sqlUpdate({
+				table: 'usuario',
+				datos: {
+					nombre: body.nombre,
+					apellidos: body.apellidos,
+					genero: body.genero,
+					correo: body.correo,
+					carnet: body.carnet,
+					cui: body.cui,
+					direccion: body.direccion,
+					fecha_nac: body.fecha_nac
+						.replace('T', ' ')
+						.replace('Z', ''),
+				},
+				query: { id_usuario: user.primaryKey },
+			}),
+			sqlUpdate({
+				table: 'ut_perfil',
+				datos: {
+					id_horario: body.id_horario,
+					id_jornada: body.id_jornada,
+				},
+				query: { id_usuario: user.primaryKey },
+			}),
+		]);
+		res.json(results);
+	} catch (error: any) {
+		errorHttp(res, { error, msg: 'Error al actualizar el usuario' });
+	}
 };
 
 const eliminarItem = async ({ query }: Request, res: Response) => {

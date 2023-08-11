@@ -5,11 +5,19 @@ import { SyntheticEvent, useEffect, useState } from 'react';
 import { FormProvider, SubmitHandler, useForm } from 'react-hook-form';
 import { URL } from '../../../api/server';
 import { useFetch } from '../../../hooks/useFetch';
-import { UserType, schemaUsuario } from '../../../models/Perfil';
+import {
+	UserType,
+	defaultProfile,
+	schemaUsuario,
+} from '../../../models/Perfil';
 import { ErrorPage } from '../../ErrorPage';
 import { ContactData } from './components/ContactData';
 import { PersonalData } from './components/PersonalData';
 import { SesionData } from './components/SesionData';
+import { formatDateToInput } from '@/utils/formatHandler';
+import { ResultType } from '@/models/Result';
+import { putData } from '@/services/fetching';
+import swal from 'sweetalert';
 
 export const UserProfile = (): JSX.Element => {
 	const [isEditing, setIsEditing] = useState(false);
@@ -21,7 +29,7 @@ export const UserProfile = (): JSX.Element => {
 		url: URL.AUTH.PROFILE,
 	});
 	const methods = useForm<UserType>({
-		defaultValues: perfil,
+		defaultValues: defaultProfile,
 		mode: 'onBlur',
 		resolver: yupResolver(schemaUsuario),
 	});
@@ -32,8 +40,25 @@ export const UserProfile = (): JSX.Element => {
 	};
 
 	const onSubmit: SubmitHandler<UserType> = async (data) => {
-		console.log('> Form perfil', data);
-		setIsEditing(false);
+		console.log('Update user', data);
+		const result: ResultType[] = await putData({
+			path: `${URL.USER}`,
+			body: data,
+		});
+		if (result.some((item) => item.affectedRows === 0)) {
+			swal(
+				'¡Actualización fallida!',
+				'Los datos del perfil no se actualizaron',
+				'error'
+			);
+		} else {
+			swal(
+				'¡Actualización exitosa!',
+				'Los datos del perfil se actualizaron correctamente',
+				'success'
+			);
+			setIsEditing(false);
+		}
 	};
 
 	useEffect(() => {
@@ -46,11 +71,18 @@ export const UserProfile = (): JSX.Element => {
 			methods.setValue('carnet', perfil.carnet);
 			methods.setValue('cui', perfil.cui);
 			methods.setValue('direccion', perfil.direccion);
-			methods.setValue('fecha_nac', perfil.fecha_nac);
+			methods.setValue(
+				'fecha_nac',
+				formatDateToInput({
+					date: new Date(perfil.fecha_nac),
+				})
+			);
 			methods.setValue('estado', perfil.estado);
 			methods.setValue('telefono', perfil.telefono);
 			methods.setValue('id_rol', perfil.id_rol);
 			methods.setValue('rol', perfil.rol);
+			methods.setValue('id_jornada', perfil.id_jornada);
+			methods.setValue('id_horario', perfil.id_horario);
 		}
 	}, [isLoading]);
 
@@ -78,15 +110,19 @@ export const UserProfile = (): JSX.Element => {
 								sm: '2fr 1fr',
 							},
 						}}>
+						{/* PERSONAL DATA */}
 						<Typography variant='h6'>Datos personales</Typography>
 						<PersonalData editing={isEditing} />
 						<Divider sx={{ gridColumn: '1 / span 2' }} />
+						{/* CONTACT DATA */}
 						<Typography variant='h6'>Datos de contacto</Typography>
 						<ContactData editing={isEditing} />
 						<Divider sx={{ gridColumn: '1 / span 2' }} />
+						{/* SESSION DATA */}
 						<Typography variant='h6'>Datos de sesión</Typography>
 						<SesionData editing={isEditing} />
 						<Divider sx={{ gridColumn: '1 / span 2' }} />
+						{/* END FORM */}
 						<Button
 							variant={isEditing ? 'outlined' : 'contained'}
 							color={isEditing ? 'secondary' : 'primary'}
