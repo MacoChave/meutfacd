@@ -2,6 +2,7 @@ import { URL } from '@/api/server';
 import { McAutocomplete } from '@/components/McWithoutForms/McAutocomplete';
 import { useCustomFetch } from '@/hooks/useFetch';
 import { ScheduleType } from '@/models/Schedule';
+import { Typography } from '@mui/material';
 import React from 'react';
 
 export type PickHorarioProps = {
@@ -29,6 +30,11 @@ const PickHorario: React.FC<PickHorarioProps> = ({
 			id_jornada: id_jornada ?? 0,
 		},
 	});
+
+	if (isLoadingHorarios) return <Typography>Cargando horarios</Typography>;
+	if (isErrorHorarios)
+		return <Typography>Error al cargar horarios</Typography>;
+
 	return (
 		<McAutocomplete
 			label='Horario'

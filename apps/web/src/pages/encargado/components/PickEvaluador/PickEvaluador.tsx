@@ -2,17 +2,18 @@ import { URL } from '@/api/server';
 import { McAutocomplete } from '@/components/McWithoutForms/McAutocomplete';
 import { useCustomFetch } from '@/hooks/useFetch';
 import { UserType } from '@/models/Perfil';
+import { Typography } from '@mui/material';
 import React from 'react';
 
 export type PickEvaluadorProps = {
 	evaluador: UserType;
-	rol: string;
+	rol?: string;
 	setEvaluador: (evaluador: UserType) => void;
 };
 
 const PickEvaluador: React.FC<PickEvaluadorProps> = ({
 	evaluador,
-	rol,
+	rol = '%Docente perfil%',
 	setEvaluador,
 }) => {
 	const {
@@ -28,11 +29,15 @@ const PickEvaluador: React.FC<PickEvaluadorProps> = ({
 				{
 					column: 'roles',
 					operator: 'like',
-					value: `%Docente perfil%`,
+					value: rol,
 				},
 			],
 		},
 	});
+	if (isLoadingTeacher) return <Typography>Cargando docentes</Typography>;
+	if (isErrorTeacher)
+		return <Typography>Error al cargar los docentes</Typography>;
+
 	return (
 		<McAutocomplete
 			label='Docente'

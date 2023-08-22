@@ -1,6 +1,6 @@
 export const DATA_SOURCES = {
 	PORT: process.env.PORT || 3000,
-	AUTH_HOST: process.env.AUTH_HOST || 'localhost',
+	AUTH_HOST: process.env.AUTH_HOST || '',
 	AUTH_PORT: process.env.AUTH_PORT || '4000',
 	DB_CONN_LIMIT: Number(process.env.DB_CONN_LIMIT) || 4,
 	DB_NAME: process.env.DB_NAME || 'db_meutfacd',

@@ -77,6 +77,9 @@ export const loginHandler = async ({ body }: Request, res: Response) => {
 			user: body.correo,
 			password: body.pass,
 		};
+		console.log(
+			`${DATA_SOURCES.AUTH_HOST}:${DATA_SOURCES.AUTH_PORT}/login`
+		);
 
 		const response = await axios.post(
 			`${DATA_SOURCES.AUTH_HOST}:${DATA_SOURCES.AUTH_PORT}/login`,

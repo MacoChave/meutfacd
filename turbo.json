@@ -24,6 +24,12 @@
         "dev": {
             "cache": false
         },
+        "start": {
+            "dependsOn": [
+                "^build"
+            ],
+            "cache": false
+        },
         "start_win": {
             "dependsOn": [
                 "^build"

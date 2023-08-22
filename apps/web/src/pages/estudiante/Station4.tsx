@@ -26,32 +26,32 @@ const style = {
 const Estacion4 = () => {
 	const [isUploading, setIsUploading] = useState(false);
 	const [isUploaded, setIsUploaded] = useState(false);
-	const {
-		data: revision,
-		isLoading,
-		isError,
-	} = useCustomFetch({
-		url: `${URL.REVIEW}/one`,
-		method: 'post',
-		body: {
-			table: 'ut_v_revision',
-			columns: [
-				'id_revision',
-				'titulo',
-				'fecha_revision',
-				'detalle',
-				'estado',
-				'estacion',
-			],
-			order: {
-				fecha_revision: 'DESC',
-			},
-			limit: 1,
-		},
-		params: {
-			estacion: 4,
-		},
-	});
+	// const {
+	// 	data: revision,
+	// 	isLoading,
+	// 	isError,
+	// } = useCustomFetch({
+	// 	url: `${URL.REVIEW}/one`,
+	// 	method: 'post',
+	// 	body: {
+	// 		table: 'ut_v_revision',
+	// 		columns: [
+	// 			'id_revision',
+	// 			'titulo',
+	// 			'fecha_revision',
+	// 			'detalle',
+	// 			'estado',
+	// 			'estacion',
+	// 		],
+	// 		order: {
+	// 			fecha_revision: 'DESC',
+	// 		},
+	// 		limit: 1,
+	// 	},
+	// 	params: {
+	// 		estacion: 4,
+	// 	},
+	// });
 
 	const {
 		control,
@@ -93,23 +93,23 @@ const Estacion4 = () => {
 
 	const onSubmit: SubmitHandler<Draft> = async (draft) => {
 		try {
-			if (revision.estado === 'P') {
-				await putData({
-					path: URL.THESIS,
-					body: {
-						titulo: draft.titulo,
-						ruta_tesis: draft.name,
-					},
-				});
-			} else {
-				await postData({
-					path: URL.THESIS,
-					body: {
-						titulo: draft.titulo,
-						ruta_tesis: draft.name,
-					},
-				});
-			}
+			// if (revision.estado === 'P') {
+			// 	await putData({
+			// 		path: URL.THESIS,
+			// 		body: {
+			// 			titulo: draft.titulo,
+			// 			ruta_tesis: draft.name,
+			// 		},
+			// 	});
+			// } else {
+			// 	await postData({
+			// 		path: URL.THESIS,
+			// 		body: {
+			// 			titulo: draft.titulo,
+			// 			ruta_tesis: draft.name,
+			// 		},
+			// 	});
+			// }
 
 			swal(
 				'¡Bien hecho!',
@@ -122,13 +122,13 @@ const Estacion4 = () => {
 	};
 
 	useEffect(() => {
-		if (revision) {
-			setValue('titulo', revision.titulo);
-		}
-	}, [revision]);
+		// if (revision) {
+		// 	setValue('titulo', revision.titulo);
+		// }
+	}, []);
 
-	if (isLoading) return <p>Cargando...</p>;
-	if (isError) return <p>Ha ocurrido un error</p>;
+	// if (isLoading) return <p>Cargando...</p>;
+	// if (isError) return <p>Ha ocurrido un error</p>;
 
 	return (
 		<>
@@ -139,9 +139,7 @@ const Estacion4 = () => {
 							<Typography variant='h6'>
 								Detalle del previo
 							</Typography>
-							<Typography>
-								{revision.detalle ?? 'Sin revisión'}
-							</Typography>
+							<Typography>{'Sin revisión'}</Typography>
 						</Box>
 						<Box>
 							<Controller

@@ -1,8 +1,6 @@
 import { DataTypes } from 'sequelize';
 import sequelize from '../config/sequelize';
 
-export type UsuarioType = {};
-
 const Usuario = sequelize.define(
 	'usuario',
 	{

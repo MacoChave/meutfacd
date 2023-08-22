@@ -2,6 +2,7 @@ import { URL } from '@/api/server';
 import { McAutocomplete } from '@/components/McWithoutForms/McAutocomplete';
 import { useCustomFetch } from '@/hooks/useFetch';
 import { PeriodType } from '@/models/Period';
+import { Typography } from '@mui/material';
 import React from 'react';
 
 export type PickJornadaProps = {
@@ -21,6 +22,11 @@ const PickJornada: React.FC<PickJornadaProps> = ({ jornada, setJornada }) => {
 			table: 'ut_jornada',
 		},
 	});
+
+	if (isLoadingJornadas) return <Typography>Cargando jornadas</Typography>;
+	if (isErrorJornadas)
+		return <Typography>Error al cargar jornadas</Typography>;
+
 	return (
 		<McAutocomplete
 			label='Jornada'

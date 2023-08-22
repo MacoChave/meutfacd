@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import { validarToken } from '../utils/token';
 import { errorHttp } from '../utils/error.handle';
+import { SessionUser } from '../models/usuario';
 
 // TODO: Evaluar pros y contras de evaluar token en cada sistema o en microservicio autenticación
 export const requireAuth = (
@@ -22,7 +23,7 @@ export const requireAuth = (
 
 		if (!decodedToken) throw new Error('Token no válido');
 
-		req.user = decodedToken;
+		req.user = decodedToken as any;
 		console.log('[REQUIRE AUTH][REQUIRE AUTH] User', decodedToken);
 		next();
 	} catch (error: any) {

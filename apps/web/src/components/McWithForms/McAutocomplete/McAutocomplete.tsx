@@ -18,7 +18,7 @@ export type McAutocompleteProps = {
 const McAutocomplete: React.FC<McAutocompleteProps> = ({
 	control,
 	name,
-	options,
+	options = [],
 	label,
 	disabled = false,
 }) => {
@@ -39,7 +39,13 @@ const McAutocomplete: React.FC<McAutocompleteProps> = ({
 								: null
 						}
 						disabled={disabled}
-						getOptionLabel={(option: Option) => option.label}
+						getOptionLabel={(option: Option) => option?.label ?? ''}
+						isOptionEqualToValue={(
+							option: Option,
+							value: Option
+						) => {
+							return value ? option.id === value.id : false;
+						}}
 						onChange={(_event, newValue) => {
 							onChange(newValue ? newValue.id : null);
 						}}

@@ -2,6 +2,8 @@ import { ErrorPage } from '@/pages/ErrorPage';
 import { Login } from '@/pages/Sesion';
 import { Logup } from '@/pages/Sesion/Logup';
 import { UserRecovery } from '@/pages/Sesion/UserRecovery';
+import { Courses } from '@/pages/administrador/Courses';
+import { PagesApp } from '@/pages/administrador/PagesApp';
 import { Draft } from '@/pages/encargado/Draft';
 import { FstCourse } from '@/pages/encargado/FstCourse';
 import { ScndCourse } from '@/pages/encargado/ScndCourse';
@@ -12,9 +14,7 @@ import ProtectedRoute from '../components/ProtectedRoute';
 import Home from '../pages/Home/Home';
 import UserProfile from '../pages/Sesion/UserProfile/UserProfile';
 import HomeAdministrador from '../pages/administrador';
-import Actividades from '../pages/administrador/Actividades';
 import Aplicacion from '../pages/administrador/Aplicacion';
-import Permisos from '../pages/administrador/Permisos';
 import Problemas from '../pages/administrador/Problemas';
 import Usuarios from '../pages/administrador/Usuarios/Usuarios';
 import HomeReporte from '../pages/analitica';
@@ -102,6 +102,14 @@ export const router = createBrowserRouter([
 				element: (
 					<ProtectedRoute rol='estudiante'>
 						{<Estacion3 />}
+					</ProtectedRoute>
+				),
+			},
+			{
+				path: 'dictamen',
+				element: (
+					<ProtectedRoute rol='estudiante'>
+						{<Estacion4 />}
 					</ProtectedRoute>
 				),
 			},
@@ -299,7 +307,7 @@ export const router = createBrowserRouter([
 				path: 'paginas',
 				element: (
 					<ProtectedRoute rol='administrador'>
-						<Permisos />
+						<PagesApp />
 					</ProtectedRoute>
 				),
 			},
@@ -307,7 +315,7 @@ export const router = createBrowserRouter([
 				path: 'cursos',
 				element: (
 					<ProtectedRoute rol='administrador'>
-						<Actividades />
+						<Courses />
 					</ProtectedRoute>
 				),
 			},

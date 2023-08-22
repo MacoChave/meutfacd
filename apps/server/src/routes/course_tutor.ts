@@ -6,7 +6,7 @@ import {
 	getItems,
 	postItem,
 	putItem,
-} from '../controllers/course';
+} from '../controllers/course_tutor';
 
 const router = Router();
 

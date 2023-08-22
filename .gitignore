@@ -146,3 +146,8 @@ dist
 .turbo
 
 # End of https://www.toptal.com/developers/gitignore/api/turbo,node
+
+# Created by Marco Chávez
+# Authentication micro service
+auth/
+# End of Marco Chávez
