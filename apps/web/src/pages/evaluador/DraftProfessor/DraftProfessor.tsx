@@ -1,6 +1,5 @@
 import { URL as URI } from '@/api/server';
 import { Contenedor, McModal } from '@/components';
-import AgregarComentario from '@/components/FijarFecha';
 import { McTable } from '@/components/MyTable';
 import { useCustomFetch } from '@/hooks/useFetch';
 import { getData } from '@/services/fetching';

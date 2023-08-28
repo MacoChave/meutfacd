@@ -1,6 +1,7 @@
 import {
 	formatByDataType,
 	getAlignByDataType,
+	getChipColor,
 	getChipLabel,
 } from '@/utils/formatHandler';
 import {
@@ -30,7 +31,12 @@ export type McBodyProps = {
 
 export const getValue = (key: string, cellValue: any): React.ReactNode => {
 	if (key === 'estado') {
-		return <Chip color='primary' label={getChipLabel(cellValue)} />;
+		return (
+			<Chip
+				color={getChipColor(cellValue)}
+				label={getChipLabel(cellValue)}
+			/>
+		);
 	} else {
 		const text = formatByDataType({ [key]: cellValue });
 		return <>{text}</>;

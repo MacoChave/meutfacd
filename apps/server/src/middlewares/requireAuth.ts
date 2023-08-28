@@ -1,7 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
-import { validarToken } from '../utils/token';
 import { errorHttp } from '../utils/error.handle';
-import { SessionUser } from '../models/usuario';
+import { validarToken } from '../utils/token';
 
 // TODO: Evaluar pros y contras de evaluar token en cada sistema o en microservicio autenticación
 export const requireAuth = (
@@ -10,6 +9,17 @@ export const requireAuth = (
 	next: NextFunction
 ) => {
 	try {
+		console.log({
+			date: new Date().toLocaleString('es-GT', {
+				timeZone: 'America/Guatemala',
+			}),
+			authorization: req.headers.authorization,
+			path: req.path,
+			baseURL: req.baseUrl,
+			body: req.body,
+			params: req.params,
+			query: req.query,
+		});
 		const authHeader = req.headers.authorization;
 
 		if (!authHeader || !authHeader.startsWith('Bearer'))
@@ -20,6 +30,7 @@ export const requireAuth = (
 		if (!token || token === 'null') throw new Error('Token no encontrado');
 
 		const decodedToken = validarToken(token);
+		console.log('decodedToken', decodedToken);
 
 		if (!decodedToken) throw new Error('Token no válido');
 
@@ -27,6 +38,6 @@ export const requireAuth = (
 		console.log('[REQUIRE AUTH][REQUIRE AUTH] User', decodedToken);
 		next();
 	} catch (error: any) {
-		errorHttp(res, error as any);
+		errorHttp(res, { error, msg: 'Autenticación requerida', code: 401 });
 	}
 };

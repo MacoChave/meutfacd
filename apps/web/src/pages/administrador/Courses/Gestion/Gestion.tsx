@@ -12,7 +12,6 @@ const Gestion: React.FC<GestionProps> = ({}) => {
 				Crear cursos
 			</Typography>
 			<Form onClose={onClose} />
-			<Box>Listado</Box>
 		</Box>
 	);
 };

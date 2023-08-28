@@ -34,15 +34,11 @@ const Dashboard = ({
 			}}>
 			<>
 				<ToolbarWithSesion />
-				{/* {menuArray.length > 0 && (
-					)} */}
 				<Sidebar menuArray={data || []} open={open} setOpen={setOpen} />
 				{children}
 				<Box
 					sx={{
 						gridArea: 'footer',
-						// position: 'fixed',
-						// bottom: 0,
 						width: '90%',
 						mx: 'auto',
 						p: 1,
@@ -51,6 +47,7 @@ const Dashboard = ({
 						sx={{
 							textAlign: 'center',
 							fontSize: { xs: '0.6rem', md: '0.8rem' },
+							py: 2,
 						}}>
 						Administración 2021-2025 © Decano Henry Arriaga
 					</Typography>

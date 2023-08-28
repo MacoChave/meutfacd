@@ -1,4 +1,3 @@
-import { useAuthStore } from '@/hooks/useAuthStore';
 import store from '@/redux/store';
 import { Box, Card, Typography } from '@mui/material';
 import React from 'react';

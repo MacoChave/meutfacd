@@ -10,14 +10,18 @@ import {
 } from '@/models/CourseTutor';
 import { UserType } from '@/models/Perfil';
 import { PeriodType } from '@/models/Period';
+import { ResultType } from '@/models/Result';
 import { ScheduleType } from '@/models/Schedule';
 import { PickEvaluador } from '@/pages/encargado/components/PickEvaluador';
 import { PickHorario } from '@/pages/encargado/components/PickHorario';
 import { PickJornada } from '@/pages/encargado/components/PickJornada';
+import { postData } from '@/services/fetching';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Box, Button, Typography } from '@mui/material';
+import { Box, Button } from '@mui/material';
 import React, { useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
+import swal from 'sweetalert';
+import { PickDays } from '../PickDays';
 
 export type FormProps = {
 	onClose: () => void;
@@ -27,11 +31,14 @@ const Form: React.FC<FormProps> = ({ onClose }) => {
 	const [jornada, setJornada] = useState({} as PeriodType);
 	const [horario, setHorario] = useState({} as ScheduleType);
 	const [professor, setProfessor] = useState({} as UserType);
-	const { control, setValue, getValues, handleSubmit } = useForm({
+	const [days, setDays] = React.useState<string[]>([]);
+
+	const { control, reset, setValue, getValues, handleSubmit } = useForm({
 		defaultValues: courseTutorDefault,
 		mode: 'onBlur',
 		resolver: yupResolver(courseTutorSchema),
 	});
+
 	const { data, isLoading, isError } = useCustomFetch({
 		url: `${URL.GENERIC}/all`,
 		body: {
@@ -41,9 +48,34 @@ const Form: React.FC<FormProps> = ({ onClose }) => {
 		params: {},
 	});
 
-	const onSubmit: SubmitHandler<CourseTutor> = (data) => {
+	const onSubmit: SubmitHandler<CourseTutor> = async (data) => {
 		console.log('Send data', data);
+		const result: ResultType = await postData({
+			path: URL.COURSE_TUTOR,
+			body: {
+				salon: data['salon'],
+				dias: JSON.stringify(data['dias']),
+				fecha: data['fecha'],
+				id_curso: data['id_curso'],
+				id_tutor: data['id_tutor'],
+				id_horario: data['id_horario'],
+				id_jornada: data['id_jornada'],
+			},
+		});
+		console.log('Result', result);
+		if (result.affectedRows > 0) {
+			reset();
+			setHorario({} as ScheduleType);
+			setJornada({} as PeriodType);
+			setProfessor({} as UserType);
+			setDays([]);
+			swal('¡Listo!', 'El curso se ha asignado correctamente', 'success');
+			onClose();
+		}
 	};
+
+	if (isLoading) return <div>Loading...</div>;
+	if (isError) return <div>Error</div>;
 
 	return (
 		<>
@@ -68,6 +100,23 @@ const Form: React.FC<FormProps> = ({ onClose }) => {
 						control={control as any}
 						name='salon'
 						label='Salón'
+					/>
+					<McInput
+						control={control as any}
+						name='fecha'
+						label='Fecha de inicio'
+						type='date'
+						customChange={(e) => {
+							setValue('fecha', e.target.value);
+							console.log('Change date', e.target.value);
+						}}
+					/>
+					<PickDays
+						days={days}
+						setDays={(days: string[]) => {
+							setValue('dias', days);
+							setDays(days);
+						}}
 					/>
 					<PickJornada
 						jornada={jornada}

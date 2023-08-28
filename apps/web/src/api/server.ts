@@ -9,6 +9,7 @@ export const URL = {
 		_: '/api/course',
 		ASIGNACION: '/api/course/assignment',
 	},
+	COURSE_TUTOR: '/api/course_tutor',
 	GENERIC: '/api/generic',
 	MESSAGING: '/api/messaging',
 	PERIOD: '/api/period',

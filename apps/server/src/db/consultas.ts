@@ -249,7 +249,6 @@ export const sqlSelect = async ({
 	const conn = await connection();
 	const [results, fields] = await conn.query(sql, values);
 	conn.end();
-	console.log('[sqlSelect][results]', results);
 	return results;
 };
 
@@ -348,8 +347,5 @@ export const sqlDelete = async ({ table, query }: sqlDeleteType) => {
 	const conn = await connection();
 	const [results, fields] = await conn.query(sql, valsWhere);
 	conn.end();
-	console.log('**********');
-	console.log({ results, fields });
-	console.log('**********');
 	return results;
 };

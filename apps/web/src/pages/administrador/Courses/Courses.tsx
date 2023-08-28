@@ -2,10 +2,10 @@ import { URL } from '@/api/server';
 import { Contenedor } from '@/components';
 import { useCustomFetch } from '@/hooks/useFetch';
 import { style } from '@/themes/styles';
-import { Box, Button, Typography } from '@mui/material';
+import { Box } from '@mui/material';
 import React from 'react';
-import { Gestion } from './Gestion';
 import { Asignacion } from './Asignacion';
+import { Gestion } from './Gestion';
 
 export type CoursesProps = {};
 

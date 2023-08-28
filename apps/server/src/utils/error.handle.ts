@@ -28,7 +28,8 @@ const errorHttp = (res: Response, { error, msg, code }: errorHttpType) => {
 		});
 	} else {
 		res.status(code || 500).json({
-			error: msg || 'Error interno del servidor',
+			error:
+				(error as Error).message || msg || 'Error interno del servidor',
 		});
 	}
 };

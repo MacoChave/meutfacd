@@ -1,19 +1,37 @@
+import { APROBADO, ESPERA, PREVIA, RECHAZADO, REVISION } from '@/consts/vars';
 import { TypeWithKey } from '@/models/TypeWithKey';
 
 export const getChipLabel = (code: string) => {
 	switch (code) {
-		case 'E':
+		case ESPERA:
 			return 'En espera';
-		case 'A':
+		case APROBADO:
 			return 'Aprobado';
-		case 'R':
+		case RECHAZADO:
 			return 'Rechazado';
-		case 'P':
+		case PREVIA:
 			return 'Previa';
-		case 'V':
+		case REVISION:
 			return 'Revisión';
 		default:
 			return 'Sin datos';
+	}
+};
+
+export const getChipColor = (code: string) => {
+	switch (code) {
+		case ESPERA:
+			return 'warning';
+		case APROBADO:
+			return 'success';
+		case RECHAZADO:
+			return 'error';
+		case PREVIA:
+			return 'info';
+		case REVISION:
+			return 'primary';
+		default:
+			return 'default';
 	}
 };
 
@@ -82,12 +100,14 @@ export const formatDateToInput = ({
 	if (setDay) date.setDate(setDay);
 	if (setHour) date.setHours(setHour);
 
-	const str = date.toLocaleString('fr-CA', {
+	const str = date.toLocaleString('es-GT', {
 		year: 'numeric',
 		month: '2-digit',
 		day: '2-digit',
 		timeZone: 'America/Guatemala',
 	});
+
+	console.log('formatDate', date, 'str', str);
 
 	return str;
 };

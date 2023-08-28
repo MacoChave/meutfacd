@@ -33,6 +33,14 @@ export const theme = createTheme({
 				},
 			},
 		},
+		MuiToggleButton: {
+			styleOverrides: {
+				root: {
+					borderRadius: 4,
+					border: 'none',
+				},
+			},
+		},
 	},
 	palette: {
 		primary: {

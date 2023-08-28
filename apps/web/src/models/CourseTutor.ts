@@ -5,6 +5,7 @@ export type CourseTutor = {
 	id_curso_tutor: number;
 	fecha: string;
 	salon: string;
+	dias: string[];
 	id_curso: number;
 	id_tutor: number;
 	id_horario: number;
@@ -13,8 +14,9 @@ export type CourseTutor = {
 
 export const courseTutorDefault: CourseTutor = {
 	id_curso_tutor: 0,
-	fecha: '',
+	fecha: new Date().toISOString().slice(0, 10),
 	salon: '',
+	dias: [],
 	id_curso: 0,
 	id_tutor: 0,
 	id_horario: 0,
@@ -26,6 +28,11 @@ export const courseTutorSchema = yup.object().shape({
 		.string()
 		.max(128, 'Salón no debe exceder los 128 carácteres')
 		.required('Salón es requerido'),
+	fetch: yup.string(),
+	dias: yup
+		.array()
+		.min(1, 'Debe seleccionar al menos un día')
+		.required('Días es requerido'),
 	id_curso: yup
 		.number()
 		.positive('Curso es requerido')
