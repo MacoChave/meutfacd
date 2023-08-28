@@ -1,16 +1,20 @@
 import { URL } from '@/api/server';
-import { Contenedor } from '@/components';
+import { Contenedor, McModal } from '@/components';
 import { McTable } from '@/components/MyTable';
 import { useCustomFetch } from '@/hooks/useFetch';
 import { ResultType } from '@/models/Result';
 import { putData } from '@/services/fetching';
-import { Box } from '@mui/material';
-import React from 'react';
+import React, { useState } from 'react';
 import swal from 'sweetalert';
+import { FormPagesApp } from './FormPagesApp';
+import { PageAppType } from '@/models/PageApp';
 
 export type PagesAppProps = Record<string, never>;
 
 const PagesApp: React.FC<PagesAppProps> = ({}) => {
+	const [editPage, setEditPage] = useState<PageAppType>({} as PageAppType);
+	const [editing, setEditing] = useState(false);
+
 	const { data, isLoading, isError, refetch } = useCustomFetch({
 		url: `${URL.GENERIC}/all`,
 		method: 'post',
@@ -28,7 +32,7 @@ const PagesApp: React.FC<PagesAppProps> = ({}) => {
 			},
 			params: { id_pagina: item.id_pagina },
 		});
-		console.log(result);
+
 		if (result.affectedRows > 0) {
 			swal('Guardado', 'Se ha guardado correctamente', 'success');
 			refetch();
@@ -38,7 +42,14 @@ const PagesApp: React.FC<PagesAppProps> = ({}) => {
 	};
 
 	const onEdit = (item: any) => {
-		console.log('Edit item', item);
+		setEditPage(item);
+		setEditing(true);
+	};
+
+	const onClose = () => {
+		setEditing(false);
+		setEditPage({} as PageAppType);
+		refetch();
 	};
 
 	if (isLoading) return <div>Loading...</div>;
@@ -51,12 +62,18 @@ const PagesApp: React.FC<PagesAppProps> = ({}) => {
 					headers={{
 						nombre: 'Nombre',
 						descripcion: 'Descripción',
+						icono: 'Abr',
 					}}
 					rows={data}
 					totalCols={{}}
 					onEdit={onEdit}
 				/>
 			</Contenedor>
+			{editing && (
+				<McModal open={editing} onClose={onClose} title='Editar página'>
+					<FormPagesApp page={editPage} onClose={onClose} />
+				</McModal>
+			)}
 		</>
 	);
 };

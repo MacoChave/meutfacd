@@ -8,6 +8,7 @@ import {
 	ListItemText,
 	Toolbar,
 	Tooltip,
+	Typography,
 } from '@mui/material';
 import { DrawerProps } from '../../propTypes/Appbar';
 import { useNavigate } from 'react-router-dom';
@@ -22,58 +23,64 @@ const Sidebar = ({ menuArray, open, setOpen }: DrawerProps) => {
 				variant='permanent'
 				open={open}
 				sx={{
-					width: { xs: '50px', md: drawerWidth },
+					width: { xs: 60, md: drawerWidth },
 					flexShrink: 0,
 					[`& .MuiDrawer-paper`]: {
-						width: { xs: '50px', md: drawerWidth },
+						width: { xs: 60, md: drawerWidth },
 						boxSizing: 'border-box',
 					},
-					scrollbarWidth: 'none' /* Firefox */,
-					'&::-webkit-scrollbar': {
-						display: 'none',
-					} /* Chrome */,
 				}}>
 				<Toolbar />
 				<Divider />
 				<List>
-					{menuArray.map((item, index) => (
-						<ListItem
-							key={index}
-							disablePadding
-							sx={{
-								display: 'block',
-							}}>
-							<ListItemButton
-								onClick={() => navigate(item.ruta)}
+					{menuArray
+						.sort((a, b) => a.indice - b.indice)
+						.map((item, index) => (
+							<ListItem
+								key={index}
+								disablePadding
 								sx={{
-									minHeight: 48,
-									justifyContent: {
-										xs: 'center',
-										md: 'initial',
-									},
-									px: 4,
-									gap: 2,
+									display: 'block',
 								}}>
-								<ListItemIcon
+								<ListItemButton
+									onClick={() => navigate(item.ruta)}
 									sx={{
-										minWidth: 0,
-										mr: open ? 3 : 'auto',
-										justifyContent: 'center',
-										color: 'inherit',
+										minHeight: 48,
+										justifyContent: {
+											xs: 'center',
+											md: 'initial',
+										},
+										overflow: 'hidden',
+										scrollbarWidth: 'none' /* Firefox */,
+										'&::-webkit-scrollbar': {
+											display: 'none',
+										} /* Chrome */,
+										px: 4,
+										gap: 2,
 									}}>
-									<Tooltip title={item.description}>
-										<>{item.nombre.slice(0, 2)}</>
+									<Tooltip title={item.descripcion}>
+										<ListItemIcon
+											sx={{
+												minWidth: 0,
+												mr: open ? 3 : 'auto',
+												justifyContent: 'center',
+												color: 'inherit',
+											}}>
+											<Typography variant='caption'>
+												{item.icono ||
+													item.nombre.slice(0, 3)}
+											</Typography>
+										</ListItemIcon>
 									</Tooltip>
-								</ListItemIcon>
-								<ListItemText
-									primary={item.nombre}
-									sx={{
-										opacity: { xs: 0, md: 1 },
-									}}
-								/>
-							</ListItemButton>
-						</ListItem>
-					))}
+									<ListItemText
+										primary={item.nombre}
+										sx={{
+											opacity: { xs: 0, md: 1 },
+										}}
+									/>
+								</ListItemButton>
+							</ListItem>
+						))}
 				</List>
 			</Drawer>
 		</>

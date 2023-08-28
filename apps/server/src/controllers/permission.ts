@@ -11,12 +11,11 @@ const getItem = ({ query, user }: Request, res: Response) => {
 };
 
 const getItems = async ({ query, user }: Request, res: Response) => {
-	console.log(user);
 	try {
 		const sql = `select 
 	uperm.id_rol , uperm.id_pagina , 
 	upag.nombre , upag.descripcion , 
-	upag.indice , upag.ruta 
+	upag.indice , upag.ruta , upag.icono
 from ut_permiso uperm 
 left join rol r 
 	using (id_rol)
@@ -30,7 +29,6 @@ where r.id_rol in (
 	where ur.id_usuario = ?
 ) ; `;
 		const rows = await sqlEjecutar({ sql, values: [user.primaryKey] });
-		console.log(rows);
 		res.status(200).json(rows);
 	} catch (error: any) {
 		errorHttp(res, error as any);

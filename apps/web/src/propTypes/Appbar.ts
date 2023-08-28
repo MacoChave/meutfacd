@@ -1,3 +1,5 @@
+import { PageAppType } from '@/models/PageApp';
+
 export interface AppbarProps {
 	open: boolean;
 	setOpen: (open: boolean) => void;
@@ -11,7 +13,7 @@ export interface MenuItem {
 }
 
 export interface DrawerProps {
-	menuArray: MenuItem[];
+	menuArray: PageAppType[];
 	open: boolean;
 	setOpen: (open: boolean) => void;
 }
