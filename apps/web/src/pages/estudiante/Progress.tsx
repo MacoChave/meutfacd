@@ -20,6 +20,7 @@ const Progress = () => {
 				'fecha_creacion',
 				'fecha_modificacion',
 				'fecha',
+				'tutor',
 				'estado',
 				'estacion',
 			],
@@ -40,6 +41,7 @@ const Progress = () => {
 				<McTable
 					headers={{
 						estacion: 'Estación',
+						tutor: 'Revisor',
 						fecha_creacion: 'Creación',
 						fecha_modificacion: 'Modificación',
 						fecha: 'Revisión',

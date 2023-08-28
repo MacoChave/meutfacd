@@ -18,20 +18,43 @@ const config: S3ClientConfig = {
 
 console.log('config', config);
 
+const getContentTypeByExt = (name: string) => {
+	const ext = name.split('.').pop();
+	switch (ext) {
+		case 'pdf':
+			return 'application/pdf';
+		case 'doc':
+			return 'application/msword';
+		case 'docx':
+			return 'application/vnd.openxmlformats-officedocument.wordprocessingml.document';
+		case 'xls':
+			return 'application/vnd.ms-excel';
+		case 'xlsx':
+			return 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
+		case 'ppt':
+			return 'application/vnd.ms-powerpoint';
+		case 'pptx':
+			return 'application/vnd.openxmlformats-officedocument.presentationml.presentation';
+		default:
+			return 'application/pdf';
+	}
+};
+
 export const uploadFile = async (
 	path: string,
 	name: string,
-	carnet: string = ''
+	carnet: string = '',
+	fieldname: 'draft' | 'thesis'
 ) => {
 	const stream = createReadStream(path);
 	const params: PutObjectCommandInput = {
 		Bucket: DATA_SOURCES.AWS_BUCKET_NAME,
-		Key: `${carnet}_${name}`,
+		Key: `${carnet}/${name}`,
 		Body: stream,
 		ACL: 'public-read',
-		ContentType: 'application/pdf',
+		ContentType: getContentTypeByExt(name),
 		Metadata: {
-			fieldname: 'draft',
+			fieldname: fieldname,
 		},
 	};
 	const client = new S3Client(config);

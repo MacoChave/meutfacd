@@ -1,9 +1,8 @@
 import { Request, Response } from 'express';
-import { logger } from '../utils/logger';
-import { downloadFile, uploadFile } from '../utils/upload';
-import { createReadStream, createWriteStream } from 'fs';
-import { errorHttp } from '../utils/error.handle';
 import { DATA_SOURCES } from '../config/vars.config';
+import { errorHttp } from '../utils/error.handle';
+import { logger } from '../utils/logger';
+import { uploadFile } from '../utils/upload';
 
 const uploadDraft = async ({ files, user }: Request, res: Response) => {
 	try {
@@ -11,10 +10,11 @@ const uploadDraft = async ({ files, user }: Request, res: Response) => {
 		const result = await uploadFile(
 			files.draft.tempFilePath,
 			files.draft.name,
-			user.carnet
+			user.carnet.toString(),
+			'draft'
 		);
 		console.log({ result });
-		res.status(200).json({ name: `${user.carnet}_${files.draft.name}` });
+		res.status(200).json({ name: `${user.carnet}/${files.draft.name}` });
 	} catch (error: any) {
 		errorHttp(res, { error, msg: 'Error al subir el borrador', code: 500 });
 	}
@@ -26,7 +26,8 @@ const uploadTesis = async ({ files, user }: Request, res: Response) => {
 		const result = await uploadFile(
 			files.tesis.tempFilePath,
 			files.tesis.name,
-			user.carnet
+			user.carnet.toString(),
+			'thesis'
 		);
 		console.log(result);
 		res.status(200).json({ success: 'Tesis subida correctamente' });
@@ -50,4 +51,4 @@ const getFile = async ({ query }: Request, res: Response) => {
 	}
 };
 
-export { uploadDraft, uploadTesis, getFile };
+export { getFile, uploadDraft, uploadTesis };

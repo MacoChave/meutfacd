@@ -17,20 +17,20 @@ const Estacion5 = () => {
 		isLoading,
 		isError,
 	} = useCustomFetch({
-		url: URL.THESIS.HISTORY,
+		url: `${URL.REVIEW}/one`,
 		method: 'post',
 		body: {
 			table: 'ut_v_revision',
 			columns: [
 				'id_revision',
 				'titulo',
-				'fecha_revision',
+				'fecha',
 				'detalle',
 				'estado',
 				'estacion',
 			],
 			order: {
-				fecha_revision: 'DESC',
+				fecha: 'DESC',
 			},
 			limit: 1,
 		},
@@ -39,7 +39,8 @@ const Estacion5 = () => {
 		},
 	});
 
-	console.log({ revision });
+	if (isLoading) return <p>Cargando...</p>;
+	if (isError) return <p>Error</p>;
 
 	return (
 		<>

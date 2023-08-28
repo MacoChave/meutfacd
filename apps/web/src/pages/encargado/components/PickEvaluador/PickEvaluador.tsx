@@ -13,7 +13,7 @@ export type PickEvaluadorProps = {
 
 const PickEvaluador: React.FC<PickEvaluadorProps> = ({
 	evaluador,
-	rol = '%Docente perfil%',
+	rol = 'Docente perfil',
 	setEvaluador,
 }) => {
 	const {
@@ -29,7 +29,7 @@ const PickEvaluador: React.FC<PickEvaluadorProps> = ({
 				{
 					column: 'roles',
 					operator: 'like',
-					value: rol,
+					value: `%${rol}%`,
 				},
 			],
 		},

@@ -113,7 +113,7 @@ const Draft: React.FC<DraftProps> = ({}) => {
 						<PickEvaluador
 							evaluador={docente}
 							setEvaluador={setDocente}
-							rol={'Docente punto de tesis'}
+							rol={'Docente perfil'}
 						/>
 						<Button variant='contained' onClick={saveAssign}>
 							Guardar asignación
