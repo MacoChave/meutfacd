@@ -18,8 +18,11 @@ const config: S3ClientConfig = {
 
 console.log('config', config);
 
-const getContentTypeByExt = (name: string) => {
-	const ext = name.split('.').pop();
+export const getExtFile = (name: string): string => {
+	return name.split('.').pop() || '';
+};
+
+export const getContentTypeByExt = (ext: string): string => {
 	switch (ext) {
 		case 'pdf':
 			return 'application/pdf';
@@ -44,15 +47,16 @@ export const uploadFile = async (
 	path: string,
 	name: string,
 	carnet: string = '',
-	fieldname: 'draft' | 'thesis'
+	fieldname: 'preview' | 'thesis'
 ) => {
+	const ext = getExtFile(name);
 	const stream = createReadStream(path);
 	const params: PutObjectCommandInput = {
 		Bucket: DATA_SOURCES.AWS_BUCKET_NAME,
-		Key: `${carnet}/${name}`,
+		Key: `${carnet}/${fieldname}.${ext}`,
 		Body: stream,
 		ACL: 'public-read',
-		ContentType: getContentTypeByExt(name),
+		ContentType: getContentTypeByExt(ext),
 		Metadata: {
 			fieldname: fieldname,
 		},

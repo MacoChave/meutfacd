@@ -45,28 +45,30 @@ export const logupHandler = async ({ body, query }: Request, res: Response) => {
 		};
 
 		// Crear variables para almacenar en BD
+		const keys: string[] = Object.keys(usuario).map((key) => '?');
+		keys.push(...['@error_code', '@error_message']);
 		const values = Object.values(usuario).map((value) => value);
 
 		// Almacenar en BD
-		const usuarioNuevo: any = await sqlEjecutar({
-			sql: `call sp_ut_crear_usuario(${Object.keys(usuario)
-				.map((_value) => '?')
-				.join(',')})`,
+		await sqlEjecutar({
+			sql: `call sp_ut_crear_usuario(${keys.join(',')})`,
 			values,
 		});
-		console.log(usuarioNuevo);
 
-		if (usuarioNuevo.affectedRows === 0) {
-			errorHttp(res, {
-				msg: 'Error al crear usuario',
-				code: 400,
-			});
-			return;
+		const [errorInfo] = await sqlEjecutar({
+			sql: `select @error_code, @error_message`,
+		});
+
+		console.log({ errorInfo });
+		const { error_code, error_message } = errorInfo;
+
+		if (error_code && error_code !== 0) {
+			throw new Error(error_message);
 		}
 
 		res.status(200).json({ msg: 'Usuario creado' });
 	} catch (error: any) {
-		res.status(400).json({ msg: 'Error al crear usuario', error });
+		errorHttp(res, { msg: 'Error al crear usuario', error });
 	}
 };
 

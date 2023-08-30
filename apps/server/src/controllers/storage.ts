@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import { DATA_SOURCES } from '../config/vars.config';
 import { errorHttp } from '../utils/error.handle';
 import { logger } from '../utils/logger';
-import { uploadFile } from '../utils/upload';
+import { getExtFile, uploadFile } from '../utils/upload';
 
 const uploadDraft = async ({ files, user }: Request, res: Response) => {
 	try {
@@ -11,12 +11,18 @@ const uploadDraft = async ({ files, user }: Request, res: Response) => {
 			files.draft.tempFilePath,
 			files.draft.name,
 			user.carnet.toString(),
-			'draft'
+			'preview'
 		);
 		console.log({ result });
-		res.status(200).json({ name: `${user.carnet}/${files.draft.name}` });
+		res.status(200).json({
+			name: `${user.carnet}/preview.${getExtFile(files.draft.name)}`,
+		});
 	} catch (error: any) {
-		errorHttp(res, { error, msg: 'Error al subir el borrador', code: 500 });
+		errorHttp(res, {
+			error,
+			msg: 'Error al subir el punto de tesis',
+			code: 500,
+		});
 	}
 };
 
@@ -30,7 +36,9 @@ const uploadTesis = async ({ files, user }: Request, res: Response) => {
 			'thesis'
 		);
 		console.log(result);
-		res.status(200).json({ success: 'Tesis subida correctamente' });
+		res.status(200).json({
+			name: `${user.carnet}/thesis.${getExtFile(files.tesis.name)}`,
+		});
 	} catch (error: any) {
 		res.status(500).json({ error: 'Error al subir la tesis' });
 	}

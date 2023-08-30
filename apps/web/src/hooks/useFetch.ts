@@ -3,7 +3,7 @@ import axios from 'axios';
 
 const fetchData = async ({ queryKey }: QueryFunctionContext) => {
 	const { data } = await axios.get(queryKey[1] as string, {
-		params: queryKey[3] as Object,
+		params: queryKey[2] as Object,
 	});
 	return data;
 };

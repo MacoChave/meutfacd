@@ -1,11 +1,14 @@
 import { Request, Response } from 'express';
-import { sqlSelect, sqlSelectOne } from '../db/consultas';
+import {
+	sqlDelete,
+	sqlInsert,
+	sqlSelect,
+	sqlSelectOne,
+	sqlUpdate,
+} from '../db/consultas';
 import { errorHttp } from '../utils/error.handle';
 
-export const getItem = async (
-	{ body, query, user }: Request,
-	res: Response
-) => {
+export const getItem = async ({ query, user }: Request, res: Response) => {
 	try {
 		const response = await sqlSelectOne({
 			table: 'ut_notificacion',
@@ -17,14 +20,11 @@ export const getItem = async (
 	}
 };
 
-export const getItems = async (
-	{ body, query, user }: Request,
-	res: Response
-) => {
+export const getItems = async ({ query, user }: Request, res: Response) => {
 	try {
 		const response = await sqlSelect({
-			table: 'ut_notificacion',
-			query: { id_receptor: user.primaryKey },
+			table: 'ut_v_notification',
+			query: { ...query, id_receptor: user.primaryKey },
 		});
 		res.status(200).json(response);
 	} catch (error) {
@@ -32,10 +32,11 @@ export const getItems = async (
 	}
 };
 
-export const postItem = async ({ body, query }: Request, res: Response) => {
+export const postItem = async ({ body }: Request, res: Response) => {
 	try {
-		const response = await sqlSelect({
+		const response = await sqlInsert({
 			table: 'ut_notificacion',
+			datos: body,
 		});
 		res.status(200).json(response);
 	} catch (error) {
@@ -45,19 +46,23 @@ export const postItem = async ({ body, query }: Request, res: Response) => {
 
 export const putItem = async ({ body, query }: Request, res: Response) => {
 	try {
-		const response = await sqlSelect({
+		const response = await sqlUpdate({
 			table: 'ut_notificacion',
+			datos: body,
+			query,
 		});
 		res.status(200).json(response);
 	} catch (error) {
+		console.log({ error });
 		errorHttp(res, error as any);
 	}
 };
 
-export const deleteItem = async ({ body, query }: Request, res: Response) => {
+export const deleteItem = async ({ query }: Request, res: Response) => {
 	try {
-		const response = await sqlSelect({
-			table: 'ut_notificacion',
+		const response = await sqlDelete({
+			table: 'ut_notifcacion',
+			query,
 		});
 		res.status(200).json(response);
 	} catch (error) {
