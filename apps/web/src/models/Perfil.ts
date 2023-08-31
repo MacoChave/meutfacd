@@ -1,4 +1,4 @@
-import { formatDateToInput } from '@/utils/formatHandler';
+import { formatDate } from '@/utils/formatHandler';
 import * as yup from 'yup';
 
 export type Tipo_PerfilTutor = {
@@ -45,7 +45,7 @@ export const defaultProfile: UserType = {
 	carnet: 0,
 	cui: '',
 	direccion: '',
-	fecha_nac: formatDateToInput({ date: new Date() }),
+	fecha_nac: formatDate({ date: new Date() }),
 	estado: '',
 	telefono: '',
 	id_rol: 0,
@@ -93,10 +93,16 @@ export const schemaUsuario = yup.object().shape({
 		.required('Dirección es requerido')
 		.max(200, 'Dirección no puede ser mayor a 200 caracteres'),
 	fecha_nac: yup
-		.date()
-		.max(
-			new Date(),
-			'La fecha de nacimiento debe ser menor a la fecha actual'
+		.string()
+		.test(
+			'is-future',
+			'Fecha de nacimiento no puede ser en el futuro',
+			(value) => {
+				if (!value) return false;
+				const [day, month, year] = value.split('/');
+				const date = new Date(`${year}-${month}-${day}`);
+				return date <= new Date();
+			}
 		)
 		.required('Fecha de nacimiento es requerido'),
 	// estado: yup.string().required('Estado es requerido'),

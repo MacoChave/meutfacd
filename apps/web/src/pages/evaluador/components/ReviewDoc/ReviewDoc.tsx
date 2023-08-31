@@ -1,6 +1,6 @@
 import { URL } from '@/api/server';
 import { ResultType } from '@/models/Result';
-import { putData } from '@/services/fetching';
+import { postData, putData } from '@/services/fetching';
 import { Box, Button, TextField } from '@mui/material';
 import React, { useState } from 'react';
 import swal from 'sweetalert';
@@ -52,17 +52,48 @@ const ReviewDoc: React.FC<ReviewDocProps> = ({ curReview, onClose }) => {
 	};
 
 	const onApprove = async () => {
-		const result: ResultType = await putData({
-			path: `${URL.REVIEW}`,
-			body: { estado: 'A' },
-			params: { id_revision: curReview.id_revision },
-		});
-		if (result.affectedRows) {
-			swal('Éxito', 'Se aprobó el documento', 'success');
-			onClose();
-		} else {
-			swal('Error', 'No se pudo aprobar el documento', 'error');
-		}
+		Promise.all([
+			putData<ResultType>({
+				path: URL.REVIEW,
+				body: { estado: 'A', detalle: 'Punto de tesis aprobado' },
+				params: { id_revision: curReview.id_revision },
+			}),
+			postData<ResultType>({
+				path: URL.REVIEW,
+				body: {
+					id_tesis: curReview.id_tesis,
+					estacion: 2,
+					estado: 'E',
+				},
+			}),
+		])
+			.then(([result1, result2]) => {
+				if (result1.affectedRows) {
+					swal('Éxito', 'Se aprobó el documento', 'success');
+				}
+				if (result2.affectedRows) {
+					swal(
+						'Éxito',
+						'Se registró el avance a la siguiente fase del estudiante',
+						'success'
+					);
+				}
+				onClose();
+			})
+			.catch(() => {
+				swal('Error', 'No se pudo aprobar el documento', 'error');
+			});
+		// const result: ResultType = await putData({
+		// 	path: `${URL.REVIEW}`,
+		// 	body: { estado: 'A' },
+		// 	params: { id_revision: curReview.id_revision },
+		// });
+		// if (result.affectedRows) {
+		// 	swal('Éxito', 'Se aprobó el documento', 'success');
+		// 	onClose();
+		// } else {
+		// 	swal('Error', 'No se pudo aprobar el documento', 'error');
+		// }
 	};
 
 	return (

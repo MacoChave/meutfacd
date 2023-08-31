@@ -5,6 +5,7 @@ import { UserType } from '@/models/Perfil';
 import { Box, TextField } from '@mui/material';
 import { McAutocomplete } from '@/components/McWithForms/McAutocomplete';
 import { generos } from '@/consts/genres';
+import { McInput } from '@/components/McWithForms/McInput';
 
 const PersonalData: React.FC<DataProps> = ({ editing }) => {
 	const {
@@ -61,7 +62,14 @@ const PersonalData: React.FC<DataProps> = ({ editing }) => {
 				options={generos.map((g) => ({ id: g.value, label: g.label }))}
 				disabled={!editing}
 			/>
-			<Controller
+			<McInput
+				control={control as any}
+				name='fecha_nac'
+				label='Fecha de nacimiento'
+				type='date'
+				disabled={!editing}
+			/>
+			{/* <Controller
 				control={control}
 				name='fecha_nac'
 				render={({ field }) => (
@@ -82,7 +90,7 @@ const PersonalData: React.FC<DataProps> = ({ editing }) => {
 						helperText={errors.fecha_nac?.message}
 					/>
 				)}
-			/>
+			/> */}
 		</Box>
 	);
 };

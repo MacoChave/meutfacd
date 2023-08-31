@@ -1,4 +1,3 @@
-import { formatDateToInput } from '@/utils/formatHandler';
 import * as yup from 'yup';
 
 export type CourseTutor = {

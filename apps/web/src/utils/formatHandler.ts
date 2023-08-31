@@ -82,7 +82,7 @@ export const formatByDataType = (cellValue: TypeWithKey<string>): string => {
 	}
 };
 
-type formatDateType = {
+type TFormatDate = {
 	date: Date;
 	setDay?: number;
 	setHour?: number;
@@ -90,13 +90,13 @@ type formatDateType = {
 	onlyMonth?: boolean;
 };
 
-export const formatDateToInput = ({
+export const formatDate = ({
 	date,
 	setDay,
 	setHour,
 	onlyTime,
 	onlyMonth,
-}: formatDateType): string => {
+}: TFormatDate): string => {
 	if (setDay) date.setDate(setDay);
 	if (setHour) date.setHours(setHour);
 
@@ -110,4 +110,9 @@ export const formatDateToInput = ({
 	console.log('formatDate', date, 'str', str);
 
 	return str;
+};
+
+export const formatToInputDate = (strDate: string) => {
+	const [day, month, year] = strDate.split('/');
+	return `${year}-${month}-${day}`;
 };

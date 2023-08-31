@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import { sqlInsert, sqlSelect, sqlSelectOne, sqlUpdate } from '../db/consultas';
 import { errorHttp } from '../utils/error.handle';
+import { formatDate } from '../utils/formats';
 
 export const getItem = async (
 	{ query, body, user }: Request,
@@ -86,7 +87,15 @@ export const assignReview = async ({ query, body }: Request, res: Response) => {
 				sqlUpdate({
 					table: 'ut_revision',
 					query: { id_revision },
-					datos: { id_tutor, estado: 'V' },
+					datos: {
+						id_tutor,
+						estado: 'V',
+						fecha: formatDate({
+							date: new Date(),
+							format: 'mysql',
+							type: 'datetime',
+						}),
+					},
 				})
 			)
 		);
@@ -108,7 +117,14 @@ export const putItem = async (
 		const results = await sqlUpdate({
 			table: 'ut_revision',
 			query,
-			datos: body,
+			datos: {
+				...body,
+				fecha: formatDate({
+					date: new Date(),
+					format: 'mysql',
+					type: 'datetime',
+				}),
+			},
 		});
 		res.status(200).json(results);
 	} catch (error: any) {

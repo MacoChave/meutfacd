@@ -1,8 +1,12 @@
 import { Contenedor, Loader } from '@/components';
+import { ResultType } from '@/models/Result';
+import { putData } from '@/services/fetching';
+import { formatDate, formatToInputDate } from '@/utils/formatHandler';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Box, Button, Divider, Typography } from '@mui/material';
 import { SyntheticEvent, useEffect, useState } from 'react';
 import { FormProvider, SubmitHandler, useForm } from 'react-hook-form';
+import swal from 'sweetalert';
 import { URL } from '../../../api/server';
 import { useFetch } from '../../../hooks/useFetch';
 import {
@@ -14,10 +18,6 @@ import { ErrorPage } from '../../ErrorPage';
 import { ContactData } from './components/ContactData';
 import { PersonalData } from './components/PersonalData';
 import { SesionData } from './components/SesionData';
-import { formatDateToInput } from '@/utils/formatHandler';
-import { ResultType } from '@/models/Result';
-import { putData } from '@/services/fetching';
-import swal from 'sweetalert';
 
 export const UserProfile = (): JSX.Element => {
 	const [isEditing, setIsEditing] = useState(false);
@@ -73,7 +73,7 @@ export const UserProfile = (): JSX.Element => {
 			methods.setValue('direccion', perfil.direccion);
 			methods.setValue(
 				'fecha_nac',
-				formatDateToInput({
+				formatDate({
 					date: new Date(perfil.fecha_nac),
 				})
 			);

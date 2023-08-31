@@ -1,4 +1,4 @@
-import { formatDateToInput } from '@/utils/formatHandler';
+import { formatToInputDate } from '@/utils/formatHandler';
 import { TextField } from '@mui/material';
 import React, { HTMLInputTypeAttribute } from 'react';
 import { Control, Controller, FieldValues, Path } from 'react-hook-form';
@@ -29,10 +29,10 @@ const McInput: React.FC<McInputProps> = ({
 				return (
 					<TextField
 						{...field}
-						variant='outlined'
+						variant='standard'
 						label={label}
 						value={
-							type === 'date' ? value.replace('/', '-') : value
+							type === 'date' ? formatToInputDate(value) : value
 						}
 						type={type}
 						onChange={(e) => {

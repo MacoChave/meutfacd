@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import Usuario from '../models/usuario';
 import { errorHttp } from '../utils/error.handle';
 import { sqlDelete, sqlSelect, sqlUpdate } from '../db/consultas';
+import { formatDate, newDate } from '../utils/formats';
 
 const obtenerItem = async ({ params }: Request, res: Response) => {
 	try {
@@ -49,9 +50,11 @@ const actualizarItem = async (
 					carnet: body.carnet,
 					cui: body.cui,
 					direccion: body.direccion,
-					fecha_nac: body.fecha_nac
-						.replace('T', ' ')
-						.replace('Z', ''),
+					fecha_nac: formatDate({
+						date: newDate(body.fecha_nac, 'es'),
+						format: 'mysql',
+						type: 'date',
+					}),
 				},
 				query: { id_usuario: user.primaryKey },
 			}),
