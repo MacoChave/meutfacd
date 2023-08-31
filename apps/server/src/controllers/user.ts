@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import Usuario from '../models/usuario';
+import Usuario from '../models/user';
 import { errorHttp } from '../utils/error.handle';
 import { sqlDelete, sqlSelect, sqlUpdate } from '../db/consultas';
 import { formatDate, newDate } from '../utils/formats';

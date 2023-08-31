@@ -4,7 +4,7 @@ import { McInput } from '@/components/McWithForms/McInput';
 import { useCustomFetch } from '@/hooks/useFetch';
 import { Course } from '@/models/Course';
 import {
-	CourseTutor,
+	TCourseTutor,
 	courseTutorDefault,
 	courseTutorSchema,
 } from '@/models/CourseTutor';
@@ -48,7 +48,7 @@ const Form: React.FC<FormProps> = ({ onClose }) => {
 		params: {},
 	});
 
-	const onSubmit: SubmitHandler<CourseTutor> = async (data) => {
+	const onSubmit: SubmitHandler<TCourseTutor> = async (data) => {
 		console.log('Send data', data);
 		const result: ResultType = await postData({
 			path: URL.COURSE_TUTOR,

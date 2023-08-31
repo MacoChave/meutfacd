@@ -1,10 +1,14 @@
 import { URL } from '@/api/server';
-import { Contenedor } from '@/components';
+import { Contenedor, Loader } from '@/components';
+import { ESPERA, REVISION } from '@/consts/vars';
 import { useCustomFetch } from '@/hooks/useFetch';
-import { UserType } from '@/models/Perfil';
+import { TCourseTutor } from '@/models/CourseTutor';
 import { PeriodType } from '@/models/Period';
 import { ReviewType } from '@/models/Review';
 import { ScheduleType } from '@/models/Schedule';
+import { postData, putData } from '@/services/fetching';
+import { style } from '@/themes/styles';
+import { SwitchLeft } from '@mui/icons-material';
 import {
 	Box,
 	Button,
@@ -17,24 +21,25 @@ import {
 } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import swal from 'sweetalert';
-import { PickEvaluador } from '../components/PickEvaluador';
-import { style } from '@/themes/styles';
-import { SwitchLeft } from '@mui/icons-material';
-import { PickJornada } from '../components/PickJornada';
+import { PickCourseTutor } from '../components/PickCourseTutor';
 import { PickHorario } from '../components/PickHorario';
+import { PickJornada } from '../components/PickJornada';
 
 export type FstCourseProps = Record<string, never>;
 
 const FstCourse: React.FC<FstCourseProps> = ({}) => {
 	const [jornada, setJornada] = useState<PeriodType>({} as PeriodType);
 	const [horario, setHorario] = useState<ScheduleType>({} as ScheduleType);
-	const [docente, setDocente] = useState<UserType>({} as UserType);
+	const [courseTutor, setCourseTutor] = useState<TCourseTutor>(
+		{} as TCourseTutor
+	);
 	const [assignment, setAssignment] = useState<ReviewType[]>(
 		[] as ReviewType[]
 	);
 	const [unAssignment, setUnAssignment] = useState<ReviewType[]>(
 		[] as ReviewType[]
 	);
+	const [waiting, setWaiting] = useState(false);
 
 	const { data, isLoading, isError } = useCustomFetch({
 		url: `${URL.GENERIC}/all`,
@@ -43,25 +48,41 @@ const FstCourse: React.FC<FstCourseProps> = ({}) => {
 			table: 'ut_v_revision',
 		},
 		params: {
-			estado: 'A',
-			estacion: 1,
+			estado: ESPERA,
+			estacion: 2,
 			id_jornada: jornada.id_jornada || 0,
 			id_horario: horario.id_horario || 0,
 		},
 	});
 
-	const saveAssign = () => {
-		if (!docente.id_usuario) {
+	const saveAssign = async () => {
+		setWaiting(true);
+		if (!courseTutor.id_curso_tutor) {
 			swal(
 				'Error',
-				'No se ha seleccionado un docente para asignar',
+				'Seleccione un salón de clases para asignar',
 				'error'
 			);
 			return;
 		}
 
-		const id_tutor = docente.id_usuario;
-		const id_revisiones = assignment.map((s) => s.id_revision);
+		for await (const assign of assignment) {
+			await postData({
+				path: URL.ASSIGNMENT,
+				body: {
+					id_curso_tutor: courseTutor.id_curso_tutor,
+					id_estudiante: assign.id_usuario,
+				},
+			});
+			await putData({
+				path: URL.REVIEW,
+				body: { id_tutor: courseTutor.id_tutor, estado: REVISION },
+				params: { id_revision: assign.id_revision },
+			});
+		}
+		setAssignment([]);
+		setCourseTutor({} as TCourseTutor);
+		setWaiting(false);
 	};
 
 	const assign = (student: any) => {
@@ -117,10 +138,11 @@ const FstCourse: React.FC<FstCourseProps> = ({}) => {
 							gap: 2,
 							gridColumnEnd: 'span 2',
 						}}>
-						<PickEvaluador
-							evaluador={docente}
-							setEvaluador={setDocente}
-							rol='Docente curso 1'
+						<PickCourseTutor
+							courseTutor={courseTutor}
+							setCourseTutor={setCourseTutor}
+							id_horario={horario?.id_horario ?? 0}
+							id_jornada={jornada?.id_jornada ?? 0}
 						/>
 						<Button variant='contained' onClick={saveAssign}>
 							Guardar asignación
@@ -201,6 +223,7 @@ const FstCourse: React.FC<FstCourseProps> = ({}) => {
 					</Box>
 				</Box>
 			</Contenedor>
+			{waiting && <Loader />}
 		</>
 	);
 };

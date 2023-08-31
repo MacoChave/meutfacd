@@ -1,7 +1,9 @@
 import { URL } from '@/api/server';
 import { Contenedor } from '@/components';
+import { APROBADO, RECHAZADO, REVISION } from '@/consts/vars';
 import { useCustomFetch } from '@/hooks/useFetch';
 import { style } from '@/themes/styles';
+import { getChipColor, getChipLabel } from '@/utils/formatHandler';
 import { Download, FileDownload, UploadFile } from '@mui/icons-material';
 import { Box, Chip, IconButton, TextField, Typography } from '@mui/material';
 
@@ -20,19 +22,9 @@ const Estacion2 = () => {
 	} = useCustomFetch({
 		url: `${URL.ASSIGNMENT}/one`,
 		method: 'post',
-		body: {
-			table: 'ut_v_asignacion',
-			columns: [
-				'id_curso_tutor',
-				'salon',
-				'hora_inicio',
-				'hora_final',
-				'uj_nombre',
-				'es_aprobado',
-				'ruta_certificado',
-				'u_nombre',
-			],
-			limit: 1,
+		params: {
+			estacion: 2,
+			estado: REVISION,
 		},
 	});
 
@@ -50,26 +42,31 @@ const Estacion2 = () => {
 							gap: 4,
 						}}>
 						<TextField
-							variant='filled'
+							variant='standard'
 							label='Catedrático'
-							value={asignacion.tt_nombre || 'No asignado'}
+							value={asignacion?.tutor ?? 'No asignado'}
 						/>
 						<TextField
-							variant='filled'
+							variant='standard'
 							label='Jornada'
-							value={asignacion.uj_nombre || 'No asignado'}
+							value={asignacion?.jornada ?? 'No asignado'}
 						/>
 						<TextField
-							variant='filled'
+							variant='standard'
 							label='Horario'
-							value={`${asignacion.hora_inicio || 'Inicio'} - ${
-								asignacion.hora_final || 'Final'
+							value={`${asignacion?.hora_inicio ?? 'Inicio'} - ${
+								asignacion?.hora_final ?? 'Final'
 							}`}
 						/>
 						<TextField
-							variant='filled'
+							variant='standard'
+							label='Días'
+							value={asignacion?.dias ?? 'No asignado'}
+						/>
+						<TextField
+							variant='standard'
 							label='Salón'
-							value={asignacion.salon || 'No asignado'}
+							value={asignacion?.salon ?? 'No asignado'}
 						/>
 					</Box>
 					<Box
@@ -81,20 +78,8 @@ const Estacion2 = () => {
 						<Box sx={boxStyle}>
 							<Typography>Resultado</Typography>
 							<Chip
-								label={
-									asignacion.es_aprobado === undefined
-										? 'En espera'
-										: asignacion.es_aprobado
-										? 'Aprobado'
-										: 'Reprobado'
-								}
-								color={
-									asignacion.es_aprobado === undefined
-										? 'primary'
-										: asignacion.es_aprobado
-										? 'success'
-										: 'warning'
-								}
+								label={getChipLabel(asignacion.estado)}
+								color={getChipColor(asignacion.estado)}
 							/>
 						</Box>
 						<Box sx={boxStyle}>

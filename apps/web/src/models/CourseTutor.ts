@@ -1,6 +1,6 @@
 import * as yup from 'yup';
 
-export type CourseTutor = {
+export type TCourseTutor = {
 	id_curso_tutor: number;
 	fecha: string;
 	salon: string;
@@ -11,7 +11,7 @@ export type CourseTutor = {
 	id_jornada: number;
 };
 
-export const courseTutorDefault: CourseTutor = {
+export const courseTutorDefault: TCourseTutor = {
 	id_curso_tutor: 0,
 	fecha: new Date().toISOString().slice(0, 10),
 	salon: '',

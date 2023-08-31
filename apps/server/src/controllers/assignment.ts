@@ -1,7 +1,14 @@
 import { Request, Response } from 'express';
 import * as XLSX from 'xlsx';
-import { sqlInsert, sqlSelect, sqlSelectOne, sqlUpdate } from '../db/consultas';
+import {
+	sqlEjecutar,
+	sqlInsert,
+	sqlSelect,
+	sqlSelectOne,
+	sqlUpdate,
+} from '../db/consultas';
 import { errorHttp } from '../utils/error.handle';
+import { RowDataPacket } from 'mysql2';
 
 export const getExcelFile = async (req: Request, res: Response) => {
 	try {
@@ -38,11 +45,21 @@ export const getItem = async (
 	res: Response
 ) => {
 	try {
-		const result = await sqlSelectOne({
-			...body,
-			query: { id_estudiante: user.primaryKey, ...query },
+		const result = await sqlEjecutar({
+			sql: `select 
+	* 
+from ut_v_asignacion uva 
+where uva.id_estudiante in (
+	select uvr.id_usuario  
+	from ut_v_revision uvr 
+	where uvr.estacion = ? 
+	and uvr.estado = ?
+) 
+and id_estudiante = ? ; `,
+			values: [query.estacion, query.estado, user.primaryKey],
 		});
-		res.status(200).json(result);
+
+		res.status(200).json(result[0]);
 	} catch (error: any) {
 		errorHttp(res, {
 			error,
