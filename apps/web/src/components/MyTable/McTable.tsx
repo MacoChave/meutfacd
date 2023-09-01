@@ -12,6 +12,8 @@ export type McTableProps = {
 	onView?: (row: object) => void;
 	onDelete?: (row: object) => void;
 	onPrint?: (row: object) => void;
+	onPass?: (row: object) => void;
+	onFail?: (row: object) => void;
 };
 
 const McTable: React.FC<McTableProps> = ({
@@ -22,6 +24,8 @@ const McTable: React.FC<McTableProps> = ({
 	onView = undefined,
 	onDelete = undefined,
 	onPrint = undefined,
+	onPass = undefined,
+	onFail = undefined,
 }) => {
 	return (
 		<Box
@@ -39,6 +43,8 @@ const McTable: React.FC<McTableProps> = ({
 					onView={onView}
 					onDelete={onDelete}
 					onPrint={onPrint}
+					onPass={onPass}
+					onFail={onFail}
 				/>
 				<McFooter headers={headers} rows={rows} totalCols={totalCols} />
 			</Table>

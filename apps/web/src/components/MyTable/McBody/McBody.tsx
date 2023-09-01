@@ -5,11 +5,16 @@ import {
 	getChipLabel,
 } from '@/utils/formatHandler';
 import {
+	Cancel,
+	CancelOutlined,
+	Check,
 	Delete,
 	Edit,
 	FileOpen,
 	FilePresent,
 	Print,
+	UnfoldLess,
+	UnfoldMore,
 } from '@mui/icons-material';
 import {
 	Chip,
@@ -27,6 +32,8 @@ export type McBodyProps = {
 	onView?: (row: object) => void;
 	onDelete?: (row: object) => void;
 	onPrint?: (row: object) => void;
+	onPass?: (row: object) => void;
+	onFail?: (row: object) => void;
 };
 
 export const getValue = (key: string, cellValue: any): React.ReactNode => {
@@ -50,6 +57,8 @@ const McBody: React.FC<McBodyProps> = ({
 	onView,
 	onDelete,
 	onPrint,
+	onPass,
+	onFail,
 }) => {
 	return (
 		<TableBody>
@@ -89,6 +98,20 @@ const McBody: React.FC<McBodyProps> = ({
 								color='primary'
 								onClick={() => onPrint(row)}>
 								<Print />
+							</IconButton>
+						)}
+						{onPass && (
+							<IconButton
+								color='primary'
+								onClick={() => onPass(row)}>
+								<Check />
+							</IconButton>
+						)}
+						{onFail && (
+							<IconButton
+								color='warning'
+								onClick={() => onFail(row)}>
+								<CancelOutlined />
 							</IconButton>
 						)}
 					</TableCell>

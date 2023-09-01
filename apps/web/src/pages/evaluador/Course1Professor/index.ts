@@ -1,0 +1,1 @@
+export { default as Course1Professor } from './Course1Professor';

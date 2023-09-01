@@ -22,9 +22,9 @@ const Estacion2 = () => {
 	} = useCustomFetch({
 		url: `${URL.ASSIGNMENT}/one`,
 		method: 'post',
+		body: {},
 		params: {
 			estacion: 2,
-			estado: REVISION,
 		},
 	});
 

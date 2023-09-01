@@ -5,6 +5,7 @@ import { ToolbarWithSesion } from '../components/navegacion/Toolbar';
 import { MenuItem } from '../propTypes/Appbar';
 import { useFetch } from '@/hooks/useFetch';
 import { URL } from '@/api/server';
+import { DotsLoaders } from '@/components/Loader/DotsLoaders';
 
 const Dashboard = ({
 	menuArray,
@@ -18,7 +19,7 @@ const Dashboard = ({
 	});
 	const [open, setOpen] = useState(false);
 
-	if (isLoading) return <p>Loading...</p>;
+	if (isLoading) return <DotsLoaders />;
 	if (isError) return <p>Error</p>;
 
 	return (

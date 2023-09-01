@@ -1,14 +1,7 @@
 import { Request, Response } from 'express';
 import * as XLSX from 'xlsx';
-import {
-	sqlEjecutar,
-	sqlInsert,
-	sqlSelect,
-	sqlSelectOne,
-	sqlUpdate,
-} from '../db/consultas';
+import { sqlEjecutar, sqlInsert, sqlSelect, sqlUpdate } from '../db/consultas';
 import { errorHttp } from '../utils/error.handle';
-import { RowDataPacket } from 'mysql2';
 
 export const getExcelFile = async (req: Request, res: Response) => {
 	try {
@@ -55,7 +48,7 @@ where uva.id_estudiante in (
 	where uvr.estacion = ? 
 	and uvr.estado = ?
 ) 
-and id_estudiante = ? ; `,
+and id_estudiante = ?`,
 			values: [query.estacion, query.estado, user.primaryKey],
 		});
 

@@ -19,6 +19,7 @@ import './Toolbar.css';
 import { NotificationType } from '@/models/Notification';
 import { useSnackbar } from 'notistack';
 import { putData } from '@/services/fetching';
+import { DotsLoaders } from '../Loader/DotsLoaders';
 
 interface ToolbarProps {
 	children?: React.ReactNode;
@@ -104,7 +105,7 @@ export const ToolbarWithSesion = () => {
 		});
 	};
 
-	if (isLoading) return <div>Cargando...</div>;
+	if (isLoading) return <DotsLoaders />;
 	if (isError) return <div>Error</div>;
 
 	return (

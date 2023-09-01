@@ -33,6 +33,7 @@ import Estacion5 from '../pages/estudiante/Station5';
 import HomeEvaluador from '../pages/evaluador';
 import RevisionCurso from '../pages/evaluador/RevisionCurso';
 import RevisionDocumento from '../pages/evaluador/RevisionDoc';
+import { Course1Professor } from '@/pages/evaluador/Course1Professor';
 
 export const router = createBrowserRouter([
 	{
@@ -219,7 +220,7 @@ export const router = createBrowserRouter([
 				path: 'curso-introduccion',
 				element: (
 					<ProtectedRoute rol='profesor'>
-						{<RevisionCurso />}
+						{<Course1Professor />}
 					</ProtectedRoute>
 				),
 			},
