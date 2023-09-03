@@ -24,6 +24,7 @@ import swal from 'sweetalert';
 import { PickCourseTutor } from '../components/PickCourseTutor';
 import { PickHorario } from '../components/PickHorario';
 import { PickJornada } from '../components/PickJornada';
+import { DotsLoaders } from '@/components/Loader/DotsLoaders';
 
 export type FstCourseProps = Record<string, never>;
 
@@ -103,10 +104,10 @@ const FstCourse: React.FC<FstCourseProps> = ({}) => {
 	}, [data]);
 
 	if (isLoading) {
-		return <div>Cargando...</div>;
+		return <DotsLoaders />;
 	}
 	if (isError) {
-		return <div>Error</div>;
+		return <Typography>Error al cargar los estudiantes</Typography>;
 	}
 
 	return (

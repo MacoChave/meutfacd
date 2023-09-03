@@ -9,21 +9,39 @@ import { postData, putData } from '@/services/fetching';
 import React from 'react';
 import swal from 'sweetalert';
 
-export type Course1ProfessorProps = Record<string, never>;
+export type SndCourseDProps = Record<string, never>;
 
-const Course1Professor: React.FC<Course1ProfessorProps> = ({}) => {
+const SndCourseD: React.FC<SndCourseDProps> = ({}) => {
 	const { data, isLoading, isError, refetch } = useCustomFetch({
 		url: `${URL.REVIEW}/professor`,
 		method: 'get',
 		body: {},
-		params: { estado: REVISION, estacion: 2 },
+		params: { estado: REVISION, estacion: 3 },
 	});
 
 	const onPass = async (item: any) => {
+		const result: ResultType = await putData<ResultType>({
+			path: URL.REVIEW,
+			body: { estado: APROBADO, detalle: 'Curso aprobado' },
+			params: { id_revision: item.id_revision },
+		});
+		if (result.affectedRows) {
+			swal(
+				'Éxito',
+				'Se registró el avance a la siguiente fase del estudiante',
+				'success'
+			);
+		} else {
+			swal('Error', 'No se pudo aprobar el curso', 'error');
+		}
+		refetch();
+	};
+
+	const onFail = async (item: any) => {
 		Promise.all([
 			putData<ResultType>({
 				path: URL.REVIEW,
-				body: { estado: APROBADO, detalle: 'Curso aprobado' },
+				body: { estado: RECHAZADO, detalle: 'Curso reprobado' },
 				params: { id_revision: item.id_revision },
 			}),
 			postData<ResultType>({
@@ -35,7 +53,7 @@ const Course1Professor: React.FC<Course1ProfessorProps> = ({}) => {
 				if (result1.affectedRows && result2.affectedRows) {
 					swal(
 						'Éxito',
-						'Se registró el avance a la siguiente fase del estudiante',
+						'Se reprobó al estudiante y se envió a repetir el curso',
 						'success'
 					);
 				} else {
@@ -48,41 +66,12 @@ const Course1Professor: React.FC<Course1ProfessorProps> = ({}) => {
 			});
 	};
 
-	const onFail = async (item: any) => {
-		Promise.all([
-			putData<ResultType>({
-				path: URL.REVIEW,
-				body: { estado: RECHAZADO, detalle: 'Curso reprobado' },
-				params: { id_revision: item.id_revision },
-			}),
-			postData<ResultType>({
-				path: URL.REVIEW,
-				body: { id_tesis: item.id_tesis, estado: ESPERA, estacion: 2 },
-			}),
-		])
-			.then(([result1, result2]) => {
-				if (result1.affectedRows && result2.affectedRows) {
-					swal(
-						'Éxito',
-						'Se reprobó al estudiante y se envió a repetir el curso',
-						'success'
-					);
-				} else {
-					swal('Error', 'No se pudo reprobar el curso', 'error');
-				}
-				refetch();
-			})
-			.catch(() => {
-				swal('Error', 'No se pudo reprobar el curso', 'error');
-			});
-	};
-
 	if (isLoading) return <DotsLoaders />;
-	if (isError) return <div>Error</div>;
+	if (isError) return <div>Hubo un error</div>;
 
 	return (
 		<>
-			<Contenedor title='Curso 1'>
+			<Contenedor title='Curso 2'>
 				<McTable
 					headers={{
 						nombre: 'Estudiante',
@@ -100,4 +89,4 @@ const Course1Professor: React.FC<Course1ProfessorProps> = ({}) => {
 	);
 };
 
-export default Course1Professor;
+export default SndCourseD;

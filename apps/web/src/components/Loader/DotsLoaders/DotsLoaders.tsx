@@ -4,7 +4,7 @@ import './DotsLoaders.css';
 export type DotsLoadersProps = {};
 
 const DotsLoaders: React.FC<DotsLoadersProps> = ({}) => {
-	return <div className='loader'>DotsLoaders</div>;
+	return <div className='loader'></div>;
 };
 
 export default DotsLoaders;

@@ -1,30 +1,30 @@
 import { URL as URI } from '@/api/server';
 import { Contenedor, McModal } from '@/components';
+import { DotsLoaders } from '@/components/Loader/DotsLoaders';
 import { McTable } from '@/components/MyTable';
 import { useCustomFetch } from '@/hooks/useFetch';
 import { getData } from '@/services/fetching';
+import { Typography } from '@mui/material';
 import React, { useState } from 'react';
 import { ReviewDoc } from '../components/ReviewDoc';
-import { DotsLoaders } from '@/components/Loader/DotsLoaders';
-import { Typography } from '@mui/material';
 
-export type DraftProfessorProps = Record<string, never>;
+export type StylesComisionProps = Record<string, never>;
 
-const DraftProfessor: React.FC<DraftProfessorProps> = ({}) => {
+const StylesComision: React.FC<StylesComisionProps> = ({}) => {
 	const [openReview, setOpenReview] = useState(false);
 	const [curReview, setCurReview] = useState({});
 	const { data, isLoading, isError, refetch } = useCustomFetch({
 		url: `${URI.REVIEW}/professor`,
 		method: 'get',
 		body: {},
-		params: { estado: 'V', estacion: 1 },
+		params: { estado: 'V', estacion: 4 },
 	});
 
 	const openPDF = async (item: any) => {
 		const { url }: any = await getData({
 			path: `${URI.STORAGE._}`,
 			body: {},
-			params: { name: item.ruta_perfil },
+			params: { name: item.ruta_tesis },
 		});
 		window.open(url);
 	};
@@ -45,7 +45,7 @@ const DraftProfessor: React.FC<DraftProfessorProps> = ({}) => {
 
 	return (
 		<>
-			<Contenedor title='Revisar punto de tesis'>
+			<Contenedor title='Revisar tesis por Comisión y estilos'>
 				<McTable
 					headers={{
 						nombre: 'Estudiante',
@@ -69,4 +69,4 @@ const DraftProfessor: React.FC<DraftProfessorProps> = ({}) => {
 	);
 };
 
-export default DraftProfessor;
+export default StylesComision;

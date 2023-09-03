@@ -20,6 +20,8 @@ import { PickEvaluador } from '../components/PickEvaluador';
 import swal from 'sweetalert';
 import { putData } from '@/services/fetching';
 import { ResultType } from '@/models/Result';
+import { DotsLoaders } from '@/components/Loader/DotsLoaders';
+import { ESPERA } from '@/consts/vars';
 
 export type DraftProps = Record<string, never>;
 
@@ -38,7 +40,7 @@ const Draft: React.FC<DraftProps> = ({}) => {
 		body: {
 			table: 'ut_v_revision',
 		},
-		params: { estado: 'E', estacion: 1 },
+		params: { estado: ESPERA, estacion: 1 },
 	});
 
 	const saveAssign = async () => {
@@ -92,10 +94,10 @@ const Draft: React.FC<DraftProps> = ({}) => {
 	}, [data]);
 
 	if (isLoading) {
-		return <div>Cargando...</div>;
+		return <DotsLoaders />;
 	}
 	if (isError) {
-		return <div>Error...</div>;
+		return <Typography>Error...</Typography>;
 	}
 
 	return (

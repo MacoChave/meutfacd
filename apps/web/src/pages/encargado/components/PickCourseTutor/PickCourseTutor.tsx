@@ -6,6 +6,7 @@ import { Typography } from '@mui/material';
 import React from 'react';
 
 export type PickCourseTutorProps = {
+	course?: number;
 	id_horario: number;
 	id_jornada: number;
 	courseTutor: TCourseTutor;
@@ -13,6 +14,7 @@ export type PickCourseTutorProps = {
 };
 
 const PickCourseTutor: React.FC<PickCourseTutorProps> = ({
+	course = 1,
 	id_horario,
 	id_jornada,
 	courseTutor,
@@ -25,6 +27,7 @@ const PickCourseTutor: React.FC<PickCourseTutorProps> = ({
 			table: 'ut_curso_tutor',
 		},
 		params: {
+			id_curso: course,
 			id_horario,
 			id_jornada,
 		},

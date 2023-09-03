@@ -1,5 +1,5 @@
 import { URL } from '@/api/server';
-import { Contenedor } from '@/components';
+import { Contenedor, Loader } from '@/components';
 import { useCustomFetch } from '@/hooks/useFetch';
 import { UserType } from '@/models/Perfil';
 import { PeriodType } from '@/models/Period';
@@ -22,19 +22,28 @@ import { PickJornada } from '../components/PickJornada';
 import { PickHorario } from '../components/PickHorario';
 import { PickEvaluador } from '../components/PickEvaluador';
 import { SwitchLeft } from '@mui/icons-material';
+import { TCourseTutor } from '@/models/CourseTutor';
+import { ESPERA, REVISION } from '@/consts/vars';
+import { postData, putData } from '@/services/fetching';
+import { DotsLoaders } from '@/components/Loader/DotsLoaders';
+import { PickCourseTutor } from '../components/PickCourseTutor';
+import { ResultType } from '@/models/Result';
 
 export type ScndCourseProps = Record<string, never>;
 
 const ScndCourse: React.FC<ScndCourseProps> = ({}) => {
 	const [jornada, setJornada] = useState<PeriodType>({} as PeriodType);
 	const [horario, setHorario] = useState<ScheduleType>({} as ScheduleType);
-	const [docente, setDocente] = useState<UserType>({} as UserType);
+	const [courseTutor, setCourseTutor] = useState<TCourseTutor>(
+		{} as TCourseTutor
+	);
 	const [assignment, setAssignment] = useState<ReviewType[]>(
 		[] as ReviewType[]
 	);
 	const [unAssignment, setUnAssignment] = useState<ReviewType[]>(
 		[] as ReviewType[]
 	);
+	const [waiting, setWaiting] = useState(false);
 
 	const { data, isLoading, isError } = useCustomFetch({
 		url: `${URL.GENERIC}/all`,
@@ -43,15 +52,16 @@ const ScndCourse: React.FC<ScndCourseProps> = ({}) => {
 			table: 'ut_v_revision',
 		},
 		params: {
-			estado: 'A',
-			estacion: 2,
+			estado: ESPERA,
+			estacion: 3,
 			id_jornada: jornada.id_jornada || 0,
 			id_horario: horario.id_horario || 0,
 		},
 	});
 
-	const saveAssign = () => {
-		if (!docente.id_usuario) {
+	const saveAssign = async () => {
+		setWaiting(true);
+		if (!courseTutor.id_curso_tutor) {
 			swal(
 				'Error',
 				'No se ha seleccionado un docente para asignar',
@@ -60,8 +70,27 @@ const ScndCourse: React.FC<ScndCourseProps> = ({}) => {
 			return;
 		}
 
-		const id_tutor = docente.id_usuario;
-		const id_revisiones = assignment.map((s) => s.id_revision);
+		for await (const assign of assignment) {
+			try {
+				await postData({
+					path: URL.ASSIGNMENT,
+					body: {
+						id_curso_tutor: courseTutor.id_curso_tutor,
+						id_estudiante: assign.id_usuario,
+					},
+				});
+				await putData({
+					path: URL.REVIEW,
+					body: { id_tutor: courseTutor.id_tutor, estado: REVISION },
+					params: { id_revision: assign.id_revision },
+				});
+			} catch (error) {
+				console.log(error);
+			}
+		}
+		setAssignment([]);
+		setCourseTutor({} as TCourseTutor);
+		setWaiting(false);
 	};
 
 	const assign = (student: any) => {
@@ -82,15 +111,15 @@ const ScndCourse: React.FC<ScndCourseProps> = ({}) => {
 	}, [data]);
 
 	if (isLoading) {
-		return <div>Cargando...</div>;
+		return <DotsLoaders />;
 	}
 	if (isError) {
-		return <div>Error</div>;
+		return <Typography>Error al cargar los estudiantes</Typography>;
 	}
 
 	return (
 		<>
-			<Contenedor title='Asignación al curso 1'>
+			<Contenedor title='Asignación al curso 2'>
 				<Box sx={style}>
 					<Box
 						sx={{
@@ -117,10 +146,12 @@ const ScndCourse: React.FC<ScndCourseProps> = ({}) => {
 							gap: 2,
 							gridColumnEnd: 'span 2',
 						}}>
-						<PickEvaluador
-							evaluador={docente}
-							setEvaluador={setDocente}
-							rol='Docente curso 1'
+						<PickCourseTutor
+							course={2}
+							courseTutor={courseTutor}
+							setCourseTutor={setCourseTutor}
+							id_jornada={jornada?.id_jornada ?? 0}
+							id_horario={horario?.id_horario ?? 0}
 						/>
 						<Button variant='contained' onClick={saveAssign}>
 							Guardar asignación
@@ -201,6 +232,7 @@ const ScndCourse: React.FC<ScndCourseProps> = ({}) => {
 					</Box>
 				</Box>
 			</Contenedor>
+			{waiting && <Loader />}
 		</>
 	);
 };

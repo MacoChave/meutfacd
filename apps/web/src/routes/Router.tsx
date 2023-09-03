@@ -8,7 +8,10 @@ import { Draft } from '@/pages/encargado/Draft';
 import { FstCourse } from '@/pages/encargado/FstCourse';
 import { ScndCourse } from '@/pages/encargado/ScndCourse';
 import { ThesisSup } from '@/pages/encargado/ThesisSup';
+import { Course1Professor } from '@/pages/evaluador/Course1Professor';
 import { DraftProfessor } from '@/pages/evaluador/DraftProfessor';
+import { SndCourseD } from '@/pages/evaluador/SndCourseD';
+import { StylesComision } from '@/pages/evaluador/StylesComision';
 import { createBrowserRouter } from 'react-router-dom';
 import ProtectedRoute from '../components/ProtectedRoute';
 import Home from '../pages/Home/Home';
@@ -31,9 +34,6 @@ import Estacion3 from '../pages/estudiante/Station3';
 import Estacion4 from '../pages/estudiante/Station4';
 import Estacion5 from '../pages/estudiante/Station5';
 import HomeEvaluador from '../pages/evaluador';
-import RevisionCurso from '../pages/evaluador/RevisionCurso';
-import RevisionDocumento from '../pages/evaluador/RevisionDoc';
-import { Course1Professor } from '@/pages/evaluador/Course1Professor';
 
 export const router = createBrowserRouter([
 	{
@@ -228,7 +228,7 @@ export const router = createBrowserRouter([
 				path: 'curso-elaboracion',
 				element: (
 					<ProtectedRoute rol='profesor'>
-						{<RevisionCurso />}
+						{<SndCourseD />}
 					</ProtectedRoute>
 				),
 			},
@@ -236,7 +236,7 @@ export const router = createBrowserRouter([
 				path: 'tesis',
 				element: (
 					<ProtectedRoute rol='profesor'>
-						{<RevisionDocumento />}
+						{<StylesComision />}
 					</ProtectedRoute>
 				),
 			},
