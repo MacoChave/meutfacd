@@ -1,6 +1,6 @@
 import { URL } from '@/api/server';
 import { Contenedor } from '@/components';
-import { APROBADO, RECHAZADO, REVISION } from '@/consts/vars';
+import { DotsLoaders } from '@/components/Loader/DotsLoaders';
 import { useCustomFetch } from '@/hooks/useFetch';
 import { style } from '@/themes/styles';
 import { getChipColor, getChipLabel } from '@/utils/formatHandler';
@@ -20,16 +20,30 @@ const Estacion2 = () => {
 		isLoading,
 		isError,
 	} = useCustomFetch({
-		url: `${URL.ASSIGNMENT}/one`,
+		url: `${URL.REVIEW}/one`,
 		method: 'post',
-		body: {},
+		body: {
+			table: 'ut_v_revision',
+			columns: [
+				'id_revision',
+				'dias',
+				'fecha_curso',
+				'estado',
+				'tutor',
+				'salon',
+			],
+			order: {
+				fecha_revision: 'DESC',
+			},
+			limit: 1,
+		},
 		params: {
 			estacion: 2,
 		},
 	});
 
-	if (isLoading) return <p>Cargando...</p>;
-	if (isError) return <p>Error</p>;
+	if (isLoading) return <DotsLoaders />;
+	if (isError) return <Typography>Error</Typography>;
 
 	return (
 		<>

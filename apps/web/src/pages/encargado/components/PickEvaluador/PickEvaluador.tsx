@@ -1,4 +1,5 @@
 import { URL } from '@/api/server';
+import { DotsLoaders } from '@/components/Loader/DotsLoaders';
 import { McAutocomplete } from '@/components/McWithoutForms/McAutocomplete';
 import { useCustomFetch } from '@/hooks/useFetch';
 import { UserType } from '@/models/Perfil';
@@ -34,7 +35,7 @@ const PickEvaluador: React.FC<PickEvaluadorProps> = ({
 			],
 		},
 	});
-	if (isLoadingTeacher) return <Typography>Cargando docentes</Typography>;
+	if (isLoadingTeacher) return <DotsLoaders />;
 	if (isErrorTeacher)
 		return <Typography>Error al cargar los docentes</Typography>;
 

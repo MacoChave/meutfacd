@@ -1,5 +1,6 @@
 import { URL } from '@/api/server';
 import { Contenedor, Loader } from '@/components';
+import { DotsLoaders } from '@/components/Loader/DotsLoaders';
 import { ESPERA, REVISION } from '@/consts/vars';
 import { useCustomFetch } from '@/hooks/useFetch';
 import { TCourseTutor } from '@/models/CourseTutor';
@@ -24,7 +25,6 @@ import swal from 'sweetalert';
 import { PickCourseTutor } from '../components/PickCourseTutor';
 import { PickHorario } from '../components/PickHorario';
 import { PickJornada } from '../components/PickJornada';
-import { DotsLoaders } from '@/components/Loader/DotsLoaders';
 
 export type FstCourseProps = Record<string, never>;
 
@@ -68,18 +68,26 @@ const FstCourse: React.FC<FstCourseProps> = ({}) => {
 		}
 
 		for await (const assign of assignment) {
-			await postData({
-				path: URL.ASSIGNMENT,
-				body: {
-					id_curso_tutor: courseTutor.id_curso_tutor,
-					id_estudiante: assign.id_usuario,
-				},
-			});
-			await putData({
-				path: URL.REVIEW,
-				body: { id_tutor: courseTutor.id_tutor, estado: REVISION },
-				params: { id_revision: assign.id_revision },
-			});
+			try {
+				// await postData({
+				// 	path: URL.ASSIGNMENT,
+				// 	body: {
+				// 		id_curso_tutor: courseTutor.id_curso_tutor,
+				// 		id_estudiante: assign.id_usuario,
+				// 	},
+				// });
+				await putData({
+					path: URL.REVIEW,
+					body: {
+						id_tutor: courseTutor.id_tutor,
+						estado: REVISION,
+						id_curso_tutor: courseTutor.id_curso_tutor,
+					},
+					params: { id_revision: assign.id_revision },
+				});
+			} catch (error) {
+				console.log(error);
+			}
 		}
 		setAssignment([]);
 		setCourseTutor({} as TCourseTutor);
@@ -103,12 +111,10 @@ const FstCourse: React.FC<FstCourseProps> = ({}) => {
 		}
 	}, [data]);
 
-	if (isLoading) {
-		return <DotsLoaders />;
-	}
-	if (isError) {
+	if (isLoading) return <DotsLoaders />;
+
+	if (isError)
 		return <Typography>Error al cargar los estudiantes</Typography>;
-	}
 
 	return (
 		<>

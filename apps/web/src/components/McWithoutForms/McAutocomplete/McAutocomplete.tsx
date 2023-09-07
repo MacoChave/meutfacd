@@ -1,4 +1,5 @@
-import { Autocomplete, TextField } from '@mui/material';
+import { DotsLoaders } from '@/components/Loader/DotsLoaders';
+import { Autocomplete, TextField, Typography } from '@mui/material';
 import React from 'react';
 
 export type McAutocompleteProps = {
@@ -20,8 +21,8 @@ const McAutocomplete: React.FC<McAutocompleteProps> = ({
 	isError,
 	setValue,
 }) => {
-	if (isLoading) return <p>Cargando...</p>;
-	if (isError) return <p>Error</p>;
+	if (isLoading) return <DotsLoaders />;
+	if (isError) return <Typography>Error</Typography>;
 
 	return (
 		<Autocomplete

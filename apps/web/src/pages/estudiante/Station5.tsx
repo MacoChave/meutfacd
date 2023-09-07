@@ -1,8 +1,9 @@
 import { URL } from '@/api/server';
 import { Contenedor } from '@/components';
+import { DotsLoaders } from '@/components/Loader/DotsLoaders';
 import { useCustomFetch } from '@/hooks/useFetch';
 import { style } from '@/themes/styles';
-import { Box, TextField } from '@mui/material';
+import { Box, TextField, Typography } from '@mui/material';
 
 const boxStyle = {
 	display: 'flex',
@@ -39,8 +40,8 @@ const Estacion5 = () => {
 		},
 	});
 
-	if (isLoading) return <p>Cargando...</p>;
-	if (isError) return <p>Error</p>;
+	if (isLoading) return <DotsLoaders />;
+	if (isError) return <Typography>Error</Typography>;
 
 	return (
 		<>

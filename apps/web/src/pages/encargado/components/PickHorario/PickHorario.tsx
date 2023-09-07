@@ -1,4 +1,5 @@
 import { URL } from '@/api/server';
+import { DotsLoaders } from '@/components/Loader/DotsLoaders';
 import { McAutocomplete } from '@/components/McWithoutForms/McAutocomplete';
 import { useCustomFetch } from '@/hooks/useFetch';
 import { ScheduleType } from '@/models/Schedule';
@@ -31,7 +32,7 @@ const PickHorario: React.FC<PickHorarioProps> = ({
 		},
 	});
 
-	if (isLoadingHorarios) return <Typography>Cargando horarios</Typography>;
+	if (isLoadingHorarios) return <DotsLoaders />;
 	if (isErrorHorarios)
 		return <Typography>Error al cargar horarios</Typography>;
 

@@ -93,12 +93,9 @@ const ThesisSup: React.FC<ThesisSupProps> = ({}) => {
 		}
 	}, [data]);
 
-	if (isLoading) {
-		return <DotsLoaders />;
-	}
-	if (isError) {
-		return <Typography>Error...</Typography>;
-	}
+	if (isLoading) return <DotsLoaders />;
+
+	if (isError) return <Typography>Error...</Typography>;
 
 	return (
 		<>

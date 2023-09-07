@@ -1,5 +1,6 @@
 import React from 'react';
 import './SpinLoader.css';
+import { Box } from '@mui/material';
 
 export type SpinLoaderProps = {
 	message?: string;
@@ -7,25 +8,14 @@ export type SpinLoaderProps = {
 
 const SpinLoader: React.FC<SpinLoaderProps> = ({ message = '' }) => {
 	return (
-		<div className='loader'></div>
-		// <Box
-		// 	sx={{
-		// 		position: 'fixed',
-		// 		top: 0,
-		// 		left: 0,
-		// 		display: 'flex',
-		// 		flexDirection: 'column',
-		// 		justifyContent: 'center',
-		// 		alignItems: 'center',
-		// 		height: '100vh',
-		// 		width: '100vw',
-		// 		gap: 2,
-		// 		backgroundColor: 'rgba(0,0,0,0.7)',
-		// 		color: 'primary.contrastText',
-		// 	}}>
-		// 	<CircularProgress color='secondary' />
-		// 	<Typography variant='h3'>{message}</Typography>
-		// </Box>
+		<Box
+			sx={{
+				width: '100%',
+				height: '100%',
+				m: 'auto',
+			}}>
+			<div className='loader'></div>
+		</Box>
 	);
 };
 

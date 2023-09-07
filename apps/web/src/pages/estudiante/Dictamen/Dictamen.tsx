@@ -1,5 +1,5 @@
 import { URL } from '@/api/server';
-import { Contenedor } from '@/components';
+import { Contenedor, FileChooser } from '@/components';
 import { SpinLoader } from '@/components/Loader/SpinLoader';
 import { APROBADO, ESPERA, REVISION } from '@/consts/vars';
 import { useCustomFetch } from '@/hooks/useFetch';
@@ -20,13 +20,13 @@ import {
 	Typography,
 } from '@mui/material';
 import { AxiosError } from 'axios';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import swal from 'sweetalert';
-import FileChooser from '../../components/controles/FileChooser';
-import { DotsLoaders } from '@/components/Loader/DotsLoaders';
 
-const Estacion4 = () => {
+export type DictamenProps = {};
+
+const Dictamen: React.FC<DictamenProps> = ({}) => {
 	const [isUploading, setIsUploading] = useState(false);
 	const [isUploaded, setIsUploaded] = useState(false);
 	const {
@@ -54,7 +54,7 @@ const Estacion4 = () => {
 			limit: 1,
 		},
 		params: {
-			estacion: 5,
+			estacion: 4,
 		},
 	});
 
@@ -74,9 +74,9 @@ const Estacion4 = () => {
 		try {
 			setIsUploading(true);
 			const formData = new FormData();
-			formData.append('thesis', file);
+			formData.append('dictamen', file);
 			const data = await postData<UploadFile>({
-				path: URL.STORAGE.THESIS,
+				path: URL.STORAGE.DICTAMEN,
 				body: formData,
 				headers: {
 					'Content-Type': 'multipart/form-data',
@@ -103,19 +103,17 @@ const Estacion4 = () => {
 				path: URL.THESIS,
 				body: {
 					titulo: draft.titulo,
-					ruta_tesis: draft.name,
 				},
 			});
 
-			if (revision.estado === undefined) {
-				await postData({
-					path: URL.REVIEW,
-					body: {
-						estacion: 5,
-						estado: ESPERA,
-					},
-				});
-			}
+			await postData({
+				path: URL.REVIEW,
+				body: {
+					estacion: 4,
+					ruta_dictamen: draft.name,
+					estado: APROBADO,
+				},
+			});
 
 			swal(
 				'¡Bien hecho!',
@@ -144,17 +142,17 @@ const Estacion4 = () => {
 		}
 	}, [revision]);
 
-	if (isLoading) return <DotsLoaders />;
+	if (isLoading) return <SpinLoader />;
 	if (isError)
 		return <Typography>No se pudo cargar la revisión...</Typography>;
 	return (
 		<>
-			<Contenedor title='Presentar tesis'>
+			<Contenedor title='Cambio de tema (Solo si lo requiere el asesor)'>
 				<form onSubmit={handleSubmit(onSubmit)}>
 					<Box sx={style}>
 						<Box>
 							<Typography variant='h6'>
-								Detalle del previo
+								Detalle del dictámen
 								<Box component='span' sx={{ ml: 2 }}>
 									<Chip
 										color={getChipColor(revision.estado)}
@@ -171,13 +169,9 @@ const Estacion4 = () => {
 								</Box>
 							</Typography>
 							<Typography>
-								Docente revisor:{' '}
-								{revision?.tutor || 'Sin asignación'}
+								Docente revisor: {revision?.tutor || ''}
 							</Typography>
-							<Typography>
-								{revision?.detalle ??
-									'Aún no hay detalle del previo'}
-							</Typography>
+							<Typography>{revision?.detalle ?? ''}</Typography>
 						</Box>
 						<Box>
 							<Controller
@@ -211,7 +205,7 @@ const Estacion4 = () => {
 								}}>
 								{!isUploaded ? (
 									<FileChooser
-										title='Tesis'
+										title='Dictámen'
 										onUpload={onUpload}
 										disabled={true}
 									/>
@@ -228,9 +222,11 @@ const Estacion4 = () => {
 					</Box>
 				</form>
 			</Contenedor>
-			{isUploading && <SpinLoader message='Subiendo tesis' />}
+			{isUploading && (
+				<SpinLoader message='Subiendo dictámen de asesor' />
+			)}
 		</>
 	);
 };
 
-export default Estacion4;
+export default Dictamen;

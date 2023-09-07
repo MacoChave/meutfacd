@@ -1,4 +1,5 @@
 import { URL } from '@/api/server';
+import { DotsLoaders } from '@/components/Loader/DotsLoaders';
 import { McTable } from '@/components/MyTable';
 import { useCustomFetch } from '@/hooks/useFetch';
 import { ResultType } from '@/models/Result';
@@ -17,6 +18,7 @@ const Asignacion: React.FC<AsignacionProps> = ({}) => {
 		body: {
 			table: 'ut_v_cursotutor',
 			sort: {
+				fecha: 'desc',
 				id_curso: 'asc',
 				id_jornada: 'asc',
 				id_horario: 'asc',
@@ -39,8 +41,8 @@ const Asignacion: React.FC<AsignacionProps> = ({}) => {
 		}
 	};
 
-	if (isLoading) return <div>Loading...</div>;
-	if (isError) return <div>Error</div>;
+	if (isLoading) return <DotsLoaders />;
+	if (isError) return <Typography>Error</Typography>;
 
 	return (
 		<Box>

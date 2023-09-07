@@ -2,10 +2,11 @@ import { URL } from '@/api/server';
 import { Contenedor } from '@/components';
 import { useCustomFetch } from '@/hooks/useFetch';
 import { style } from '@/themes/styles';
-import { Box } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import React from 'react';
 import { Asignacion } from './Asignacion';
 import { Gestion } from './Gestion';
+import { DotsLoaders } from '@/components/Loader/DotsLoaders';
 
 export type CoursesProps = {};
 
@@ -18,8 +19,8 @@ const Courses: React.FC<CoursesProps> = ({}) => {
 		},
 	});
 
-	if (isLoading) return <div>Loading...</div>;
-	if (isError) return <div>Error</div>;
+	if (isLoading) return <DotsLoaders />;
+	if (isError) return <Typography>Error</Typography>;
 
 	return (
 		<>

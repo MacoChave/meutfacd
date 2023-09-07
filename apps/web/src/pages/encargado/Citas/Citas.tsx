@@ -134,37 +134,4 @@ const Citas: React.FC<CitasProps> = ({}) => {
 	);
 };
 
-const rows: ProgressType[] = [
-	{
-		estacion: '20145296',
-		evaluador: 'Estudiante 1',
-		fecha_carga: '2021-10-10',
-	},
-	{
-		estacion: '20145296',
-		evaluador: 'Estudiante 2',
-		fecha_carga: '2021-10-10',
-	},
-	{
-		estacion: '20145296',
-		evaluador: 'Estudiante 2',
-		fecha_carga: '2021-10-10',
-	},
-	{
-		estacion: '20145296',
-		evaluador: 'Estudiante 2',
-		fecha_carga: '2021-10-10',
-	},
-	{
-		estacion: '20145296',
-		evaluador: 'Estudiante 2',
-		fecha_carga: '2021-10-10',
-	},
-	{
-		estacion: '20145296',
-		evaluador: 'Estudiante 2',
-		fecha_carga: '2021-10-10',
-	},
-];
-
 export default Citas;

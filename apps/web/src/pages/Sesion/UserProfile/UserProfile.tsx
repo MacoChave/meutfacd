@@ -18,6 +18,7 @@ import { ErrorPage } from '../../ErrorPage';
 import { ContactData } from './components/ContactData';
 import { PersonalData } from './components/PersonalData';
 import { SesionData } from './components/SesionData';
+import { DotsLoaders } from '@/components/Loader/DotsLoaders';
 
 export const UserProfile = (): JSX.Element => {
 	const [isEditing, setIsEditing] = useState(false);
@@ -86,7 +87,7 @@ export const UserProfile = (): JSX.Element => {
 		}
 	}, [isLoading]);
 
-	if (isLoading) return <Loader />;
+	if (isLoading) return <DotsLoaders />;
 
 	if (isError)
 		return (

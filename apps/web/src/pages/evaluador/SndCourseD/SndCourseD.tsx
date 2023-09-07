@@ -6,6 +6,7 @@ import { APROBADO, ESPERA, RECHAZADO, REVISION } from '@/consts/vars';
 import { useCustomFetch } from '@/hooks/useFetch';
 import { ResultType } from '@/models/Result';
 import { postData, putData } from '@/services/fetching';
+import { Typography } from '@mui/material';
 import React from 'react';
 import swal from 'sweetalert';
 
@@ -67,7 +68,7 @@ const SndCourseD: React.FC<SndCourseDProps> = ({}) => {
 	};
 
 	if (isLoading) return <DotsLoaders />;
-	if (isError) return <div>Hubo un error</div>;
+	if (isError) return <Typography>Hubo un error</Typography>;
 
 	return (
 		<>

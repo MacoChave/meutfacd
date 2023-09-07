@@ -47,7 +47,7 @@ export const uploadFile = async (
 	path: string,
 	name: string,
 	carnet: string = '',
-	fieldname: 'preview' | 'thesis'
+	fieldname: 'preview' | 'thesis' | 'dictamen'
 ) => {
 	const ext = getExtFile(name);
 	const stream = createReadStream(path);

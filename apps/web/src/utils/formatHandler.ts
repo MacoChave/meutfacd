@@ -113,6 +113,9 @@ export const formatDate = ({
 };
 
 export const formatToInputDate = (strDate: string) => {
-	const [day, month, year] = strDate.split('/');
-	return `${year}-${month}-${day}`;
+	console.log(strDate);
+	const sep: boolean = strDate.includes('/');
+	const [day, month, year] = strDate.split(sep ? '/' : '-');
+
+	return `${day}-${month}-${year}`;
 };

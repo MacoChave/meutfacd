@@ -26,6 +26,10 @@ const errorHttp = (res: Response, { error, msg, code }: errorHttpType) => {
 		res.status(400).json({
 			error: 'El registro contiene datos no válidos',
 		});
+	} else if (error?.errno === 1172) {
+		res.status(400).json({
+			error: 'El registro contiene datos no válidos',
+		});
 	} else {
 		res.status(code || 500).json({
 			error:

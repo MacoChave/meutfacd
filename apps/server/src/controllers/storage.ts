@@ -30,17 +30,35 @@ const uploadTesis = async ({ files, user }: Request, res: Response) => {
 	try {
 		logger({ dirname: __dirname, proc: 'uploadTesis', message: files });
 		const result = await uploadFile(
-			files.tesis.tempFilePath,
-			files.tesis.name,
+			files.thesis.tempFilePath,
+			files.thesis.name,
 			user.carnet.toString(),
 			'thesis'
 		);
 		console.log(result);
 		res.status(200).json({
-			name: `${user.carnet}/thesis.${getExtFile(files.tesis.name)}`,
+			name: `${user.carnet}/thesis.${getExtFile(files.thesis.name)}`,
 		});
 	} catch (error: any) {
 		res.status(500).json({ error: 'Error al subir la tesis' });
+	}
+};
+
+const uploadDictamen = async ({ files, user }: Request, res: Response) => {
+	try {
+		logger({ dirname: __dirname, proc: 'uploadDictamen', message: files });
+		const result = await uploadFile(
+			files.dictamen.tempFilePath,
+			files.dictamen.name,
+			user.carnet.toString(),
+			'dictamen'
+		);
+		console.log(result);
+		res.status(200).json({
+			name: `${user.carnet}/dictamen.${getExtFile(files.dictamen.name)}`,
+		});
+	} catch (error: any) {
+		res.status(500).json({ error: 'Error al subir la dictamen' });
 	}
 };
 
@@ -59,4 +77,4 @@ const getFile = async ({ query }: Request, res: Response) => {
 	}
 };
 
-export { getFile, uploadDraft, uploadTesis };
+export { getFile, uploadDraft, uploadDictamen, uploadTesis };

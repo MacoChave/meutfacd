@@ -6,6 +6,7 @@ import { DataProps } from '../../propTypes/DataProps';
 import { useCustomFetch } from '@/hooks/useFetch';
 import { URL } from '@/api/server';
 import { McAutocomplete } from '@/components/McWithForms/McAutocomplete';
+import { DotsLoaders } from '@/components/Loader/DotsLoaders';
 
 const ContactData: React.FC<DataProps> = ({ editing }) => {
 	const {
@@ -46,7 +47,7 @@ const ContactData: React.FC<DataProps> = ({ editing }) => {
 	}, [watch('id_jornada')]);
 
 	if (isLoadingPeriods || isLoadingSchedules) {
-		return <div>Cargando...</div>;
+		return <DotsLoaders />;
 	}
 
 	return (

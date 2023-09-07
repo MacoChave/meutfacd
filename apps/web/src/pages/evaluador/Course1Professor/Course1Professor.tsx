@@ -6,6 +6,7 @@ import { APROBADO, ESPERA, RECHAZADO, REVISION } from '@/consts/vars';
 import { useCustomFetch } from '@/hooks/useFetch';
 import { ResultType } from '@/models/Result';
 import { postData, putData } from '@/services/fetching';
+import { Typography } from '@mui/material';
 import React from 'react';
 import swal from 'sweetalert';
 
@@ -78,7 +79,7 @@ const Course1Professor: React.FC<Course1ProfessorProps> = ({}) => {
 	};
 
 	if (isLoading) return <DotsLoaders />;
-	if (isError) return <div>Error</div>;
+	if (isError) return <Typography>Error</Typography>;
 
 	return (
 		<>

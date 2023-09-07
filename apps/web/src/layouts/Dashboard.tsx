@@ -20,7 +20,7 @@ const Dashboard = ({
 	const [open, setOpen] = useState(false);
 
 	if (isLoading) return <DotsLoaders />;
-	if (isError) return <p>Error</p>;
+	if (isError) return <Typography>Error</Typography>;
 
 	return (
 		<Box

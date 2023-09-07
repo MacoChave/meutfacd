@@ -34,6 +34,7 @@ import Estacion3 from '../pages/estudiante/Station3';
 import Estacion4 from '../pages/estudiante/Station4';
 import Estacion5 from '../pages/estudiante/Station5';
 import HomeEvaluador from '../pages/evaluador';
+import { Dictamen } from '@/pages/estudiante/Dictamen';
 
 export const router = createBrowserRouter([
 	{
@@ -110,7 +111,7 @@ export const router = createBrowserRouter([
 				path: 'dictamen',
 				element: (
 					<ProtectedRoute rol='estudiante'>
-						{<Estacion4 />}
+						{<Dictamen />}
 					</ProtectedRoute>
 				),
 			},

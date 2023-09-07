@@ -93,12 +93,8 @@ const Draft: React.FC<DraftProps> = ({}) => {
 		}
 	}, [data]);
 
-	if (isLoading) {
-		return <DotsLoaders />;
-	}
-	if (isError) {
-		return <Typography>Error...</Typography>;
-	}
+	if (isLoading) return <DotsLoaders />;
+	if (isError) return <Typography>Error...</Typography>;
 
 	return (
 		<>

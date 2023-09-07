@@ -1,4 +1,5 @@
 import { URL } from '@/api/server';
+import { DotsLoaders } from '@/components/Loader/DotsLoaders';
 import { McAutocomplete } from '@/components/McWithoutForms/McAutocomplete';
 import { useCustomFetch } from '@/hooks/useFetch';
 import { TCourseTutor } from '@/models/CourseTutor';
@@ -33,7 +34,7 @@ const PickCourseTutor: React.FC<PickCourseTutorProps> = ({
 		},
 	});
 
-	if (isLoading) return <Typography>Cargando cursos</Typography>;
+	if (isLoading) return <DotsLoaders />;
 	if (isError) return <Typography>Error al cargar los cursos</Typography>;
 	return (
 		<McAutocomplete

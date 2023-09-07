@@ -1,5 +1,6 @@
 import { URL } from '@/api/server';
 import { Contenedor } from '@/components';
+import { DotsLoaders } from '@/components/Loader/DotsLoaders';
 import { SpinLoader } from '@/components/Loader/SpinLoader';
 import { APROBADO, ESPERA, PREVIA, REVISION } from '@/consts/vars';
 import { useCustomFetch } from '@/hooks/useFetch';
@@ -143,8 +144,9 @@ const Estacion1 = () => {
 		}
 	}, [revision]);
 
-	if (isLoading) return <>Cargando revisión...</>;
-	if (isError) return <>No se pudo cargar la revisión...</>;
+	if (isLoading) return <DotsLoaders />;
+	if (isError)
+		return <Typography>No se pudo cargar la revisión...</Typography>;
 
 	return (
 		<>

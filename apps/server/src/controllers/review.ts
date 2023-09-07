@@ -61,11 +61,20 @@ export const getItemsByCurrentProf = async (
 	}
 };
 
-export const postItem = async ({ body }: Request, res: Response) => {
+export const postItem = async ({ body, user }: Request, res: Response) => {
 	try {
+		const result = await sqlSelectOne({
+			table: 'ut_tesis',
+			columns: ['id_tesis'],
+			query: { id_estudiante: user.primaryKey },
+		});
+
 		const results = await sqlInsert({
 			table: 'ut_revision',
-			datos: body,
+			datos: {
+				...body,
+				id_tesis: body.id_tesis ? body.id_tesis : result.id_tesis,
+			},
 		});
 		res.status(200).json(results);
 	} catch (error: any) {

@@ -22,6 +22,7 @@ export const URL = {
 		_: '/api/storage',
 		DRAFT: '/api/storage/draft',
 		THESIS: '/api/storage/thesis',
+		DICTAMEN: '/api/storage/dictamen',
 	},
 	STUDENT: '/api/student',
 	THESIS: '/api/thesis',

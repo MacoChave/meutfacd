@@ -106,7 +106,7 @@ export const ToolbarWithSesion = () => {
 	};
 
 	if (isLoading) return <DotsLoaders />;
-	if (isError) return <div>Error</div>;
+	if (isError) return <Typography>Error</Typography>;
 
 	return (
 		<>

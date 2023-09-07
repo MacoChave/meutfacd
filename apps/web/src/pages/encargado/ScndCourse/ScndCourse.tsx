@@ -1,11 +1,15 @@
 import { URL } from '@/api/server';
 import { Contenedor, Loader } from '@/components';
+import { DotsLoaders } from '@/components/Loader/DotsLoaders';
+import { ESPERA, REVISION } from '@/consts/vars';
 import { useCustomFetch } from '@/hooks/useFetch';
-import { UserType } from '@/models/Perfil';
+import { TCourseTutor } from '@/models/CourseTutor';
 import { PeriodType } from '@/models/Period';
 import { ReviewType } from '@/models/Review';
 import { ScheduleType } from '@/models/Schedule';
+import { postData, putData } from '@/services/fetching';
 import { style } from '@/themes/styles';
+import { SwitchLeft } from '@mui/icons-material';
 import {
 	Box,
 	Button,
@@ -18,16 +22,9 @@ import {
 } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import swal from 'sweetalert';
-import { PickJornada } from '../components/PickJornada';
-import { PickHorario } from '../components/PickHorario';
-import { PickEvaluador } from '../components/PickEvaluador';
-import { SwitchLeft } from '@mui/icons-material';
-import { TCourseTutor } from '@/models/CourseTutor';
-import { ESPERA, REVISION } from '@/consts/vars';
-import { postData, putData } from '@/services/fetching';
-import { DotsLoaders } from '@/components/Loader/DotsLoaders';
 import { PickCourseTutor } from '../components/PickCourseTutor';
-import { ResultType } from '@/models/Result';
+import { PickHorario } from '../components/PickHorario';
+import { PickJornada } from '../components/PickJornada';
 
 export type ScndCourseProps = Record<string, never>;
 
@@ -72,16 +69,20 @@ const ScndCourse: React.FC<ScndCourseProps> = ({}) => {
 
 		for await (const assign of assignment) {
 			try {
-				await postData({
-					path: URL.ASSIGNMENT,
-					body: {
-						id_curso_tutor: courseTutor.id_curso_tutor,
-						id_estudiante: assign.id_usuario,
-					},
-				});
+				// await postData({
+				// 	path: URL.ASSIGNMENT,
+				// 	body: {
+				// 		id_curso_tutor: courseTutor.id_curso_tutor,
+				// 		id_estudiante: assign.id_usuario,
+				// 	},
+				// });
 				await putData({
 					path: URL.REVIEW,
-					body: { id_tutor: courseTutor.id_tutor, estado: REVISION },
+					body: {
+						id_tutor: courseTutor.id_tutor,
+						estado: REVISION,
+						id_curso_tutor: courseTutor.id_curso_tutor,
+					},
 					params: { id_revision: assign.id_revision },
 				});
 			} catch (error) {
@@ -110,12 +111,10 @@ const ScndCourse: React.FC<ScndCourseProps> = ({}) => {
 		}
 	}, [data]);
 
-	if (isLoading) {
-		return <DotsLoaders />;
-	}
-	if (isError) {
+	if (isLoading) return <DotsLoaders />;
+
+	if (isError)
 		return <Typography>Error al cargar los estudiantes</Typography>;
-	}
 
 	return (
 		<>

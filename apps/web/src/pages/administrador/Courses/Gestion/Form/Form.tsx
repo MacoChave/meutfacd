@@ -17,11 +17,12 @@ import { PickHorario } from '@/pages/encargado/components/PickHorario';
 import { PickJornada } from '@/pages/encargado/components/PickJornada';
 import { postData } from '@/services/fetching';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Box, Button } from '@mui/material';
+import { Box, Button, Typography } from '@mui/material';
 import React, { useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import swal from 'sweetalert';
 import { PickDays } from '../PickDays';
+import { DotsLoaders } from '@/components/Loader/DotsLoaders';
 
 export type FormProps = {
 	onClose: () => void;
@@ -74,8 +75,8 @@ const Form: React.FC<FormProps> = ({ onClose }) => {
 		}
 	};
 
-	if (isLoading) return <div>Loading...</div>;
-	if (isError) return <div>Error</div>;
+	if (isLoading) return <DotsLoaders />;
+	if (isError) return <Typography>Error</Typography>;
 
 	return (
 		<>
@@ -108,7 +109,6 @@ const Form: React.FC<FormProps> = ({ onClose }) => {
 						type='date'
 						customChange={(e) => {
 							setValue('fecha', e.target.value);
-							console.log('Change date', e.target.value);
 						}}
 					/>
 					<PickDays
