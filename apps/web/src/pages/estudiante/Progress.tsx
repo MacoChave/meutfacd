@@ -21,10 +21,15 @@ const Progress = () => {
 				'fecha_creacion',
 				'fecha_modificacion',
 				'fecha',
+				'detalle',
 				'tutor',
 				'estado',
 				'estacion',
 			],
+			sort: {
+				estacion: 'asc',
+				fecha_creacion: 'asc',
+			},
 		},
 	});
 
@@ -42,6 +47,7 @@ const Progress = () => {
 				<McTable
 					headers={{
 						estacion: 'Estación',
+						detalle: 'Observación',
 						tutor: 'Revisor',
 						fecha_creacion: 'Creación',
 						fecha_modificacion: 'Modificación',

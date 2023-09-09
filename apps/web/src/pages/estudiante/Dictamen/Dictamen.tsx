@@ -174,6 +174,15 @@ const Dictamen: React.FC<DictamenProps> = ({}) => {
 							<Typography>{revision?.detalle ?? ''}</Typography>
 						</Box>
 						<Box>
+							<TextField
+								value={revision?.titulo || ''}
+								fullWidth
+								label='Título actual del punto de tesis'
+								variant='standard'
+								InputProps={{
+									readOnly: true,
+								}}
+							/>
 							<Controller
 								control={control}
 								name='titulo'
@@ -181,8 +190,8 @@ const Dictamen: React.FC<DictamenProps> = ({}) => {
 									<TextField
 										{...field}
 										fullWidth
-										label='Título del punto de tesis'
-										variant='filled'
+										label='Nuevo título del punto de tesis'
+										variant='standard'
 										InputProps={{
 											readOnly:
 												revision.estado === REVISION ||

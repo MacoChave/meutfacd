@@ -17,7 +17,7 @@ const StylesComision: React.FC<StylesComisionProps> = ({}) => {
 		url: `${URI.REVIEW}/professor`,
 		method: 'get',
 		body: {},
-		params: { estado: 'V', estacion: 4 },
+		params: { estado: 'V', estacion: 5 },
 	});
 
 	const openPDF = async (item: any) => {

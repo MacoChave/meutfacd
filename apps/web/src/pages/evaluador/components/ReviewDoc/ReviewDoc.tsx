@@ -18,7 +18,11 @@ const ReviewDoc: React.FC<ReviewDocProps> = ({ curReview, onClose }) => {
 
 	const onReject = async () => {
 		if (commentEmpty()) {
-			swal('Error', 'Debe agregar un comentario para rechazar', 'error');
+			swal(
+				'Error',
+				'Debe agregar un comentario para rechazar el documento',
+				'error'
+			);
 			return;
 		}
 		const result: ResultType = await putData({
@@ -36,7 +40,11 @@ const ReviewDoc: React.FC<ReviewDocProps> = ({ curReview, onClose }) => {
 
 	const onPrior = async () => {
 		if (commentEmpty()) {
-			swal('Error', 'Debe agregar un comentario para el previo', 'error');
+			swal(
+				'Error',
+				'Debe agregar un comentario para enviar a previo el documento',
+				'error'
+			);
 			return;
 		}
 		const result: ResultType = await putData({
@@ -56,7 +64,7 @@ const ReviewDoc: React.FC<ReviewDocProps> = ({ curReview, onClose }) => {
 		Promise.all([
 			putData<ResultType>({
 				path: URL.REVIEW,
-				body: { estado: APROBADO, detalle: 'Punto de tesis aprobado' },
+				body: { estado: APROBADO, detalle: 'Documento aprobado' },
 				params: { id_revision: curReview.id_revision },
 			}),
 			postData<ResultType>({
