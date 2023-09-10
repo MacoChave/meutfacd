@@ -1,0 +1,16 @@
+import { AxiosError } from 'axios';
+import swal from 'sweetalert';
+
+export const errorHandler = (error: AxiosError) => {
+	const data: any = error.response?.data;
+	console.log({
+		codigo: error.response?.status,
+		mensaje: error.response?.statusText,
+		detalles: data?.error?.message ?? 'No se encontró el error',
+	});
+	swal({
+		title: 'Error',
+		text: data?.error?.message ?? 'No se encontró el error',
+		icon: 'error',
+	});
+};

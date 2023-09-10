@@ -1,0 +1,64 @@
+import { Request, Response } from 'express';
+import { sqlEjecutar } from '../db/consultas';
+import { errorHttp } from '../utils/error.handle';
+
+const getItem = (res: Response) => {
+	try {
+		res.status(200).json({ msg: 'OK' });
+	} catch (error: any) {
+		errorHttp(res, error as any);
+	}
+};
+
+const getItems = async ({ user }: Request, res: Response) => {
+	try {
+		const sql = `select 
+	uperm.id_rol , uperm.id_pagina , 
+	upag.nombre , upag.descripcion , 
+	upag.indice , upag.ruta 
+from ut_permiso uperm 
+left join rol r 
+	using (id_rol)
+left join ut_pagina upag 
+	using (id_pagina)
+where r.id_rol in (
+	select id_rol 
+	from rol r2 
+	left join usuario_rol ur 
+	using (id_rol)
+	where ur.id_usuario = ?
+	and uperm.permiso = ?
+) ; `;
+		const rows = await sqlEjecutar({ sql, values: [user.primaryKey, 1] });
+		res.status(200).json(rows);
+	} catch (error: any) {
+		console.log(error);
+		errorHttp(res, error as any);
+	}
+};
+
+const createItem = (res: Response) => {
+	try {
+		res.status(200).json({ msg: 'OK' });
+	} catch (error: any) {
+		errorHttp(res, error as any);
+	}
+};
+
+const updateItem = (res: Response) => {
+	try {
+		res.status(200).json({ msg: 'OK' });
+	} catch (error: any) {
+		errorHttp(res, error as any);
+	}
+};
+
+const deleteItem = (res: Response) => {
+	try {
+		res.status(200).json({ msg: 'OK' });
+	} catch (error: any) {
+		errorHttp(res, error as any);
+	}
+};
+
+export { createItem, deleteItem, getItem, getItems, updateItem };
