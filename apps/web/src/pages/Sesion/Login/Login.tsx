@@ -1,18 +1,20 @@
+import { yupResolver } from '@hookform/resolvers/yup';
+import { Box, Button, Card, Toolbar, Typography } from '@mui/material';
+import React, { SyntheticEvent, lazy } from 'react';
+import { FormProvider, SubmitHandler, useForm } from 'react-hook-form';
+import { useDispatch } from 'react-redux';
+import { useNavigate, useParams } from 'react-router-dom';
 import { URL } from '@/api/server';
-import Loader from '@/components/Loader';
+const SpinLoader = lazy(
+	() => import('@/components/Loader/SpinLoader/SpinLoader')
+);
 import { ToolbarWithoutSesion } from '@/components/navegacion/Toolbar';
 import { AuthState } from '@/interfaces/AuthState';
 import { Tipo_Login, schemaLogin } from '@/models/Login';
+import { setLogged } from '@/redux/states';
 import store from '@/redux/store';
 import { postData } from '@/services/fetching';
-import { yupResolver } from '@hookform/resolvers/yup';
-import { Box, Button, Card, Toolbar, Typography } from '@mui/material';
-import React, { SyntheticEvent } from 'react';
-import { FormProvider, SubmitHandler, useForm } from 'react-hook-form';
-import { useNavigate, useParams } from 'react-router-dom';
 import { Seguridad } from './Seguridad';
-import { useDispatch } from 'react-redux';
-import { setLogged } from '@/redux/states';
 
 export type LoginProps = Record<string, never>;
 
@@ -41,7 +43,6 @@ const Login: React.FC<LoginProps> = () => {
 		if (response.token === undefined) return;
 
 		const rol = response.roles ? response.roles.split(' ')[0] : '';
-		console.log(rol);
 
 		dispatch(setLogged(response));
 		navigate(`/${rol || 'estudiante'}`.toLowerCase(), {
@@ -117,7 +118,7 @@ const Login: React.FC<LoginProps> = () => {
 					</FormProvider>
 				</Box>
 			</Box>
-			{control.loading && <Loader />}
+			{control.loading && <SpinLoader />}
 		</>
 	);
 };

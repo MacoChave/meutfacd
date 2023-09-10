@@ -1,8 +1,8 @@
 import { Request, Response } from 'express';
-import { errorHttp } from '../utils/error.handle';
 import { sqlEjecutar } from '../db/consultas';
+import { errorHttp } from '../utils/error.handle';
 
-const getItem = ({ query, user }: Request, res: Response) => {
+const getItem = (res: Response) => {
 	try {
 		res.status(200).json({ msg: 'OK' });
 	} catch (error: any) {
@@ -10,8 +10,7 @@ const getItem = ({ query, user }: Request, res: Response) => {
 	}
 };
 
-const getItems = async ({ query, user }: Request, res: Response) => {
-	console.log(user);
+const getItems = async ({ user }: Request, res: Response) => {
 	try {
 		const sql = `select 
 	uperm.id_rol , uperm.id_pagina , 
@@ -28,16 +27,17 @@ where r.id_rol in (
 	left join usuario_rol ur 
 	using (id_rol)
 	where ur.id_usuario = ?
+	and uperm.permiso = ?
 ) ; `;
-		const rows = await sqlEjecutar({ sql, values: [user.primaryKey] });
-		console.log(rows);
+		const rows = await sqlEjecutar({ sql, values: [user.primaryKey, 1] });
 		res.status(200).json(rows);
 	} catch (error: any) {
+		console.log(error);
 		errorHttp(res, error as any);
 	}
 };
 
-const createItem = ({ body }: Request, res: Response) => {
+const createItem = (res: Response) => {
 	try {
 		res.status(200).json({ msg: 'OK' });
 	} catch (error: any) {
@@ -45,7 +45,7 @@ const createItem = ({ body }: Request, res: Response) => {
 	}
 };
 
-const updateItem = ({ query, body }: Request, res: Response) => {
+const updateItem = (res: Response) => {
 	try {
 		res.status(200).json({ msg: 'OK' });
 	} catch (error: any) {
@@ -53,7 +53,7 @@ const updateItem = ({ query, body }: Request, res: Response) => {
 	}
 };
 
-const deleteItem = ({ query }: Request, res: Response) => {
+const deleteItem = (res: Response) => {
 	try {
 		res.status(200).json({ msg: 'OK' });
 	} catch (error: any) {
@@ -61,4 +61,4 @@ const deleteItem = ({ query }: Request, res: Response) => {
 	}
 };
 
-export { getItem, getItems, createItem, updateItem, deleteItem };
+export { createItem, deleteItem, getItem, getItems, updateItem };

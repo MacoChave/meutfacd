@@ -1,8 +1,9 @@
 import { URL } from '@/api/server';
 import { Contenedor } from '@/components';
+import { DotsLoaders } from '@/components/Loader/DotsLoaders';
 import { useCustomFetch } from '@/hooks/useFetch';
 import { style } from '@/themes/styles';
-import { Box, TextField } from '@mui/material';
+import { Box, TextField, Typography } from '@mui/material';
 
 const boxStyle = {
 	display: 'flex',
@@ -17,20 +18,20 @@ const Estacion5 = () => {
 		isLoading,
 		isError,
 	} = useCustomFetch({
-		url: URL.THESIS.HISTORY,
+		url: `${URL.REVIEW}/one`,
 		method: 'post',
 		body: {
 			table: 'ut_v_revision',
 			columns: [
 				'id_revision',
 				'titulo',
-				'fecha_revision',
+				'fecha',
 				'detalle',
 				'estado',
 				'estacion',
 			],
 			order: {
-				fecha_revision: 'DESC',
+				fecha: 'DESC',
 			},
 			limit: 1,
 		},
@@ -39,7 +40,8 @@ const Estacion5 = () => {
 		},
 	});
 
-	console.log({ revision });
+	if (isLoading) return <DotsLoaders />;
+	if (isError) return <Typography>Error</Typography>;
 
 	return (
 		<>

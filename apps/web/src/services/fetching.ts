@@ -12,10 +12,13 @@ type axiosProps = {
 export async function getData<T>({
 	path,
 	params = {},
+	headers = {
+		'Content-Type': 'application/json',
+	},
 }: axiosProps): Promise<T> {
 	const { data } = await axios.get(path, {
 		headers: {
-			'Content-Type': 'application/json',
+			...headers,
 		},
 		params,
 	});
@@ -31,7 +34,6 @@ export async function postData<T>({
 		'Content-Type': 'application/json',
 	},
 }: axiosProps): Promise<T> {
-	console.log('headers', headers);
 	const { data } = await axios.post(path, body, {
 		headers: {
 			...headers,
@@ -46,8 +48,14 @@ export async function putData<T>({
 	path,
 	body = {},
 	params = {},
+	headers = {
+		'Content-Type': 'application/json',
+	},
 }: axiosProps): Promise<T> {
 	const { data } = await axios.put(path, body, {
+		headers: {
+			...headers,
+		},
 		params,
 	});
 	return data;
@@ -57,8 +65,14 @@ export async function putData<T>({
 export async function deleteData<T>({
 	path,
 	params = {},
+	headers = {
+		'Content-Type': 'application/json',
+	},
 }: axiosProps): Promise<T> {
 	const { data } = await axios.delete(path, {
+		headers: {
+			...headers,
+		},
 		params,
 	});
 	return data;

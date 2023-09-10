@@ -1,22 +1,5 @@
 {
-  "name": "server",
-  "version": "1.0.0",
-  "description": "Servidor del sistema de modulos de la unidad de tesis de la facultad de ciencias juridicas y sociales",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "set NODE_ENV=development && ts-node-dev --respawn --transpile-only ./src/app.ts",
-    "build": "tsc",
-    "start": "NODE_ENV=production node dist/src/app.js",
-    "start_win": "set NODE_ENV=production && node dist/src/app.js"
-  },
-  "keywords": [
-    "nodejs",
-    "typescript",
-    "jwt"
-  ],
   "author": "Marco Chávez",
-  "license": "ISC",
   "dependencies": {
     "@aws-sdk/client-s3": "^3.352.0",
     "axios": "^1.4.0",
@@ -28,17 +11,39 @@
     "jsonwebtoken": "^9.0.0",
     "morgan": "^1.10.0",
     "mysql2": "^3.0.1",
-    "sequelize": "^6.29.0"
+    "sequelize": "^6.29.0",
+    "xlsx": "^0.18.5"
   },
+  "description": "Servidor del sistema de modulos de la unidad de tesis de la facultad de ciencias juridicas y sociales",
   "devDependencies": {
     "@types/bcrypt": "^5.0.0",
     "@types/cors": "^2.8.13",
     "@types/express": "^4.17.15",
     "@types/express-fileupload": "^1.4.1",
+    "@types/jest": "^29.5.4",
     "@types/jsonwebtoken": "^9.0.1",
     "@types/morgan": "^1.9.4",
     "@types/node": "^18.11.18",
+    "@types/supertest": "^2.0.12",
+    "jest": "^29.6.4",
+    "supertest": "^6.3.3",
+    "ts-jest": "^29.1.1",
     "ts-node-dev": "^2.0.0",
     "typescript": "^4.9.4"
-  }
+  },
+  "keywords": [
+    "nodejs",
+    "typescript",
+    "jwt"
+  ],
+  "license": "ISC",
+  "main": "index.js",
+  "name": "server",
+  "scripts": {
+    "build": "tsc",
+    "dev": "set NODE_ENV=development && ts-node-dev --respawn --transpile-only ./src/app.ts",
+    "start": "NODE_ENV=production node dist/src/app.js",
+    "test": "set NODE_ENV=test && jest --watchAll --runInBand --detectOpenHandles --forceExit"
+  },
+  "version": "1.0.0"
 }

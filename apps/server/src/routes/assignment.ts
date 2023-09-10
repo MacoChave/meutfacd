@@ -2,6 +2,7 @@ import { Router } from 'express';
 import { requireAuth } from '../middlewares/requireAuth';
 import {
 	deleteItem,
+	getExcelFile,
 	getItem,
 	getItems,
 	postItem,
@@ -10,6 +11,7 @@ import {
 
 const router = Router();
 
+router.get('/', getExcelFile);
 router.post('/one', requireAuth, getItem);
 router.post('/all', requireAuth, getItems);
 router.post('/', requireAuth, postItem);

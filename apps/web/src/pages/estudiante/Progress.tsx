@@ -6,6 +6,7 @@ import { ProgressType } from '@/interfaces/ProgressType';
 import { Typography } from '@mui/material';
 import { useState } from 'react';
 import Dialogo from '../../components/Modal';
+import { DotsLoaders } from '@/components/Loader/DotsLoaders';
 
 const Progress = () => {
 	const [open, setOpen] = useState(false);
@@ -19,10 +20,16 @@ const Progress = () => {
 				'id_revision',
 				'fecha_creacion',
 				'fecha_modificacion',
-				'fecha_revision',
+				'fecha',
+				'detalle',
+				'tutor',
 				'estado',
 				'estacion',
 			],
+			sort: {
+				estacion: 'asc',
+				fecha_creacion: 'asc',
+			},
 		},
 	});
 
@@ -31,8 +38,8 @@ const Progress = () => {
 		setRow(row);
 	};
 
-	if (isLoading) return <div>Cargando...</div>;
-	if (isError) return <div>Error al cargar los datos</div>;
+	if (isLoading) return <DotsLoaders />;
+	if (isError) return <Typography>Error al cargar los datos</Typography>;
 
 	return (
 		<>
@@ -40,9 +47,11 @@ const Progress = () => {
 				<McTable
 					headers={{
 						estacion: 'Estación',
+						detalle: 'Observación',
+						tutor: 'Revisor',
 						fecha_creacion: 'Creación',
 						fecha_modificacion: 'Modificación',
-						fecha_revision: 'Revisión',
+						fecha: 'Revisión',
 						estado: 'Estado',
 					}}
 					rows={data || []}

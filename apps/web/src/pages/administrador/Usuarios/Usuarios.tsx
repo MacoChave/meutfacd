@@ -27,7 +27,6 @@ const Usuarios = () => {
 			path: `${URL.USER}`,
 			params: { id_usuario: registro['id_usuario'] },
 		});
-		console.log(response);
 		refetch();
 	};
 

@@ -1,10 +1,41 @@
-import axios, { AxiosError } from 'axios';
 import { Request, Response } from 'express';
-import { DATA_SOURCES } from '../config/vars.config';
 import { sqlEjecutar, sqlSelectOne } from '../db/consultas';
+import { TSignIn } from '../models/signIn';
 import { errorHttp } from '../utils/error.handle';
-import { logger } from '../utils/logger';
-import { encriptarPassword } from '../utils/token';
+import { comparePassword, encryptPassword, generarToken } from '../utils/token';
+
+const signIn = async ({ user, password }: TSignIn) => {
+	try {
+		const userData = await sqlSelectOne({
+			table: 'ut_v_usuarios',
+			columns: ['id_usuario', 'nombre', 'cui', 'carnet', 'roles', 'pass'],
+			query: { correo: user },
+		});
+
+		if (!userData) {
+			throw new Error('Usuario no encontrado');
+		}
+
+		const hashPassword = userData.pass;
+
+		const isMatch = await comparePassword(password, hashPassword);
+
+		if (!isMatch) {
+			throw new Error('Contraseña incorrecta');
+		}
+
+		const token = generarToken({
+			primaryKey: userData.id_usuario,
+			cui: userData.cui,
+			carnet: userData.carnet,
+			roles: userData.roles,
+		});
+
+		return { token, name: userData.nombre, roles: userData.roles };
+	} catch (error) {
+		throw error;
+	}
+};
 
 export const logupHandler = async ({ body, query }: Request, res: Response) => {
 	try {
@@ -23,12 +54,20 @@ export const logupHandler = async ({ body, query }: Request, res: Response) => {
 
 		const { rol } = query;
 
-		const hash = await encriptarPassword(pass);
+		if (!rol) {
+			throw new Error('Rol no especificado');
+		}
 
-		const rowRol: any = await sqlEjecutar({
+		const rolFinded: any = await sqlEjecutar({
 			sql: `SELECT id_rol FROM rol WHERE lower(nombre) like lower(?)`,
 			values: [`${rol}%`],
 		});
+
+		if (!rolFinded.length) {
+			throw new Error('Rol no encontrado');
+		}
+
+		const hash = await encryptPassword(pass);
 
 		const usuario = {
 			nombre,
@@ -41,69 +80,64 @@ export const logupHandler = async ({ body, query }: Request, res: Response) => {
 			id_municipio: 1,
 			carnet,
 			cui,
-			rol: rowRol[0].id_rol,
+			rol: rolFinded[0].id_rol,
 		};
 
 		// Crear variables para almacenar en BD
+		const keys: string[] = Object.keys(usuario).map((key) => '?');
+		keys.push(...['@error_code', '@error_message']);
 		const values = Object.values(usuario).map((value) => value);
 
 		// Almacenar en BD
-		const usuarioNuevo: any = await sqlEjecutar({
-			sql: `call sp_ut_crear_usuario(${Object.keys(usuario)
-				.map((_value) => '?')
-				.join(',')})`,
+		await sqlEjecutar({
+			sql: `call sp_ut_crear_usuario(${keys.join(',')})`,
 			values,
 		});
-		console.log(usuarioNuevo);
 
-		if (usuarioNuevo.affectedRows === 0) {
-			errorHttp(res, {
-				msg: 'Error al crear usuario',
-				code: 400,
-			});
-			return;
+		const [errorInfo]: any = await sqlEjecutar({
+			sql: `select @error_code, @error_message`,
+		});
+
+		const { error_code, error_message } = errorInfo;
+
+		if (error_code && error_code !== 0) {
+			throw new Error(error_message);
 		}
 
 		res.status(200).json({ msg: 'Usuario creado' });
 	} catch (error: any) {
-		res.status(400).json({ msg: 'Error al crear usuario', error });
+		errorHttp(res, { msg: 'Error al crear usuario', error });
 	}
 };
 
-//  TODO: Se podría eliminar este endpoint
 export const loginHandler = async ({ body }: Request, res: Response) => {
 	try {
-		const userData = {
+		const userData: TSignIn = {
 			user: body.correo,
 			password: body.pass,
 		};
 
-		const response = await axios.post(
-			`${DATA_SOURCES.AUTH_HOST}:${DATA_SOURCES.AUTH_PORT}/login`,
-			userData,
-			{
-				headers: {
-					'Content-Type': 'application/json',
-				},
-			}
-		);
-		logger({
-			dirname: __dirname,
-			proc: 'loginHandler',
-			message: response.data,
-		});
-		res.status(200).json(response.data);
+		// CONSULTA SIN MICROSERVICIO AUT
+		const result = await signIn(userData);
+
+		// CONSULTA A MICROSERVICIO AUTH
+		// const response = await axios.post(
+		// 	`${DATA_SOURCES.AUTH_HOST}:${DATA_SOURCES.AUTH_PORT}/login`,
+		// 	userData,
+		// 	{
+		// 		headers: {
+		// 			'Content-Type': 'application/json',
+		// 		},
+		// 	}
+		// );
+		// logger({
+		// 	dirname: __dirname,
+		// 	proc: 'loginHandler',
+		// 	message: response.data,
+		// });
+		res.status(200).json(result);
 	} catch (error: any) {
-		const { response, status } = error as AxiosError;
-		logger({
-			dirname: __dirname,
-			proc: 'loginHandler',
-			message: `${response?.data}`,
-		});
-		console.log(response?.data, response?.status);
-		res.status(response?.status ?? 500).json(
-			response?.data ?? 'Se produjo un error al iniciar sesión'
-		);
+		errorHttp(res, { msg: 'Error al iniciar sesión', error });
 	}
 };
 
@@ -120,14 +154,19 @@ export const profileHandler = async ({ user }: Request, res: Response) => {
 		}
 
 		return res.status(200).json({
+			fecha_nac: result.fecha_nac,
+			genero: result.genero,
+			direccion: result.direccion,
+			id_municipio: result.id_municipio,
 			nombre: result.nombre,
 			apellidos: result.apellidos,
 			correo: result.correo,
 			estado: result.estado,
 			carnet: result.carnet,
 			cui: result.cui,
-			id_rol: result.id_rol,
-			rol: result.rol,
+			roles: result.roles,
+			id_jornada: result.id_jornada,
+			id_horario: result.id_horario,
 		});
 	} catch (error: any) {
 		errorHttp(res, { msg: 'Error al obtener el perfil', error });

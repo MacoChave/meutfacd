@@ -3,10 +3,14 @@ import { DataProps } from '../../propTypes/DataProps';
 import { Controller, useFormContext } from 'react-hook-form';
 import { UserType } from '@/models/Perfil';
 import { Box, TextField } from '@mui/material';
+import { McAutocomplete } from '@/components/McWithForms/McAutocomplete';
+import { generos } from '@/consts/genres';
+import { McInput } from '@/components/McWithForms/McInput';
 
 const PersonalData: React.FC<DataProps> = ({ editing }) => {
 	const {
 		control,
+		setValue,
 		formState: { errors },
 	} = useFormContext<UserType>();
 
@@ -51,24 +55,21 @@ const PersonalData: React.FC<DataProps> = ({ editing }) => {
 					/>
 				)}
 			/>
-			<Controller
-				control={control}
+			<McAutocomplete
+				control={control as any}
 				name='genero'
-				render={({ field }) => (
-					<TextField
-						{...field}
-						label='Género'
-						variant='standard'
-						InputProps={{
-							readOnly: !editing,
-							disabled: !editing,
-						}}
-						error={!!errors.genero}
-						helperText={errors.genero?.message}
-					/>
-				)}
+				label='Género'
+				options={generos.map((g) => ({ id: g.value, label: g.label }))}
+				disabled={!editing}
 			/>
-			<Controller
+			<McInput
+				control={control as any}
+				name='fecha_nac'
+				label='Fecha de nacimiento'
+				type='date'
+				disabled={!editing}
+			/>
+			{/* <Controller
 				control={control}
 				name='fecha_nac'
 				render={({ field }) => (
@@ -77,6 +78,10 @@ const PersonalData: React.FC<DataProps> = ({ editing }) => {
 						type='date'
 						label='Fecha de nacimiento'
 						variant='standard'
+						onChange={(e) => {
+							setValue('fecha_nac', e.target.value);
+							field.onChange(e);
+						}}
 						InputProps={{
 							readOnly: !editing,
 							disabled: !editing,
@@ -85,7 +90,7 @@ const PersonalData: React.FC<DataProps> = ({ editing }) => {
 						helperText={errors.fecha_nac?.message}
 					/>
 				)}
-			/>
+			/> */}
 		</Box>
 	);
 };

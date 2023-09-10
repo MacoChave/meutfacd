@@ -1,17 +1,37 @@
+import { APROBADO, ESPERA, PREVIA, RECHAZADO, REVISION } from '@/consts/vars';
 import { TypeWithKey } from '@/models/TypeWithKey';
 
 export const getChipLabel = (code: string) => {
 	switch (code) {
-		case 'E':
+		case ESPERA:
 			return 'En espera';
-		case 'A':
+		case APROBADO:
 			return 'Aprobado';
-		case 'R':
+		case RECHAZADO:
 			return 'Rechazado';
-		case 'P':
+		case PREVIA:
 			return 'Previa';
+		case REVISION:
+			return 'Revisión';
 		default:
-			return 'En espera';
+			return 'Sin datos';
+	}
+};
+
+export const getChipColor = (code: string) => {
+	switch (code) {
+		case ESPERA:
+			return 'warning';
+		case APROBADO:
+			return 'success';
+		case RECHAZADO:
+			return 'error';
+		case PREVIA:
+			return 'info';
+		case REVISION:
+			return 'primary';
+		default:
+			return 'default';
 	}
 };
 
@@ -52,7 +72,9 @@ export const formatByDataType = (cellValue: TypeWithKey<string>): string => {
 		case 'number':
 			return new Intl.NumberFormat().format(Number(value));
 		case 'date':
-			return new Date(value).toLocaleDateString('es-GT');
+			return new Date(value).toLocaleDateString('es-GT', {
+				dateStyle: 'long',
+			});
 		case 'boolean':
 			return value ? 'Si' : 'No';
 		default:
@@ -60,10 +82,37 @@ export const formatByDataType = (cellValue: TypeWithKey<string>): string => {
 	}
 };
 
-export const formatDate = (date: Date, isFullDate: boolean = true): string => {
-	const year = date.toLocaleString('default', { month: 'numeric' });
-	const month = date.toLocaleString('default', { month: '2-digit' });
-	const day = date.toLocaleString('default', { day: '2-digit' });
+type TFormatDate = {
+	date: Date;
+	setDay?: number;
+	setHour?: number;
+	onlyTime?: boolean;
+	onlyMonth?: boolean;
+};
 
-	return `${year}-${month}${isFullDate && `-${day}`}`;
+export const formatDate = ({
+	date,
+	setDay,
+	setHour,
+	onlyTime,
+	onlyMonth,
+}: TFormatDate): string => {
+	if (setDay) date.setDate(setDay);
+	if (setHour) date.setHours(setHour);
+
+	const str = date.toLocaleString('es-GT', {
+		year: 'numeric',
+		month: '2-digit',
+		day: '2-digit',
+		timeZone: 'America/Guatemala',
+	});
+
+	return str;
+};
+
+export const formatToInputDate = (strDate: string) => {
+	const sep: boolean = strDate.includes('/');
+	const [day, month, year] = strDate.split(sep ? '/' : '-');
+
+	return `${day}-${month}-${year}`;
 };

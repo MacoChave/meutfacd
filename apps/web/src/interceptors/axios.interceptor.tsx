@@ -1,4 +1,5 @@
 import { Control } from '@/models/Control';
+import { setLogout } from '@/redux/states';
 import store from '@/redux/store';
 import { getValidatorError } from '@/utils/getValidatorError';
 import axios, {
@@ -63,18 +64,27 @@ const onErrorResponse = (error: AxiosError | Error): Promise<AxiosError> => {
 		});
 
 		swal({
-			title: 'Oops!',
+			title: '!Oops!',
 			text: errorMessage,
 			icon: 'error',
+			buttons: {
+				accept: {
+					text: 'Aceptar',
+					value: status,
+				},
+			},
+		}).then((value) => {
+			if (value === 401) {
+				// DELETE TOKEN & GO TO LOGIN PAGE
+				setLogout();
+				window.location.href = '/';
+			}
 		});
 
-		if (status === 401) {
-			// DELETE TOKEN & GO TO LOGIN PAGE
-			logOnDev(`[API] | Error ${error.message}`);
-		}
+		logOnDev(`[API] | Error ${error.message}`);
 	} else {
 		logOnDev(`[API] | Error ${error.message}`);
-		swal('Oops!', error.message, 'error');
+		swal('!Oops!', error.message, 'error');
 	}
 
 	return Promise.reject(error);

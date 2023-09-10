@@ -1,19 +1,30 @@
 import { URL } from '@/api/server';
 import { Contenedor } from '@/components';
+import { DotsLoaders } from '@/components/Loader/DotsLoaders';
 import { SpinLoader } from '@/components/Loader/SpinLoader';
+import { APROBADO, ESPERA, PREVIA, REVISION } from '@/consts/vars';
 import { useCustomFetch } from '@/hooks/useFetch';
 import { UploadFile } from '@/interfaces/UploadFile';
 import { Draft, draftDefault, draftSchema } from '@/models/Draft';
-import { postData, putData } from '@/services/fetching';
+import { getData, postData, putData } from '@/services/fetching';
+import { style } from '@/themes/styles';
 import { errorHandler } from '@/utils/errorHandler';
+import { getChipColor, getChipLabel } from '@/utils/formatHandler';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Box, Button, TextField, Typography } from '@mui/material';
+import { OpenInBrowser } from '@mui/icons-material';
+import {
+	Box,
+	Button,
+	Chip,
+	IconButton,
+	TextField,
+	Typography,
+} from '@mui/material';
 import { AxiosError } from 'axios';
 import { useEffect, useState } from 'react';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import swal from 'sweetalert';
 import FileChooser from '../../components/controles/FileChooser';
-import { style } from '@/themes/styles';
 
 const Estacion1 = () => {
 	const [isUploading, setIsUploading] = useState(false);
@@ -22,6 +33,7 @@ const Estacion1 = () => {
 		data: revision,
 		isLoading,
 		isError,
+		refetch,
 	} = useCustomFetch({
 		url: `${URL.REVIEW}/one`,
 		method: 'post',
@@ -30,10 +42,11 @@ const Estacion1 = () => {
 			columns: [
 				'id_revision',
 				'titulo',
-				'fecha_revision',
+				'fecha',
 				'detalle',
 				'estado',
-				'estacion',
+				'tutor',
+				'ruta_perfil',
 			],
 			order: {
 				fecha_revision: 'DESC',
@@ -48,6 +61,7 @@ const Estacion1 = () => {
 	const {
 		control,
 		formState: { errors },
+		reset,
 		setValue,
 		handleSubmit,
 	} = useForm<Draft>({
@@ -85,7 +99,7 @@ const Estacion1 = () => {
 
 	const onSubmit: SubmitHandler<Draft> = async (draft) => {
 		try {
-			if (revision.estado === 'P') {
+			if (revision.estado === PREVIA || revision.estado === ESPERA) {
 				await putData({
 					path: URL.THESIS,
 					body: {
@@ -108,9 +122,20 @@ const Estacion1 = () => {
 				'El punto de tesis se presentó correctamente',
 				'success'
 			);
+			reset();
+			refetch();
 		} catch (error: any) {
 			errorHandler(error as AxiosError);
 		}
+	};
+
+	const openPDF = async () => {
+		const { url }: any = await getData({
+			path: URL.STORAGE._,
+			body: {},
+			params: { name: revision.ruta_perfil },
+		});
+		window.open(url);
 	};
 
 	useEffect(() => {
@@ -119,8 +144,9 @@ const Estacion1 = () => {
 		}
 	}, [revision]);
 
-	if (isLoading) return <>Cargando revisión...</>;
-	if (isError) return <>No se pudo cargar la revisión...</>;
+	if (isLoading) return <DotsLoaders />;
+	if (isError)
+		return <Typography>No se pudo cargar la revisión...</Typography>;
 
 	return (
 		<>
@@ -130,9 +156,28 @@ const Estacion1 = () => {
 						<Box>
 							<Typography variant='h6'>
 								Detalle del previo
+								<Box component='span' sx={{ ml: 2 }}>
+									<Chip
+										color={getChipColor(revision.estado)}
+										label={getChipLabel(revision.estado)}
+									/>
+									{revision.ruta_perfil && (
+										<IconButton
+											color='info'
+											title='Ver archivo subido'
+											onClick={() => openPDF()}>
+											<OpenInBrowser />
+										</IconButton>
+									)}
+								</Box>
 							</Typography>
 							<Typography>
-								{revision?.detalle ?? 'Sin revisión'}
+								Docente revisor:{' '}
+								{revision?.tutor || 'Sin asignación'}
+							</Typography>
+							<Typography>
+								{revision?.detalle ??
+									'Aún no hay detalle del previo'}
 							</Typography>
 						</Box>
 						<Box>
@@ -145,35 +190,46 @@ const Estacion1 = () => {
 										fullWidth
 										label='Título del punto de tesis'
 										variant='filled'
+										InputProps={{
+											readOnly:
+												revision.estado === REVISION ||
+												revision.estado === APROBADO,
+										}}
 										error={!!errors.titulo}
 										helperText={errors.titulo?.message}
 									/>
 								)}
 							/>
 						</Box>
-						<Box
-							sx={{
-								gridColumn: { xs: '1', sm: '2' },
-								gridRow: { xs: '1', sm: '1 / span 2' },
-							}}>
-							{!isUploaded ? (
-								<FileChooser
-									title='Punto de tesis'
-									onUpload={onUpload}
-								/>
-							) : (
-								<Button
-									variant='contained'
-									color='primary'
-									type='submit'>
-									Enviar
-								</Button>
-							)}
-						</Box>
+						{!(
+							revision.estado === REVISION ||
+							revision.estado === APROBADO
+						) && (
+							<Box
+								sx={{
+									gridColumn: { xs: '1', sm: '2' },
+									gridRow: { xs: '1', sm: '1 / span 2' },
+								}}>
+								{!isUploaded ? (
+									<FileChooser
+										title='Punto de tesis'
+										onUpload={onUpload}
+										disabled={true}
+									/>
+								) : (
+									<Button
+										variant='contained'
+										color='primary'
+										type='submit'>
+										Enviar
+									</Button>
+								)}
+							</Box>
+						)}
 					</Box>
 				</form>
 			</Contenedor>
-			{isUploading && <SpinLoader message='Subiendo tu punto de tesis' />}
+			{isUploading && <SpinLoader message='Subiendo punto de tesis' />}
 		</>
 	);
 };

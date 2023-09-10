@@ -1,7 +1,9 @@
 import { URL } from '@/api/server';
 import { Contenedor } from '@/components';
+import { DotsLoaders } from '@/components/Loader/DotsLoaders';
 import { useCustomFetch } from '@/hooks/useFetch';
 import { style } from '@/themes/styles';
+import { getChipColor, getChipLabel } from '@/utils/formatHandler';
 import { Download, FileDownload, UploadFile } from '@mui/icons-material';
 import { Box, Chip, IconButton, TextField, Typography } from '@mui/material';
 
@@ -18,26 +20,30 @@ const Estacion2 = () => {
 		isLoading,
 		isError,
 	} = useCustomFetch({
-		url: `${URL.ASSIGNMENT}/one`,
+		url: `${URL.REVIEW}/one`,
 		method: 'post',
 		body: {
-			table: 'ut_v_asignacion',
+			table: 'ut_v_revision',
 			columns: [
-				'id_curso_tutor',
+				'id_revision',
+				'dias',
+				'fecha_curso',
+				'estado',
+				'tutor',
 				'salon',
-				'hora_inicio',
-				'hora_final',
-				'uj_nombre',
-				'es_aprobado',
-				'ruta_certificado',
-				'u_nombre',
 			],
+			order: {
+				fecha_revision: 'DESC',
+			},
 			limit: 1,
+		},
+		params: {
+			estacion: 2,
 		},
 	});
 
-	if (isLoading) return <p>Cargando...</p>;
-	if (isError) return <p>Error</p>;
+	if (isLoading) return <DotsLoaders />;
+	if (isError) return <Typography>Error</Typography>;
 
 	return (
 		<>
@@ -50,26 +56,31 @@ const Estacion2 = () => {
 							gap: 4,
 						}}>
 						<TextField
-							variant='filled'
+							variant='standard'
 							label='Catedrático'
-							value={asignacion.tt_nombre || 'No asignado'}
+							value={asignacion?.tutor ?? 'No asignado'}
 						/>
 						<TextField
-							variant='filled'
+							variant='standard'
 							label='Jornada'
-							value={asignacion.uj_nombre || 'No asignado'}
+							value={asignacion?.jornada ?? 'No asignado'}
 						/>
 						<TextField
-							variant='filled'
+							variant='standard'
 							label='Horario'
-							value={`${asignacion.hora_inicio || 'Inicio'} - ${
-								asignacion.hora_final || 'Final'
+							value={`${asignacion?.hora_inicio ?? 'Inicio'} - ${
+								asignacion?.hora_final ?? 'Final'
 							}`}
 						/>
 						<TextField
-							variant='filled'
+							variant='standard'
+							label='Días'
+							value={asignacion?.dias ?? 'No asignado'}
+						/>
+						<TextField
+							variant='standard'
 							label='Salón'
-							value={asignacion.salon || 'No asignado'}
+							value={asignacion?.salon ?? 'No asignado'}
 						/>
 					</Box>
 					<Box
@@ -81,20 +92,8 @@ const Estacion2 = () => {
 						<Box sx={boxStyle}>
 							<Typography>Resultado</Typography>
 							<Chip
-								label={
-									asignacion.es_aprobado === undefined
-										? 'En espera'
-										: asignacion.es_aprobado
-										? 'Aprobado'
-										: 'Reprobado'
-								}
-								color={
-									asignacion.es_aprobado === undefined
-										? 'primary'
-										: asignacion.es_aprobado
-										? 'success'
-										: 'warning'
-								}
+								label={getChipLabel(asignacion.estado)}
+								color={getChipColor(asignacion.estado)}
 							/>
 						</Box>
 						<Box sx={boxStyle}>

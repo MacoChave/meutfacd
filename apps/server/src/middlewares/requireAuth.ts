@@ -1,4 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
+import { errorHttp } from '../utils/error.handle';
 import { validarToken } from '../utils/token';
 import { errorHttp } from '../utils/error.handle';
 
@@ -13,17 +14,20 @@ export const requireAuth = (
 
 		if (!authHeader || !authHeader.startsWith('Bearer'))
 			throw new Error('Autenticación no enviada');
+		if (!authHeader || !authHeader.startsWith('Bearer'))
+			throw new Error('Autenticación no enviada');
 
 		const token = authHeader.split(' ')[1];
 
+		if (!token || token === 'null') throw new Error('Token no encontrado');
 		if (!token || token === 'null') throw new Error('Token no encontrado');
 
 		const decodedToken = validarToken(token);
 
 		if (!decodedToken) throw new Error('Token no válido');
+		if (!decodedToken) throw new Error('Token no válido');
 
-		req.user = decodedToken;
-		console.log('[REQUIRE AUTH][REQUIRE AUTH] User', decodedToken);
+		req.user = decodedToken as any;
 		next();
 	} catch (error: any) {
 		errorHttp(res, error as any);

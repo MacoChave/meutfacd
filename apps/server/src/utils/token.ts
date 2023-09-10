@@ -1,24 +1,28 @@
-import jwt from 'jsonwebtoken';
+import jwt, { JwtPayload } from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 import { DATA_SOURCES } from '../config/vars.config';
 
 const jwtOptions = {
-	expiresIn: DATA_SOURCES.TOKEN_EXPIRES,
+	expiresIn: DATA_SOURCES.JWT_EXPIRATION,
 };
 
 export const generarToken = (data: any) => {
-	return jwt.sign(data, DATA_SOURCES.TOKEN_SECRET, jwtOptions);
+	return jwt.sign(data, DATA_SOURCES.JWT_SECRET, jwtOptions);
 };
 
-export const validarToken = (token: string) => {
-	return jwt.verify(token, DATA_SOURCES.TOKEN_SECRET);
+export const validarToken = (token: string): JwtPayload | string => {
+	try {
+		return jwt.verify(token, DATA_SOURCES.JWT_SECRET);
+	} catch (error) {
+		throw new Error('La sesión ha expirado');
+	}
 };
 
-export const encriptarPassword = (plainPassword: string) => {
+export const encryptPassword = (plainPassword: string) => {
 	return bcrypt.hash(plainPassword, DATA_SOURCES.SALT);
 };
 
-export const compararPassword = (
+export const comparePassword = (
 	plainPassword: string,
 	hashPassword: string
 ) => {

@@ -8,7 +8,9 @@ type errorHttpType = {
 };
 
 const errorHttp = (res: Response, { error, msg, code }: errorHttpType) => {
+	console.log('********** ERROR **********');
 	console.log({ error, msg, code });
+	console.log('***************************');
 
 	if (error?.errno === 1062) {
 		res.status(400).json({ error: 'El registro ya existe' });
@@ -24,9 +26,14 @@ const errorHttp = (res: Response, { error, msg, code }: errorHttpType) => {
 		res.status(400).json({
 			error: 'El registro contiene datos no válidos',
 		});
+	} else if (error?.errno === 1172) {
+		res.status(400).json({
+			error: 'El registro contiene datos no válidos',
+		});
 	} else {
 		res.status(code || 500).json({
-			error: msg || 'Error interno del servidor',
+			error:
+				(error as Error).message || msg || 'Error interno del servidor',
 		});
 	}
 };

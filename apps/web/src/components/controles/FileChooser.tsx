@@ -3,11 +3,13 @@ import { ChangeEvent, DragEvent, useState } from 'react';
 
 interface fileChooserProps {
 	title?: string;
+	disabled?: boolean;
 	onUpload: (file: File) => void;
 }
 
 const FileChooser: React.FC<fileChooserProps> = ({
 	title = 'Arrastra tu archivo',
+	disabled = false,
 	onUpload,
 }) => {
 	const [active, setActive] = useState(false);

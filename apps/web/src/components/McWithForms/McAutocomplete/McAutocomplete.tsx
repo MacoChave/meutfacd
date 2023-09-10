@@ -12,13 +12,15 @@ export type McAutocompleteProps = {
 	name: Path<FieldValues>;
 	options: Option[];
 	label: string;
+	disabled?: boolean;
 };
 
 const McAutocomplete: React.FC<McAutocompleteProps> = ({
 	control,
 	name,
-	options,
+	options = [],
 	label,
+	disabled = false,
 }) => {
 	return (
 		<Controller
@@ -36,14 +38,21 @@ const McAutocomplete: React.FC<McAutocompleteProps> = ({
 								  ) ?? null
 								: null
 						}
-						getOptionLabel={(option: Option) => option.label}
+						disabled={disabled}
+						getOptionLabel={(option: Option) => option?.label ?? ''}
+						isOptionEqualToValue={(
+							option: Option,
+							value: Option
+						) => {
+							return value ? option.id === value.id : false;
+						}}
 						onChange={(_event, newValue) => {
 							onChange(newValue ? newValue.id : null);
 						}}
 						renderInput={(params) => (
 							<TextField
 								{...params}
-								variant='outlined'
+								variant='standard'
 								label={label}
 								error={!!error}
 								helperText={error?.message ?? null}

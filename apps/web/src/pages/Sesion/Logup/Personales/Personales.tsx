@@ -1,13 +1,9 @@
+import { generos } from '@/consts/genres';
 import { Autocomplete, Box, TextField } from '@mui/material';
 import React from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 
 export type PersonalesProps = {};
-
-const generos = [
-	{ value: 'M', label: 'Masculino' },
-	{ value: 'F', label: 'Femenino' },
-];
 
 const Personales: React.FC<PersonalesProps> = () => {
 	const {

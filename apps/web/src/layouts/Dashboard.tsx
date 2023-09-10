@@ -5,6 +5,7 @@ import { ToolbarWithSesion } from '../components/navegacion/Toolbar';
 import { MenuItem } from '../propTypes/Appbar';
 import { useFetch } from '@/hooks/useFetch';
 import { URL } from '@/api/server';
+import { DotsLoaders } from '@/components/Loader/DotsLoaders';
 
 const Dashboard = ({
 	menuArray,
@@ -18,8 +19,8 @@ const Dashboard = ({
 	});
 	const [open, setOpen] = useState(false);
 
-	if (isLoading) return <p>Loading...</p>;
-	if (isError) return <p>Error</p>;
+	if (isLoading) return <DotsLoaders />;
+	if (isError) return <Typography>Error</Typography>;
 
 	return (
 		<Box
@@ -34,15 +35,11 @@ const Dashboard = ({
 			}}>
 			<>
 				<ToolbarWithSesion />
-				{/* {menuArray.length > 0 && (
-					)} */}
 				<Sidebar menuArray={data || []} open={open} setOpen={setOpen} />
 				{children}
 				<Box
 					sx={{
 						gridArea: 'footer',
-						// position: 'fixed',
-						// bottom: 0,
 						width: '90%',
 						mx: 'auto',
 						p: 1,
@@ -51,6 +48,7 @@ const Dashboard = ({
 						sx={{
 							textAlign: 'center',
 							fontSize: { xs: '0.6rem', md: '0.8rem' },
+							py: 2,
 						}}>
 						Administración 2021-2025 © Decano Henry Arriaga
 					</Typography>

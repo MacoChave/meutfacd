@@ -1,72 +1,5 @@
 import { connection } from '../config/mysql';
-import { DATA_SOURCES } from '../config/vars.config';
 import { logger } from '../utils/logger';
-import { encriptarPassword } from '../utils/token';
-
-export const cargarRolesTutor = async () => {
-	const roles = [];
-	roles.push({
-		nombre: 'Administrador',
-		descripcion:
-			'Personal encargado de administrar el sistema de tesis de pregrado',
-	});
-	roles.push({
-		nombre: 'Analitica',
-		descripcion: 'Personal de soporte del sistema de tesis de pregrado',
-	});
-	roles.push({
-		nombre: 'Encargado',
-		descripcion: 'Tutor encargado de una estación de tesis de pregrado',
-	});
-	roles.push({
-		nombre: 'Evaluador',
-		descripcion:
-			'Tutor dedicado a evaluar a los estudiantes de tesis de pregrado',
-	});
-	roles.push({
-		nombre: 'Estudiante',
-		descripcion: 'Usuario estudiante del sistema de tesis de pregrado',
-	});
-
-	await sqlInsertMany({
-		table: 'rol',
-		datos: roles,
-	});
-};
-export const crearUsuarioAdministrador = async () => {
-	const adminPass = await encriptarPassword(DATA_SOURCES.ADMIN_PASSWORD);
-
-	const adminUser = {
-		nombre: 'Administrador',
-		apellido: 'Derecho',
-		genero: '-',
-		correo: 'admin@derecho.cloud',
-		pass: adminPass,
-		direccion: 'Guatemala',
-		fecha_nac: '2023-01-01',
-		municipio: 1,
-		carnet: '000000000',
-		cui: '0000000000000',
-		rol: 1,
-	};
-
-	const sql = `call sp_ut_crear_usuario(${Object.keys(adminUser)
-		.map(() => '?')
-		.join(',')})`;
-
-	const conn = await connection();
-
-	conn.query(sql, Object.values(adminUser))
-		.then((res) => {
-			console.log('[Crear admin][Insertar]', res);
-		})
-		.catch((err) => {
-			console.log('Error al crear usuario administrador', err.sqlMessage);
-		})
-		.finally(() => {
-			conn.end();
-		});
-};
 
 type conditionsType = {
 	column: string;
@@ -249,7 +182,6 @@ export const sqlSelect = async ({
 	const conn = await connection();
 	const [results, fields] = await conn.query(sql, values);
 	conn.end();
-	console.log('[sqlSelect][results]', results);
 	return results;
 };
 

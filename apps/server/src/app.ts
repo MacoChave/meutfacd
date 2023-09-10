@@ -22,18 +22,19 @@ app.use(
 );
 app.use(
 	fileUpload({
-		useTempFiles: true,
+		useTempFiles: false,
 		tempFileDir: './storage',
 		limits: { fileSize: 50 * 1024 * 1024 },
 		debug: true,
 	})
 );
+app.use(express.static('storage'));
 
 // ROUTES
 app.use('/api', router);
 
 app.listen(PORT, () => {
-	console.log('Server is listening on port', PORT);
+	console.log('Server is listening on port 👉', PORT);
 });
 
 // Database connection
@@ -41,12 +42,12 @@ const conectarBD = async () => {
 	const conn = await conectar();
 	conn.getConnection()
 		.then(async () => {
-			console.log('Database connected...');
+			console.log('Database connected 👌');
 			// await cargarRolesTutor();
 			// console.log('Roles loaded...');
 			// await crearUsuarioAdministrador();
 			// console.log('Admin user created...');
 		})
-		.catch((err) => console.log('Error connecting to database', err));
+		.catch((err) => console.log('Error connecting to database 😭', err));
 };
 conectarBD();

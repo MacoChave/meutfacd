@@ -1,17 +1,58 @@
 import { Request, Response } from 'express';
-import { sqlInsert, sqlSelect, sqlSelectOne, sqlUpdate } from '../db/consultas';
+import * as XLSX from 'xlsx';
+import { sqlEjecutar, sqlInsert, sqlSelect, sqlUpdate } from '../db/consultas';
 import { errorHttp } from '../utils/error.handle';
+
+export const getExcelFile = async (req: Request, res: Response) => {
+	try {
+		const professor = await sqlSelect({
+			table: 'ut_v_usuarios',
+			conditions: [
+				{ column: 'roles', operator: 'like', value: '%curso%' },
+			],
+		});
+		const workSheet = XLSX.utils.json_to_sheet(professor as any[]);
+		const workBook = XLSX.utils.book_new();
+
+		XLSX.utils.book_append_sheet(workBook, workSheet, 'profesores');
+		XLSX.writeFile(workBook, 'storage/ut_asignacion.xlsx');
+
+		res.status(200).sendFile('ut_asignacion.xlsx', {
+			root: './storage',
+			headers: {
+				'Content-Type':
+					'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+			},
+		});
+	} catch (error: any) {
+		errorHttp(res, {
+			error,
+			msg: 'No se puede obtener el archivo',
+			code: 500,
+		});
+	}
+};
 
 export const getItem = async (
 	{ query, body, user }: Request,
 	res: Response
 ) => {
 	try {
-		const result = await sqlSelectOne({
-			...body,
-			query: { id_estudiante: user.primaryKey, ...query },
+		const result: any = await sqlEjecutar({
+			sql: `select 
+	* 
+from ut_v_asignacion uva 
+where uva.id_estudiante in (
+	select uvr.id_usuario  
+	from ut_v_revision uvr 
+	where uvr.estacion = ? 
+	and uvr.estado = ?
+) 
+and id_estudiante = ?`,
+			values: [query.estacion, query.estado, user.primaryKey],
 		});
-		res.status(200).json(result);
+
+		res.status(200).json(result[0]);
 	} catch (error: any) {
 		errorHttp(res, {
 			error,
