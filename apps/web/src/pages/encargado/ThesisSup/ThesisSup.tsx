@@ -59,7 +59,7 @@ const ThesisSup: React.FC<ThesisSupProps> = ({}) => {
 			path: `${URL.REVIEW}/assign`,
 			body: { id_revisiones, id_tutor },
 		});
-		console.log(results);
+
 		if (results.some((r) => r.affectedRows === 0)) {
 			swal(
 				'Error',

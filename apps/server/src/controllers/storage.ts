@@ -13,7 +13,6 @@ const uploadDraft = async ({ files, user }: Request, res: Response) => {
 			user.carnet.toString(),
 			'preview'
 		);
-		console.log({ result });
 		res.status(200).json({
 			name: `${user.carnet}/preview.${getExtFile(files.draft.name)}`,
 		});
@@ -35,7 +34,6 @@ const uploadTesis = async ({ files, user }: Request, res: Response) => {
 			user.carnet.toString(),
 			'thesis'
 		);
-		console.log(result);
 		res.status(200).json({
 			name: `${user.carnet}/thesis.${getExtFile(files.thesis.name)}`,
 		});
@@ -53,7 +51,6 @@ const uploadDictamen = async ({ files, user }: Request, res: Response) => {
 			user.carnet.toString(),
 			'dictamen'
 		);
-		console.log(result);
 		res.status(200).json({
 			name: `${user.carnet}/dictamen.${getExtFile(files.dictamen.name)}`,
 		});

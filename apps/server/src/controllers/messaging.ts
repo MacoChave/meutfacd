@@ -53,7 +53,6 @@ export const putItem = async ({ body, query }: Request, res: Response) => {
 		});
 		res.status(200).json(response);
 	} catch (error) {
-		console.log({ error });
 		errorHttp(res, error as any);
 	}
 };

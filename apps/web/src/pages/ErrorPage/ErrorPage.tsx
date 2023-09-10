@@ -1,6 +1,5 @@
-import { BotonPrimario } from '@/components/controles/Boton';
-import { Box, Typography } from '@mui/material';
-import React from 'react';
+import { Box, Button, Typography } from '@mui/material';
+import React, { lazy } from 'react';
 
 export type ErrorPageProps = {
 	codigo: number;
@@ -27,7 +26,9 @@ const ErrorPage: React.FC<ErrorPageProps> = ({ codigo, mensaje }) => {
 			<Typography variant='h1'>Ooops!</Typography>
 			<Typography variant='h4'>{codigo}</Typography>
 			<Typography variant='body1'>{mensaje}</Typography>
-			<BotonPrimario handleClick={handleClick}>Regresar</BotonPrimario>
+			<Button variant='contained' color='primary' onClick={handleClick}>
+				Regresar
+			</Button>
 		</Box>
 	);
 };

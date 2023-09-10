@@ -105,7 +105,7 @@ const Citas: React.FC<CitasProps> = ({}) => {
 									<IconButton
 										color='primary'
 										onClick={() =>
-											console.log('Download file')
+											console.log('Download file is not implemented')
 										}>
 										<Download />
 									</IconButton>

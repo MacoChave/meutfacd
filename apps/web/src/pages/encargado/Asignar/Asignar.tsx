@@ -51,7 +51,12 @@ const Asignar: React.FC<AsignarProps> = ({ rol }) => {
 	});
 
 	const onSave = () => {
-		console.log('onSave', { jornada, horario, evaluador, assignment });
+		console.log('onSave is not implemented', {
+			jornada,
+			horario,
+			evaluador,
+			assignment,
+		});
 	};
 
 	const assign = (student: any) => {

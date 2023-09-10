@@ -34,7 +34,6 @@ export async function postData<T>({
 		'Content-Type': 'application/json',
 	},
 }: axiosProps): Promise<T> {
-	console.log('headers', headers);
 	const { data } = await axios.post(path, body, {
 		headers: {
 			...headers,

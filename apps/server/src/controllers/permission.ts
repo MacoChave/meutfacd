@@ -15,7 +15,7 @@ const getItems = async ({ query, user }: Request, res: Response) => {
 		const sql = `select 
 	uperm.id_rol , uperm.id_pagina , 
 	upag.nombre , upag.descripcion , 
-	upag.indice , upag.ruta , upag.icono
+	upag.indice , upag.ruta 
 from ut_permiso uperm 
 left join rol r 
 	using (id_rol)
@@ -27,10 +27,12 @@ where r.id_rol in (
 	left join usuario_rol ur 
 	using (id_rol)
 	where ur.id_usuario = ?
+	and uperm.permiso = ?
 ) ; `;
-		const rows = await sqlEjecutar({ sql, values: [user.primaryKey] });
+		const rows = await sqlEjecutar({ sql, values: [user.primaryKey, 1] });
 		res.status(200).json(rows);
 	} catch (error: any) {
+		console.log(error);
 		errorHttp(res, error as any);
 	}
 };

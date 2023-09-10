@@ -27,7 +27,7 @@ const Rol: React.FC<TabsProps> = ({ usuario, index, ...other }) => {
 		body: {
 			table: 'ut_v_rol',
 		},
-		params: { id_usuario: usuario.id_usuario }
+		params: { id_usuario: usuario.id_usuario },
 	});
 	const {
 		data: rols,
@@ -75,7 +75,7 @@ const Rol: React.FC<TabsProps> = ({ usuario, index, ...other }) => {
 			path: `${URL.USER_ROL}`,
 			params: { id_usuario: usuario.id_usuario, id_rol: data.id_rol },
 		});
-		console.log(result);
+
 		if (result) {
 			swal('¡Rol eliminado!', '', 'success');
 			refetch();

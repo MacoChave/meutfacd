@@ -1,8 +1,12 @@
 import { URL } from '@/api/server';
 import { Contenedor } from '@/components';
+import { DotsLoaders } from '@/components/Loader/DotsLoaders';
+import { ESPERA } from '@/consts/vars';
 import { useCustomFetch } from '@/hooks/useFetch';
 import { UserType } from '@/models/Perfil';
+import { ResultType } from '@/models/Result';
 import { ReviewType } from '@/models/Review';
+import { putData } from '@/services/fetching';
 import { style } from '@/themes/styles';
 import { SwitchLeft, SwitchRight } from '@mui/icons-material';
 import {
@@ -16,12 +20,8 @@ import {
 	Typography,
 } from '@mui/material';
 import React, { useEffect, useState } from 'react';
-import { PickEvaluador } from '../components/PickEvaluador';
 import swal from 'sweetalert';
-import { putData } from '@/services/fetching';
-import { ResultType } from '@/models/Result';
-import { DotsLoaders } from '@/components/Loader/DotsLoaders';
-import { ESPERA } from '@/consts/vars';
+import { PickEvaluador } from '../components/PickEvaluador';
 
 export type DraftProps = Record<string, never>;
 
@@ -59,7 +59,7 @@ const Draft: React.FC<DraftProps> = ({}) => {
 			path: `${URL.REVIEW}/assign`,
 			body: { id_revisiones, id_tutor },
 		});
-		console.log(results);
+
 		if (results.some((r) => r.affectedRows === 0)) {
 			swal(
 				'Error',

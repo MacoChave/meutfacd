@@ -1,40 +1,57 @@
-import { ErrorPage } from '@/pages/ErrorPage';
-import { Login } from '@/pages/Sesion';
-import { Logup } from '@/pages/Sesion/Logup';
-import { UserRecovery } from '@/pages/Sesion/UserRecovery';
-import { Courses } from '@/pages/administrador/Courses';
-import { PagesApp } from '@/pages/administrador/PagesApp';
-import { Draft } from '@/pages/encargado/Draft';
-import { FstCourse } from '@/pages/encargado/FstCourse';
-import { ScndCourse } from '@/pages/encargado/ScndCourse';
-import { ThesisSup } from '@/pages/encargado/ThesisSup';
-import { Course1Professor } from '@/pages/evaluador/Course1Professor';
-import { DraftProfessor } from '@/pages/evaluador/DraftProfessor';
-import { SndCourseD } from '@/pages/evaluador/SndCourseD';
-import { StylesComision } from '@/pages/evaluador/StylesComision';
+import { Contenedor } from '@/components';
+import { SpinLoader } from '@/components/Loader/SpinLoader';
+import { Suspense, lazy } from 'react';
 import { createBrowserRouter } from 'react-router-dom';
-import ProtectedRoute from '../components/ProtectedRoute';
-import Home from '../pages/Home/Home';
-import UserProfile from '../pages/Sesion/UserProfile/UserProfile';
-import HomeAdministrador from '../pages/administrador';
-import Aplicacion from '../pages/administrador/Aplicacion';
-import Problemas from '../pages/administrador/Problemas';
-import Usuarios from '../pages/administrador/Usuarios/Usuarios';
-import HomeReporte from '../pages/analitica';
-import ByEstacion from '../pages/analitica/ByEstacion';
-import ByRol from '../pages/analitica/ByRol';
-import Resumen from '../pages/analitica/Resumen';
-import HomeEncargado from '../pages/encargado';
-import Citas from '../pages/encargado/Citas/Citas';
-import HomeEstudiante from '../pages/estudiante';
-import Progress from '../pages/estudiante/Progress';
-import Estacion1 from '../pages/estudiante/Station1';
-import Estacion2 from '../pages/estudiante/Station2';
-import Estacion3 from '../pages/estudiante/Station3';
-import Estacion4 from '../pages/estudiante/Station4';
-import Estacion5 from '../pages/estudiante/Station5';
-import HomeEvaluador from '../pages/evaluador';
-import { Dictamen } from '@/pages/estudiante/Dictamen';
+const ErrorPage = lazy(() => import('@/pages/ErrorPage/ErrorPage'));
+const Login = lazy(() => import('@/pages/Sesion/Login/Login'));
+const Logup = lazy(() => import('@/pages/Sesion/Logup/Logup'));
+const UserRecovery = lazy(
+	() => import('@/pages/Sesion/UserRecovery/UserRecovery')
+);
+const Courses = lazy(() => import('@/pages/administrador/Courses/Courses'));
+const PagesApp = lazy(() => import('@/pages/administrador/PagesApp/PagesApp'));
+const Draft = lazy(() => import('@/pages/encargado/Draft/Draft'));
+const FstCourse = lazy(() => import('@/pages/encargado/FstCourse/FstCourse'));
+const ScndCourse = lazy(
+	() => import('@/pages/encargado/ScndCourse/ScndCourse')
+);
+const ThesisSup = lazy(() => import('@/pages/encargado/ThesisSup/ThesisSup'));
+const Dictamen = lazy(() => import('@/pages/estudiante/Dictamen/Dictamen'));
+const Course1Professor = lazy(
+	() => import('@/pages/evaluador/Course1Professor/Course1Professor')
+);
+const DraftProfessor = lazy(
+	() => import('@/pages/evaluador/DraftProfessor/DraftProfessor')
+);
+const SndCourseD = lazy(
+	() => import('@/pages/evaluador/SndCourseD/SndCourseD')
+);
+const StylesComision = lazy(
+	() => import('@/pages/evaluador/StylesComision/StylesComision')
+);
+const ProtectedRoute = lazy(() => import('../components/ProtectedRoute'));
+const Home = lazy(() => import('../pages/Home/Home'));
+const UserProfile = lazy(
+	() => import('../pages/Sesion/UserProfile/UserProfile')
+);
+const HomeAdministrador = lazy(() => import('../pages/administrador'));
+const Aplicacion = lazy(() => import('../pages/administrador/Aplicacion'));
+const Problemas = lazy(() => import('../pages/administrador/Problemas'));
+const Usuarios = lazy(() => import('../pages/administrador/Usuarios/Usuarios'));
+const HomeReporte = lazy(() => import('../pages/analitica'));
+const ByEstacion = lazy(() => import('../pages/analitica/ByEstacion'));
+const ByRol = lazy(() => import('../pages/analitica/ByRol'));
+const Resumen = lazy(() => import('../pages/analitica/Resumen'));
+const HomeEncargado = lazy(() => import('../pages/encargado'));
+const Citas = lazy(() => import('../pages/encargado/Citas/Citas'));
+const HomeEstudiante = lazy(() => import('../pages/estudiante'));
+const Progress = lazy(() => import('../pages/estudiante/Progress'));
+const Estacion1 = lazy(() => import('../pages/estudiante/Station1'));
+const Estacion2 = lazy(() => import('../pages/estudiante/Station2'));
+const Estacion3 = lazy(() => import('../pages/estudiante/Station3'));
+const Estacion4 = lazy(() => import('../pages/estudiante/Station4'));
+const Estacion5 = lazy(() => import('../pages/estudiante/Station5'));
+const HomeEvaluador = lazy(() => import('../pages/evaluador'));
 
 export const router = createBrowserRouter([
 	{

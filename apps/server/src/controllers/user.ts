@@ -75,9 +75,6 @@ const actualizarItem = async (
 
 const eliminarItem = async ({ query }: Request, res: Response) => {
 	try {
-		console.log('**********');
-		console.log({ query });
-		console.log('**********');
 		const result = await sqlDelete({
 			table: 'usuario',
 			query,

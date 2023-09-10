@@ -16,8 +16,6 @@ const config: S3ClientConfig = {
 	},
 };
 
-console.log('config', config);
-
 export const getExtFile = (name: string): string => {
 	return name.split('.').pop() || '';
 };

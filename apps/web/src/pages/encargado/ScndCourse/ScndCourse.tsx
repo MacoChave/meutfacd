@@ -107,7 +107,6 @@ const ScndCourse: React.FC<ScndCourseProps> = ({}) => {
 	useEffect(() => {
 		if (data) {
 			setUnAssignment(data);
-			console.log(assignment);
 		}
 	}, [data]);
 

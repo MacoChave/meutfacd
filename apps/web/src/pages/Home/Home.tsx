@@ -1,11 +1,14 @@
-import { Box, Typography } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
-import { InfoEstacion } from './components/InfoEstacion';
-import { SesionMenu } from './components/SesionMenu';
 import svgStation1 from '@/assets/svg/estacion1.svg';
 import svgStation2 from '@/assets/svg/estacion2.svg';
 import svgStation4 from '@/assets/svg/estacion4.svg';
 import svgStation5 from '@/assets/svg/estacion5.svg';
+import { Box, Typography } from '@mui/material';
+import { lazy } from 'react';
+import { useNavigate } from 'react-router-dom';
+const InfoEstacion = lazy(
+	() => import('./components/InfoEstacion/InfoEstacion')
+);
+const SesionMenu = lazy(() => import('./components/SesionMenu/SesionMenu'));
 
 const Home = (props: any) => {
 	const navigate = useNavigate();
@@ -29,6 +32,7 @@ const Home = (props: any) => {
 						height: 'auto',
 						objectFit: 'cover',
 					}}
+					loading='lazy'
 				/>
 			</Box>
 			<Box sx={{ textAlign: 'right' }}>

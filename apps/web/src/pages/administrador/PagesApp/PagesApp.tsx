@@ -2,12 +2,12 @@ import { URL } from '@/api/server';
 import { Contenedor, McModal } from '@/components';
 import { McTable } from '@/components/MyTable';
 import { useCustomFetch } from '@/hooks/useFetch';
+import { PageAppType } from '@/models/PageApp';
 import { ResultType } from '@/models/Result';
 import { putData } from '@/services/fetching';
 import React, { useState } from 'react';
 import swal from 'sweetalert';
 import { FormPagesApp } from './FormPagesApp';
-import { PageAppType } from '@/models/PageApp';
 
 export type PagesAppProps = Record<string, never>;
 

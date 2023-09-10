@@ -39,6 +39,7 @@ const InfoEstacion: React.FC<InfoEstacionProps> = ({
 					}}
 					src={img}
 					alt={alt}
+					loading='lazy'
 				/>
 			</Box>
 		</Box>

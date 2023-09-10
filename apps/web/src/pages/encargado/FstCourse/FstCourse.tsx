@@ -107,7 +107,6 @@ const FstCourse: React.FC<FstCourseProps> = ({}) => {
 	useEffect(() => {
 		if (data) {
 			setUnAssignment(data);
-			console.log(assignment);
 		}
 	}, [data]);
 

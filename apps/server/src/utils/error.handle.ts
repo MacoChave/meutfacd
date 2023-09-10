@@ -8,9 +8,9 @@ type errorHttpType = {
 };
 
 const errorHttp = (res: Response, { error, msg, code }: errorHttpType) => {
-	console.log('***** ERROR *****');
+	console.log('********** ERROR **********');
 	console.log({ error, msg, code });
-	console.log('*****************');
+	console.log('***************************');
 
 	if (error?.errno === 1062) {
 		res.status(400).json({ error: 'El registro ya existe' });

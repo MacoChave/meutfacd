@@ -26,7 +26,6 @@ export const getItem = async ({ body, query }: Request, res: Response) => {
 
 export const getItems = async ({ body, query }: Request, res: Response) => {
 	try {
-		console.log({ body, query });
 		const responses = await sqlSelect({
 			...body,
 			query,

@@ -1,5 +1,5 @@
 import { URL } from '@/api/server';
-import derechoLogo from '@/assets/svg/derechoLogo.svg';
+import derechoLogo from '@/assets/svg/logo_derecho_white.svg';
 import { useFetch } from '@/hooks/useFetch';
 import { setLogout } from '@/redux/states';
 import { AccountCircle, Menu, Notifications } from '@mui/icons-material';
@@ -53,6 +53,7 @@ export const ToolbarWithoutSesion = ({ children }: ToolbarProps) => {
 						marginRight: '1em',
 					}}
 					alt='Facultad de Ciencias Jurídicas y Sociales'
+					loading='lazy'
 				/>
 				<Typography
 					variant='h6'

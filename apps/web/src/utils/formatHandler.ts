@@ -107,13 +107,10 @@ export const formatDate = ({
 		timeZone: 'America/Guatemala',
 	});
 
-	console.log('formatDate', date, 'str', str);
-
 	return str;
 };
 
 export const formatToInputDate = (strDate: string) => {
-	console.log(strDate);
 	const sep: boolean = strDate.includes('/');
 	const [day, month, year] = strDate.split(sep ? '/' : '-');
 

@@ -1,12 +1,14 @@
 import { URL } from '@/api/server';
-import { Contenedor } from '@/components';
 import { useCustomFetch } from '@/hooks/useFetch';
 import { style } from '@/themes/styles';
 import { Box, Typography } from '@mui/material';
-import React from 'react';
-import { Asignacion } from './Asignacion';
-import { Gestion } from './Gestion';
-import { DotsLoaders } from '@/components/Loader/DotsLoaders';
+import React, { lazy } from 'react';
+const Asignacion = lazy(() => import('./Asignacion/Asignacion'));
+const Gestion = lazy(() => import('./Gestion/Gestion'));
+const Contenedor = lazy(() => import('@/components/Contenedor/Contenedor'));
+const DotsLoaders = lazy(
+	() => import('@/components/Loader/DotsLoaders/DotsLoaders')
+);
 
 export type CoursesProps = {};
 

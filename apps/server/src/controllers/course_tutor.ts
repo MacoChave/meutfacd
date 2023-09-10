@@ -31,7 +31,6 @@ export const postItem = async ({ body, query }: Request, res: Response) => {
 		});
 		res.status(200).json(result);
 	} catch (error) {
-		console.log(__dirname, error);
 		errorHttp(res, error as any);
 	}
 };

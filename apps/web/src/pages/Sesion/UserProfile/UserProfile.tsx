@@ -41,7 +41,6 @@ export const UserProfile = (): JSX.Element => {
 	};
 
 	const onSubmit: SubmitHandler<UserType> = async (data) => {
-		console.log('Update user', data);
 		const result: ResultType[] = await putData({
 			path: `${URL.USER}`,
 			body: data,

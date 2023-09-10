@@ -50,7 +50,6 @@ const Form: React.FC<FormProps> = ({ onClose }) => {
 	});
 
 	const onSubmit: SubmitHandler<TCourseTutor> = async (data) => {
-		console.log('Send data', data);
 		const result: ResultType = await postData({
 			path: URL.COURSE_TUTOR,
 			body: {
@@ -63,7 +62,7 @@ const Form: React.FC<FormProps> = ({ onClose }) => {
 				id_jornada: data['id_jornada'],
 			},
 		});
-		console.log('Result', result);
+
 		if (result.affectedRows > 0) {
 			reset();
 			setHorario({} as ScheduleType);
