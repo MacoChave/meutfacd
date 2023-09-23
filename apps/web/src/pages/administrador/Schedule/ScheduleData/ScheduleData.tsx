@@ -2,12 +2,12 @@ import { URL } from '@/api/server';
 import { DotsLoaders } from '@/components/Loader/DotsLoaders';
 import { McTable } from '@/components/MyTable';
 import { useCustomFetch } from '@/hooks/useFetch';
-import { Box, Typography } from '@mui/material';
-import React from 'react';
-import { FormSchedule } from '../FormSchedule';
 import { ResultType } from '@/models/Result';
 import { deleteData } from '@/services/fetching';
+import { Box, Typography } from '@mui/material';
+import React from 'react';
 import swal from 'sweetalert';
+import { FormSchedule } from '../FormSchedule';
 
 export type ScheduleDataProps = {};
 

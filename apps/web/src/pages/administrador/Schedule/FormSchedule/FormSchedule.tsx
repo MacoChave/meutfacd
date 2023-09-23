@@ -8,7 +8,8 @@ import { ResultType } from '@/models/Result';
 import { ScheduleDefault, ScheduleSchema, TSchedule } from '@/models/Schedule';
 import { postData } from '@/services/fetching';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Box, Button, Typography } from '@mui/material';
+import { Refresh } from '@mui/icons-material';
+import { Box, Button, IconButton, Typography } from '@mui/material';
 import React from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import swal from 'sweetalert';
@@ -29,7 +30,7 @@ const FormSchedule: React.FC<FormScheduleProps> = ({ onClose }) => {
 		resolver: yupResolver(ScheduleSchema),
 	});
 
-	const { data, isLoading, isError } = useCustomFetch({
+	const { data, isLoading, isError, refetch } = useCustomFetch({
 		url: `${URL.PERIOD}/all`,
 		method: 'post',
 	});
@@ -67,6 +68,12 @@ const FormSchedule: React.FC<FormScheduleProps> = ({ onClose }) => {
 				alignItems: 'center',
 				gap: 2,
 			}}>
+			<Typography variant='body1' component={'h2'} gutterBottom>
+				Recargar jornadas
+				<IconButton color='secondary' onClick={() => refetch()}>
+					<Refresh />
+				</IconButton>
+			</Typography>
 			<McAutocomplete
 				control={control as any}
 				name='id_jornada'
