@@ -1,13 +1,13 @@
 import { URL } from '@/api/server';
 import { McAutocomplete } from '@/components/McWithoutForms/McAutocomplete';
 import { useCustomFetch } from '@/hooks/useFetch';
-import { PeriodType } from '@/models/Period';
+import { TPeriod } from '@/models/Period';
 import { Typography } from '@mui/material';
 import React from 'react';
 
 export type PickJornadaProps = {
-	jornada: PeriodType;
-	setJornada: (jornada: PeriodType) => void;
+	jornada: TPeriod;
+	setJornada: (jornada: TPeriod) => void;
 };
 
 const PickJornada: React.FC<PickJornadaProps> = ({ jornada, setJornada }) => {

@@ -1,7 +1,8 @@
 import { URL } from '@/api/server';
 import { Contenedor, FileChooser } from '@/components';
+import { DotsLoaders } from '@/components/Loader/DotsLoaders';
 import { SpinLoader } from '@/components/Loader/SpinLoader';
-import { APROBADO, ESPERA, REVISION } from '@/consts/vars';
+import { APROBADO, REVISION } from '@/consts/vars';
 import { useCustomFetch } from '@/hooks/useFetch';
 import { UploadFile } from '@/interfaces/UploadFile';
 import { Draft, draftDefault, draftSchema } from '@/models/Draft';
@@ -142,7 +143,7 @@ const Dictamen: React.FC<DictamenProps> = ({}) => {
 		}
 	}, [revision]);
 
-	if (isLoading) return <SpinLoader />;
+	if (isLoading) return <DotsLoaders />;
 	if (isError)
 		return <Typography>No se pudo cargar la revisión...</Typography>;
 	return (

@@ -4,10 +4,10 @@ import { DotsLoaders } from '@/components/Loader/DotsLoaders';
 import { ESPERA, REVISION } from '@/consts/vars';
 import { useCustomFetch } from '@/hooks/useFetch';
 import { TCourseTutor } from '@/models/CourseTutor';
-import { PeriodType } from '@/models/Period';
+import { TPeriod } from '@/models/Period';
 import { ReviewType } from '@/models/Review';
-import { ScheduleType } from '@/models/Schedule';
-import { postData, putData } from '@/services/fetching';
+import { TSchedule } from '@/models/Schedule';
+import { putData } from '@/services/fetching';
 import { style } from '@/themes/styles';
 import { SwitchLeft } from '@mui/icons-material';
 import {
@@ -29,8 +29,8 @@ import { PickJornada } from '../components/PickJornada';
 export type FstCourseProps = Record<string, never>;
 
 const FstCourse: React.FC<FstCourseProps> = ({}) => {
-	const [jornada, setJornada] = useState<PeriodType>({} as PeriodType);
-	const [horario, setHorario] = useState<ScheduleType>({} as ScheduleType);
+	const [jornada, setJornada] = useState<TPeriod>({} as TPeriod);
+	const [horario, setHorario] = useState<TSchedule>({} as TSchedule);
 	const [courseTutor, setCourseTutor] = useState<TCourseTutor>(
 		{} as TCourseTutor
 	);
@@ -133,7 +133,7 @@ const FstCourse: React.FC<FstCourseProps> = ({}) => {
 						<PickHorario
 							horario={horario}
 							setHorario={setHorario}
-							id_jornada={jornada.id_jornada}
+							id_jornada={jornada?.id_jornada ?? 0}
 						/>
 					</Box>
 					<Box

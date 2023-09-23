@@ -6,7 +6,7 @@ import { SnackbarProvider } from 'notistack';
 import { Suspense } from 'react';
 import { Provider } from 'react-redux';
 import { RouterProvider } from 'react-router-dom';
-import { SpinLoader } from './components/Loader/SpinLoader';
+import { DotsLoaders } from './components/Loader/DotsLoaders';
 import queryClient from './queryClient';
 import store from './redux/store';
 import { router } from './routes/Router';
@@ -44,7 +44,7 @@ function App() {
 										<Typography variant='h4' align='center'>
 											Espere un momento
 										</Typography>
-										<SpinLoader />
+										<DotsLoaders />
 									</Box>
 								}>
 								<RouterProvider

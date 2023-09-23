@@ -1,11 +1,19 @@
 import { Router } from 'express';
+import { requireAuth } from '../middlewares/requireAuth';
+import {
+	createItem,
+	deleteItem,
+	getItem,
+	getItems,
+	updateItem,
+} from '../controllers/period';
 
 const router = Router();
 
-router.get('', (req, res) => {});
-router.get('/all', (req, res) => {});
-router.post('', (req, res) => {});
-router.put('', (req, res) => {});
-router.delete('', (req, res) => {});
+router.post('/one', requireAuth, getItem);
+router.post('/all', requireAuth, getItems);
+router.post('', requireAuth, createItem);
+router.put('', requireAuth, updateItem);
+router.delete('', requireAuth, deleteItem);
 
 export { router };

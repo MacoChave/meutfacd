@@ -1,9 +1,9 @@
-import { Box, Toolbar } from '@mui/material';
+import { URL } from '@/api/server';
+import { DotsLoaders } from '@/components/Loader/DotsLoaders';
+import { useFetch } from '@/hooks/useFetch';
+import { Box, Toolbar, Typography } from '@mui/material';
 import { Outlet } from 'react-router-dom';
 import Dashboard from '../../layouts/Dashboard';
-import { useFetch } from '@/hooks/useFetch';
-import { URL } from '@/api/server';
-import { Loader } from '@/components';
 
 const HomeEstudiante = () => {
 	const {
@@ -15,8 +15,9 @@ const HomeEstudiante = () => {
 		params: {},
 	});
 
-	if (isLoading) return <Loader />;
-	if (isError) return <div>Error</div>;
+	if (isLoading) return <DotsLoaders />;
+	if (isError)
+		return <Typography>No se pudieron cargar los permisos</Typography>;
 
 	return (
 		<Dashboard>

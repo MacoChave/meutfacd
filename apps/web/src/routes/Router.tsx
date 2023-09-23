@@ -35,6 +35,7 @@ const UserProfile = lazy(
 const HomeAdministrador = lazy(() => import('../pages/administrador'));
 const Aplicacion = lazy(() => import('../pages/administrador/Aplicacion'));
 const Problemas = lazy(() => import('../pages/administrador/Problemas'));
+const Schedule = lazy(() => import('@/pages/administrador/Schedule/Schedule'));
 const Usuarios = lazy(() => import('../pages/administrador/Usuarios/Usuarios'));
 const HomeReporte = lazy(() => import('../pages/analitica'));
 const ByEstacion = lazy(() => import('../pages/analitica/ByEstacion'));
@@ -333,6 +334,14 @@ export const router = createBrowserRouter([
 				element: (
 					<ProtectedRoute rol='administrador'>
 						<Courses />
+					</ProtectedRoute>
+				),
+			},
+			{
+				path: 'horarios',
+				element: (
+					<ProtectedRoute rol='administrador'>
+						<Schedule />
 					</ProtectedRoute>
 				),
 			},

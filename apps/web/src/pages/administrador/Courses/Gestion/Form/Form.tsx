@@ -9,9 +9,9 @@ import {
 	courseTutorSchema,
 } from '@/models/CourseTutor';
 import { UserType } from '@/models/Perfil';
-import { PeriodType } from '@/models/Period';
+import { TPeriod } from '@/models/Period';
 import { ResultType } from '@/models/Result';
-import { ScheduleType } from '@/models/Schedule';
+import { TSchedule } from '@/models/Schedule';
 import { PickEvaluador } from '@/pages/encargado/components/PickEvaluador';
 import { PickHorario } from '@/pages/encargado/components/PickHorario';
 import { PickJornada } from '@/pages/encargado/components/PickJornada';
@@ -29,8 +29,8 @@ export type FormProps = {
 };
 
 const Form: React.FC<FormProps> = ({ onClose }) => {
-	const [jornada, setJornada] = useState({} as PeriodType);
-	const [horario, setHorario] = useState({} as ScheduleType);
+	const [jornada, setJornada] = useState({} as TPeriod);
+	const [horario, setHorario] = useState({} as TSchedule);
 	const [professor, setProfessor] = useState({} as UserType);
 	const [days, setDays] = React.useState<string[]>([]);
 
@@ -65,8 +65,8 @@ const Form: React.FC<FormProps> = ({ onClose }) => {
 
 		if (result.affectedRows > 0) {
 			reset();
-			setHorario({} as ScheduleType);
-			setJornada({} as PeriodType);
+			setHorario({} as TSchedule);
+			setJornada({} as TPeriod);
 			setProfessor({} as UserType);
 			setDays([]);
 			swal('¡Listo!', 'El curso se ha asignado correctamente', 'success');
@@ -119,14 +119,14 @@ const Form: React.FC<FormProps> = ({ onClose }) => {
 					/>
 					<PickJornada
 						jornada={jornada}
-						setJornada={(jornada: PeriodType) => {
-							setValue('id_jornada', jornada.id_jornada);
+						setJornada={(jornada: TPeriod) => {
+							setValue('id_jornada', jornada?.id_jornada ?? 0);
 							setJornada(jornada);
 						}}
 					/>
 					<PickHorario
 						horario={horario}
-						setHorario={(horario: ScheduleType) => {
+						setHorario={(horario: TSchedule) => {
 							setValue('id_horario', horario.id_horario);
 							setHorario(horario);
 						}}
