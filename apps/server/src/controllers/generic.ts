@@ -24,11 +24,14 @@ export const getItem = async ({ body, query }: Request, res: Response) => {
 	}
 };
 
-export const getItems = async ({ body, query }: Request, res: Response) => {
+export const getItems = async (
+	{ body, query, params }: Request,
+	res: Response
+) => {
 	try {
 		const responses = await sqlSelect({
 			...body,
-			...query,
+			query,
 		});
 		res.status(200).json(responses);
 	} catch (error: any) {
