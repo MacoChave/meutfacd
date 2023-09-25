@@ -4,6 +4,7 @@ export const URL = {
 		LOGIN: '/api/auth/login',
 		LOGUP: '/api/auth/logup',
 		PROFILE: '/api/auth/profile',
+		VERIFY: '/api/auth/verified-email',
 	},
 	COURSE: {
 		_: '/api/course',

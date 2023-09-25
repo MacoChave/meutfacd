@@ -3,6 +3,9 @@ import { createBrowserRouter } from 'react-router-dom';
 const ErrorPage = lazy(() => import('@/pages/ErrorPage/ErrorPage'));
 const Login = lazy(() => import('@/pages/Sesion/Login/Login'));
 const Logup = lazy(() => import('@/pages/Sesion/Logup/Logup'));
+const VerifiedEmail = lazy(
+	() => import('@/pages/Sesion/VerifiedEmail/VerifiedEmail')
+);
 const UserRecovery = lazy(
 	() => import('@/pages/Sesion/UserRecovery/UserRecovery')
 );
@@ -70,6 +73,10 @@ export const router = createBrowserRouter([
 	{
 		path: '/logup/:rol',
 		element: <Logup />,
+	},
+	{
+		path: '/verify-email/:email',
+		element: <VerifiedEmail />,
 	},
 	{
 		path: '/recovery/:rol',

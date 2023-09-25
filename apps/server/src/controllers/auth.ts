@@ -1,8 +1,9 @@
 import { Request, Response } from 'express';
-import { sqlEjecutar, sqlSelectOne } from '../db/consultas';
+import { sqlEjecutar, sqlSelectOne, sqlUpdate } from '../db/consultas';
 import { TSignIn } from '../models/signIn';
 import { errorHttp } from '../utils/error.handle';
 import { comparePassword, encryptPassword, generarToken } from '../utils/token';
+import { getBodyFromVerification, sendEmail } from '../utils/email';
 
 const signIn = async ({ user, password }: TSignIn) => {
 	try {
@@ -34,6 +35,23 @@ const signIn = async ({ user, password }: TSignIn) => {
 		return { token, name: userData.nombre, roles: userData.roles };
 	} catch (error) {
 		throw error;
+	}
+};
+
+export const verifyEmail = async ({ query }: Request, res: Response) => {
+	try {
+		const response = await sqlUpdate({
+			table: 'usuario',
+			datos: { estado: 'A' },
+			query: { correo: atob(query.email as string) },
+		});
+
+		return res.status(200).json(response);
+	} catch (error: any) {
+		errorHttp(res, {
+			error,
+			msg: 'Error al verificar el correo electrónico',
+		});
 	}
 };
 
@@ -103,6 +121,17 @@ export const logupHandler = async ({ body, query }: Request, res: Response) => {
 		if (error_code && error_code !== 0) {
 			throw new Error(error_message);
 		}
+
+		// SEND EMAIL VERIFICATION TO USER
+		const emailData = await sendEmail({
+			to: correo,
+			plainText: 'Por favor, verifica tu correo electrónico',
+			subject: 'Verificación de correo electrónico',
+			content: getBodyFromVerification({
+				username: nombre,
+				email: correo,
+			}),
+		});
 
 		res.status(200).json({ msg: 'Usuario creado' });
 	} catch (error: any) {
