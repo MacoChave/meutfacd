@@ -48,8 +48,8 @@ const Estacion1 = () => {
 				'tutor',
 				'ruta_perfil',
 			],
-			order: {
-				fecha_revision: 'DESC',
+			sort: {
+				fecha: 'DESC',
 			},
 			limit: 1,
 		},
@@ -99,7 +99,7 @@ const Estacion1 = () => {
 
 	const onSubmit: SubmitHandler<Draft> = async (draft) => {
 		try {
-			if (revision.estado === PREVIA || revision.estado === ESPERA) {
+			if (revision.estado === ESPERA || revision.estado === PREVIA) {
 				await putData({
 					path: URL.THESIS,
 					body: {

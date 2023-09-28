@@ -32,6 +32,13 @@ const ReviewDoc: React.FC<ReviewDocProps> = ({ curReview, onClose }) => {
 		});
 		if (result.affectedRows) {
 			swal('Éxito', 'Se rechazó el documento', 'success');
+			await postData({
+				path: URL.MESSAGING,
+				body: {
+					id_receptor: curReview.tutor,
+					mensaje: `El documento ${curReview.titulo} fue rechazado por el evaluador`,
+				},
+			});
 			onClose();
 		} else {
 			swal('Error', 'Ocurrió un error al rechazar el documento', 'error');
@@ -47,13 +54,26 @@ const ReviewDoc: React.FC<ReviewDocProps> = ({ curReview, onClose }) => {
 			);
 			return;
 		}
+
 		const result: ResultType = await putData({
 			path: `${URL.REVIEW}`,
 			body: { estado: PREVIA, detalle: comment },
 			params: { id_revision: curReview.id_revision },
 		});
+
 		if (result.affectedRows) {
 			swal('Éxito', 'Se envió a previa el documento', 'success');
+
+			Promise.all([
+				await postData<ResultType>({
+					path: URL.MESSAGING,
+					body: {
+						id_emisor: curReview.id_tutor,
+						id_receptor: curReview.id_usuario,
+						mensaje: `Su punto de tesis ${curReview.titulo} fue enviado a previa por el evaluador ${curReview.tutor}`,
+					},
+				}),
+			]);
 			onClose();
 		} else {
 			swal('Error', 'No se pudo enviar a previa el documento', 'error');
@@ -75,6 +95,14 @@ const ReviewDoc: React.FC<ReviewDocProps> = ({ curReview, onClose }) => {
 					estado: ESPERA,
 				},
 			}),
+			await postData<ResultType>({
+				path: URL.MESSAGING,
+				body: {
+					id_emisor: curReview.id_tutor,
+					id_receptor: curReview.id_usuario,
+					mensaje: `Su punto de tesis ${curReview.titulo} fue aprobado por el evaluador ${curReview.tutor}`,
+				},
+			}),
 		])
 			.then(([result1, result2]) => {
 				if (result1.affectedRows && result2.affectedRows) {
@@ -83,8 +111,14 @@ const ReviewDoc: React.FC<ReviewDocProps> = ({ curReview, onClose }) => {
 						'Se registró el avance a la siguiente fase del estudiante',
 						'success'
 					);
-				} else {
+				} else if (result1.warningStatus > 0) {
 					swal('Error', 'No se pudo aprobar el documento', 'error');
+				} else if (result2.warningStatus > 0) {
+					swal(
+						'Error',
+						'No se pudo crear el registro para avanzar a la siguiente etapa',
+						'error'
+					);
 				}
 				onClose();
 			})
@@ -132,6 +166,7 @@ const ReviewDoc: React.FC<ReviewDocProps> = ({ curReview, onClose }) => {
 						display: 'flex',
 						flexDirection: 'column',
 						justifyContent: 'space-between',
+						gap: 2,
 					}}>
 					<Button variant='contained' onClick={onReject}>
 						Rechazar

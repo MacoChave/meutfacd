@@ -7,6 +7,7 @@ import React, { useState } from 'react';
 import { ReviewDoc } from '../components/ReviewDoc';
 import { DotsLoaders } from '@/components/Loader/DotsLoaders';
 import { Typography } from '@mui/material';
+import { ReviewType } from '@/models/Review';
 
 export type DraftProfessorProps = Record<string, never>;
 

@@ -1,3 +1,4 @@
+import { ESTACIONES } from '@/consts/vars';
 import {
 	formatByDataType,
 	getAlignByDataType,
@@ -44,6 +45,8 @@ export const getValue = (key: string, cellValue: any): React.ReactNode => {
 				label={getChipLabel(cellValue)}
 			/>
 		);
+	} else if (key === 'estacion') {
+		return <>{ESTACIONES[cellValue - 1]}</>;
 	} else {
 		const text = formatByDataType({ [key]: cellValue });
 		return <>{text}</>;

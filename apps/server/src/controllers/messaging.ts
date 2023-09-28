@@ -32,11 +32,13 @@ export const getItems = async ({ query, user }: Request, res: Response) => {
 	}
 };
 
-export const postItem = async ({ body }: Request, res: Response) => {
+export const postItem = async ({ body, user }: Request, res: Response) => {
 	try {
 		const response = await sqlInsert({
 			table: 'ut_notificacion',
-			datos: body,
+			datos: {
+				...body,
+			},
 		});
 		res.status(200).json(response);
 	} catch (error) {

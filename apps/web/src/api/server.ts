@@ -13,6 +13,7 @@ export const URL = {
 	COURSE_TUTOR: '/api/course_tutor',
 	GENERIC: '/api/generic',
 	MESSAGING: '/api/messaging',
+	MAILING: '/api/mailing',
 	PERIOD: '/api/period',
 	PERMISSION: '/api/permission',
 	PROFESOR: '/api/profesor',
