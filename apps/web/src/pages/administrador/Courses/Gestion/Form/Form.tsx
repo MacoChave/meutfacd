@@ -127,7 +127,7 @@ const Form: React.FC<FormProps> = ({ onClose }) => {
 					<PickHorario
 						horario={horario}
 						setHorario={(horario: TSchedule) => {
-							setValue('id_horario', horario.id_horario);
+							setValue('id_horario', horario.id_horario ?? 0);
 							setHorario(horario);
 						}}
 						id_jornada={jornada.id_jornada ?? 0}
