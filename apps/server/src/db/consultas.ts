@@ -15,6 +15,7 @@ type sqlSelectType = {
 	limit?: number;
 	offset?: number;
 	conditions?: conditionsType[];
+	condInclusives?: boolean;
 	q?: any;
 	pageNumber?: number;
 	pageSize?: number;
@@ -79,14 +80,22 @@ const getSetClause = (datos: Object) => {
 		.join(', ');
 	return [str, values];
 };
-const getConditionsWhere = (conditions: conditionsType[]) => {
+const getConditionsWhere = (
+	conditions: conditionsType[],
+	includes: boolean = false
+) => {
 	const values: any[] = [];
 	const where = conditions
 		.map((cond) => {
-			values.push(cond.value);
-			return `${cond.column} ${cond.operator} ?`;
+			if (cond.operator === 'JSON_CONTAINS') {
+				values.push(`[${cond.value}]`);
+				return `JSON_CONTAINS(${cond.column}, ?)`;
+			} else {
+				values.push(cond.value);
+				return `${cond.column} ${cond.operator} ?`;
+			}
 		})
-		.join(' OR ');
+		.join(includes ? ' AND ' : ' OR ');
 	return [where, values];
 };
 
@@ -108,6 +117,7 @@ export const sqlSelect = async ({
 	limit = NaN,
 	offset = NaN,
 	conditions = [],
+	condInclusives = false,
 	q = NaN,
 	pageNumber = NaN,
 	pageSize = NaN,
@@ -140,7 +150,10 @@ export const sqlSelect = async ({
 	FROM ${strTableName}`;
 
 	if (conditions.length > 0) {
-		const [strConditions, valsConditions] = getConditionsWhere(conditions);
+		const [strConditions, valsConditions] = getConditionsWhere(
+			conditions,
+			condInclusives
+		);
 		filters.push(`(${strConditions})`);
 		values.push(...valsConditions);
 	}
@@ -190,6 +203,8 @@ export const sqlSelectOne = async ({
 	columns = [],
 	query = {},
 	sort = {},
+	conditions = [],
+	condInclusives = false,
 }: sqlSelectType) => {
 	const results: any = await sqlSelect({
 		table,
@@ -198,6 +213,8 @@ export const sqlSelectOne = async ({
 		sort,
 		limit: 1,
 		offset: 0,
+		conditions,
+		condInclusives,
 	});
 	return results[0];
 };
