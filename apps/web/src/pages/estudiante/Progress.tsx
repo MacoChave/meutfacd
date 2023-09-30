@@ -7,6 +7,13 @@ import { Typography } from '@mui/material';
 import { useState } from 'react';
 import Dialogo from '../../components/Modal';
 import { DotsLoaders } from '@/components/Loader/DotsLoaders';
+import { setLoading } from '@/redux/states';
+import { errorHandler } from '@/utils/errorHandler';
+import { AxiosError } from 'axios';
+import { postData } from '@/services/fetching';
+import { downloadFileByBloodPart } from '@/utils/fileManagment';
+import { APROBADO } from '@/consts/vars';
+import swal from 'sweetalert';
 
 const Progress = () => {
 	const [open, setOpen] = useState(false);
@@ -38,6 +45,34 @@ const Progress = () => {
 		setRow(row);
 	};
 
+	const handlePrint = async (row: Object) => {
+		if ((row as ProgressType).estado !== APROBADO) {
+			swal('Error', 'No se puede generar el dictamen', 'error');
+			return;
+		}
+		try {
+			const data = await postData<any>({
+				path: `${URL.PDF}/dictamen`,
+				body: {
+					nameEmisor: `Encargado de estación ${
+						(row as ProgressType).estacion
+					}`,
+					nameReceiver: `${(row as ProgressType).id_estudiante}`,
+					thesisTitle: `${(row as ProgressType).titulo}`,
+					station: `${(row as ProgressType).estacion}`,
+				},
+				responseType: 'arraybuffer',
+				headers: {
+					Accept: 'application/pdf',
+				},
+			});
+			downloadFileByBloodPart(data, 'dictamen.pdf');
+		} catch (error) {
+			errorHandler(error as AxiosError);
+		} finally {
+		}
+	};
+
 	if (isLoading) return <DotsLoaders />;
 	if (isError) return <Typography>Error al cargar los datos</Typography>;
 
@@ -56,6 +91,7 @@ const Progress = () => {
 					}}
 					rows={data || []}
 					totalCols={{}}
+					onPrint={handlePrint}
 				/>
 			</Contenedor>
 			<Dialogo open={open} title='Observaciones' setOpen={setOpen}>

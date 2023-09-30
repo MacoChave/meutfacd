@@ -6,6 +6,7 @@ type axiosProps = {
 	body?: any;
 	params?: TypeWithKey<any>;
 	headers?: TypeWithKey<string>;
+	responseType?: string;
 };
 
 // GET DATA
@@ -33,8 +34,10 @@ export async function postData<T>({
 	headers = {
 		'Content-Type': 'application/json',
 	},
+	responseType = 'json',
 }: axiosProps): Promise<T> {
 	const { data } = await axios.post(path, body, {
+		responseType: responseType,
 		headers: {
 			...headers,
 		},
