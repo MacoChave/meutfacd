@@ -33,7 +33,7 @@ const ReviewDoc: React.FC<ReviewDocProps> = ({ curReview, onClose }) => {
 		if (result.affectedRows) {
 			swal('Éxito', 'Se rechazó el documento', 'success');
 			await postData({
-				path: URL.MESSAGING,
+				path: URL.NOTIFICATION,
 				body: {
 					id_receptor: curReview.tutor,
 					mensaje: `El documento ${curReview.titulo} fue rechazado por el evaluador`,
@@ -66,7 +66,7 @@ const ReviewDoc: React.FC<ReviewDocProps> = ({ curReview, onClose }) => {
 
 			Promise.all([
 				await postData<ResultType>({
-					path: URL.MESSAGING,
+					path: URL.NOTIFICATION,
 					body: {
 						id_emisor: curReview.id_tutor,
 						id_receptor: curReview.id_usuario,
@@ -96,7 +96,7 @@ const ReviewDoc: React.FC<ReviewDocProps> = ({ curReview, onClose }) => {
 				},
 			}),
 			await postData<ResultType>({
-				path: URL.MESSAGING,
+				path: URL.NOTIFICATION,
 				body: {
 					id_emisor: curReview.id_tutor,
 					id_receptor: curReview.id_usuario,

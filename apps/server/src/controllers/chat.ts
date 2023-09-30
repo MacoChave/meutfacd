@@ -1,24 +1,49 @@
 import { Request, Response } from 'express';
+import {
+	sqlEjecutar,
+	sqlInsert,
+	sqlSelect,
+	sqlSelectOne,
+} from '../db/consultas';
 import { errorHttp } from '../utils/error.handle';
-import { sqlInsert, sqlSelect, sqlSelectOne } from '../db/consultas';
+import { SQL_OPERATORS } from '../utils/consts';
 
 // CREATE CHAT
-export const createChat = async ({ body, user }: Request, res: Response) => {
+export const createChat = async ({ query, user }: Request, res: Response) => {
+	console.log({ query, user });
 	try {
-		const chat = await sqlInsert({
+		const chats: any = await sqlSelectOne({
+			table: 'ut_v_chat',
+			conditions: [
+				{
+					column: 'miembros',
+					operator: SQL_OPERATORS.JSON_CONTAINS,
+					value: query.user_id,
+				},
+				{
+					column: 'miembros',
+					operator: SQL_OPERATORS.JSON_CONTAINS,
+					value: user.primaryKey,
+				},
+			],
+			condInclusives: true,
+		});
+		if (chats.length > 0) {
+			throw new Error('Ya existe un chat con ese usuario');
+		}
+		const newChat = await sqlInsert({
 			table: 'ut_chat',
 			datos: {
-				miembros: JSON.stringify([...body.miembros, user.primaryKey]),
+				miembros: JSON.stringify([
+					Number(query.receptor),
+					Number(user.primaryKey),
+				]),
 			},
 		});
-		res.status(200).json(chat);
+		res.status(200).json(newChat);
 	} catch (error: any) {
 		console.log({ error });
-		errorHttp(res, {
-			error,
-			msg: 'No se puede crear el chat',
-			code: 500,
-		});
+		errorHttp(res, error);
 	}
 };
 
@@ -26,52 +51,42 @@ export const createChat = async ({ body, user }: Request, res: Response) => {
 export const findUserChats = async ({ user }: Request, res: Response) => {
 	try {
 		const chats = await sqlSelect({
-			table: 'ut_chat',
+			table: 'ut_v_chat',
 			conditions: [
 				{
 					column: 'miembros',
-					operator: 'JSON_CONTAINS',
+					operator: SQL_OPERATORS.JSON_CONTAINS,
 					value: user.primaryKey,
 				},
 			],
 		});
 		res.status(200).json(chats);
 	} catch (error: any) {
-		errorHttp(res, {
-			error,
-			msg: 'No se puede obtener los chats',
-			code: 500,
-		});
+		errorHttp(res, error);
 	}
 };
 
 // FIND CHAT
 export const findChat = async ({ query, user }: Request, res: Response) => {
 	try {
-		const chat = await sqlSelectOne({
-			table: 'ut_chat',
+		const chats: any = await sqlSelect({
+			table: 'ut_v_chat',
 			conditions: [
 				{
 					column: 'miembros',
-					operator: 'JSON_CONTAINS',
-					value: query.user_id,
+					operator: SQL_OPERATORS.JSON_CONTAINS,
+					value: user.primaryKey,
 				},
 				{
 					column: 'miembros',
-					operator: 'JSON_CONTAINS',
-					value: user.primaryKey,
+					operator: SQL_OPERATORS.JSON_CONTAINS,
+					value: query.user_id,
 				},
 			],
-			condInclusives: true,
 		});
-		res.status(200).json(chat);
+		console.log({ chats });
+		res.status(200).json(chats[0]);
 	} catch (error: any) {
-		errorHttp(res, {
-			error,
-			msg: 'No se puede obtener los chats',
-			code: 500,
-		});
+		errorHttp(res, error);
 	}
 };
-
-// GET USER CHATS

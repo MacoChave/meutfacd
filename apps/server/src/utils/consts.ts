@@ -1,4 +1,4 @@
-const SQL_OPERATORS = {
+export const SQL_OPERATORS = {
 	EQ: '=',
 	NE: '!=',
 	GT: '>',

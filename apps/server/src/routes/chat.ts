@@ -6,6 +6,6 @@ const router = Router();
 
 router.get('/', requireAuth, findUserChats);
 router.get('/exact', requireAuth, findChat);
-router.post('/create', requireAuth, createChat);
+router.post('/', requireAuth, createChat);
 
 export { router };

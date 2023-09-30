@@ -86,7 +86,7 @@ export const ToolbarWithSesion = () => {
 		isError: isErrorMessages,
 		refetch: refetchMessages,
 	} = useFetch({
-		url: `${URL.MESSAGING}/all`,
+		url: `${URL.NOTIFICATION}/all`,
 		params: { activo: 1 },
 	});
 
@@ -119,7 +119,7 @@ export const ToolbarWithSesion = () => {
 				variant: 'info',
 				onClose: async () => {
 					await putData({
-						path: URL.MESSAGING,
+						path: URL.NOTIFICATION,
 						body: { activo: 0 },
 						params: { id_notificacion: message.id_notificacion },
 					});
