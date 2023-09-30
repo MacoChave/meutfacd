@@ -1,8 +1,13 @@
 import { URL } from '@/api/server';
 import derechoLogo from '@/assets/svg/logo_derecho_white.svg';
-import { useFetch } from '@/hooks/useFetch';
+import { useCustomFetch, useFetch } from '@/hooks/useFetch';
 import { setLogout } from '@/redux/states';
-import { AccountCircle, Menu, Notifications } from '@mui/icons-material';
+import {
+	AccountCircle,
+	Menu,
+	Message,
+	Notifications,
+} from '@mui/icons-material';
 import {
 	AppBar,
 	Badge,
@@ -75,9 +80,24 @@ export const ToolbarWithSesion = () => {
 	const dispatch = useDispatch();
 	const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
-	const { data, isLoading, isError, refetch } = useFetch({
+	const {
+		data: messages,
+		isLoading: isLoadMessages,
+		isError: isErrorMessages,
+		refetch: refetchMessages,
+	} = useFetch({
 		url: `${URL.MESSAGING}/all`,
 		params: { activo: 1 },
+	});
+
+	// GET MESSAGES
+	const {
+		data: chats,
+		isLoading: isLoadChats,
+		isError: isErrorChats,
+	} = useCustomFetch({
+		url: `${URL.CHAT}`,
+		method: 'get',
 	});
 
 	const handleLogout = (_: MouseEvent) => {
@@ -89,8 +109,12 @@ export const ToolbarWithSesion = () => {
 		navigate('perfil');
 	};
 
+	const handleChat = (_: MouseEvent) => {
+		navigate('chat');
+	};
+
 	const openMessages = () => {
-		data.forEach((message: NotificationType) => {
+		messages.forEach((message: NotificationType) => {
 			enqueueSnackbar(message.mensaje, {
 				variant: 'info',
 				onClose: async () => {
@@ -99,21 +123,27 @@ export const ToolbarWithSesion = () => {
 						body: { activo: 0 },
 						params: { id_notificacion: message.id_notificacion },
 					});
-					refetch();
+					refetchMessages();
 					closeSnackbar();
 				},
+				autoHideDuration: 5000,
 			});
 		});
 	};
 
-	if (isLoading) return <DotsLoaders />;
-	if (isError) return <Typography>Error</Typography>;
+	if (isLoadMessages) return <DotsLoaders />;
+	if (isErrorMessages) return <Typography>Error</Typography>;
 
 	return (
 		<>
 			<ToolbarWithoutSesion>
+				<IconButton color='inherit' onClick={handleChat}>
+					<Badge badgeContent={chats?.length ?? 0} color='info'>
+						<Message />
+					</Badge>
+				</IconButton>
 				<IconButton color='inherit' onClick={openMessages}>
-					<Badge badgeContent={data?.length ?? 0} color='info'>
+					<Badge badgeContent={messages?.length ?? 0} color='info'>
 						<Notifications />
 					</Badge>
 				</IconButton>
