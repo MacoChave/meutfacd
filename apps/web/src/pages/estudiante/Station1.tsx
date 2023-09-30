@@ -184,12 +184,14 @@ const Estacion1 = () => {
 							<Typography>
 								Docente revisor:{' '}
 								{revision?.tutor || 'Sin asignación'}
-								<IconButton
-									color='info'
-									title='Crear chat'
-									onClick={createChat}>
-									<Chat />
-								</IconButton>
+								{revision?.id_tutor && (
+									<IconButton
+										color='info'
+										title='Crear chat'
+										onClick={createChat}>
+										<Chat />
+									</IconButton>
+								)}
 							</Typography>
 							<Typography>
 								{revision?.detalle ??

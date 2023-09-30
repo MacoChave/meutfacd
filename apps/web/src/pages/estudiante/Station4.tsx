@@ -10,7 +10,7 @@ import { style } from '@/themes/styles';
 import { errorHandler } from '@/utils/errorHandler';
 import { getChipColor, getChipLabel } from '@/utils/formatHandler';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { OpenInBrowser } from '@mui/icons-material';
+import { Chat, OpenInBrowser } from '@mui/icons-material';
 import {
 	Box,
 	Button,
@@ -25,6 +25,7 @@ import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import swal from 'sweetalert';
 import FileChooser from '../../components/controles/FileChooser';
 import { DotsLoaders } from '@/components/Loader/DotsLoaders';
+import { ReviewType } from '@/models/Review';
 
 const Estacion4 = () => {
 	const [isUploading, setIsUploading] = useState(false);
@@ -47,6 +48,7 @@ const Estacion4 = () => {
 				'estado',
 				'tutor',
 				'ruta_perfil',
+				'id_tutor',
 			],
 			order: {
 				fecha_revision: 'DESC',
@@ -138,6 +140,14 @@ const Estacion4 = () => {
 		window.open(url);
 	};
 
+	const createChat = async () => {
+		const data = await postData({
+			path: URL.CHAT,
+			params: { receptor: (revision as ReviewType).id_tutor },
+		});
+		console.log(data);
+	};
+
 	useEffect(() => {
 		if (revision) {
 			setValue('titulo', revision.titulo);
@@ -173,6 +183,14 @@ const Estacion4 = () => {
 							<Typography>
 								Docente revisor:{' '}
 								{revision?.tutor || 'Sin asignación'}
+								{revision?.id_tutor && (
+									<IconButton
+										color='info'
+										title='Crear chat'
+										onClick={createChat}>
+										<Chat />
+									</IconButton>
+								)}
 							</Typography>
 							<Typography>
 								{revision?.detalle ??
