@@ -5,13 +5,6 @@ import { useCustomFetch } from '@/hooks/useFetch';
 import { style } from '@/themes/styles';
 import { Box, TextField, Typography } from '@mui/material';
 
-const boxStyle = {
-	display: 'flex',
-	flexDirection: 'row',
-	justifyContent: 'space-between',
-	gap: 4,
-};
-
 const Estacion5 = () => {
 	const {
 		data: revision,
@@ -24,11 +17,12 @@ const Estacion5 = () => {
 			table: 'ut_v_revision',
 			columns: [
 				'id_revision',
-				'titulo',
-				'fecha',
-				'detalle',
+				'dias',
+				'fecha_curso',
 				'estado',
-				'estacion',
+				'tutor',
+				'salon',
+				'id_tutor',
 			],
 			order: {
 				fecha: 'DESC',
@@ -36,7 +30,7 @@ const Estacion5 = () => {
 			limit: 1,
 		},
 		params: {
-			estacion: 2,
+			estacion: 6,
 		},
 	});
 
@@ -56,22 +50,22 @@ const Estacion5 = () => {
 						<TextField
 							variant='filled'
 							label='Catedrático'
-							value='Anselma León Teruel'
+							value={revision?.tutor || ''}
 						/>
 						<TextField
 							variant='filled'
 							label='Fecha'
-							value='10-jun-2023'
+							value={revision?.fecha_curso || ''}
 						/>
 						<TextField
 							variant='filled'
 							label='Horario'
-							value='15:00'
+							value={revision?.dias || ''}
 						/>
 						<TextField
 							variant='filled'
 							label='Salón'
-							value='Edificio S6 - 300'
+							value={revision?.salon || ''}
 						/>
 					</Box>
 				</Box>

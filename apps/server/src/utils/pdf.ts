@@ -22,6 +22,12 @@ export const createDocument = () => {
 		},
 		font: 'Helvetica',
 		bufferPages: true,
+		permissions: {
+			annotating: false,
+			copying: false,
+			modifying: false,
+			printing: 'highResolution',
+		},
 	});
 	return doc;
 };

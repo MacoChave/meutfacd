@@ -1,19 +1,18 @@
 import { URL } from '@/api/server';
 import { Contenedor } from '@/components';
+import { DotsLoaders } from '@/components/Loader/DotsLoaders';
 import { McTable } from '@/components/MyTable';
+import { APROBADO } from '@/consts/vars';
 import { useCustomFetch } from '@/hooks/useFetch';
 import { ProgressType } from '@/interfaces/ProgressType';
-import { Typography } from '@mui/material';
-import { useState } from 'react';
-import Dialogo from '../../components/Modal';
-import { DotsLoaders } from '@/components/Loader/DotsLoaders';
-import { setLoading } from '@/redux/states';
-import { errorHandler } from '@/utils/errorHandler';
-import { AxiosError } from 'axios';
 import { postData } from '@/services/fetching';
+import { errorHandler } from '@/utils/errorHandler';
 import { downloadFileByBloodPart } from '@/utils/fileManagment';
-import { APROBADO } from '@/consts/vars';
+import { Typography } from '@mui/material';
+import { AxiosError } from 'axios';
+import { useState } from 'react';
 import swal from 'sweetalert';
+import Dialogo from '../../components/Modal';
 
 const Progress = () => {
 	const [open, setOpen] = useState(false);

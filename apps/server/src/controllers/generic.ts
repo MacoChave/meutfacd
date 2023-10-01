@@ -16,11 +16,7 @@ export const getItem = async ({ body, query }: Request, res: Response) => {
 		});
 		res.status(200).json(response);
 	} catch (error: any) {
-		errorHttp(res, {
-			error,
-			msg: 'No se puede obtener el item',
-			code: 500,
-		});
+		errorHttp(res, error);
 	}
 };
 
@@ -35,11 +31,7 @@ export const getItems = async (
 		});
 		res.status(200).json(responses);
 	} catch (error: any) {
-		errorHttp(res, {
-			error,
-			msg: 'No se puede obtener el item',
-			code: 500,
-		});
+		errorHttp(res, error);
 	}
 };
 
@@ -51,11 +43,7 @@ export const createItem = async ({ body }: Request, res: Response) => {
 		});
 		res.status(200).json(response);
 	} catch (error: any) {
-		errorHttp(res, {
-			error,
-			msg: 'No se puede obtener el item',
-			code: 500,
-		});
+		errorHttp(res, error);
 	}
 };
 
@@ -67,11 +55,7 @@ export const createItems = async ({ body }: Request, res: Response) => {
 		});
 		res.status(200).json(response);
 	} catch (error: any) {
-		errorHttp(res, {
-			error,
-			msg: 'No se puede obtener el item',
-			code: 500,
-		});
+		errorHttp(res, error);
 	}
 };
 
@@ -84,10 +68,6 @@ export const putItem = async ({ body, query }: Request, res: Response) => {
 		});
 		res.status(200).json(result);
 	} catch (error: any) {
-		errorHttp(res, {
-			error,
-			msg: 'No se puede obtener el item',
-			code: 500,
-		});
+		errorHttp(res, error);
 	}
 };

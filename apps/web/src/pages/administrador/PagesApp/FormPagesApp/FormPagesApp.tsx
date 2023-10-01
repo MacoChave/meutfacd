@@ -27,7 +27,7 @@ const FormPagesApp: React.FC<FormPagesAppProps> = ({ page, onClose }) => {
 				datos: {
 					nombre: data.nombre,
 					descripcion: data.descripcion,
-					icono: data.icono,
+					// icono: data.icono,
 				},
 			},
 			params: { id_pagina: data.id_pagina },

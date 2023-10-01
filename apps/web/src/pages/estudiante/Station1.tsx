@@ -102,13 +102,25 @@ const Estacion1 = () => {
 	const onSubmit: SubmitHandler<Draft> = async (draft) => {
 		try {
 			if (revision.estado === ESPERA || revision.estado === PREVIA) {
-				await putData({
-					path: URL.THESIS,
-					body: {
-						titulo: draft.titulo,
-						ruta_perfil: draft.name,
-					},
-				});
+				Promise.all([
+					putData({
+						path: URL.THESIS,
+						body: {
+							titulo: draft.titulo,
+							ruta_tesis: draft.name,
+						},
+					}),
+					postData({
+						path: URL.REVIEW,
+						body: {
+							id_curso_tutor: revision.id_curso_tutor,
+							id_tutor: revision.id_tutor,
+							id_tesis: revision.id_tesis,
+							estado: REVISION,
+							estacion: 1,
+						},
+					}),
+				]);
 			} else {
 				await postData({
 					path: URL.THESIS,
@@ -143,7 +155,7 @@ const Estacion1 = () => {
 	const createChat = async () => {
 		const data = await postData({
 			path: URL.CHAT,
-			params: { receptor: (revision as ReviewType).id_tutor },
+			params: { user_id: (revision as ReviewType).id_tutor },
 		});
 		console.log(data);
 	};

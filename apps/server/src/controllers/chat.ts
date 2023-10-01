@@ -28,14 +28,15 @@ export const createChat = async ({ query, user }: Request, res: Response) => {
 			],
 			condInclusives: true,
 		});
-		if (chats.length > 0) {
+		console.log({ chats });
+		if (chats !== undefined) {
 			throw new Error('Ya existe un chat con ese usuario');
 		}
 		const newChat = await sqlInsert({
 			table: 'ut_chat',
 			datos: {
 				miembros: JSON.stringify([
-					Number(query.receptor),
+					Number(query.user_id),
 					Number(user.primaryKey),
 				]),
 			},

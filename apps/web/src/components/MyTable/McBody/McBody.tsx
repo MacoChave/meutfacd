@@ -23,6 +23,7 @@ import {
 	TableBody,
 	TableCell,
 	TableRow,
+	Typography,
 } from '@mui/material';
 import React from 'react';
 
@@ -49,7 +50,18 @@ export const getValue = (key: string, cellValue: any): React.ReactNode => {
 		return <>{ESTACIONES[cellValue - 1]}</>;
 	} else {
 		const text = formatByDataType({ [key]: cellValue });
-		return <>{text}</>;
+		return (
+			<Typography
+				sx={{
+					textOverflow: 'ellipsis',
+				}}>
+				{!text
+					? ''
+					: text.length > 40
+					? text.slice(0, 40) + '...'
+					: text}
+			</Typography>
+		);
 	}
 };
 

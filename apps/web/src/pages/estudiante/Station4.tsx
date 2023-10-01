@@ -1,7 +1,7 @@
 import { URL } from '@/api/server';
 import { Contenedor } from '@/components';
 import { SpinLoader } from '@/components/Loader/SpinLoader';
-import { APROBADO, ESPERA, REVISION } from '@/consts/vars';
+import { APROBADO, ESPERA, PREVIA, REVISION } from '@/consts/vars';
 import { useCustomFetch } from '@/hooks/useFetch';
 import { UploadFile } from '@/interfaces/UploadFile';
 import { Draft, draftDefault, draftSchema } from '@/models/Draft';
@@ -50,8 +50,8 @@ const Estacion4 = () => {
 				'ruta_perfil',
 				'id_tutor',
 			],
-			order: {
-				fecha_revision: 'DESC',
+			sort: {
+				fecha: 'DESC',
 			},
 			limit: 1,
 		},
@@ -101,13 +101,27 @@ const Estacion4 = () => {
 
 	const onSubmit: SubmitHandler<Draft> = async (draft) => {
 		try {
-			await putData({
-				path: URL.THESIS,
-				body: {
-					titulo: draft.titulo,
-					ruta_tesis: draft.name,
-				},
-			});
+			if (revision.estado === ESPERA || revision.estado === PREVIA) {
+				Promise.all([
+					putData({
+						path: URL.THESIS,
+						body: {
+							titulo: draft.titulo,
+							ruta_tesis: draft.name,
+						},
+					}),
+					postData({
+						path: URL.REVIEW,
+						body: {
+							id_curso_tutor: revision.id_curso_tutor,
+							id_tutor: revision.id_tutor,
+							id_tesis: revision.id_tesis,
+							estado: REVISION,
+							estacion: 5,
+						},
+					}),
+				]);
+			}
 
 			if (revision.estado === undefined) {
 				await postData({
@@ -118,7 +132,6 @@ const Estacion4 = () => {
 					},
 				});
 			}
-
 			swal(
 				'¡Bien hecho!',
 				'Su tesis se presentó correctamente',
@@ -143,7 +156,7 @@ const Estacion4 = () => {
 	const createChat = async () => {
 		const data = await postData({
 			path: URL.CHAT,
-			params: { receptor: (revision as ReviewType).id_tutor },
+			params: { user_id: (revision as ReviewType).id_tutor },
 		});
 		console.log(data);
 	};

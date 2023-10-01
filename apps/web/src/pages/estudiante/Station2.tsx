@@ -35,8 +35,8 @@ const Estacion2 = () => {
 				'salon',
 				'id_tutor',
 			],
-			order: {
-				fecha_revision: 'DESC',
+			sort: {
+				fecha: 'DESC',
 			},
 			limit: 1,
 		},
@@ -48,7 +48,7 @@ const Estacion2 = () => {
 	const createChat = async () => {
 		const data = await postData({
 			path: URL.CHAT,
-			params: { receptor: (revision as ReviewType).id_tutor },
+			params: { user_id: (revision as ReviewType).id_tutor },
 		});
 		console.log(data);
 	};
@@ -116,12 +116,12 @@ const Estacion2 = () => {
 								color={getChipColor(revision.estado)}
 							/>
 						</Box>
-						<Box sx={boxStyle}>
+						{/* <Box sx={boxStyle}>
 							<Typography>Certificado</Typography>
 							<IconButton color='primary'>
 								<FileDownload />
 							</IconButton>
-						</Box>
+						</Box> */}
 						<Box sx={boxStyle}>
 							<Typography>Presentar asesor</Typography>
 							<IconButton color='primary'>

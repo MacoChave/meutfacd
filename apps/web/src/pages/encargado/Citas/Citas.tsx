@@ -14,6 +14,8 @@ import Dialogo from '../../../components/Modal';
 import React, { ReactNode, useState } from 'react';
 import AgregarComentario from '../../../components/FijarFecha';
 import FijarFecha from '../../../components/Comentar';
+import { useCustomFetch } from '@/hooks/useFetch';
+import { URL } from '@/api/server';
 
 type ProgressType = {
 	estacion: string;
@@ -34,6 +36,35 @@ const Citas: React.FC<CitasProps> = ({}) => {
 	const [open, setOpen] = useState(false);
 	const [row, setRow] = useState<ProgressType>({} as ProgressType);
 	const [modalContent, setmodalContent] = useState<ReactNode>(<></>);
+
+	const {
+		data: revisiones,
+		isLoading,
+		isError,
+		refetch,
+	} = useCustomFetch({
+		url: `${URL.GENERIC}/all`,
+		method: 'post',
+		body: {
+			table: 'ut_v_revision',
+			columns: [
+				'id_revision',
+				'titulo',
+				'fecha',
+				'detalle',
+				'estado',
+				'tutor',
+				'ruta_perfil',
+				'id_tutor',
+			],
+			sort: {
+				fecha: 'ASC',
+			},
+		},
+		params: {
+			estacion: 6,
+		},
+	});
 
 	const handleShow = (row: ProgressType, operation: Operation) => {
 		switch (operation) {
@@ -56,16 +87,12 @@ const Citas: React.FC<CitasProps> = ({}) => {
 					variant='h4'
 					component='h2'
 					textAlign='center'
-					py={4}>
-					Raquel Angulo
-				</Typography>
+					py={4}></Typography>
 				<Typography
 					variant='h5'
 					component='h3'
 					textAlign='center'
-					py={4}>
-					Citas programadas
-				</Typography>
+					py={4}></Typography>
 				<Table
 					sx={{ minWidth: 250, maxWidth: 600, mx: 'auto' }}
 					aria-label='simple table'>
@@ -77,54 +104,7 @@ const Citas: React.FC<CitasProps> = ({}) => {
 							<TableCell>Revisión</TableCell>
 						</TableRow>
 					</TableHead>
-					<TableBody>
-						{rows.map((row, index) => (
-							<TableRow
-								key={index}
-								sx={{
-									'&:last-child td, &:last-child th': {
-										border: 0,
-									},
-								}}>
-								<TableCell component='th' scope='row'>
-									{row.estacion}
-								</TableCell>
-								<TableCell>{row.evaluador}</TableCell>
-								<TableCell>{row.fecha_carga}</TableCell>
-								<TableCell>
-									<IconButton
-										color='primary'
-										onClick={() =>
-											handleShow(
-												row,
-												Operation.RECALENDARIZAR
-											)
-										}>
-										<CalendarToday />
-									</IconButton>
-									<IconButton
-										color='primary'
-										onClick={() =>
-											console.log('Download file is not implemented')
-										}>
-										<Download />
-									</IconButton>
-									<IconButton
-										color='primary'
-										onClick={() =>
-											handleShow(row, Operation.COMENTAR)
-										}>
-										<Message />
-									</IconButton>
-									<IconButton
-										color='primary'
-										onClick={() => {}}>
-										<Check />
-									</IconButton>
-								</TableCell>
-							</TableRow>
-						))}
-					</TableBody>
+					<TableBody></TableBody>
 				</Table>
 			</TableContainer>
 			<Dialogo open={open} title='Observaciones' setOpen={setOpen}>

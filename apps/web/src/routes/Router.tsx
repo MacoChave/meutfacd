@@ -24,6 +24,7 @@ const Estacion2 = lazy(() => import('../pages/estudiante/Station2'));
 const Estacion3 = lazy(() => import('../pages/estudiante/Station3'));
 const Estacion4 = lazy(() => import('../pages/estudiante/Station4'));
 const Estacion5 = lazy(() => import('../pages/estudiante/Station5'));
+const Finalizar = lazy(() => import('@/pages/estudiante/Finalizar'));
 // PROFESSOR PAGES
 const HomeEvaluador = lazy(() => import('../pages/evaluador'));
 const DraftProfessor = lazy(
@@ -173,7 +174,7 @@ export const router = createBrowserRouter([
 				path: 'finalizacion',
 				element: (
 					<ProtectedRoute rol='estudiante'>
-						{<Estacion5 />}
+						{<Finalizar />}
 					</ProtectedRoute>
 				),
 			},

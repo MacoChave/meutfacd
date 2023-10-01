@@ -10,7 +10,7 @@ export const getChipLabel = (code: string) => {
 		case RECHAZADO:
 			return 'Rechazado';
 		case PREVIA:
-			return 'Previa';
+			return 'Previo';
 		case REVISION:
 			return 'Revisión';
 		default:

@@ -6,7 +6,7 @@ import { ReviewType } from '@/models/Review';
 import { postData } from '@/services/fetching';
 import { style } from '@/themes/styles';
 import { getChipColor, getChipLabel } from '@/utils/formatHandler';
-import { Chat, FileDownload } from '@mui/icons-material';
+import { Chat } from '@mui/icons-material';
 import { Box, Chip, IconButton, TextField, Typography } from '@mui/material';
 
 const boxStyle = {
@@ -35,8 +35,8 @@ const Estacion3 = () => {
 				'salon',
 				'id_tutor',
 			],
-			order: {
-				fecha_revision: 'DESC',
+			sort: {
+				fecha: 'DESC',
 			},
 			limit: 1,
 		},
@@ -48,7 +48,7 @@ const Estacion3 = () => {
 	const createChat = async () => {
 		const data = await postData({
 			path: URL.CHAT,
-			params: { receptor: (revision as ReviewType).id_tutor },
+			params: { user_id: (revision as ReviewType).id_tutor },
 		});
 		console.log(data);
 	};
@@ -68,6 +68,7 @@ const Estacion3 = () => {
 						}}>
 						{revision?.id_tutor && (
 							<IconButton
+								sx={{ alignSelf: 'flex-start' }}
 								color='info'
 								title='Crear chat'
 								onClick={createChat}>
@@ -115,12 +116,12 @@ const Estacion3 = () => {
 								color={getChipColor(revision.estado)}
 							/>
 						</Box>
-						<Box sx={boxStyle}>
+						{/* <Box sx={boxStyle}>
 							<Typography>Certificado</Typography>
 							<IconButton color='primary'>
 								<FileDownload />
 							</IconButton>
-						</Box>
+						</Box> */}
 					</Box>
 				</Box>
 			</Contenedor>
