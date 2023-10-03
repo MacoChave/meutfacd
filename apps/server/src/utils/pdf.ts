@@ -1,8 +1,10 @@
 import { Response } from 'express';
-import PDFDocument from 'pdfkit';
+import PDFDocument from 'pdfkit-construct';
 
 export const writehead = (name: string, res: Response) => {
-	const filename = `${name}_${new Date().toLocaleDateString('es-GT')}.pdf`;
+	const filename = `${name}_${new Date().toLocaleDateString('es-GT', {
+		dateStyle: 'short',
+	})}.pdf`;
 
 	return res.writeHead(200, {
 		'Content-Type': 'application/pdf',
@@ -32,28 +34,23 @@ export const createDocument = () => {
 	return doc;
 };
 
-export const setLetterHead = async (
-	doc: any,
-	user: string = 'Lic. Juan Carlos Pérez',
-	status: string = 'Jefe de Estación'
-) => {
-	doc.fontSize(12).text(
-		new Date().toLocaleDateString('es-GT', { dateStyle: 'full' }),
-		{
-			align: 'right',
-			linegap: 2,
-		}
-	);
-	doc.fontSize(12)
-		.moveDown(3)
-		.text(user.toUpperCase(), { align: 'left', linegap: 2 });
-	doc.fontSize(12).text(status.toUpperCase(), { align: 'left', linegap: 2 });
-	doc.fontSize(12).text('FACULTAD DE CIENCIAS JURIDICAS Y SOCIALES', {
-		align: 'left',
-		linegap: 2,
+export const setHeader = async (doc: any) => {
+	// const imagePath = `${__dirname}\\..\\assets\\images\\PDFHeader.png`;
+	const imagePath = `./src/assets/images/PDFHeader.png`;
+	console.log({ imagePath });
+	doc.setDocumentHeader({ height: '15%' }, () => {
+		doc.image(imagePath, 50, 40, {
+			fit: [500, 100],
+			align: 'center',
+		});
 	});
-	doc.fontSize(12).text('UNIVERSIDAD DE SAN CARLOS DE GUATEMALA', {
-		align: 'left',
-		linegap: 2,
+};
+
+export const setFooter = (doc: any) => {
+	doc.setDocumentFooter({ height: '15%' }, () => {
+		doc.image(`${__dirname}/../assets/images/PDFFooter.png`, 50, 45, {
+			fit: [500, 100],
+			align: 'center',
+		});
 	});
 };

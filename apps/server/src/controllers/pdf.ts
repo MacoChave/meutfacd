@@ -1,25 +1,30 @@
 import { Request, Response } from 'express';
-import { createDocument, setLetterHead, writehead } from '../utils/pdf';
 import { errorHttp } from '../utils/error.handle';
+import { createDocument, setFooter, setHeader } from '../utils/pdf';
+import { WriteStream, createWriteStream, readFileSync } from 'fs';
+import { uploadDictamen } from './storage';
+import {
+	PutObjectCommand,
+	PutObjectCommandInput,
+	S3Client,
+} from '@aws-sdk/client-s3';
+import { config } from '../utils/upload';
 
-export const createCertificate = async (
+export const createReport = async (
 	{ body, query, user }: Request,
 	res: Response
 ) => {
 	try {
 		const { nameEmisor, nameReceiver, thesisTitle, station } = body;
 
-		const stream: any = writehead(nameEmisor, res);
+		const filename: string = 'src/assets/images/report.pdf';
+		// const stream: any = writehead(nameEmisor, res);
 		const doc = createDocument();
 
-		doc.on('data', (data) => {
-			stream.write(data);
-		});
-		doc.on('end', () => {
-			stream.end();
-		});
+		let writeStream = createWriteStream(filename);
+		doc.pipe(writeStream);
 
-		await setLetterHead(doc, user.cui);
+		await setHeader(doc);
 
 		doc.fontSize(12).moveDown(2).text(`Estimado doctor`, {
 			align: 'left',
@@ -49,9 +54,30 @@ export const createCertificate = async (
 			lineGap: 2,
 		});
 
+		setFooter(doc);
+
 		doc.flushPages();
 		doc.end();
+
+		writeStream.on('finish', async () => {
+			const fileContent = readFileSync(filename);
+
+			const params: PutObjectCommandInput = {
+				Bucket: 'ut-src',
+				Key: `test/dictamen.pdf`,
+				Body: fileContent,
+				ACL: 'public-read',
+				ContentType: 'application/pdf',
+				Metadata: {
+					fieldname: 'dictamen',
+				},
+			};
+			const client = new S3Client(config);
+			const result = await client.send(new PutObjectCommand(params));
+			res.status(200).json(result);
+		});
 	} catch (error: any) {
+		console.log({ error });
 		errorHttp(res, error);
 	}
 };

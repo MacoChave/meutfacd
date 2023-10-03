@@ -8,7 +8,7 @@ import {
 import { createReadStream } from 'fs';
 import { DATA_SOURCES } from '../config/vars.config';
 
-const config: S3ClientConfig = {
+export const config: S3ClientConfig = {
 	region: DATA_SOURCES.AWS_BUCKET_REGION,
 	credentials: {
 		accessKeyId: DATA_SOURCES.AWS_PUBLIC_KEY,

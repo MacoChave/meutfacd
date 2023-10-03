@@ -17,11 +17,7 @@ const uploadDraft = async ({ files, user }: Request, res: Response) => {
 			name: `${user.carnet}/preview.${getExtFile(files.draft.name)}`,
 		});
 	} catch (error: any) {
-		errorHttp(res, {
-			error,
-			msg: 'Error al subir el punto de tesis',
-			code: 500,
-		});
+		errorHttp(res, error);
 	}
 };
 
@@ -38,7 +34,7 @@ const uploadTesis = async ({ files, user }: Request, res: Response) => {
 			name: `${user.carnet}/thesis.${getExtFile(files.thesis.name)}`,
 		});
 	} catch (error: any) {
-		res.status(500).json({ error: 'Error al subir la tesis' });
+		errorHttp(res, error);
 	}
 };
 
@@ -55,7 +51,7 @@ const uploadDictamen = async ({ files, user }: Request, res: Response) => {
 			name: `${user.carnet}/dictamen.${getExtFile(files.dictamen.name)}`,
 		});
 	} catch (error: any) {
-		res.status(500).json({ error: 'Error al subir la dictamen' });
+		errorHttp(res, error);
 	}
 };
 
@@ -66,11 +62,7 @@ const getFile = async ({ query }: Request, res: Response) => {
 			url: `https://${DATA_SOURCES.AWS_BUCKET_NAME}.s3.amazonaws.com/${name}`,
 		});
 	} catch (error: any) {
-		errorHttp(res, {
-			error,
-			msg: 'Error al descargar el archivo',
-			code: 500,
-		});
+		errorHttp(res, error);
 	}
 };
 

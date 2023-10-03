@@ -1,9 +1,9 @@
 import { Router } from 'express';
 import { requireAuth } from '../middlewares/requireAuth';
-import { createCertificate } from '../controllers/pdf';
+import { createReport } from '../controllers/pdf';
 
 const router = Router();
 
-router.post('/dictamen', requireAuth, createCertificate);
+router.post('/dictamen', requireAuth, createReport);
 
 export { router };
