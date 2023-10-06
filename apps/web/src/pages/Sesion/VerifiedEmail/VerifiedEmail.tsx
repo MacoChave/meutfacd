@@ -5,14 +5,15 @@ import { SpinLoader } from '@/components/Loader/SpinLoader';
 import { setLoading } from '@/redux/states';
 import { putData } from '@/services/fetching';
 import { Box, Button, Card, Toolbar, Typography } from '@mui/material';
-import React, { useState } from 'react';
-import { useParams } from 'react-router-dom';
+import React, { SyntheticEvent, useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 import swal from 'sweetalert';
 
 export type VerifiedEmailProps = {};
 
 const VerifiedEmail: React.FC<VerifiedEmailProps> = ({}) => {
 	const [loading, setloading] = useState(false);
+	const navigate = useNavigate();
 	let { email } = useParams();
 
 	const onSubmit = async () => {
@@ -38,6 +39,12 @@ const VerifiedEmail: React.FC<VerifiedEmailProps> = ({}) => {
 		}
 	};
 
+	const goToLogin = (event: SyntheticEvent) => {
+		navigate(`/login/Estudiante`, {
+			replace: true,
+		});
+	};
+
 	return (
 		<>
 			<ToolbarWithoutSesion />
@@ -46,14 +53,14 @@ const VerifiedEmail: React.FC<VerifiedEmailProps> = ({}) => {
 				<Box
 					sx={{
 						width: {
-							xs: '100%',
-							sm: '100%',
-							md: '100%',
-							lg: '100%',
-							xl: '100%',
+							xs: '90vw',
+							sm: '80vw',
+							md: '50vw',
+							lg: '40vw',
+							xl: '30vw',
 						},
+						height: 'auto',
 						m: 'auto',
-						height: '100%',
 					}}>
 					<Card
 						sx={{
@@ -73,6 +80,17 @@ const VerifiedEmail: React.FC<VerifiedEmailProps> = ({}) => {
 							Verificar correo electrónico
 						</Button>
 					</Card>
+					<Box
+						sx={{
+							display: 'flex',
+							justifyContent: 'space-around',
+							alignItems: 'center',
+						}}>
+						<Box sx={{ flex: 1 }} />
+						<Button variant='text' onClick={goToLogin}>
+							Iniciar sesión
+						</Button>
+					</Box>
 				</Box>
 			</Box>
 			{loading && <SpinLoader />}

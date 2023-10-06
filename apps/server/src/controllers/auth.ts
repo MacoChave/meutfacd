@@ -48,10 +48,7 @@ export const verifyEmail = async ({ query }: Request, res: Response) => {
 
 		return res.status(200).json(response);
 	} catch (error: any) {
-		errorHttp(res, {
-			error,
-			msg: 'Error al verificar el correo electrónico',
-		});
+		errorHttp(res, error);
 	}
 };
 
@@ -135,7 +132,7 @@ export const logupHandler = async ({ body, query }: Request, res: Response) => {
 
 		res.status(200).json({ msg: 'Usuario creado' });
 	} catch (error: any) {
-		errorHttp(res, { msg: 'Error al crear usuario', error });
+		errorHttp(res, error);
 	}
 };
 
@@ -166,7 +163,7 @@ export const loginHandler = async ({ body }: Request, res: Response) => {
 		// });
 		res.status(200).json(result);
 	} catch (error: any) {
-		errorHttp(res, { msg: 'Error al iniciar sesión', error });
+		errorHttp(res, error);
 	}
 };
 
@@ -198,6 +195,6 @@ export const profileHandler = async ({ user }: Request, res: Response) => {
 			id_horario: result.id_horario,
 		});
 	} catch (error: any) {
-		errorHttp(res, { msg: 'Error al obtener el perfil', error });
+		errorHttp(res, error);
 	}
 };

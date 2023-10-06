@@ -9,6 +9,9 @@ const VerifiedEmail = lazy(
 const UserRecovery = lazy(
 	() => import('@/pages/Sesion/UserRecovery/UserRecovery')
 );
+const VerifiedDocument = lazy(
+	() => import('@/pages/VerifiedDocument/VerifiedDocument')
+);
 // PAGES WITH SESSIONS
 const Home = lazy(() => import('../pages/Home/Home'));
 const ProtectedRoute = lazy(() => import('../components/ProtectedRoute'));
@@ -17,51 +20,59 @@ const UserProfile = lazy(
 );
 const Chat = lazy(() => import('../pages/Chat/Chat'));
 // STUDENT PAGES
-const HomeEstudiante = lazy(() => import('../pages/estudiante'));
+const HomeStudent = lazy(() => import('../pages/estudiante'));
 const Progress = lazy(() => import('../pages/estudiante/Progress'));
-const Estacion1 = lazy(() => import('../pages/estudiante/Station1'));
-const Estacion2 = lazy(() => import('../pages/estudiante/Station2'));
-const Estacion3 = lazy(() => import('../pages/estudiante/Station3'));
-const Estacion4 = lazy(() => import('../pages/estudiante/Station4'));
-const Estacion5 = lazy(() => import('../pages/estudiante/Station5'));
-const Finalizar = lazy(() => import('@/pages/estudiante/Finalizar'));
+const DrawStudent = lazy(() => import('../pages/estudiante/Station1'));
+const FstCourseStudent = lazy(() => import('../pages/estudiante/Station2'));
+const SndCourseStudent = lazy(() => import('../pages/estudiante/Station3'));
+const ChangeStudent = lazy(
+	() => import('@/pages/estudiante/Dictamen/Dictamen')
+);
+const ThesisStudent = lazy(() => import('../pages/estudiante/Station4'));
+const IntPreviewStudent = lazy(() => import('../pages/estudiante/Station5'));
+const PrintRequest = lazy(() => import('@/pages/estudiante/Finalizar'));
 // PROFESSOR PAGES
-const HomeEvaluador = lazy(() => import('../pages/evaluador'));
+const HomeProfessor = lazy(() => import('../pages/evaluador'));
 const DraftProfessor = lazy(
 	() => import('@/pages/evaluador/DraftProfessor/DraftProfessor')
 );
-const Course1Professor = lazy(
+const FstCourseProfessor = lazy(
 	() => import('@/pages/evaluador/Course1Professor/Course1Professor')
 );
-const SndCourseD = lazy(
+const SndCourseProfessor = lazy(
 	() => import('@/pages/evaluador/SndCourseD/SndCourseD')
 );
-const Dictamen = lazy(() => import('@/pages/estudiante/Dictamen/Dictamen'));
-const StylesComision = lazy(
+const ThesisProfessor = lazy(
 	() => import('@/pages/evaluador/StylesComision/StylesComision')
 );
+// COORDINATOR PAGES
+const HomeResponsible = lazy(() => import('../pages/encargado'));
+const DraftResponsible = lazy(() => import('@/pages/encargado/Draft/Draft'));
+const FstCourseResponsible = lazy(
+	() => import('@/pages/encargado/FstCourse/FstCourse')
+);
+const SndCourseResponsible = lazy(
+	() => import('@/pages/encargado/ScndCourse/ScndCourse')
+);
+const ThesisResponsible = lazy(
+	() => import('@/pages/encargado/ThesisSup/ThesisSup')
+);
+const IntpreviewResponsible = lazy(
+	() => import('../pages/encargado/Citas/Citas')
+);
 // ANALYTICS PAGES
-const HomeReporte = lazy(() => import('../pages/analitica'));
+const HomeAnalitycs = lazy(() => import('../pages/analitica'));
 const ByEstacion = lazy(() => import('../pages/analitica/ByEstacion'));
 const ByRol = lazy(() => import('../pages/analitica/ByRol'));
 const Resumen = lazy(() => import('../pages/analitica/Resumen'));
 // ADMINISTRATOR PAGES
-const HomeAdministrador = lazy(() => import('../pages/administrador'));
+const HomeAdmin = lazy(() => import('../pages/administrador'));
 const PagesApp = lazy(() => import('@/pages/administrador/PagesApp/PagesApp'));
-const Usuarios = lazy(() => import('../pages/administrador/Usuarios/Usuarios'));
+const UsersApp = lazy(() => import('../pages/administrador/Usuarios/Usuarios'));
 const Courses = lazy(() => import('@/pages/administrador/Courses/Courses'));
 const Schedule = lazy(() => import('@/pages/administrador/Schedule/Schedule'));
 const Aplicacion = lazy(() => import('../pages/administrador/Aplicacion'));
-const Problemas = lazy(() => import('../pages/administrador/Problemas'));
-// COORDINATOR PAGES
-const HomeEncargado = lazy(() => import('../pages/encargado'));
-const Draft = lazy(() => import('@/pages/encargado/Draft/Draft'));
-const FstCourse = lazy(() => import('@/pages/encargado/FstCourse/FstCourse'));
-const ScndCourse = lazy(
-	() => import('@/pages/encargado/ScndCourse/ScndCourse')
-);
-const ThesisSup = lazy(() => import('@/pages/encargado/ThesisSup/ThesisSup'));
-const Citas = lazy(() => import('../pages/encargado/Citas/Citas'));
+const ProblemsApp = lazy(() => import('../pages/administrador/Problemas'));
 // ERROR PAGES
 const ErrorPage = lazy(() => import('@/pages/ErrorPage/ErrorPage'));
 
@@ -89,15 +100,17 @@ export const router = createBrowserRouter([
 		element: <VerifiedEmail />,
 	},
 	{
+		path: '/verify-document/:reviewId',
+		element: <VerifiedDocument />,
+	},
+	{
 		path: '/recovery/:rol',
 		element: <UserRecovery />,
 	},
 	{
 		path: '/estudiante',
 		element: (
-			<ProtectedRoute rol='estudiante'>
-				{<HomeEstudiante />}
-			</ProtectedRoute>
+			<ProtectedRoute rol='estudiante'>{<HomeStudent />}</ProtectedRoute>
 		),
 		children: [
 			{
@@ -126,7 +139,7 @@ export const router = createBrowserRouter([
 				path: 'punto-tesis',
 				element: (
 					<ProtectedRoute rol='estudiante'>
-						{<Estacion1 />}
+						{<DrawStudent />}
 					</ProtectedRoute>
 				),
 			},
@@ -134,7 +147,7 @@ export const router = createBrowserRouter([
 				path: 'curso-introduccion',
 				element: (
 					<ProtectedRoute rol='estudiante'>
-						{<Estacion2 />}
+						{<FstCourseStudent />}
 					</ProtectedRoute>
 				),
 			},
@@ -142,7 +155,7 @@ export const router = createBrowserRouter([
 				path: 'curso-elaboracion',
 				element: (
 					<ProtectedRoute rol='estudiante'>
-						{<Estacion3 />}
+						{<SndCourseStudent />}
 					</ProtectedRoute>
 				),
 			},
@@ -150,7 +163,7 @@ export const router = createBrowserRouter([
 				path: 'dictamen',
 				element: (
 					<ProtectedRoute rol='estudiante'>
-						{<Dictamen />}
+						{<ChangeStudent />}
 					</ProtectedRoute>
 				),
 			},
@@ -158,7 +171,7 @@ export const router = createBrowserRouter([
 				path: 'tesis',
 				element: (
 					<ProtectedRoute rol='estudiante'>
-						{<Estacion4 />}
+						{<ThesisStudent />}
 					</ProtectedRoute>
 				),
 			},
@@ -166,7 +179,7 @@ export const router = createBrowserRouter([
 				path: 'previos-internos',
 				element: (
 					<ProtectedRoute rol='estudiante'>
-						{<Estacion5 />}
+						{<IntPreviewStudent />}
 					</ProtectedRoute>
 				),
 			},
@@ -174,7 +187,7 @@ export const router = createBrowserRouter([
 				path: 'finalizacion',
 				element: (
 					<ProtectedRoute rol='estudiante'>
-						{<Finalizar />}
+						{<PrintRequest />}
 					</ProtectedRoute>
 				),
 			},
@@ -183,7 +196,9 @@ export const router = createBrowserRouter([
 	{
 		path: '/encargado/',
 		element: (
-			<ProtectedRoute rol='encargado'>{<HomeEncargado />}</ProtectedRoute>
+			<ProtectedRoute rol='encargado'>
+				{<HomeResponsible />}
+			</ProtectedRoute>
 		),
 		children: [
 			{
@@ -204,7 +219,7 @@ export const router = createBrowserRouter([
 				path: 'punto-tesis',
 				element: (
 					<ProtectedRoute rol='encargado'>
-						<Draft />
+						<DraftResponsible />
 					</ProtectedRoute>
 				),
 			},
@@ -212,7 +227,7 @@ export const router = createBrowserRouter([
 				path: 'curso-introduccion',
 				element: (
 					<ProtectedRoute rol='encargado'>
-						{<FstCourse />}
+						{<FstCourseResponsible />}
 					</ProtectedRoute>
 				),
 			},
@@ -220,7 +235,7 @@ export const router = createBrowserRouter([
 				path: 'curso-elaboracion',
 				element: (
 					<ProtectedRoute rol='encargado'>
-						{<ScndCourse />}
+						{<SndCourseResponsible />}
 					</ProtectedRoute>
 				),
 			},
@@ -228,14 +243,16 @@ export const router = createBrowserRouter([
 				path: 'tesis',
 				element: (
 					<ProtectedRoute rol='encargado'>
-						{<ThesisSup />}
+						{<ThesisResponsible />}
 					</ProtectedRoute>
 				),
 			},
 			{
 				path: 'previos-internos',
 				element: (
-					<ProtectedRoute rol='encargado'>{<Citas />}</ProtectedRoute>
+					<ProtectedRoute rol='encargado'>
+						{<IntpreviewResponsible />}
+					</ProtectedRoute>
 				),
 			},
 		],
@@ -243,7 +260,7 @@ export const router = createBrowserRouter([
 	{
 		path: '/docente',
 		element: (
-			<ProtectedRoute rol='profesor'>{<HomeEvaluador />}</ProtectedRoute>
+			<ProtectedRoute rol='profesor'>{<HomeProfessor />}</ProtectedRoute>
 		),
 		children: [
 			{
@@ -272,7 +289,7 @@ export const router = createBrowserRouter([
 				path: 'curso-introduccion',
 				element: (
 					<ProtectedRoute rol='profesor'>
-						{<Course1Professor />}
+						{<FstCourseProfessor />}
 					</ProtectedRoute>
 				),
 			},
@@ -280,7 +297,7 @@ export const router = createBrowserRouter([
 				path: 'curso-elaboracion',
 				element: (
 					<ProtectedRoute rol='profesor'>
-						{<SndCourseD />}
+						{<SndCourseProfessor />}
 					</ProtectedRoute>
 				),
 			},
@@ -288,7 +305,7 @@ export const router = createBrowserRouter([
 				path: 'tesis',
 				element: (
 					<ProtectedRoute rol='profesor'>
-						{<StylesComision />}
+						{<ThesisProfessor />}
 					</ProtectedRoute>
 				),
 			},
@@ -297,7 +314,7 @@ export const router = createBrowserRouter([
 	{
 		path: '/analitica',
 		element: (
-			<ProtectedRoute rol='analitica'>{<HomeReporte />}</ProtectedRoute>
+			<ProtectedRoute rol='analitica'>{<HomeAnalitycs />}</ProtectedRoute>
 		),
 		children: [
 			{
@@ -341,9 +358,7 @@ export const router = createBrowserRouter([
 	{
 		path: '/administrador',
 		element: (
-			<ProtectedRoute rol='administrador'>
-				{<HomeAdministrador />}
-			</ProtectedRoute>
+			<ProtectedRoute rol='administrador'>{<HomeAdmin />}</ProtectedRoute>
 		),
 		children: [
 			{
@@ -366,7 +381,7 @@ export const router = createBrowserRouter([
 				path: 'usuarios',
 				element: (
 					<ProtectedRoute rol='administrador'>
-						<Usuarios />
+						<UsersApp />
 					</ProtectedRoute>
 				),
 			},
@@ -406,7 +421,7 @@ export const router = createBrowserRouter([
 				path: 'problemas',
 				element: (
 					<ProtectedRoute rol='administrador'>
-						<Problemas />
+						<ProblemsApp />
 					</ProtectedRoute>
 				),
 			},

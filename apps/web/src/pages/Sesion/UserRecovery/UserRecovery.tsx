@@ -66,7 +66,6 @@ const UserRecovery: React.FC<UserRecoveryProps> = ({}) => {
 						height: 'auto',
 						mx: 'auto',
 					}}>
-					<Typography variant='h4'>Recuperar contraseña</Typography>
 					<form onSubmit={handleSubmit(onSubmit)}>
 						<Card
 							sx={{
@@ -76,6 +75,9 @@ const UserRecovery: React.FC<UserRecoveryProps> = ({}) => {
 								my: 4,
 								p: 4,
 							}}>
+							<Typography variant='h4'>
+								Recuperar contraseña
+							</Typography>
 							<Controller
 								control={control}
 								name='correo'
@@ -93,7 +95,7 @@ const UserRecovery: React.FC<UserRecoveryProps> = ({}) => {
 								)}
 							/>
 							<Button type='submit' variant='contained'>
-								Recuperar
+								Recuperar contraseña
 							</Button>
 						</Card>
 					</form>
@@ -103,7 +105,7 @@ const UserRecovery: React.FC<UserRecoveryProps> = ({}) => {
 							justifyContent: 'space-around',
 							alignItems: 'center',
 						}}>
-						<Typography>Iniciar sesión</Typography>
+						<Box sx={{ flex: 1 }} />
 						<Button variant='text' onClick={goToLogin}>
 							Iniciar sesión
 						</Button>

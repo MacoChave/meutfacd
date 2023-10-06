@@ -1,5 +1,8 @@
 import { Response } from 'express';
-import PDFDocument from 'pdfkit-construct';
+import { join } from 'path';
+import PDFDocument from 'pdfkit';
+import { toDataURL, toString } from 'qrcode';
+import { DATA_SOURCES } from '../config/vars.config';
 
 export const writehead = (name: string, res: Response) => {
 	const filename = `${name}_${new Date().toLocaleDateString('es-GT', {
@@ -34,23 +37,44 @@ export const createDocument = () => {
 	return doc;
 };
 
-export const setHeader = async (doc: any) => {
-	// const imagePath = `${__dirname}\\..\\assets\\images\\PDFHeader.png`;
-	const imagePath = `./src/assets/images/PDFHeader.png`;
-	console.log({ imagePath });
-	doc.setDocumentHeader({ height: '15%' }, () => {
-		doc.image(imagePath, 50, 40, {
-			fit: [500, 100],
-			align: 'center',
-		});
+export const setHeader = (doc: any) => {
+	const imagePath = join(__dirname, '/../storage/PDFHeader.png');
+	doc.image(imagePath, 72, 15, {
+		fit: [475, 100],
+		align: 'center',
+		valign: 'center',
 	});
 };
 
 export const setFooter = (doc: any) => {
-	doc.setDocumentFooter({ height: '15%' }, () => {
-		doc.image(`${__dirname}/../assets/images/PDFFooter.png`, 50, 45, {
-			fit: [500, 100],
-			align: 'center',
-		});
+	const imagePath = join(__dirname, '/../storage/PDFFooter.png');
+	doc.image(imagePath, 72, doc.page.height - 125, {
+		fit: [475, 100],
+		align: 'center',
+		valign: 'center',
 	});
+};
+
+export const setQRCode = async (doc: any, idReview: number) => {
+	let data = `${DATA_SOURCES.URL_FRONTEND}/verify-document/${idReview}`;
+	// let stringData = JSON.stringify(data);
+	// const result = await toString(stringData, { type: 'terminal' });
+	const qrResult = await toDataURL(data);
+
+	doc.image(qrResult, {
+		fit: [100, 100],
+		align: 'right',
+		valign: 'center',
+	});
+};
+
+export const getNameStation = (station: number) => {
+	const stations: string[] = [
+		'Punto de tesis',
+		'Curso 1',
+		'Curso 2',
+		'Comisión y estilo',
+		'Previos internos',
+	];
+	return stations[station + 1];
 };
