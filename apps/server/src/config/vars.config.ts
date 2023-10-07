@@ -1,7 +1,7 @@
 import { logger } from '../utils/logger';
 
 export const DATA_SOURCES = {
-	PORT: Number(process.env.PORT) || 5000,
+	API_PORT: Number(process.env.API_PORT) || 5000,
 	URL_FRONTEND: process.env.URL_FRONTEND || 'localhost:5173',
 	URL_EMAIL_VERIFIED:
 		process.env.URL_EMAIL_VERIFIED || 'localhost:5173/email-verified',
@@ -16,6 +16,8 @@ export const DATA_SOURCES = {
 	DB_PASS: process.env.DB_PASS || 'root',
 	DB_CONN_LIMIT: Number(process.env.DB_CONN_LIMIT) || 4,
 	SALT: Number(process.env.SALT) || 10,
+	SEND_EMAIL: process.env.SEND_EMAIL || 'false',
+	UPLOAD_S3: process.env.UPLOAD_S3 || 'false',
 	SMTP_HOST: process.env.SMTP_HOST || 'smtp.gmail.com',
 	SMTP_PORT: Number(process.env.SMTP_PORT) || 587,
 	SMTP_USERNAME: process.env.SMTP_USERNAME || 'SMTP_USERNAME',

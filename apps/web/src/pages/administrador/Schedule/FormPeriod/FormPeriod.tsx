@@ -1,7 +1,7 @@
 import { URL } from '@/api/server';
 import { McInput } from '@/components/McWithForms/McInput';
 import { PeriodDefault, PeriodSchema, TPeriod } from '@/models/Period';
-import { ResultType } from '@/models/Result';
+import { TResult } from '@/models/Fetching';
 import { postData } from '@/services/fetching';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Box, Button } from '@mui/material';
@@ -26,7 +26,7 @@ const FormPeriod: React.FC<FormPeriodProps> = ({ onClose }) => {
 	});
 
 	const onSubmit: SubmitHandler<TPeriod> = async (data) => {
-		const result: ResultType = await postData({
+		const result: TResult = await postData({
 			path: `${URL.PERIOD}`,
 			body: data,
 		});

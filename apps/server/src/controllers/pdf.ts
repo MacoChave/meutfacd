@@ -17,6 +17,8 @@ import {
 import { config } from '../utils/upload';
 import { formatDate } from '../utils/formats';
 import { sqlSelectOne } from '../db/consultas';
+import { DATA_SOURCES } from '../config/vars.config';
+import { logger } from '../utils/logger';
 
 export const createReport = async ({ body, user }: Request, res: Response) => {
 	try {
@@ -201,18 +203,25 @@ export const createReport = async ({ body, user }: Request, res: Response) => {
 		writeStream.on('finish', async () => {
 			const fileContent = readFileSync(filename);
 
-			// const params: PutObjectCommandInput = {
-			// 	Bucket: 'ut-src',
-			// 	Key: `test/dictamen.pdf`,
-			// 	Body: fileContent,
-			// 	ACL: 'public-read',
-			// 	ContentType: 'application/pdf',
-			// 	Metadata: {
-			// 		fieldname: 'dictamen',
-			// 	},
-			// };
-			// const client = new S3Client(config);
-			// const result = await client.send(new PutObjectCommand(params));
+			if (DATA_SOURCES.UPLOAD_S3) {
+				const params: PutObjectCommandInput = {
+					Bucket: 'ut-src',
+					Key: `test/dictamen.pdf`,
+					Body: fileContent,
+					ACL: 'public-read',
+					ContentType: 'application/pdf',
+					Metadata: {
+						fieldname: 'dictamen',
+					},
+				};
+				const client = new S3Client(config);
+				const result = await client.send(new PutObjectCommand(params));
+				logger({
+					dirname: __dirname,
+					proc: 'createReport',
+					message: result,
+				});
+			}
 			res.status(200).json({ message: 'Report generated' });
 		});
 	} catch (error: any) {

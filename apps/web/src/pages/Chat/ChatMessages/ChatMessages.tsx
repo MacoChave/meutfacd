@@ -4,7 +4,7 @@ import { DotsLoaders } from '@/components/Loader/DotsLoaders';
 import { useCustomFetch } from '@/hooks/useFetch';
 import { TChat } from '@/models/Chat';
 import { TMessage } from '@/models/Message';
-import { ResultType } from '@/models/Result';
+import { TResult } from '@/models/Fetching';
 import { postData } from '@/services/fetching';
 import { formatDate } from '@/utils/formatHandler';
 import { Autorenew, Send } from '@mui/icons-material';

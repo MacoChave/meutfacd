@@ -10,7 +10,7 @@ import {
 } from '@/models/CourseTutor';
 import { UserType } from '@/models/Perfil';
 import { TPeriod } from '@/models/Period';
-import { ResultType } from '@/models/Result';
+import { TResult } from '@/models/Fetching';
 import { TSchedule } from '@/models/Schedule';
 import { PickEvaluador } from '@/pages/encargado/components/PickEvaluador';
 import { PickHorario } from '@/pages/encargado/components/PickHorario';
@@ -50,7 +50,7 @@ const Form: React.FC<FormProps> = ({ onClose }) => {
 	});
 
 	const onSubmit: SubmitHandler<TCourseTutor> = async (data) => {
-		const result: ResultType = await postData({
+		const result: TResult = await postData({
 			path: URL.COURSE_TUTOR,
 			body: {
 				salon: data['salon'],

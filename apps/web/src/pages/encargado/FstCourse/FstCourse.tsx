@@ -25,6 +25,7 @@ import swal from 'sweetalert';
 import { PickCourseTutor } from '../components/PickCourseTutor';
 import { PickHorario } from '../components/PickHorario';
 import { PickJornada } from '../components/PickJornada';
+import { SpinLoader } from '@/components/Loader/SpinLoader';
 
 export type FstCourseProps = Record<string, never>;
 
@@ -229,7 +230,7 @@ const FstCourse: React.FC<FstCourseProps> = ({}) => {
 					</Box>
 				</Box>
 			</Contenedor>
-			{waiting && <Loader />}
+			{waiting && <SpinLoader />}
 		</>
 	);
 };

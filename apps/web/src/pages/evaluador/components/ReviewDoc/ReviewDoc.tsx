@@ -1,6 +1,6 @@
 import { URL } from '@/api/server';
 import { APROBADO, ESPERA, PREVIA, RECHAZADO } from '@/consts/vars';
-import { ResultType } from '@/models/Result';
+import { TResult } from '@/models/Fetching';
 import { postData, putData } from '@/services/fetching';
 import { Box, Button, TextField } from '@mui/material';
 import React, { useState } from 'react';
@@ -25,7 +25,7 @@ const ReviewDoc: React.FC<ReviewDocProps> = ({ curReview, onClose }) => {
 			);
 			return;
 		}
-		const result: ResultType = await putData({
+		const result: TResult = await putData({
 			path: `${URL.REVIEW}`,
 			body: { estado: RECHAZADO, detalle: comment },
 			params: { id_revision: curReview.id_revision },
@@ -55,7 +55,7 @@ const ReviewDoc: React.FC<ReviewDocProps> = ({ curReview, onClose }) => {
 			return;
 		}
 
-		const result: ResultType = await putData({
+		const result: TResult = await putData({
 			path: `${URL.REVIEW}`,
 			body: { estado: PREVIA, detalle: comment },
 			params: { id_revision: curReview.id_revision },
@@ -65,7 +65,7 @@ const ReviewDoc: React.FC<ReviewDocProps> = ({ curReview, onClose }) => {
 			swal('Éxito', 'Se envió a previa el documento', 'success');
 
 			Promise.all([
-				await postData<ResultType>({
+				await postData<TResult>({
 					path: URL.NOTIFICATION,
 					body: {
 						id_emisor: curReview.id_tutor,
@@ -82,12 +82,12 @@ const ReviewDoc: React.FC<ReviewDocProps> = ({ curReview, onClose }) => {
 
 	const onApprove = async () => {
 		Promise.all([
-			putData<ResultType>({
+			putData<TResult>({
 				path: URL.REVIEW,
 				body: { estado: APROBADO, detalle: 'Documento aprobado' },
 				params: { id_revision: curReview.id_revision },
 			}),
-			postData<ResultType>({
+			postData<TResult>({
 				path: URL.REVIEW,
 				body: {
 					id_tesis: curReview.id_tesis,
@@ -95,7 +95,7 @@ const ReviewDoc: React.FC<ReviewDocProps> = ({ curReview, onClose }) => {
 					estado: ESPERA,
 				},
 			}),
-			await postData<ResultType>({
+			await postData<TResult>({
 				path: URL.NOTIFICATION,
 				body: {
 					id_emisor: curReview.id_tutor,

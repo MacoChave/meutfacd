@@ -5,7 +5,7 @@ import { useCustomFetch } from '@/hooks/useFetch';
 import { Box, Typography } from '@mui/material';
 import React from 'react';
 import { FormPeriod } from '../FormPeriod';
-import { ResultType } from '@/models/Result';
+import { TResult } from '@/models/Fetching';
 import { deleteData } from '@/services/fetching';
 import swal from 'sweetalert';
 
@@ -22,7 +22,7 @@ const PeriodData: React.FC<PeriodDataProps> = ({}) => {
 	};
 
 	const onDelete = async (item: any) => {
-		const result: ResultType = await deleteData({
+		const result: TResult = await deleteData({
 			path: URL.PERIOD,
 			params: { id_jornada: item.id_jornada },
 		});

@@ -4,6 +4,8 @@ import { TSignIn } from '../models/signIn';
 import { errorHttp } from '../utils/error.handle';
 import { comparePassword, encryptPassword, generarToken } from '../utils/token';
 import { getBodyFromVerification, sendEmail } from '../utils/email';
+import { DATA_SOURCES } from '../config/vars.config';
+import { logger } from '../utils/logger';
 
 const signIn = async ({ user, password }: TSignIn) => {
 	try {
@@ -120,15 +122,22 @@ export const logupHandler = async ({ body, query }: Request, res: Response) => {
 		}
 
 		// SEND EMAIL VERIFICATION TO USER
-		const emailData = await sendEmail({
-			to: correo,
-			plainText: 'Por favor, verifica tu correo electrónico',
-			subject: 'Verificación de correo electrónico',
-			content: getBodyFromVerification({
-				username: nombre,
-				email: correo,
-			}),
-		});
+		if (DATA_SOURCES.SEND_EMAIL) {
+			const emailData = await sendEmail({
+				to: correo,
+				plainText: 'Por favor, verifica tu correo electrónico',
+				subject: 'Verificación de correo electrónico',
+				content: getBodyFromVerification({
+					username: nombre,
+					email: correo,
+				}),
+			});
+			logger({
+				dirname: __dirname,
+				proc: 'logupHandler',
+				message: emailData,
+			});
+		}
 
 		res.status(200).json({ msg: 'Usuario creado' });
 	} catch (error: any) {

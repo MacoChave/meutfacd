@@ -6,7 +6,7 @@ import { conectar } from './config/mysql';
 import { DATA_SOURCES } from './config/vars.config';
 import { router } from './routes';
 
-const PORT = DATA_SOURCES.PORT;
+const PORT = DATA_SOURCES.API_PORT;
 
 const app = express();
 
@@ -23,7 +23,7 @@ app.use(
 app.use(
 	fileUpload({
 		useTempFiles: true,
-		tempFileDir: './storage',
+		tempFileDir: '/storage',
 		limits: { fileSize: 50 * 1024 * 1024 },
 		debug: true,
 	})

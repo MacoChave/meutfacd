@@ -2,7 +2,7 @@ import { URL } from '@/api/server';
 import { DotsLoaders } from '@/components/Loader/DotsLoaders';
 import { McTable } from '@/components/MyTable';
 import { useCustomFetch } from '@/hooks/useFetch';
-import { ResultType } from '@/models/Result';
+import { TResult } from '@/models/Fetching';
 import { deleteData } from '@/services/fetching';
 import { Box, Typography } from '@mui/material';
 import React from 'react';
@@ -22,7 +22,7 @@ const ScheduleData: React.FC<ScheduleDataProps> = ({}) => {
 	};
 
 	const onDelete = async (item: any) => {
-		const result: ResultType = await deleteData({
+		const result: TResult = await deleteData({
 			path: URL.SCHEDULE,
 			params: { id_horario: item.id_horario },
 		});

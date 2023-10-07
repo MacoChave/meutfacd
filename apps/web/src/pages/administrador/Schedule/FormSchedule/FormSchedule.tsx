@@ -4,7 +4,7 @@ import { McAutocomplete } from '@/components/McWithForms/McAutocomplete';
 import { McInput } from '@/components/McWithForms/McInput';
 import { useCustomFetch } from '@/hooks/useFetch';
 import { TPeriod } from '@/models/Period';
-import { ResultType } from '@/models/Result';
+import { TResult } from '@/models/Fetching';
 import { ScheduleDefault, ScheduleSchema, TSchedule } from '@/models/Schedule';
 import { postData } from '@/services/fetching';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -36,7 +36,7 @@ const FormSchedule: React.FC<FormScheduleProps> = ({ onClose }) => {
 	});
 
 	const onSubmit: SubmitHandler<TSchedule> = async (data) => {
-		const result: ResultType = await postData({
+		const result: TResult = await postData({
 			path: `${URL.SCHEDULE}`,
 			body: {
 				id_jornada: data.id_jornada,

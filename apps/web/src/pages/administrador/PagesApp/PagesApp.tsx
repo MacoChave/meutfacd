@@ -3,7 +3,7 @@ import { Contenedor, McModal } from '@/components';
 import { McTable } from '@/components/MyTable';
 import { useCustomFetch } from '@/hooks/useFetch';
 import { PageAppType } from '@/models/PageApp';
-import { ResultType } from '@/models/Result';
+import { TResult } from '@/models/Fetching';
 import { putData } from '@/services/fetching';
 import React, { useState } from 'react';
 import swal from 'sweetalert';
@@ -24,7 +24,7 @@ const PagesApp: React.FC<PagesAppProps> = ({}) => {
 	});
 
 	const onSave = async (item: any) => {
-		const result: ResultType = await putData({
+		const result: TResult = await putData({
 			path: `${URL.GENERIC}`,
 			body: {
 				table: 'ut_pagina',

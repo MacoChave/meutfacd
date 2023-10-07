@@ -4,7 +4,7 @@ import { DotsLoaders } from '@/components/Loader/DotsLoaders';
 import { ESPERA } from '@/consts/vars';
 import { useCustomFetch } from '@/hooks/useFetch';
 import { UserType } from '@/models/Perfil';
-import { ResultType } from '@/models/Result';
+import { TResult } from '@/models/Fetching';
 import { ReviewType } from '@/models/Review';
 import { putData } from '@/services/fetching';
 import { style } from '@/themes/styles';
@@ -55,7 +55,7 @@ const Draft: React.FC<DraftProps> = ({}) => {
 		const id_tutor = docente.id_usuario;
 		const id_revisiones = assignmentUsers.map((s) => s.id_revision);
 
-		const results: ResultType[] = await putData({
+		const results: TResult[] = await putData({
 			path: `${URL.REVIEW}/assign`,
 			body: { id_revisiones, id_tutor },
 		});
