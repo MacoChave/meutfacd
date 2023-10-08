@@ -22,14 +22,9 @@ import { logger } from '../utils/logger';
 
 export const createReport = async ({ body, user }: Request, res: Response) => {
 	try {
-		const {
-			idStudent,
-			idResponsible,
-			title,
-			idReview,
-			current_station,
-			next_station,
-		} = body;
+		console.log({ body, user });
+		const { idStudent, title, idReview, currentStation, nextStation } =
+			body;
 
 		const responsible = await sqlSelectOne({
 			table: 'ut_v_usuarios',
@@ -38,7 +33,7 @@ export const createReport = async ({ body, user }: Request, res: Response) => {
 				{
 					column: 'roles',
 					operator: 'like',
-					value: `%${getNameStation(next_station)}%`,
+					value: `%${nextStation}%`,
 				},
 			],
 		});
@@ -50,9 +45,15 @@ export const createReport = async ({ body, user }: Request, res: Response) => {
 		});
 
 		const student = await sqlSelectOne({
-			table: 'ut_v_usuarios',
-			columns: ['nombre', 'apellidos'],
+			table: 'usuario',
+			columns: ['carnet', 'nombre', 'apellidos'],
 			query: { id_usuario: idStudent },
+		});
+
+		console.log({
+			responsible,
+			docente,
+			student,
 		});
 
 		const filename: string = 'src/storage/report.pdf';
@@ -68,7 +69,7 @@ export const createReport = async ({ body, user }: Request, res: Response) => {
 		doc.fontSize(12).text(
 			`Guatemala, ${formatDate({
 				date: new Date(),
-				format: 'iso',
+				format: 'report',
 				type: 'date',
 			})}`,
 			{
@@ -83,14 +84,14 @@ export const createReport = async ({ body, user }: Request, res: Response) => {
 		doc.fontSize(12).text(
 			`${responsible?.nombre ?? 'Encargado'} ${
 				responsible?.apellidos ?? ''
-			}`,
+			}`.toUpperCase(),
 			{
 				align: 'left',
 				lineGap: 2,
 			}
 		);
 
-		doc.fontSize(12).text(`${responsible?.roles ?? 'Rol'}`, {
+		doc.fontSize(12).text(`${responsible?.roles ?? 'Rol'}`.toUpperCase(), {
 			align: 'left',
 			lineGap: 2,
 		});
@@ -125,7 +126,7 @@ export const createReport = async ({ body, user }: Request, res: Response) => {
 		doc.fontSize(12).text(
 			`${student?.nombre ?? 'NOMBRES'} ${
 				student?.apellidos ?? 'APELLIDOS'
-			} `,
+			} `.toUpperCase(),
 			{
 				align: 'left',
 				lineGap: 2,
@@ -141,7 +142,7 @@ export const createReport = async ({ body, user }: Request, res: Response) => {
 		});
 
 		doc.font('Helvetica-Bold');
-		doc.fontSize(12).text(`"${title}"`, {
+		doc.fontSize(12).text(`"${title}"`.toUpperCase(), {
 			align: 'left',
 			lineGap: 2,
 		});
@@ -162,9 +163,7 @@ export const createReport = async ({ body, user }: Request, res: Response) => {
 
 		doc.font('Helvetica');
 		doc.fontSize(12).text(
-			`para que se le otorgue el avance a ${getNameStation(
-				next_station
-			)}.`,
+			`para que se le otorgue el avance a ${nextStation}.`,
 			{ align: 'left', lineGap: 2 }
 		);
 
@@ -188,7 +187,7 @@ export const createReport = async ({ body, user }: Request, res: Response) => {
 			}
 		);
 
-		doc.fontSize(12).text(`Docente ${getNameStation(current_station)}`, {
+		doc.fontSize(12).text(`Docente ${currentStation}`, {
 			align: 'center',
 			lineGap: 2,
 		});
@@ -206,7 +205,7 @@ export const createReport = async ({ body, user }: Request, res: Response) => {
 			if (DATA_SOURCES.UPLOAD_S3) {
 				const params: PutObjectCommandInput = {
 					Bucket: 'ut-src',
-					Key: `test/dictamen.pdf`,
+					Key: `${student.carnet}/dictamen.pdf`,
 					Body: fileContent,
 					ACL: 'public-read',
 					ContentType: 'application/pdf',
@@ -222,7 +221,7 @@ export const createReport = async ({ body, user }: Request, res: Response) => {
 					message: result,
 				});
 			}
-			res.status(200).json({ message: 'Report generated' });
+			res.status(200).json({ name: `${student.carnet}/dictamen.pdf` });
 		});
 	} catch (error: any) {
 		console.log({ error });

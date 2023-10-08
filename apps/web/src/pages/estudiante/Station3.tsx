@@ -78,16 +78,25 @@ const Estacion3 = () => {
 						<TextField
 							variant='standard'
 							label='Catedrático'
+							InputProps={{
+								disabled: true,
+							}}
 							value={revision?.tutor ?? 'No asignado'}
 						/>
 						<TextField
 							variant='standard'
 							label='Jornada'
+							InputProps={{
+								disabled: true,
+							}}
 							value={revision?.jornada ?? 'No asignado'}
 						/>
 						<TextField
 							variant='standard'
 							label='Horario'
+							InputProps={{
+								disabled: true,
+							}}
 							value={`${revision?.hora_inicio ?? 'Inicio'} - ${
 								revision?.hora_final ?? 'Final'
 							}`}
@@ -95,11 +104,17 @@ const Estacion3 = () => {
 						<TextField
 							variant='standard'
 							label='Días'
+							InputProps={{
+								disabled: true,
+							}}
 							value={revision?.dias ?? 'No asignado'}
 						/>
 						<TextField
 							variant='standard'
 							label='Salón'
+							InputProps={{
+								disabled: true,
+							}}
 							value={revision?.salon ?? 'No asignado'}
 						/>
 					</Box>

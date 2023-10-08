@@ -63,7 +63,11 @@ const StylesComision: React.FC<StylesComisionProps> = ({}) => {
 				title='Revisión de punto de tesis'
 				open={openReview}
 				onClose={onClose}>
-				<ReviewDoc curReview={curReview} onClose={onClose} />
+				<ReviewDoc
+					station={5}
+					curReview={curReview}
+					onClose={onClose}
+				/>
 			</McModal>
 		</>
 	);

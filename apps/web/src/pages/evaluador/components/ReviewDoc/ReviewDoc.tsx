@@ -1,5 +1,6 @@
 import { URL } from '@/api/server';
-import { APROBADO, ESPERA, PREVIA, RECHAZADO } from '@/consts/vars';
+import { DotsLoaders } from '@/components/Loader/DotsLoaders';
+import { APROBADO, ESPERA, ESTACIONES, PREVIA, RECHAZADO } from '@/consts/vars';
 import { TResult } from '@/models/Fetching';
 import { postData, putData } from '@/services/fetching';
 import { Box, Button, TextField } from '@mui/material';
@@ -7,11 +8,17 @@ import React, { useState } from 'react';
 import swal from 'sweetalert';
 
 export type ReviewDocProps = {
+	station: number;
 	curReview: any;
 	onClose: () => void;
 };
 
-const ReviewDoc: React.FC<ReviewDocProps> = ({ curReview, onClose }) => {
+const ReviewDoc: React.FC<ReviewDocProps> = ({
+	station,
+	curReview,
+	onClose,
+}) => {
+	const [loading, setLoading] = useState(true);
 	const [comment, setComment] = useState('');
 
 	const commentEmpty = () => comment === '';
@@ -81,10 +88,25 @@ const ReviewDoc: React.FC<ReviewDocProps> = ({ curReview, onClose }) => {
 	};
 
 	const onApprove = async () => {
+		const dictamen = await postData<any>({
+			path: `${URL.PDF}/dictamen`,
+			body: {
+				idStudent: curReview.id_usuario,
+				title: curReview.titulo,
+				idReview: curReview.id_revision,
+				currentStation: ESTACIONES[station].toLowerCase(),
+				nextStation: ESTACIONES[station + 1].toLowerCase(),
+			},
+		});
+
 		Promise.all([
 			putData<TResult>({
 				path: URL.REVIEW,
-				body: { estado: APROBADO, detalle: 'Documento aprobado' },
+				body: {
+					estado: APROBADO,
+					detalle: 'Documento aprobado',
+					ruta_dictamen: dictamen.name ?? '',
+				},
 				params: { id_revision: curReview.id_revision },
 			}),
 			postData<TResult>({
@@ -95,7 +117,7 @@ const ReviewDoc: React.FC<ReviewDocProps> = ({ curReview, onClose }) => {
 					estado: ESPERA,
 				},
 			}),
-			await postData<TResult>({
+			postData<TResult>({
 				path: URL.NOTIFICATION,
 				body: {
 					id_emisor: curReview.id_tutor,
@@ -104,22 +126,23 @@ const ReviewDoc: React.FC<ReviewDocProps> = ({ curReview, onClose }) => {
 				},
 			}),
 		])
-			.then(([result1, result2]) => {
-				if (result1.affectedRows && result2.affectedRows) {
+			.then(([putReview, postReview, postNotify]) => {
+				if (putReview.warningStatus) {
 					swal(
-						'Éxito',
-						'Se registró el avance a la siguiente fase del estudiante',
+						'Error',
+						'No se pudo regitrar el avance del estudiante',
 						'success'
 					);
-				} else if (result1.warningStatus > 0) {
+				} else if (postReview.warningStatus) {
 					swal('Error', 'No se pudo aprobar el documento', 'error');
-				} else if (result2.warningStatus > 0) {
+				} else if (postNotify.warningStatus) {
 					swal(
 						'Error',
 						'No se pudo crear el registro para avanzar a la siguiente etapa',
 						'error'
 					);
 				}
+				swal('Éxito', 'Se aprobó el documento', 'success');
 				onClose();
 			})
 			.catch(() => {
@@ -179,6 +202,7 @@ const ReviewDoc: React.FC<ReviewDocProps> = ({ curReview, onClose }) => {
 					</Button>
 				</Box>
 			</Box>
+			{loading && <DotsLoaders />}
 		</>
 	);
 };

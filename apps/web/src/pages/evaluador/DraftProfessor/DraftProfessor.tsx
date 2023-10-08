@@ -64,7 +64,11 @@ const DraftProfessor: React.FC<DraftProfessorProps> = ({}) => {
 				title='Revisión de punto de tesis'
 				open={openReview}
 				onClose={onClose}>
-				<ReviewDoc curReview={curReview} onClose={onClose} />
+				<ReviewDoc
+					station={1}
+					curReview={curReview}
+					onClose={onClose}
+				/>
 			</McModal>
 		</>
 	);

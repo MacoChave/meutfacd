@@ -219,7 +219,7 @@ const Estacion4 = () => {
 										{...field}
 										fullWidth
 										label='Título del punto de tesis'
-										variant='filled'
+										variant='standard'
 										InputProps={{
 											readOnly:
 												revision.estado === REVISION ||

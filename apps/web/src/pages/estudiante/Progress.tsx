@@ -5,11 +5,8 @@ import { McTable } from '@/components/MyTable';
 import { APROBADO } from '@/consts/vars';
 import { useCustomFetch } from '@/hooks/useFetch';
 import { ProgressType } from '@/interfaces/ProgressType';
-import { postData } from '@/services/fetching';
-import { errorHandler } from '@/utils/errorHandler';
-import { downloadFileByBloodPart } from '@/utils/fileManagment';
+import { getData } from '@/services/fetching';
 import { Typography } from '@mui/material';
-import { AxiosError } from 'axios';
 import { useState } from 'react';
 import swal from 'sweetalert';
 import Dialogo from '../../components/Modal';
@@ -26,6 +23,7 @@ const Progress = () => {
 				'id_revision',
 				'fecha_creacion',
 				'fecha_modificacion',
+				'ruta_dictamen',
 				'fecha',
 				'detalle',
 				'tutor',
@@ -47,30 +45,16 @@ const Progress = () => {
 
 	const handlePrint = async (row: Object) => {
 		if ((row as ProgressType).estado !== APROBADO) {
-			swal('Error', 'No se puede generar el dictamen', 'error');
+			swal('Error', 'No hay documento dictámen para ver', 'error');
 			return;
 		}
-		try {
-			const data = await postData<any>({
-				path: `${URL.PDF}/dictamen`,
-				body: {
-					nameEmisor: `Encargado de estación ${
-						(row as ProgressType).estacion
-					}`,
-					nameReceiver: `${(row as ProgressType).id_estudiante}`,
-					thesisTitle: `${(row as ProgressType).titulo}`,
-					station: `${(row as ProgressType).estacion}`,
-				},
-				responseType: 'arraybuffer',
-				headers: {
-					Accept: 'application/pdf',
-				},
-			});
-			downloadFileByBloodPart(data, 'dictamen.pdf');
-		} catch (error) {
-			errorHandler(error as AxiosError);
-		} finally {
-		}
+
+		const { url }: any = await getData({
+			path: URL.STORAGE._,
+			body: {},
+			params: { name: (row as ProgressType).ruta_dictamen },
+		});
+		window.open(url);
 	};
 
 	if (isLoading) return <DotsLoaders />;

@@ -48,23 +48,35 @@ const Estacion5 = () => {
 							gap: 4,
 						}}>
 						<TextField
-							variant='filled'
+							variant='standard'
 							label='Catedrático'
+							InputProps={{
+								disabled: true,
+							}}
 							value={revision?.tutor || ''}
 						/>
 						<TextField
-							variant='filled'
+							variant='standard'
 							label='Fecha'
+							InputProps={{
+								disabled: true,
+							}}
 							value={revision?.fecha_curso || ''}
 						/>
 						<TextField
-							variant='filled'
+							variant='standard'
 							label='Horario'
+							InputProps={{
+								disabled: true,
+							}}
 							value={revision?.dias || ''}
 						/>
 						<TextField
-							variant='filled'
+							variant='standard'
 							label='Salón'
+							InputProps={{
+								disabled: true,
+							}}
 							value={revision?.salon || ''}
 						/>
 					</Box>

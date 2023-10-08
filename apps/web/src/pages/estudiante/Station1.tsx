@@ -107,7 +107,7 @@ const Estacion1 = () => {
 						path: URL.THESIS,
 						body: {
 							titulo: draft.titulo,
-							ruta_tesis: draft.name,
+							ruta_tesis: draft?.name,
 						},
 					}),
 					postData({
@@ -160,11 +160,11 @@ const Estacion1 = () => {
 		}
 	};
 
-	const openPDF = async () => {
+	const openPDF = async (filename: string) => {
 		const { url }: any = await getData({
 			path: URL.STORAGE._,
 			body: {},
-			params: { name: revision.ruta_perfil },
+			params: { name: filename },
 		});
 		window.open(url);
 	};
@@ -204,7 +204,9 @@ const Estacion1 = () => {
 										<IconButton
 											color='info'
 											title='Ver archivo subido'
-											onClick={() => openPDF()}>
+											onClick={() =>
+												openPDF(revision.ruta_perfil)
+											}>
 											<OpenInBrowser />
 										</IconButton>
 									)}
@@ -236,7 +238,7 @@ const Estacion1 = () => {
 										{...field}
 										fullWidth
 										label='Título del punto de tesis'
-										variant='filled'
+										variant='standard'
 										InputProps={{
 											readOnly:
 												revision.estado === REVISION ||
