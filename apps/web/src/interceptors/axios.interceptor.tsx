@@ -81,7 +81,7 @@ const onErrorResponse = (error: AxiosError | Error): Promise<AxiosError> => {
 			}
 		});
 
-		logOnDev(`[API] | Error ${error.message}`);
+		logOnDev(`[API] | AxiosError ${error.message}`);
 	} else {
 		logOnDev(`[API] | Error ${error.message}`);
 		swal('!Oops!', error.message, 'error');

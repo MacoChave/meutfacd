@@ -85,7 +85,7 @@ const Home = (props: any) => {
 			</Box>
 			<Box>
 				<Typography textAlign='center'>
-					Administración 2021-2025 Decano Henry Arraiga
+					Administración 2021-2025 Decano Henry Arriaga
 				</Typography>
 			</Box>
 		</Box>

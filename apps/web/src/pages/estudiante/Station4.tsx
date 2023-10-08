@@ -93,7 +93,7 @@ const Estacion4 = () => {
 			);
 			setIsUploaded(true);
 		} catch (error: any) {
-			errorHandler(error as AxiosError);
+			// errorHandler(error as AxiosError);
 		} finally {
 			setIsUploading(false);
 		}

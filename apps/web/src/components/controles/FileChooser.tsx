@@ -87,11 +87,12 @@ const FileChooser: React.FC<fileChooserProps> = ({
 						Selecciona tu archivo
 					</Button>
 				</FormLabel>
-				<Input
+				<input
+					style={{ display: 'none' }}
+					id='file'
 					type='file'
 					name='file'
-					id='file'
-					style={{ display: 'none' }}
+					accept='application/pdf'
 					onChange={onChange}
 				/>
 			</Box>

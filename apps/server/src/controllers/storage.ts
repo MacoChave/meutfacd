@@ -7,6 +7,13 @@ import { getExtFile, uploadFile } from '../utils/upload';
 const uploadDraft = async ({ files, user }: Request, res: Response) => {
 	try {
 		logger({ dirname: __dirname, proc: 'uploadDraft', message: files });
+
+		if (getExtFile(files.draft.name) !== 'pdf') {
+			throw new Error(
+				'Formato no soportado. Convierta su archivo a PDF y vuelva a intentarlo'
+			);
+		}
+
 		const result = await uploadFile(
 			files.draft.tempFilePath,
 			files.draft.name,
@@ -24,6 +31,13 @@ const uploadDraft = async ({ files, user }: Request, res: Response) => {
 const uploadTesis = async ({ files, user }: Request, res: Response) => {
 	try {
 		logger({ dirname: __dirname, proc: 'uploadTesis', message: files });
+
+		if (getExtFile(files) !== 'pdf') {
+			throw new Error(
+				'Formato no soportado. Convierta su archivo a PDF y vuelva a intentarlo'
+			);
+		}
+
 		const result = await uploadFile(
 			files.thesis.tempFilePath,
 			files.thesis.name,
@@ -41,6 +55,13 @@ const uploadTesis = async ({ files, user }: Request, res: Response) => {
 const uploadDictamen = async ({ files, user }: Request, res: Response) => {
 	try {
 		logger({ dirname: __dirname, proc: 'uploadDictamen', message: files });
+
+		if (getExtFile(files) !== 'pdf') {
+			throw new Error(
+				'Formato no soportado. Convierta su archivo a PDF y vuelva a intentarlo'
+			);
+		}
+
 		const result = await uploadFile(
 			files.dictamen.tempFilePath,
 			files.dictamen.name,

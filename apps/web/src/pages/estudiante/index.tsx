@@ -6,26 +6,9 @@ import { Outlet } from 'react-router-dom';
 import Dashboard from '../../layouts/Dashboard';
 
 const HomeEstudiante = () => {
-	const {
-		data: options,
-		isLoading,
-		isError,
-	} = useFetch({
-		url: `${URL.PERMISSION}/ALL`,
-		params: {},
-	});
-
-	if (isLoading) return <DotsLoaders />;
-	if (isError)
-		return <Typography>No se pudieron cargar los permisos</Typography>;
-
 	return (
 		<Dashboard>
-			<Box
-				sx={{
-					width: '90%',
-					mx: 'auto',
-				}}>
+			<Box>
 				<Toolbar />
 				<Toolbar />
 				<Outlet />
