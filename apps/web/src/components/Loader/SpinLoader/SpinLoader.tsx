@@ -24,7 +24,7 @@ const SpinLoader: React.FC<SpinLoaderProps> = ({
 				placeItems: 'center',
 				backgroundColor: 'rgba(0,0,0,0.5)',
 			}}>
-			<Box className='loader' component={'div'} />
+			<Box className='loader__spin' component={'div'} />
 			<Typography variant='h4' color={'white'}>
 				{message}
 			</Typography>

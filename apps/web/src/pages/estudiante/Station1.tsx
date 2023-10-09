@@ -107,7 +107,7 @@ const Estacion1 = () => {
 						path: URL.THESIS,
 						body: {
 							titulo: draft.titulo,
-							ruta_tesis: draft?.name,
+							ruta_perfil: draft?.name,
 						},
 					}),
 					postData({
@@ -127,12 +127,14 @@ const Estacion1 = () => {
 						path: URL.THESIS,
 						body: {
 							titulo: draft.titulo,
-							ruta_tesis: draft.name,
+							ruta_perfil: draft.name,
 						},
 					}),
 					putData({
 						path: URL.REVIEW,
-						body: {},
+						body: {
+							estado: ESPERA,
+						},
 						params: {
 							id_revision: revision.id_revision,
 						},

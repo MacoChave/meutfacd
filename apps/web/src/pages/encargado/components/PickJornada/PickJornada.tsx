@@ -1,4 +1,5 @@
 import { URL } from '@/api/server';
+import { DotsLoaders } from '@/components/Loader/DotsLoaders';
 import { McAutocomplete } from '@/components/McWithoutForms/McAutocomplete';
 import { useCustomFetch } from '@/hooks/useFetch';
 import { TPeriod } from '@/models/Period';
@@ -23,7 +24,7 @@ const PickJornada: React.FC<PickJornadaProps> = ({ jornada, setJornada }) => {
 		},
 	});
 
-	if (isLoadingJornadas) return <Typography>Cargando jornadas</Typography>;
+	if (isLoadingJornadas) return <DotsLoaders />;
 	if (isErrorJornadas)
 		return <Typography>Error al cargar jornadas</Typography>;
 

@@ -111,10 +111,12 @@ export const formatDate = ({
 };
 
 export const formatToInputDate = (strTimestamp: string) => {
+	console.log({ strTimestamp });
 	const [strDate, strTime] = strTimestamp.split('T');
 	const sep: boolean = strDate.includes('/');
 	const [day, month, year] = strDate.split(sep ? '/' : '-');
-	const [hour, minutes] = strTime.split(':');
+	let stYear = +day > 31 ? day : year;
+	let stDay = +day > 31 ? year : day;
 
-	return `${day}-${month}-${year}`;
+	return `${stYear}-${month}-${stDay}`;
 };

@@ -1,13 +1,12 @@
 import { URL as URI } from '@/api/server';
 import { Contenedor, McModal } from '@/components';
+import { DotsLoaders } from '@/components/Loader/DotsLoaders';
 import { McTable } from '@/components/MyTable';
 import { useCustomFetch } from '@/hooks/useFetch';
 import { getData } from '@/services/fetching';
-import React, { useState } from 'react';
-import { ReviewDoc } from '../components/ReviewDoc';
-import { DotsLoaders } from '@/components/Loader/DotsLoaders';
 import { Typography } from '@mui/material';
-import { ReviewType } from '@/models/Review';
+import React, { lazy, useState } from 'react';
+const ReviewDoc = lazy(() => import('../components/ReviewDoc/ReviewDoc'));
 
 export type DraftProfessorProps = Record<string, never>;
 

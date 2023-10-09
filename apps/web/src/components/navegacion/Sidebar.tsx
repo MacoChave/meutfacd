@@ -10,9 +10,8 @@ import {
 	Tooltip,
 	Typography,
 } from '@mui/material';
-import { DrawerProps } from '../../propTypes/Appbar';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { useEffect, useState } from 'react';
+import { DrawerProps } from '../../propTypes/Appbar';
 
 const drawerWidth = '200px';
 
@@ -26,7 +25,7 @@ const Sidebar = ({ menuArray, open, setOpen }: DrawerProps) => {
 				variant='permanent'
 				open={open}
 				sx={{
-					width: { xs: 60, md: drawerWidth },
+					width: { xs: 50, md: drawerWidth },
 					flexShrink: 0,
 					[`& .MuiDrawer-paper`]: {
 						width: { xs: 60, md: drawerWidth },

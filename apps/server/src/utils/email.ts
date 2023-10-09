@@ -65,7 +65,7 @@ export const getBodyFromActivity = ({
 	return `
         <!-- CONTENT -->
         <div style="background: #ffffff; padding: 25px;">
-            <p style="font-size: xx-large; font-weight: bold;">Verificación de correo electrónico</p>
+            <p style="font-size: xx-large; font-weight: bold;">Nueva actividad</p>
             <p>Estimado ${username}</p>
             <p>Esperamos que te encuentres bien. Queremos informarte que se ha ${action} una actividad en tu cuenta.</p>
             <p>Detalles:</p>

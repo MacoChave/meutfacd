@@ -45,10 +45,13 @@ export const ToolbarWithoutSesion = ({ children }: ToolbarProps) => {
 				gridArea: 'header',
 				zIndex: (theme) => theme.zIndex.drawer + 1,
 			}}>
-			<Toolbar>
-				<IconButton
-					color='inherit'
-					sx={{ mr: 2, display: { sm: 'none' } }}>
+			<Toolbar
+				sx={{
+					display: 'flex',
+					flexDirection: 'row',
+					justifyContent: 'space-around',
+				}}>
+				<IconButton color='inherit' sx={{ mr: 2 }}>
 					<Menu />
 				</IconButton>
 				<img
@@ -61,13 +64,16 @@ export const ToolbarWithoutSesion = ({ children }: ToolbarProps) => {
 					loading='lazy'
 				/>
 				<Typography
-					variant='h6'
 					component='div'
-					sx={{ flexGrow: 1, display: { sx: 'none', sm: 'block' } }}
+					sx={{
+						cursor: 'pointer',
+						display: { xs: 'none', sm: 'block' },
+					}}
 					onClick={() => goToHome()}>
 					Unidad de tesis
 				</Typography>
-				<Box sx={{ display: { xs: 'none', sm: 'block' } }}>
+				<Box sx={{ flexGrow: 1 }} />
+				<Box sx={{ display: { xs: 'block', sm: 'block' } }}>
 					{children}
 				</Box>
 			</Toolbar>

@@ -18,18 +18,20 @@ const ReviewDoc: React.FC<ReviewDocProps> = ({
 	curReview,
 	onClose,
 }) => {
-	const [loading, setLoading] = useState(true);
+	const [loading, setLoading] = useState(false);
 	const [comment, setComment] = useState('');
 
 	const commentEmpty = () => comment === '';
 
 	const onReject = async () => {
+		setLoading(true);
 		if (commentEmpty()) {
 			swal(
 				'Error',
 				'Debe agregar un comentario para rechazar el documento',
 				'error'
 			);
+			setLoading(false);
 			return;
 		}
 		const result: TResult = await putData({
@@ -44,21 +46,25 @@ const ReviewDoc: React.FC<ReviewDocProps> = ({
 				body: {
 					id_receptor: curReview.tutor,
 					mensaje: `El documento ${curReview.titulo} fue rechazado por el evaluador`,
+					action: 'rechazado',
 				},
 			});
 			onClose();
 		} else {
 			swal('Error', 'Ocurrió un error al rechazar el documento', 'error');
 		}
+		setLoading(false);
 	};
 
 	const onPrior = async () => {
+		setLoading(true);
 		if (commentEmpty()) {
 			swal(
 				'Error',
 				'Debe agregar un comentario para enviar a previo el documento',
 				'error'
 			);
+			setLoading(false);
 			return;
 		}
 
@@ -78,6 +84,7 @@ const ReviewDoc: React.FC<ReviewDocProps> = ({
 						id_emisor: curReview.id_tutor,
 						id_receptor: curReview.id_usuario,
 						mensaje: `Su punto de tesis ${curReview.titulo} fue enviado a previa por el evaluador ${curReview.tutor}`,
+						action: 'comentado',
 					},
 				}),
 			]);
@@ -85,9 +92,11 @@ const ReviewDoc: React.FC<ReviewDocProps> = ({
 		} else {
 			swal('Error', 'No se pudo enviar a previa el documento', 'error');
 		}
+		setLoading(false);
 	};
 
 	const onApprove = async () => {
+		setLoading(false);
 		const dictamen = await postData<any>({
 			path: `${URL.PDF}/dictamen`,
 			body: {
@@ -123,6 +132,7 @@ const ReviewDoc: React.FC<ReviewDocProps> = ({
 					id_emisor: curReview.id_tutor,
 					id_receptor: curReview.id_usuario,
 					mensaje: `Su punto de tesis ${curReview.titulo} fue aprobado por el evaluador ${curReview.tutor}`,
+					action: 'aprobado',
 				},
 			}),
 		])
@@ -148,6 +158,7 @@ const ReviewDoc: React.FC<ReviewDocProps> = ({
 			.catch(() => {
 				swal('Error', 'No se pudo aprobar el documento', 'error');
 			});
+		setLoading(false);
 	};
 
 	return (

@@ -1,5 +1,5 @@
 /* HTML: <div class="loader"></div> */
-.loader {
+.loader__spin {
 	--d: 22px;
 	width: 4px;
 	height: 4px;
