@@ -103,8 +103,9 @@ const ReviewDoc: React.FC<ReviewDocProps> = ({
 				idStudent: curReview.id_usuario,
 				title: curReview.titulo,
 				idReview: curReview.id_revision,
-				currentStation: ESTACIONES[station].toLowerCase(),
-				nextStation: ESTACIONES[station + 1].toLowerCase(),
+				currentStation: ESTACIONES[station - 1].toLowerCase(),
+				nextStation: ESTACIONES[station].toLowerCase(),
+				filename: 'Punto de tesis',
 			},
 		});
 

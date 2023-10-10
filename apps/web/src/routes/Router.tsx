@@ -51,6 +51,9 @@ const DraftResponsible = lazy(() => import('@/pages/encargado/Draft/Draft'));
 const FstCourseResponsible = lazy(
 	() => import('@/pages/encargado/FstCourse/FstCourse')
 );
+const StudentTutor = lazy(
+	() => import('@/pages/encargado/StudentTutor/StudentTutor')
+);
 const SndCourseResponsible = lazy(
 	() => import('@/pages/encargado/ScndCourse/ScndCourse')
 );
@@ -228,6 +231,14 @@ export const router = createBrowserRouter([
 				element: (
 					<ProtectedRoute rol='encargado'>
 						{<FstCourseResponsible />}
+					</ProtectedRoute>
+				),
+			},
+			{
+				path: 'tutor-estudiante',
+				element: (
+					<ProtectedRoute rol='encargado'>
+						{<StudentTutor />}
 					</ProtectedRoute>
 				),
 			},

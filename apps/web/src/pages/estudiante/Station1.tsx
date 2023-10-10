@@ -76,9 +76,10 @@ const Estacion1 = () => {
 		try {
 			setIsUploading(true);
 			const formData = new FormData();
-			formData.append('draft', file);
+			formData.append('file', file);
+			formData.append('filename', 'preview');
 			const data = await postData<UploadFile>({
-				path: URL.STORAGE.DRAFT,
+				path: URL.STORAGE,
 				body: formData,
 				headers: {
 					'Content-Type': 'multipart/form-data',
@@ -164,7 +165,7 @@ const Estacion1 = () => {
 
 	const openPDF = async (filename: string) => {
 		const { url }: any = await getData({
-			path: URL.STORAGE._,
+			path: URL.STORAGE,
 			body: {},
 			params: { name: filename },
 		});

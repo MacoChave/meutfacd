@@ -31,7 +31,7 @@ const VerifiedDocument: React.FC<VerifiedDocumentProps> = ({}) => {
 		}
 
 		const { url }: any = await getData({
-			path: URL.STORAGE._,
+			path: URL.STORAGE,
 			body: {},
 			params: { name: data.ruta_dictamen },
 		});

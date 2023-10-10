@@ -26,6 +26,7 @@ import swal from 'sweetalert';
 import FileChooser from '../../components/controles/FileChooser';
 import { DotsLoaders } from '@/components/Loader/DotsLoaders';
 import { ReviewType } from '@/models/Review';
+import { EmptyReview } from '@/components/EmptyReview';
 
 const Estacion4 = () => {
 	const [isUploading, setIsUploading] = useState(false);
@@ -76,9 +77,10 @@ const Estacion4 = () => {
 		try {
 			setIsUploading(true);
 			const formData = new FormData();
-			formData.append('thesis', file);
+			formData.append('file', file);
+			formData.append('filename', 'thesis');
 			const data = await postData<UploadFile>({
-				path: URL.STORAGE.THESIS,
+				path: URL.STORAGE,
 				body: formData,
 				headers: {
 					'Content-Type': 'multipart/form-data',
@@ -146,7 +148,7 @@ const Estacion4 = () => {
 
 	const openPDF = async () => {
 		const { url }: any = await getData({
-			path: URL.STORAGE._,
+			path: URL.STORAGE,
 			body: {},
 			params: { name: revision.ruta_tesis },
 		});
@@ -170,9 +172,13 @@ const Estacion4 = () => {
 	if (isLoading) return <DotsLoaders />;
 	if (isError)
 		return <Typography>No se pudo cargar la revisión...</Typography>;
+
+	if (!revision)
+		return <EmptyReview title='Comisión y estilo (Presentar tesis)' />;
+
 	return (
 		<>
-			<Contenedor title='Presentar tesis'>
+			<Contenedor title='Comisión y estilo (Presentar tesis)'>
 				<form onSubmit={handleSubmit(onSubmit)}>
 					<Box sx={style}>
 						<Box>

@@ -1,5 +1,6 @@
 import { URL } from '@/api/server';
 import { Contenedor } from '@/components';
+import { EmptyReview } from '@/components/EmptyReview';
 import { DotsLoaders } from '@/components/Loader/DotsLoaders';
 import { useCustomFetch } from '@/hooks/useFetch';
 import { ReviewType } from '@/models/Review';
@@ -55,6 +56,11 @@ const Estacion3 = () => {
 
 	if (isLoading) return <DotsLoaders />;
 	if (isError) return <Typography>Error</Typography>;
+
+	if (!revision)
+		return (
+			<EmptyReview title='Curso 2: Elaboración y planeación de tesis' />
+		);
 
 	return (
 		<>

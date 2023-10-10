@@ -4,24 +4,29 @@ import { errorHttp } from '../utils/error.handle';
 import { logger } from '../utils/logger';
 import { getExtFile, uploadFile } from '../utils/upload';
 
-const uploadDraft = async ({ files, user }: Request, res: Response) => {
+const uploadStudentFile = async (
+	{ files, body, user }: Request,
+	res: Response
+) => {
 	try {
 		logger({ dirname: __dirname, proc: 'uploadDraft', message: files });
 
-		if (getExtFile(files.draft.name) !== 'pdf') {
+		if (getExtFile(files.file.name) !== 'pdf') {
 			throw new Error(
 				'Formato no soportado. Convierta su archivo a PDF y vuelva a intentarlo'
 			);
 		}
 
-		const result = await uploadFile(
-			files.draft.tempFilePath,
-			files.draft.name,
+		await uploadFile(
+			files.file.tempFilePath,
+			files.file.name,
 			user.carnet.toString(),
-			'preview'
+			body.filename
 		);
 		res.status(200).json({
-			name: `${user.carnet}/preview.${getExtFile(files.draft.name)}`,
+			name: `${user.carnet}/${body.filename}.${getExtFile(
+				files.file.name
+			)}`,
 		});
 	} catch (error: any) {
 		errorHttp(res, error);
@@ -38,7 +43,7 @@ const uploadTesis = async ({ files, user }: Request, res: Response) => {
 			);
 		}
 
-		const result = await uploadFile(
+		await uploadFile(
 			files.thesis.tempFilePath,
 			files.thesis.name,
 			user.carnet.toString(),
@@ -62,7 +67,7 @@ const uploadDictamen = async ({ files, user }: Request, res: Response) => {
 			);
 		}
 
-		const result = await uploadFile(
+		await uploadFile(
 			files.dictamen.tempFilePath,
 			files.dictamen.name,
 			user.carnet.toString(),
@@ -87,4 +92,9 @@ const getFile = async ({ query }: Request, res: Response) => {
 	}
 };
 
-export { getFile, uploadDraft, uploadDictamen, uploadTesis };
+export {
+	getFile,
+	uploadStudentFile as uploadDraft,
+	uploadDictamen,
+	uploadTesis,
+};

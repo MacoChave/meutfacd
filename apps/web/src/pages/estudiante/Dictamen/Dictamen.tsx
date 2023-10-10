@@ -75,9 +75,10 @@ const Dictamen: React.FC<DictamenProps> = ({}) => {
 		try {
 			setIsUploading(true);
 			const formData = new FormData();
-			formData.append('dictamen', file);
+			formData.append('file', file);
+			formData.append('filename', 'dictamen');
 			const data = await postData<UploadFile>({
-				path: URL.STORAGE.DICTAMEN,
+				path: URL.STORAGE,
 				body: formData,
 				headers: {
 					'Content-Type': 'multipart/form-data',
@@ -130,7 +131,7 @@ const Dictamen: React.FC<DictamenProps> = ({}) => {
 
 	const openPDF = async () => {
 		const { url }: any = await getData({
-			path: URL.STORAGE._,
+			path: URL.STORAGE,
 			body: {},
 			params: { name: revision.ruta_tesis },
 		});

@@ -50,7 +50,7 @@ const Progress = () => {
 		}
 
 		const { url }: any = await getData({
-			path: URL.STORAGE._,
+			path: URL.STORAGE,
 			body: {},
 			params: { name: (row as ProgressType).ruta_dictamen },
 		});

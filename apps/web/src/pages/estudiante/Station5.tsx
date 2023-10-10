@@ -1,5 +1,6 @@
 import { URL } from '@/api/server';
 import { Contenedor } from '@/components';
+import { EmptyReview } from '@/components/EmptyReview';
 import { DotsLoaders } from '@/components/Loader/DotsLoaders';
 import { useCustomFetch } from '@/hooks/useFetch';
 import { style } from '@/themes/styles';
@@ -36,6 +37,8 @@ const Estacion5 = () => {
 
 	if (isLoading) return <DotsLoaders />;
 	if (isError) return <Typography>Error</Typography>;
+
+	if (!revision) return <EmptyReview title='Cita a previos internos' />;
 
 	return (
 		<>

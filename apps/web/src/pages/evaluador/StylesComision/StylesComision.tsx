@@ -64,7 +64,7 @@ const StylesComision: React.FC<StylesComisionProps> = ({}) => {
 				open={openReview}
 				onClose={onClose}>
 				<ReviewDoc
-					station={5}
+					station={4}
 					curReview={curReview}
 					onClose={onClose}
 				/>

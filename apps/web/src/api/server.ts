@@ -23,12 +23,7 @@ export const URL = {
 	REVIEW: '/api/review',
 	ROL: '/api/rol',
 	SCHEDULE: '/api/schedule',
-	STORAGE: {
-		_: '/api/storage',
-		DRAFT: '/api/storage/draft',
-		THESIS: '/api/storage/thesis',
-		DICTAMEN: '/api/storage/dictamen',
-	},
+	STORAGE: '/api/storage',
 	STUDENT: '/api/student',
 	THESIS: '/api/thesis',
 	USER_ROL: '/api/user_rol',

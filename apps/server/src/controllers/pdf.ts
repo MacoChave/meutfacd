@@ -23,8 +23,14 @@ import { logger } from '../utils/logger';
 export const createReport = async ({ body, user }: Request, res: Response) => {
 	try {
 		console.log({ body, user });
-		const { idStudent, title, idReview, currentStation, nextStation } =
-			body;
+		const {
+			idStudent,
+			title,
+			idReview,
+			currentStation,
+			nextStation,
+			filename,
+		} = body;
 
 		const responsible = await sqlSelectOne({
 			table: 'ut_v_usuarios',
@@ -33,7 +39,7 @@ export const createReport = async ({ body, user }: Request, res: Response) => {
 				{
 					column: 'roles',
 					operator: 'like',
-					value: `%${nextStation}%`,
+					value: `%Encargado%${nextStation}%`,
 				},
 			],
 		});
@@ -56,11 +62,11 @@ export const createReport = async ({ body, user }: Request, res: Response) => {
 			student,
 		});
 
-		const filename: string = 'src/storage/report.pdf';
+		const localFilename: string = 'src/storage/report.pdf';
 		// const stream: any = writehead(nameEmisor, res);
 		const doc = createDocument();
 
-		let writeStream = createWriteStream(filename);
+		let writeStream = createWriteStream(localFilename);
 		doc.pipe(writeStream);
 
 		setHeader(doc);
@@ -200,12 +206,12 @@ export const createReport = async ({ body, user }: Request, res: Response) => {
 		doc.end();
 
 		writeStream.on('finish', async () => {
-			const fileContent = readFileSync(filename);
+			const fileContent = readFileSync(localFilename);
 
 			if (DATA_SOURCES.UPLOAD_S3) {
 				const params: PutObjectCommandInput = {
 					Bucket: 'ut-src',
-					Key: `${student.carnet}/dictamen.pdf`,
+					Key: `${student.carnet}/${filename}.pdf`,
 					Body: fileContent,
 					ACL: 'public-read',
 					ContentType: 'application/pdf',
@@ -221,7 +227,7 @@ export const createReport = async ({ body, user }: Request, res: Response) => {
 					message: result,
 				});
 			}
-			res.status(200).json({ name: `${student.carnet}/dictamen.pdf` });
+			res.status(200).json({ name: `${student.carnet}/${filename}.pdf` });
 		});
 	} catch (error: any) {
 		console.log({ error });

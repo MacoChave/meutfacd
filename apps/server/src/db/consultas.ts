@@ -90,6 +90,8 @@ const getConditionsWhere = (
 			if (cond.operator === 'JSON_CONTAINS') {
 				values.push(`[${cond.value}]`);
 				return `JSON_CONTAINS(${cond.column}, ?)`;
+			} else if (cond.value === 'null') {
+				return `${cond.column} ${cond.operator} NULL`;
 			} else {
 				values.push(cond.value);
 				return `${cond.column} ${cond.operator} ?`;
