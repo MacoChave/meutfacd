@@ -39,7 +39,7 @@ export const createReport = async ({ body, user }: Request, res: Response) => {
 				{
 					column: 'roles',
 					operator: 'like',
-					value: `%Encargado%${nextStation}%`,
+					value: `%Encargado ${nextStation}%`,
 				},
 			],
 		});

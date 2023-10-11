@@ -6,16 +6,12 @@ import {
 	getChipLabel,
 } from '@/utils/formatHandler';
 import {
-	Cancel,
 	CancelOutlined,
 	Check,
 	Delete,
 	Edit,
-	FileOpen,
 	FilePresent,
 	Print,
-	UnfoldLess,
-	UnfoldMore,
 } from '@mui/icons-material';
 import {
 	Chip,

@@ -1,18 +1,27 @@
-import { APROBADO, ESPERA, PREVIA, RECHAZADO, REVISION } from '@/consts/vars';
+import {
+	APROBADO,
+	ESPERA,
+	PENDIENTE,
+	PREVIA,
+	RECHAZADO,
+	REVISION,
+} from '@/consts/vars';
 import { TypeWithKey } from '@/models/TypeWithKey';
 
 export const getChipLabel = (code: string) => {
 	switch (code) {
+		case PENDIENTE:
+			return 'Pendiente';
 		case ESPERA:
 			return 'En espera';
-		case APROBADO:
-			return 'Aprobado';
+		case REVISION:
+			return 'Revisión';
 		case RECHAZADO:
 			return 'Rechazado';
 		case PREVIA:
 			return 'Previo';
-		case REVISION:
-			return 'Revisión';
+		case APROBADO:
+			return 'Aprobado';
 		default:
 			return 'Sin datos';
 	}
@@ -20,16 +29,18 @@ export const getChipLabel = (code: string) => {
 
 export const getChipColor = (code: string) => {
 	switch (code) {
+		case PENDIENTE:
+			return 'default';
 		case ESPERA:
 			return 'warning';
-		case APROBADO:
-			return 'success';
+		case REVISION:
+			return 'primary';
 		case RECHAZADO:
 			return 'error';
 		case PREVIA:
 			return 'info';
-		case REVISION:
-			return 'primary';
+		case APROBADO:
+			return 'success';
 		default:
 			return 'default';
 	}

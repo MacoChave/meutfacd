@@ -18,8 +18,9 @@ export const ESTACIONES = [
 ];
 
 // ESTADOS DE REVSIONES
-export const APROBADO = 'A';
+export const PENDIENTE = 'N';
+export const ESPERA = 'E';
+export const REVISION = 'V';
 export const RECHAZADO = 'R';
 export const PREVIA = 'P';
-export const REVISION = 'V';
-export const ESPERA = 'E';
+export const APROBADO = 'A';

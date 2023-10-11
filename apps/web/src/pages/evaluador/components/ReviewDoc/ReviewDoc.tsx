@@ -10,12 +10,14 @@ import swal from 'sweetalert';
 export type ReviewDocProps = {
 	station: number;
 	curReview: any;
+	filename: string;
 	onClose: () => void;
 };
 
 const ReviewDoc: React.FC<ReviewDocProps> = ({
 	station,
 	curReview,
+	filename,
 	onClose,
 }) => {
 	const [loading, setLoading] = useState(false);
@@ -105,7 +107,7 @@ const ReviewDoc: React.FC<ReviewDocProps> = ({
 				idReview: curReview.id_revision,
 				currentStation: ESTACIONES[station - 1].toLowerCase(),
 				nextStation: ESTACIONES[station].toLowerCase(),
-				filename: 'Punto de tesis',
+				filename: filename,
 			},
 		});
 
@@ -123,7 +125,7 @@ const ReviewDoc: React.FC<ReviewDocProps> = ({
 				path: URL.REVIEW,
 				body: {
 					id_tesis: curReview.id_tesis,
-					estacion: 2,
+					estacion: station + 1,
 					estado: ESPERA,
 				},
 			}),

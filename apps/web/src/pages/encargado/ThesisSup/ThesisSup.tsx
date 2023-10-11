@@ -34,7 +34,7 @@ const ThesisSup: React.FC<ThesisSupProps> = ({}) => {
 		[] as ReviewType[]
 	);
 
-	const { data, isLoading, isError } = useCustomFetch({
+	const { data, isLoading, isError, refetch } = useCustomFetch({
 		url: `${URL.GENERIC}/all`,
 		method: 'post',
 		body: {

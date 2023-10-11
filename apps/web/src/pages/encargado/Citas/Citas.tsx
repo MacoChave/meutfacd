@@ -1,6 +1,7 @@
-import { CalendarToday, Check, Download, Message } from '@mui/icons-material';
+import { URL } from '@/api/server';
+import { useCustomFetch } from '@/hooks/useFetch';
 import {
-	IconButton,
+	Box,
 	Paper,
 	Table,
 	TableBody,
@@ -10,12 +11,15 @@ import {
 	TableRow,
 	Typography,
 } from '@mui/material';
-import Dialogo from '../../../components/Modal';
 import React, { ReactNode, useState } from 'react';
-import AgregarComentario from '../../../components/FijarFecha';
 import FijarFecha from '../../../components/Comentar';
-import { useCustomFetch } from '@/hooks/useFetch';
-import { URL } from '@/api/server';
+import AgregarComentario from '../../../components/FijarFecha';
+import Dialogo from '../../../components/Modal';
+import { ESPERA } from '@/consts/vars';
+import { DotsLoaders } from '@/components/Loader/DotsLoaders';
+import { Comentar, Contenedor, McModal } from '@/components';
+import { McTable } from '@/components/MyTable';
+import { getData } from '@/services/fetching';
 
 type ProgressType = {
 	estacion: string;
@@ -35,81 +39,62 @@ export type CitasProps = {};
 const Citas: React.FC<CitasProps> = ({}) => {
 	const [open, setOpen] = useState(false);
 	const [row, setRow] = useState<ProgressType>({} as ProgressType);
-	const [modalContent, setmodalContent] = useState<ReactNode>(<></>);
 
-	const {
-		data: revisiones,
-		isLoading,
-		isError,
-		refetch,
-	} = useCustomFetch({
+	const { data, isLoading, isError, refetch } = useCustomFetch({
 		url: `${URL.GENERIC}/all`,
 		method: 'post',
 		body: {
 			table: 'ut_v_revision',
-			columns: [
-				'id_revision',
-				'titulo',
-				'fecha',
-				'detalle',
-				'estado',
-				'tutor',
-				'ruta_perfil',
-				'id_tutor',
-			],
-			sort: {
-				fecha: 'ASC',
-			},
 		},
 		params: {
+			estado: ESPERA,
 			estacion: 6,
 		},
 	});
 
-	const handleShow = (row: ProgressType, operation: Operation) => {
-		switch (operation) {
-			case Operation.RECALENDARIZAR:
-				setmodalContent(<FijarFecha />);
-				break;
-			case Operation.COMENTAR:
-				setmodalContent(<AgregarComentario />);
-				break;
-			default:
-				break;
-		}
-		setOpen(true);
-		setRow(row);
+	const openPDF = async (item: any) => {
+		const { url }: any = await getData({
+			path: URL.STORAGE,
+			body: {},
+			params: { name: item.ruta_tesis },
+		});
+		window.open(url);
 	};
+
+	const setReview = (item: any) => {
+		setRow(item);
+		setOpen(true);
+	};
+
+	const onClose = () => {
+		setOpen(false);
+		setRow({} as ProgressType);
+		refetch();
+	};
+
+	if (isLoading) return <DotsLoaders />;
+	if (isError) return <Typography>Error...</Typography>;
+
 	return (
 		<>
-			<TableContainer component={Paper}>
-				<Typography
-					variant='h4'
-					component='h2'
-					textAlign='center'
-					py={4}></Typography>
-				<Typography
-					variant='h5'
-					component='h3'
-					textAlign='center'
-					py={4}></Typography>
-				<Table
-					sx={{ minWidth: 250, maxWidth: 600, mx: 'auto' }}
-					aria-label='simple table'>
-					<TableHead>
-						<TableRow>
-							<TableCell>Carné</TableCell>
-							<TableCell>Nombre</TableCell>
-							<TableCell>Fecha de cita</TableCell>
-							<TableCell>Revisión</TableCell>
-						</TableRow>
-					</TableHead>
-					<TableBody></TableBody>
-				</Table>
-			</TableContainer>
-			<Dialogo open={open} title='Observaciones' setOpen={setOpen}>
-				{modalContent}
-			</Dialogo>
+			<Contenedor title='Previos internos'>
+				<McTable
+					headers={{
+						nombre: 'Estudiante',
+						fecha_creacion: 'Inicio',
+						fecha_modificacion: 'Modificación',
+						fecha: 'Revisión',
+					}}
+					rows={data}
+					totalCols={{}}
+					onView={openPDF}
+					onEdit={setReview}
+				/>
+			</Contenedor>
+			<McModal title='Gestión de citas' open={open} onClose={onClose}>
+				<FijarFecha />
+				<AgregarComentario />
+			</McModal>
 		</>
 	);
 };

@@ -37,7 +37,7 @@ const Course1Professor: React.FC<Course1ProfessorProps> = ({}) => {
 				idReview: item.id_revision,
 				currentStation: ESTACIONES[1].toLowerCase(),
 				nextStation: ESTACIONES[2].toLowerCase(),
-				filename: 'Curso 1',
+				filename: 'dictmen_curso1',
 			},
 		});
 

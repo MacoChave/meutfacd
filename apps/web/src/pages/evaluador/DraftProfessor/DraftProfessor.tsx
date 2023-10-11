@@ -22,7 +22,7 @@ const DraftProfessor: React.FC<DraftProfessorProps> = ({}) => {
 
 	const openPDF = async (item: any) => {
 		const { url }: any = await getData({
-			path: `${URI.STORAGE._}`,
+			path: `${URI.STORAGE}`,
 			body: {},
 			params: { name: item.ruta_perfil },
 		});
@@ -66,6 +66,7 @@ const DraftProfessor: React.FC<DraftProfessorProps> = ({}) => {
 				<ReviewDoc
 					station={1}
 					curReview={curReview}
+					filename='dictamen_punto_tesis'
 					onClose={onClose}
 				/>
 			</McModal>

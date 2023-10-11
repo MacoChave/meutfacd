@@ -6,6 +6,7 @@ import {
 	APROBADO,
 	ESPERA,
 	ESTACIONES,
+	PENDIENTE,
 	RECHAZADO,
 	REVISION,
 } from '@/consts/vars';
@@ -37,7 +38,7 @@ const SndCourseD: React.FC<SndCourseDProps> = ({}) => {
 				idReview: item.id_revision,
 				currentStation: ESTACIONES[2].toLowerCase(),
 				nextStation: ESTACIONES[4].toLowerCase(),
-				filename: 'Curso 2',
+				filename: 'dictamen_curso2',
 			},
 		});
 
@@ -56,7 +57,7 @@ const SndCourseD: React.FC<SndCourseDProps> = ({}) => {
 				body: {
 					id_tesis: item.id_tesis,
 					estacion: 5,
-					estado: ESPERA,
+					estado: PENDIENTE,
 				},
 				params: {},
 			}),

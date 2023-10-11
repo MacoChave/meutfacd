@@ -1,7 +1,14 @@
 import { URL } from '@/api/server';
 import { Contenedor } from '@/components';
 import { SpinLoader } from '@/components/Loader/SpinLoader';
-import { APROBADO, ESPERA, PREVIA, REVISION } from '@/consts/vars';
+import {
+	APROBADO,
+	ESPERA,
+	PENDIENTE,
+	PREVIA,
+	RECHAZADO,
+	REVISION,
+} from '@/consts/vars';
 import { useCustomFetch } from '@/hooks/useFetch';
 import { UploadFile } from '@/interfaces/UploadFile';
 import { Draft, draftDefault, draftSchema } from '@/models/Draft';
@@ -103,7 +110,7 @@ const Estacion4 = () => {
 
 	const onSubmit: SubmitHandler<Draft> = async (draft) => {
 		try {
-			if (revision.estado === ESPERA || revision.estado === PREVIA) {
+			if (revision.estado === PREVIA || revision.estado === RECHAZADO) {
 				Promise.all([
 					putData({
 						path: URL.THESIS,
@@ -123,17 +130,38 @@ const Estacion4 = () => {
 						},
 					}),
 				]);
-			}
-
-			if (revision.estado === undefined) {
+			} else if (
+				revision.estado === ESPERA ||
+				revision.estado === PENDIENTE
+			) {
+				Promise.all([
+					putData({
+						path: URL.THESIS,
+						body: {
+							titulo: draft.titulo,
+							ruta_tesis: draft.name,
+						},
+					}),
+					putData({
+						path: URL.REVIEW,
+						body: {
+							estado: ESPERA,
+						},
+						params: {
+							id_revision: revision.id_revision,
+						},
+					}),
+				]);
+			} else {
 				await postData({
-					path: URL.REVIEW,
+					path: URL.THESIS,
 					body: {
-						estacion: 5,
-						estado: ESPERA,
+						titulo: draft.titulo,
+						ruta_tesis: draft.name,
 					},
 				});
 			}
+
 			swal(
 				'¡Bien hecho!',
 				'Su tesis se presentó correctamente',

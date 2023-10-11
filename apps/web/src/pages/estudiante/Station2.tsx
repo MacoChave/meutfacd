@@ -205,7 +205,7 @@ const Estacion2 = () => {
 							</Box>
 						)}
 						{revision.estado === APROBADO &&
-							revision.ruta_certificado !== '' && (
+							!revision.ruta_certificado && (
 								<>
 									<FileChooser
 										title='Presentar asesor'

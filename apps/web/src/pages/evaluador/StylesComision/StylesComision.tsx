@@ -5,8 +5,8 @@ import { McTable } from '@/components/MyTable';
 import { useCustomFetch } from '@/hooks/useFetch';
 import { getData } from '@/services/fetching';
 import { Typography } from '@mui/material';
-import React, { useState } from 'react';
-import { ReviewDoc } from '../components/ReviewDoc';
+import React, { lazy, useState } from 'react';
+const ReviewDoc = lazy(() => import('../components/ReviewDoc/ReviewDoc'));
 
 export type StylesComisionProps = Record<string, never>;
 
@@ -22,7 +22,7 @@ const StylesComision: React.FC<StylesComisionProps> = ({}) => {
 
 	const openPDF = async (item: any) => {
 		const { url }: any = await getData({
-			path: `${URI.STORAGE._}`,
+			path: `${URI.STORAGE}`,
 			body: {},
 			params: { name: item.ruta_tesis },
 		});
@@ -60,12 +60,13 @@ const StylesComision: React.FC<StylesComisionProps> = ({}) => {
 				/>
 			</Contenedor>
 			<McModal
-				title='Revisión de punto de tesis'
+				title='Revisión de tesis'
 				open={openReview}
 				onClose={onClose}>
 				<ReviewDoc
-					station={4}
+					station={5}
 					curReview={curReview}
+					filename='dictamen_tesis'
 					onClose={onClose}
 				/>
 			</McModal>
