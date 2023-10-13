@@ -97,37 +97,41 @@ type TFormatDate = {
 	date: Date;
 	setDay?: number;
 	setHour?: number;
-	onlyTime?: boolean;
+	withTime?: boolean;
 	onlyMonth?: boolean;
 };
 
 export const formatDate = ({
 	date,
-	setDay,
-	setHour,
-	onlyTime,
-	onlyMonth,
+	setDay = undefined,
+	setHour = undefined,
+	withTime = false,
+	onlyMonth = false,
 }: TFormatDate): string => {
 	if (setDay) date.setDate(setDay);
 	if (setHour) date.setHours(setHour);
 
-	const str = date.toLocaleString('es-GT', {
-		year: 'numeric',
-		month: '2-digit',
-		day: '2-digit',
+	const res = date.toLocaleString('es-GT', {
+		dateStyle: onlyMonth ? 'short' : 'long',
+		timeStyle: withTime ? 'medium' : undefined,
 		timeZone: 'America/Guatemala',
 	});
-
-	return str;
+	return res;
 };
 
-export const formatToInputDate = (strTimestamp: string) => {
-	console.log({ strTimestamp });
-	const [strDate, strTime] = strTimestamp.split('T');
-	const sep: boolean = strDate.includes('/');
-	const [day, month, year] = strDate.split(sep ? '/' : '-');
+export const formatToInputDate = (
+	strTimestamp: string,
+	includeTime: boolean = false
+) => {
+	const sepDT = strTimestamp.includes('T');
+	const [strDate, strTime] = strTimestamp.split(sepDT ? 'T' : ', ');
+	const sepD: boolean = strDate.includes('/');
+	const [day, month, year] = strDate.split(sepD ? '/' : '-');
 	let stYear = +day > 31 ? day : year;
 	let stDay = +day > 31 ? year : day;
 
-	return `${stYear}-${month}-${stDay}`;
+	const result = `${stYear}-${month}-${stDay}${
+		includeTime ? ` ${strTime.replace('Z', '')}` : ''
+	}`;
+	return result;
 };

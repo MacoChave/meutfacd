@@ -103,16 +103,19 @@ export const putItem = async (
 	res: Response
 ) => {
 	try {
+		let data = Object.assign({}, body);
+		if (data.id_tutor === 0) data.id_tutor = user.primaryKey;
+
 		const results = await sqlUpdate({
 			table: 'ut_revision',
 			query,
 			datos: {
-				...body,
 				fecha: formatDate({
 					date: new Date(),
 					format: 'mysql',
 					type: 'datetime',
 				}),
+				...data,
 			},
 		});
 		res.status(200).json(results);

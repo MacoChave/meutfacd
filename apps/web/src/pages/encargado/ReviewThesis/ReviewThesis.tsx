@@ -1,25 +1,13 @@
 import { URL } from '@/api/server';
-import { useCustomFetch } from '@/hooks/useFetch';
-import {
-	Box,
-	Paper,
-	Table,
-	TableBody,
-	TableCell,
-	TableContainer,
-	TableHead,
-	TableRow,
-	Typography,
-} from '@mui/material';
-import React, { ReactNode, useState } from 'react';
-import FijarFecha from '../../../components/Comentar';
-import AgregarComentario from '../../../components/FijarFecha';
-import Dialogo from '../../../components/Modal';
-import { ESPERA } from '@/consts/vars';
+import { Contenedor, McModal } from '@/components';
 import { DotsLoaders } from '@/components/Loader/DotsLoaders';
-import { Comentar, Contenedor, McModal } from '@/components';
 import { McTable } from '@/components/MyTable';
+import { ESPERA, PENDIENTE, REVISION } from '@/consts/vars';
+import { useCustomFetch } from '@/hooks/useFetch';
 import { getData } from '@/services/fetching';
+import { Typography } from '@mui/material';
+import React, { useState } from 'react';
+import { Cita } from './Cita';
 
 type ProgressType = {
 	estacion: string;
@@ -27,27 +15,27 @@ type ProgressType = {
 	fecha_carga: string;
 };
 
-enum Operation {
-	RECALENDARIZAR = 'Recalendarizar',
-	DESCARGAR = 'Descargar',
-	COMENTAR = 'Comentar',
-	APROBAR = 'Aprobar',
-}
+export type ReviewThesisResponsibleProps = {};
 
-export type CitasProps = {};
-
-const Citas: React.FC<CitasProps> = ({}) => {
+const ReviewThesisResponsible: React.FC<
+	ReviewThesisResponsibleProps
+> = ({}) => {
 	const [open, setOpen] = useState(false);
 	const [row, setRow] = useState<ProgressType>({} as ProgressType);
+	const [estado, setEstado] = useState(PENDIENTE);
 
 	const { data, isLoading, isError, refetch } = useCustomFetch({
 		url: `${URL.GENERIC}/all`,
 		method: 'post',
 		body: {
 			table: 'ut_v_revision',
+			conditions: [
+				{ column: 'estado', value: PENDIENTE, operator: '=' },
+				{ column: 'estado', value: REVISION, operator: '=' },
+			],
+			sort: { fecha: 'DESC' },
 		},
 		params: {
-			estado: ESPERA,
 			estacion: 6,
 		},
 	});
@@ -62,7 +50,7 @@ const Citas: React.FC<CitasProps> = ({}) => {
 	};
 
 	const setReview = (item: any) => {
-		setRow(item);
+		setRow(item as ProgressType);
 		setOpen(true);
 	};
 
@@ -80,9 +68,10 @@ const Citas: React.FC<CitasProps> = ({}) => {
 			<Contenedor title='Previos internos'>
 				<McTable
 					headers={{
+						estado: 'Estado',
 						nombre: 'Estudiante',
-						fecha_creacion: 'Inicio',
-						fecha_modificacion: 'Modificación',
+						detalle: 'Detalle',
+						sala: 'Sala',
 						fecha: 'Revisión',
 					}}
 					rows={data}
@@ -92,11 +81,10 @@ const Citas: React.FC<CitasProps> = ({}) => {
 				/>
 			</Contenedor>
 			<McModal title='Gestión de citas' open={open} onClose={onClose}>
-				<FijarFecha />
-				<AgregarComentario />
+				<Cita userProgress={row} onClose={onClose} />
 			</McModal>
 		</>
 	);
 };
 
-export default Citas;
+export default ReviewThesisResponsible;

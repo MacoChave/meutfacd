@@ -55,7 +55,7 @@ const Estacion4 = () => {
 				'detalle',
 				'estado',
 				'tutor',
-				'ruta_perfil',
+				'ruta_tesis',
 				'id_tutor',
 			],
 			sort: {

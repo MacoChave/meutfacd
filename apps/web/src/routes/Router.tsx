@@ -60,8 +60,8 @@ const SndCourseResponsible = lazy(
 const ThesisResponsible = lazy(
 	() => import('@/pages/encargado/ThesisSup/ThesisSup')
 );
-const IntpreviewResponsible = lazy(
-	() => import('../pages/encargado/Citas/Citas')
+const ReviewThesisResponsible = lazy(
+	() => import('../pages/encargado/ReviewThesis/ReviewThesis')
 );
 // ANALYTICS PAGES
 const HomeAnalitycs = lazy(() => import('../pages/analitica'));
@@ -262,7 +262,7 @@ export const router = createBrowserRouter([
 				path: 'previos-internos',
 				element: (
 					<ProtectedRoute rol='encargado'>
-						{<IntpreviewResponsible />}
+						{<ReviewThesisResponsible />}
 					</ProtectedRoute>
 				),
 			},
