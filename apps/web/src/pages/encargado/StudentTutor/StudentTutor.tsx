@@ -25,6 +25,11 @@ const StudentTutor: React.FC<StudentTutorProps> = ({}) => {
 					operator: 'is',
 					value: 'null',
 				},
+				{
+					column: 'ruta_certificado',
+					operator: '=',
+					value: '',
+				},
 			],
 		},
 		params: { estado: APROBADO, estacion: 2 },

@@ -1,28 +1,20 @@
-import { Request, Response } from 'express';
-import { errorHttp } from '../utils/error.handle';
-import {
-	createDocument,
-	getNameStation,
-	setFooter,
-	setHeader,
-	setQRCode,
-} from '../utils/pdf';
-import { WriteStream, createWriteStream, readFileSync } from 'fs';
-import { uploadDictamen } from './storage';
 import {
 	PutObjectCommand,
 	PutObjectCommandInput,
 	S3Client,
 } from '@aws-sdk/client-s3';
-import { config } from '../utils/upload';
-import { formatDate } from '../utils/formats';
-import { sqlSelectOne } from '../db/consultas';
+import { Request, Response } from 'express';
+import { createWriteStream, readFileSync } from 'fs';
 import { DATA_SOURCES } from '../config/vars.config';
+import { sqlSelectOne } from '../db/consultas';
+import { errorHttp } from '../utils/error.handle';
+import { formatDate } from '../utils/formats';
 import { logger } from '../utils/logger';
+import { createDocument, setFooter, setHeader, setQRCode } from '../utils/pdf';
+import { config } from '../utils/upload';
 
 export const createReport = async ({ body, user }: Request, res: Response) => {
 	try {
-		console.log({ body, user });
 		const {
 			idStudent,
 			title,

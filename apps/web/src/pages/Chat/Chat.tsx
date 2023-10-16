@@ -3,18 +3,10 @@ import { Contenedor } from '@/components';
 import { DotsLoaders } from '@/components/Loader/DotsLoaders';
 import { useCustomFetch } from '@/hooks/useFetch';
 import { TChat } from '@/models/Chat';
-import { formatDate } from '@/utils/formatHandler';
-import {
-	Box,
-	List,
-	ListItem,
-	ListItemButton,
-	ListItemText,
-	Typography,
-} from '@mui/material';
-import React, { useState } from 'react';
+import { Box, Card, Typography } from '@mui/material';
+import React, { lazy, useState } from 'react';
 import { ChatList } from './ChatList';
-import { ChatMessages } from './ChatMessages';
+const ChatMessages = lazy(() => import('./ChatMessages/ChatMessages'));
 
 export type ChatProps = {};
 
@@ -46,15 +38,17 @@ const Chat: React.FC<ChatProps> = ({}) => {
 						flexWrap: 'wrap',
 						gap: 2,
 					}}>
-					<Box
+					<Card
 						sx={{
 							width: 300,
 						}}>
 						<ChatList setCurrentChat={setCurrentChat} />
-					</Box>
-					<Box sx={{ flex: 1 }}>
-						<ChatMessages currentChat={currentChat} />
-					</Box>
+					</Card>
+					<Card sx={{ flex: 1 }}>
+						{currentChat && (
+							<ChatMessages currentChat={currentChat} />
+						)}
+					</Card>
 				</Box>
 			</Contenedor>
 		</>

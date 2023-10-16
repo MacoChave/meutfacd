@@ -1,10 +1,9 @@
 import { URL } from '@/api/server';
-import { Contenedor } from '@/components';
 import { DotsLoaders } from '@/components/Loader/DotsLoaders';
 import { useCustomFetch } from '@/hooks/useFetch';
 import { TChat } from '@/models/Chat';
 import { TMessage } from '@/models/Message';
-import { TResult } from '@/models/Fetching';
+import store from '@/redux/store';
 import { postData } from '@/services/fetching';
 import { formatDate } from '@/utils/formatHandler';
 import { Autorenew, Send } from '@mui/icons-material';
@@ -12,19 +11,19 @@ import {
 	Box,
 	Card,
 	IconButton,
-	List,
 	ListItem,
 	ListItemText,
 	TextField,
 	Typography,
 } from '@mui/material';
-import { FC, useState } from 'react';
+import { FC, KeyboardEvent, useState } from 'react';
 
 export type ChatMessagesProps = {
 	currentChat: TChat | null;
 };
 
 const ChatMessages: FC<ChatMessagesProps> = ({ currentChat }) => {
+	const { auth } = store.getState().control;
 	const [text, setText] = useState('');
 	const { data, isLoading, isError, refetch } = useCustomFetch({
 		url: URL.MESSAGE,
@@ -46,6 +45,24 @@ const ChatMessages: FC<ChatMessagesProps> = ({ currentChat }) => {
 
 	const reloadMessages = () => {
 		refetch();
+	};
+
+	const getStyleChat = (from: string) => {
+		if (from === auth.name)
+			return {
+				textAlign: 'right',
+				bgcolor: 'primary.light',
+				ml: 'auto',
+				mr: 0,
+				borderRadius: '12px 12px 0 12px',
+			};
+		return {
+			textAlign: 'left',
+			bgcolor: 'secondary.light',
+			ml: 0,
+			mr: 'auto',
+			borderRadius: '12px 12px 12px 0',
+		};
 	};
 
 	if (isLoading) return <DotsLoaders />;
@@ -72,11 +89,29 @@ const ChatMessages: FC<ChatMessagesProps> = ({ currentChat }) => {
 				{data.map((message: TMessage) => (
 					<ListItem key={message.id_message}>
 						<ListItemText
-							title={formatDate({
-								date: new Date(message.fecha_envio),
-							})}
+							sx={{
+								...getStyleChat(message.nombre),
+								wordBreak: 'break-word',
+								maxWidth: '50%',
+								color: 'white',
+								p: 1,
+								'&.MuiListItemText-primary': {
+									color: 'white',
+								},
+								'&.MuiListItemText-secondary': {
+									color: 'white',
+								},
+								'&.MuiListItemText-root': {
+									maxWidth: 'fit-content',
+								},
+							}}
+							title={message.nombre}
 							primary={message.texto}
-							secondary={message.nombre}
+							secondary={formatDate({
+								date: new Date(message.fecha_envio),
+								withTime: true,
+								onlyMonth: true,
+							})}
 						/>
 					</ListItem>
 				))}
@@ -101,6 +136,9 @@ const ChatMessages: FC<ChatMessagesProps> = ({ currentChat }) => {
 					placeholder='Escribe un mensaje'
 					value={text}
 					onChange={(e) => setText(e.target.value)}
+					onKeyDown={(e: KeyboardEvent<HTMLDivElement>) => {
+						if (e.key === 'Enter') sendMessage();
+					}}
 				/>
 				<IconButton
 					color='primary'

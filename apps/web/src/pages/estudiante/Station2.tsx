@@ -204,16 +204,19 @@ const Estacion2 = () => {
 								</IconButton>
 							</Box>
 						)}
-						{revision.estado === APROBADO &&
-							!revision.ruta_certificado && (
-								<>
-									<FileChooser
-										title='Presentar asesor'
-										onUpload={onUploadAsesor}
-										disabled={true}
-									/>
-								</>
-							)}
+						{revision.estado === APROBADO && (
+							<>
+								<FileChooser
+									title={
+										!revision.ruta_certificado
+											? 'Presentar asesor'
+											: 'Cambiar asesor'
+									}
+									onUpload={onUploadAsesor}
+									disabled={true}
+								/>
+							</>
+						)}
 					</Box>
 				</Box>
 			</Contenedor>
