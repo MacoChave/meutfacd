@@ -10,20 +10,22 @@ import {
 	Tooltip,
 	Typography,
 } from '@mui/material';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { DrawerProps } from '../../propTypes/Appbar';
-import { useNavigate } from 'react-router-dom';
 
 const drawerWidth = '200px';
 
 const Sidebar = ({ menuArray, open, setOpen }: DrawerProps) => {
 	const navigate = useNavigate();
+	const location = useLocation();
+
 	return (
 		<>
 			<Drawer
 				variant='permanent'
 				open={open}
 				sx={{
-					width: { xs: 60, md: drawerWidth },
+					width: { xs: 50, md: drawerWidth },
 					flexShrink: 0,
 					[`& .MuiDrawer-paper`]: {
 						width: { xs: 60, md: drawerWidth },
@@ -32,7 +34,15 @@ const Sidebar = ({ menuArray, open, setOpen }: DrawerProps) => {
 				}}>
 				<Toolbar />
 				<Divider />
-				<List>
+				<List
+					sx={{
+						'&& .Mui-selected': {
+							boxShadow: {
+								xs: 'inset 0 -5px red',
+								md: 'inset -5px 0 red',
+							},
+						},
+					}}>
 					{menuArray
 						.sort((a, b) => a.indice - b.indice)
 						.map((item, index) => (
@@ -43,6 +53,10 @@ const Sidebar = ({ menuArray, open, setOpen }: DrawerProps) => {
 									display: 'block',
 								}}>
 								<ListItemButton
+									selected={
+										location.pathname.split('/').pop() ===
+										item.ruta
+									}
 									onClick={() => navigate(item.ruta)}
 									sx={{
 										minHeight: 48,

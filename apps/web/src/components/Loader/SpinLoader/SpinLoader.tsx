@@ -1,13 +1,35 @@
+import { Box, Typography } from '@mui/material';
 import React from 'react';
 import './SpinLoader.css';
-import { Box } from '@mui/material';
 
 export type SpinLoaderProps = {
 	message?: string;
 };
 
-const SpinLoader: React.FC<SpinLoaderProps> = ({ message = '' }) => {
-	return <Box className='loader' component={'div'} />;
+const SpinLoader: React.FC<SpinLoaderProps> = ({
+	message = 'Espera un momento',
+}) => {
+	return (
+		<Box
+			sx={{
+				position: 'fixed',
+				top: 0,
+				left: 0,
+				display: 'flex',
+				flexDirection: 'column',
+				width: '100vw',
+				height: '100vh',
+				gap: 4,
+				placeContent: 'center',
+				placeItems: 'center',
+				backgroundColor: 'rgba(0,0,0,0.5)',
+			}}>
+			<Box className='loader__spin' component={'div'} />
+			<Typography variant='h4' color={'white'}>
+				{message}
+			</Typography>
+		</Box>
+	);
 };
 
 export default SpinLoader;

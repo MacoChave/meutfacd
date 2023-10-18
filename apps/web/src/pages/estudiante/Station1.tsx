@@ -2,7 +2,7 @@ import { URL } from '@/api/server';
 import { Contenedor } from '@/components';
 import { DotsLoaders } from '@/components/Loader/DotsLoaders';
 import { SpinLoader } from '@/components/Loader/SpinLoader';
-import { APROBADO, ESPERA, PREVIA, REVISION } from '@/consts/vars';
+import { APROBADO, ESPERA, PREVIA, RECHAZADO, REVISION } from '@/consts/vars';
 import { useCustomFetch } from '@/hooks/useFetch';
 import { UploadFile } from '@/interfaces/UploadFile';
 import { Draft, draftDefault, draftSchema } from '@/models/Draft';
@@ -11,7 +11,7 @@ import { style } from '@/themes/styles';
 import { errorHandler } from '@/utils/errorHandler';
 import { getChipColor, getChipLabel } from '@/utils/formatHandler';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { OpenInBrowser } from '@mui/icons-material';
+import { Chat, OpenInBrowser } from '@mui/icons-material';
 import {
 	Box,
 	Button,
@@ -25,6 +25,7 @@ import { useEffect, useState } from 'react';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import swal from 'sweetalert';
 import FileChooser from '../../components/controles/FileChooser';
+import { ReviewType } from '@/models/Review';
 
 const Estacion1 = () => {
 	const [isUploading, setIsUploading] = useState(false);
@@ -47,9 +48,10 @@ const Estacion1 = () => {
 				'estado',
 				'tutor',
 				'ruta_perfil',
+				'id_tutor',
 			],
-			order: {
-				fecha_revision: 'DESC',
+			sort: {
+				fecha: 'DESC',
 			},
 			limit: 1,
 		},
@@ -74,9 +76,10 @@ const Estacion1 = () => {
 		try {
 			setIsUploading(true);
 			const formData = new FormData();
-			formData.append('draft', file);
+			formData.append('file', file);
+			formData.append('filename', 'preview');
 			const data = await postData<UploadFile>({
-				path: URL.STORAGE.DRAFT,
+				path: URL.STORAGE,
 				body: formData,
 				headers: {
 					'Content-Type': 'multipart/form-data',
@@ -91,7 +94,7 @@ const Estacion1 = () => {
 			);
 			setIsUploaded(true);
 		} catch (error: any) {
-			errorHandler(error as AxiosError);
+			// errorHandler(error as AxiosError);
 		} finally {
 			setIsUploading(false);
 		}
@@ -99,14 +102,45 @@ const Estacion1 = () => {
 
 	const onSubmit: SubmitHandler<Draft> = async (draft) => {
 		try {
-			if (revision.estado === PREVIA || revision.estado === ESPERA) {
-				await putData({
-					path: URL.THESIS,
-					body: {
-						titulo: draft.titulo,
-						ruta_perfil: draft.name,
-					},
-				});
+			if (revision.estado === PREVIA || revision.estado === RECHAZADO) {
+				Promise.all([
+					putData({
+						path: URL.THESIS,
+						body: {
+							titulo: draft.titulo,
+							ruta_perfil: draft?.name,
+						},
+					}),
+					postData({
+						path: URL.REVIEW,
+						body: {
+							id_curso_tutor: revision.id_curso_tutor,
+							id_tutor: revision.id_tutor,
+							id_tesis: revision.id_tesis,
+							estado: REVISION,
+							estacion: 1,
+						},
+					}),
+				]);
+			} else if (revision.estado === ESPERA) {
+				Promise.all([
+					putData({
+						path: URL.THESIS,
+						body: {
+							titulo: draft.titulo,
+							ruta_perfil: draft.name,
+						},
+					}),
+					putData({
+						path: URL.REVIEW,
+						body: {
+							estado: ESPERA,
+						},
+						params: {
+							id_revision: revision.id_revision,
+						},
+					}),
+				]);
 			} else {
 				await postData({
 					path: URL.THESIS,
@@ -129,13 +163,21 @@ const Estacion1 = () => {
 		}
 	};
 
-	const openPDF = async () => {
+	const openPDF = async (filename: string) => {
 		const { url }: any = await getData({
-			path: URL.STORAGE._,
+			path: URL.STORAGE,
 			body: {},
-			params: { name: revision.ruta_perfil },
+			params: { name: filename },
 		});
 		window.open(url);
+	};
+
+	const createChat = async () => {
+		const data = await postData({
+			path: URL.CHAT,
+			params: { user_id: (revision as ReviewType).id_tutor },
+		});
+		console.log(data);
 	};
 
 	useEffect(() => {
@@ -165,7 +207,9 @@ const Estacion1 = () => {
 										<IconButton
 											color='info'
 											title='Ver archivo subido'
-											onClick={() => openPDF()}>
+											onClick={() =>
+												openPDF(revision.ruta_perfil)
+											}>
 											<OpenInBrowser />
 										</IconButton>
 									)}
@@ -174,6 +218,14 @@ const Estacion1 = () => {
 							<Typography>
 								Docente revisor:{' '}
 								{revision?.tutor || 'Sin asignación'}
+								{revision?.id_tutor && (
+									<IconButton
+										color='info'
+										title='Crear chat'
+										onClick={createChat}>
+										<Chat />
+									</IconButton>
+								)}
 							</Typography>
 							<Typography>
 								{revision?.detalle ??
@@ -189,7 +241,7 @@ const Estacion1 = () => {
 										{...field}
 										fullWidth
 										label='Título del punto de tesis'
-										variant='filled'
+										variant='standard'
 										InputProps={{
 											readOnly:
 												revision.estado === REVISION ||

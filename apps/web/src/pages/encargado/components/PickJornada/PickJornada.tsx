@@ -1,13 +1,14 @@
 import { URL } from '@/api/server';
+import { DotsLoaders } from '@/components/Loader/DotsLoaders';
 import { McAutocomplete } from '@/components/McWithoutForms/McAutocomplete';
 import { useCustomFetch } from '@/hooks/useFetch';
-import { PeriodType } from '@/models/Period';
+import { TPeriod } from '@/models/Period';
 import { Typography } from '@mui/material';
 import React from 'react';
 
 export type PickJornadaProps = {
-	jornada: PeriodType;
-	setJornada: (jornada: PeriodType) => void;
+	jornada: TPeriod;
+	setJornada: (jornada: TPeriod) => void;
 };
 
 const PickJornada: React.FC<PickJornadaProps> = ({ jornada, setJornada }) => {
@@ -23,7 +24,7 @@ const PickJornada: React.FC<PickJornadaProps> = ({ jornada, setJornada }) => {
 		},
 	});
 
-	if (isLoadingJornadas) return <Typography>Cargando jornadas</Typography>;
+	if (isLoadingJornadas) return <DotsLoaders />;
 	if (isErrorJornadas)
 		return <Typography>Error al cargar jornadas</Typography>;
 

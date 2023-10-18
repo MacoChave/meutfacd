@@ -1,7 +1,7 @@
 import { URL } from '@/api/server';
 import { McInput } from '@/components/McWithForms/McInput';
 import { PageAppType } from '@/models/PageApp';
-import { ResultType } from '@/models/Result';
+import { TResult } from '@/models/Fetching';
 import { putData } from '@/services/fetching';
 import { Box, Button } from '@mui/material';
 import React from 'react';
@@ -20,14 +20,14 @@ const FormPagesApp: React.FC<FormPagesAppProps> = ({ page, onClose }) => {
 	});
 
 	const onSubmit: SubmitHandler<PageAppType> = async (data) => {
-		const result: ResultType = await putData({
+		const result: TResult = await putData({
 			path: `${URL.GENERIC}`,
 			body: {
 				table: 'ut_pagina',
 				datos: {
 					nombre: data.nombre,
 					descripcion: data.descripcion,
-					icono: data.icono,
+					// icono: data.icono,
 				},
 			},
 			params: { id_pagina: data.id_pagina },

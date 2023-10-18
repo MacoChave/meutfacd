@@ -16,27 +16,22 @@ export const getItem = async ({ body, query }: Request, res: Response) => {
 		});
 		res.status(200).json(response);
 	} catch (error: any) {
-		errorHttp(res, {
-			error,
-			msg: 'No se puede obtener el item',
-			code: 500,
-		});
+		errorHttp(res, error);
 	}
 };
 
-export const getItems = async ({ body, query }: Request, res: Response) => {
+export const getItems = async (
+	{ body, query, params }: Request,
+	res: Response
+) => {
 	try {
 		const responses = await sqlSelect({
 			...body,
-			...query,
+			query,
 		});
 		res.status(200).json(responses);
 	} catch (error: any) {
-		errorHttp(res, {
-			error,
-			msg: 'No se puede obtener el item',
-			code: 500,
-		});
+		errorHttp(res, error);
 	}
 };
 
@@ -48,11 +43,7 @@ export const createItem = async ({ body }: Request, res: Response) => {
 		});
 		res.status(200).json(response);
 	} catch (error: any) {
-		errorHttp(res, {
-			error,
-			msg: 'No se puede obtener el item',
-			code: 500,
-		});
+		errorHttp(res, error);
 	}
 };
 
@@ -64,11 +55,7 @@ export const createItems = async ({ body }: Request, res: Response) => {
 		});
 		res.status(200).json(response);
 	} catch (error: any) {
-		errorHttp(res, {
-			error,
-			msg: 'No se puede obtener el item',
-			code: 500,
-		});
+		errorHttp(res, error);
 	}
 };
 
@@ -81,10 +68,6 @@ export const putItem = async ({ body, query }: Request, res: Response) => {
 		});
 		res.status(200).json(result);
 	} catch (error: any) {
-		errorHttp(res, {
-			error,
-			msg: 'No se puede obtener el item',
-			code: 500,
-		});
+		errorHttp(res, error);
 	}
 };

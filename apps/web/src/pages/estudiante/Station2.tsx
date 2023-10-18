@@ -1,11 +1,19 @@
 import { URL } from '@/api/server';
-import { Contenedor } from '@/components';
+import { Contenedor, FileChooser } from '@/components';
+import { EmptyReview } from '@/components/EmptyReview';
 import { DotsLoaders } from '@/components/Loader/DotsLoaders';
+import { SpinLoader } from '@/components/Loader/SpinLoader';
+import { APROBADO } from '@/consts/vars';
 import { useCustomFetch } from '@/hooks/useFetch';
+import { UploadFile } from '@/interfaces/UploadFile';
+import { ReviewType } from '@/models/Review';
+import { getData, postData, putData } from '@/services/fetching';
 import { style } from '@/themes/styles';
-import { getChipColor, getChipLabel } from '@/utils/formatHandler';
-import { Download, FileDownload, UploadFile } from '@mui/icons-material';
+import { formatDate, getChipColor, getChipLabel } from '@/utils/formatHandler';
+import { Chat, Download } from '@mui/icons-material';
 import { Box, Chip, IconButton, TextField, Typography } from '@mui/material';
+import { useState } from 'react';
+import swal from 'sweetalert';
 
 const boxStyle = {
 	display: 'flex',
@@ -15,25 +23,19 @@ const boxStyle = {
 };
 
 const Estacion2 = () => {
+	const [loading, setLoading] = useState(false);
 	const {
-		data: asignacion,
+		data: revision,
 		isLoading,
 		isError,
+		refetch,
 	} = useCustomFetch({
 		url: `${URL.REVIEW}/one`,
 		method: 'post',
 		body: {
 			table: 'ut_v_revision',
-			columns: [
-				'id_revision',
-				'dias',
-				'fecha_curso',
-				'estado',
-				'tutor',
-				'salon',
-			],
-			order: {
-				fecha_revision: 'DESC',
+			sort: {
+				fecha: 'DESC',
 			},
 			limit: 1,
 		},
@@ -42,8 +44,66 @@ const Estacion2 = () => {
 		},
 	});
 
+	const createChat = async () => {
+		const data = await postData({
+			path: URL.CHAT,
+			params: { user_id: (revision as ReviewType).id_tutor },
+		});
+		console.log(data);
+	};
+
+	const onUploadAsesor = async (file: File) => {
+		try {
+			setLoading(true);
+			const formData = new FormData();
+			formData.append('file', file);
+			formData.append('filename', 'asesor');
+			const data = await postData<UploadFile>({
+				path: URL.STORAGE,
+				body: formData,
+				headers: {
+					'Content-Type': 'multipart/form-data',
+					'Access-Control-Allow-Origin': '*',
+				},
+			});
+			await putData({
+				path: URL.THESIS,
+				body: { ruta_asesor: data.name },
+				params: { id_tesis: revision.id_tesis },
+			});
+			refetch();
+			swal('¡Listo!', 'Se ha presentado al asesor', 'success');
+		} catch (error) {
+		} finally {
+			setLoading(false);
+		}
+	};
+
+	const onDownloadAsesor = async () => {
+		const { url }: any = await getData({
+			path: URL.STORAGE,
+			body: {},
+			params: { name: (revision as ReviewType).ruta_asesor },
+		});
+		window.open(url);
+	};
+
+	const onDownloadNombramiento = async () => {
+		const { url }: any = await getData({
+			path: URL.STORAGE,
+			body: {},
+			params: { name: (revision as ReviewType).ruta_certificado },
+		});
+		window.open(url);
+	};
+
 	if (isLoading) return <DotsLoaders />;
 	if (isError) return <Typography>Error</Typography>;
+
+	if (!revision)
+		return (
+			<EmptyReview title='Curso 1: Introducción a la planeación científica' />
+		);
 
 	return (
 		<>
@@ -55,32 +115,60 @@ const Estacion2 = () => {
 							flexDirection: 'column',
 							gap: 4,
 						}}>
+						{revision?.id_tutor && (
+							<IconButton
+								sx={{ alignSelf: 'flex-start' }}
+								color='info'
+								title='Crear chat'
+								onClick={createChat}>
+								<Chat />
+							</IconButton>
+						)}
 						<TextField
 							variant='standard'
 							label='Catedrático'
-							value={asignacion?.tutor ?? 'No asignado'}
+							InputProps={{
+								disabled: true,
+							}}
+							value={revision?.tutor ?? 'No asignado'}
 						/>
 						<TextField
 							variant='standard'
 							label='Jornada'
-							value={asignacion?.jornada ?? 'No asignado'}
+							InputProps={{
+								disabled: true,
+							}}
+							value={
+								formatDate({
+									date: new Date(revision?.fecha_curso),
+								}) ?? 'Fecha de inicio del curso'
+							}
 						/>
 						<TextField
 							variant='standard'
 							label='Horario'
-							value={`${asignacion?.hora_inicio ?? 'Inicio'} - ${
-								asignacion?.hora_final ?? 'Final'
+							InputProps={{
+								disabled: true,
+							}}
+							value={`${revision?.hora_inicio ?? 'Inicio'} - ${
+								revision?.hora_final ?? 'Final'
 							}`}
 						/>
 						<TextField
 							variant='standard'
 							label='Días'
-							value={asignacion?.dias ?? 'No asignado'}
+							InputProps={{
+								disabled: true,
+							}}
+							value={revision?.dias ?? 'No asignado'}
 						/>
 						<TextField
 							variant='standard'
 							label='Salón'
-							value={asignacion?.salon ?? 'No asignado'}
+							InputProps={{
+								disabled: true,
+							}}
+							value={revision?.salon ?? 'No asignado'}
 						/>
 					</Box>
 					<Box
@@ -92,31 +180,47 @@ const Estacion2 = () => {
 						<Box sx={boxStyle}>
 							<Typography>Resultado</Typography>
 							<Chip
-								label={getChipLabel(asignacion.estado)}
-								color={getChipColor(asignacion.estado)}
+								label={getChipLabel(revision.estado)}
+								color={getChipColor(revision.estado)}
 							/>
 						</Box>
-						<Box sx={boxStyle}>
-							<Typography>Certificado</Typography>
-							<IconButton color='primary'>
-								<FileDownload />
-							</IconButton>
-						</Box>
-						<Box sx={boxStyle}>
-							<Typography>Presentar asesor</Typography>
-							<IconButton color='primary'>
-								<UploadFile />
-							</IconButton>
-						</Box>
-						<Box sx={boxStyle}>
-							<Typography>Nombramiento de asesor</Typography>
-							<IconButton color='primary'>
-								<Download />
-							</IconButton>
-						</Box>
+						{revision.ruta_asesor && (
+							<Box sx={boxStyle}>
+								<Typography>Presentación del asesor</Typography>
+								<IconButton
+									color='primary'
+									onClick={onDownloadAsesor}>
+									<Download />
+								</IconButton>
+							</Box>
+						)}
+						{revision.ruta_certificado && (
+							<Box sx={boxStyle}>
+								<Typography>Nombramiento de asesor</Typography>
+								<IconButton
+									color='primary'
+									onClick={onDownloadNombramiento}>
+									<Download />
+								</IconButton>
+							</Box>
+						)}
+						{revision.estado === APROBADO && (
+							<>
+								<FileChooser
+									title={
+										!revision.ruta_certificado
+											? 'Presentar asesor'
+											: 'Cambiar asesor'
+									}
+									onUpload={onUploadAsesor}
+									disabled={true}
+								/>
+							</>
+						)}
 					</Box>
 				</Box>
 			</Contenedor>
+			{loading && <SpinLoader />}
 		</>
 	);
 };

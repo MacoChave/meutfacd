@@ -4,9 +4,9 @@ import { DotsLoaders } from '@/components/Loader/DotsLoaders';
 import { ESPERA, REVISION } from '@/consts/vars';
 import { useCustomFetch } from '@/hooks/useFetch';
 import { TCourseTutor } from '@/models/CourseTutor';
-import { PeriodType } from '@/models/Period';
+import { TPeriod } from '@/models/Period';
 import { ReviewType } from '@/models/Review';
-import { ScheduleType } from '@/models/Schedule';
+import { TSchedule } from '@/models/Schedule';
 import { postData, putData } from '@/services/fetching';
 import { style } from '@/themes/styles';
 import { SwitchLeft } from '@mui/icons-material';
@@ -25,12 +25,13 @@ import swal from 'sweetalert';
 import { PickCourseTutor } from '../components/PickCourseTutor';
 import { PickHorario } from '../components/PickHorario';
 import { PickJornada } from '../components/PickJornada';
+import { SpinLoader } from '@/components/Loader/SpinLoader';
 
 export type ScndCourseProps = Record<string, never>;
 
 const ScndCourse: React.FC<ScndCourseProps> = ({}) => {
-	const [jornada, setJornada] = useState<PeriodType>({} as PeriodType);
-	const [horario, setHorario] = useState<ScheduleType>({} as ScheduleType);
+	const [jornada, setJornada] = useState<TPeriod>({} as TPeriod);
+	const [horario, setHorario] = useState<TSchedule>({} as TSchedule);
 	const [courseTutor, setCourseTutor] = useState<TCourseTutor>(
 		{} as TCourseTutor
 	);
@@ -133,7 +134,7 @@ const ScndCourse: React.FC<ScndCourseProps> = ({}) => {
 						<PickHorario
 							horario={horario}
 							setHorario={setHorario}
-							id_jornada={jornada.id_jornada}
+							id_jornada={jornada?.id_jornada ?? 0}
 						/>
 					</Box>
 					<Box
@@ -230,7 +231,7 @@ const ScndCourse: React.FC<ScndCourseProps> = ({}) => {
 					</Box>
 				</Box>
 			</Contenedor>
-			{waiting && <Loader />}
+			{waiting && <SpinLoader />}
 		</>
 	);
 };

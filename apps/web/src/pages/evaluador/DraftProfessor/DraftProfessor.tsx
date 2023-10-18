@@ -1,12 +1,12 @@
 import { URL as URI } from '@/api/server';
 import { Contenedor, McModal } from '@/components';
+import { DotsLoaders } from '@/components/Loader/DotsLoaders';
 import { McTable } from '@/components/MyTable';
 import { useCustomFetch } from '@/hooks/useFetch';
 import { getData } from '@/services/fetching';
-import React, { useState } from 'react';
-import { ReviewDoc } from '../components/ReviewDoc';
-import { DotsLoaders } from '@/components/Loader/DotsLoaders';
 import { Typography } from '@mui/material';
+import React, { lazy, useState } from 'react';
+const ReviewDoc = lazy(() => import('../components/ReviewDoc/ReviewDoc'));
 
 export type DraftProfessorProps = Record<string, never>;
 
@@ -22,7 +22,7 @@ const DraftProfessor: React.FC<DraftProfessorProps> = ({}) => {
 
 	const openPDF = async (item: any) => {
 		const { url }: any = await getData({
-			path: `${URI.STORAGE._}`,
+			path: `${URI.STORAGE}`,
 			body: {},
 			params: { name: item.ruta_perfil },
 		});
@@ -63,7 +63,12 @@ const DraftProfessor: React.FC<DraftProfessorProps> = ({}) => {
 				title='Revisión de punto de tesis'
 				open={openReview}
 				onClose={onClose}>
-				<ReviewDoc curReview={curReview} onClose={onClose} />
+				<ReviewDoc
+					station={1}
+					curReview={curReview}
+					filename='dictamen_punto_tesis'
+					onClose={onClose}
+				/>
 			</McModal>
 		</>
 	);

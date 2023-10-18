@@ -1,7 +1,14 @@
 import { URL } from '@/api/server';
 import { Contenedor } from '@/components';
 import { SpinLoader } from '@/components/Loader/SpinLoader';
-import { APROBADO, ESPERA, REVISION } from '@/consts/vars';
+import {
+	APROBADO,
+	ESPERA,
+	PENDIENTE,
+	PREVIA,
+	RECHAZADO,
+	REVISION,
+} from '@/consts/vars';
 import { useCustomFetch } from '@/hooks/useFetch';
 import { UploadFile } from '@/interfaces/UploadFile';
 import { Draft, draftDefault, draftSchema } from '@/models/Draft';
@@ -10,7 +17,7 @@ import { style } from '@/themes/styles';
 import { errorHandler } from '@/utils/errorHandler';
 import { getChipColor, getChipLabel } from '@/utils/formatHandler';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { OpenInBrowser } from '@mui/icons-material';
+import { Chat, OpenInBrowser } from '@mui/icons-material';
 import {
 	Box,
 	Button,
@@ -25,6 +32,8 @@ import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import swal from 'sweetalert';
 import FileChooser from '../../components/controles/FileChooser';
 import { DotsLoaders } from '@/components/Loader/DotsLoaders';
+import { ReviewType } from '@/models/Review';
+import { EmptyReview } from '@/components/EmptyReview';
 
 const Estacion4 = () => {
 	const [isUploading, setIsUploading] = useState(false);
@@ -46,10 +55,11 @@ const Estacion4 = () => {
 				'detalle',
 				'estado',
 				'tutor',
-				'ruta_perfil',
+				'ruta_tesis',
+				'id_tutor',
 			],
-			order: {
-				fecha_revision: 'DESC',
+			sort: {
+				fecha: 'DESC',
 			},
 			limit: 1,
 		},
@@ -74,9 +84,10 @@ const Estacion4 = () => {
 		try {
 			setIsUploading(true);
 			const formData = new FormData();
-			formData.append('thesis', file);
+			formData.append('file', file);
+			formData.append('filename', 'thesis');
 			const data = await postData<UploadFile>({
-				path: URL.STORAGE.THESIS,
+				path: URL.STORAGE,
 				body: formData,
 				headers: {
 					'Content-Type': 'multipart/form-data',
@@ -91,7 +102,7 @@ const Estacion4 = () => {
 			);
 			setIsUploaded(true);
 		} catch (error: any) {
-			errorHandler(error as AxiosError);
+			// errorHandler(error as AxiosError);
 		} finally {
 			setIsUploading(false);
 		}
@@ -99,20 +110,54 @@ const Estacion4 = () => {
 
 	const onSubmit: SubmitHandler<Draft> = async (draft) => {
 		try {
-			await putData({
-				path: URL.THESIS,
-				body: {
-					titulo: draft.titulo,
-					ruta_tesis: draft.name,
-				},
-			});
-
-			if (revision.estado === undefined) {
+			if (revision.estado === PREVIA || revision.estado === RECHAZADO) {
+				Promise.all([
+					putData({
+						path: URL.THESIS,
+						body: {
+							titulo: draft.titulo,
+							ruta_tesis: draft.name,
+						},
+					}),
+					postData({
+						path: URL.REVIEW,
+						body: {
+							id_curso_tutor: revision.id_curso_tutor,
+							id_tutor: revision.id_tutor,
+							id_tesis: revision.id_tesis,
+							estado: REVISION,
+							estacion: 5,
+						},
+					}),
+				]);
+			} else if (
+				revision.estado === ESPERA ||
+				revision.estado === PENDIENTE
+			) {
+				Promise.all([
+					putData({
+						path: URL.THESIS,
+						body: {
+							titulo: draft.titulo,
+							ruta_tesis: draft.name,
+						},
+					}),
+					putData({
+						path: URL.REVIEW,
+						body: {
+							estado: ESPERA,
+						},
+						params: {
+							id_revision: revision.id_revision,
+						},
+					}),
+				]);
+			} else {
 				await postData({
-					path: URL.REVIEW,
+					path: URL.THESIS,
 					body: {
-						estacion: 5,
-						estado: ESPERA,
+						titulo: draft.titulo,
+						ruta_tesis: draft.name,
 					},
 				});
 			}
@@ -131,11 +176,19 @@ const Estacion4 = () => {
 
 	const openPDF = async () => {
 		const { url }: any = await getData({
-			path: URL.STORAGE._,
+			path: URL.STORAGE,
 			body: {},
 			params: { name: revision.ruta_tesis },
 		});
 		window.open(url);
+	};
+
+	const createChat = async () => {
+		const data = await postData({
+			path: URL.CHAT,
+			params: { user_id: (revision as ReviewType).id_tutor },
+		});
+		console.log(data);
 	};
 
 	useEffect(() => {
@@ -147,9 +200,13 @@ const Estacion4 = () => {
 	if (isLoading) return <DotsLoaders />;
 	if (isError)
 		return <Typography>No se pudo cargar la revisión...</Typography>;
+
+	if (!revision)
+		return <EmptyReview title='Comisión y estilo (Presentar tesis)' />;
+
 	return (
 		<>
-			<Contenedor title='Presentar tesis'>
+			<Contenedor title='Comisión y estilo (Presentar tesis)'>
 				<form onSubmit={handleSubmit(onSubmit)}>
 					<Box sx={style}>
 						<Box>
@@ -173,6 +230,14 @@ const Estacion4 = () => {
 							<Typography>
 								Docente revisor:{' '}
 								{revision?.tutor || 'Sin asignación'}
+								{revision?.id_tutor && (
+									<IconButton
+										color='info'
+										title='Crear chat'
+										onClick={createChat}>
+										<Chat />
+									</IconButton>
+								)}
 							</Typography>
 							<Typography>
 								{revision?.detalle ??
@@ -188,7 +253,7 @@ const Estacion4 = () => {
 										{...field}
 										fullWidth
 										label='Título del punto de tesis'
-										variant='filled'
+										variant='standard'
 										InputProps={{
 											readOnly:
 												revision.estado === REVISION ||

@@ -2,17 +2,25 @@ import { URL } from '@/api/server';
 import { Contenedor } from '@/components';
 import { DotsLoaders } from '@/components/Loader/DotsLoaders';
 import { McTable } from '@/components/MyTable';
-import { APROBADO, ESPERA, RECHAZADO, REVISION } from '@/consts/vars';
+import {
+	APROBADO,
+	ESPERA,
+	ESTACIONES,
+	PENDIENTE,
+	RECHAZADO,
+	REVISION,
+} from '@/consts/vars';
 import { useCustomFetch } from '@/hooks/useFetch';
-import { ResultType } from '@/models/Result';
+import { TResult } from '@/models/Fetching';
 import { postData, putData } from '@/services/fetching';
 import { Typography } from '@mui/material';
-import React from 'react';
+import React, { useState } from 'react';
 import swal from 'sweetalert';
 
 export type SndCourseDProps = Record<string, never>;
 
 const SndCourseD: React.FC<SndCourseDProps> = ({}) => {
+	const [loading, setLoading] = useState(false);
 	const { data, isLoading, isError, refetch } = useCustomFetch({
 		url: `${URL.REVIEW}/professor`,
 		method: 'get',
@@ -21,49 +29,111 @@ const SndCourseD: React.FC<SndCourseDProps> = ({}) => {
 	});
 
 	const onPass = async (item: any) => {
-		const result: ResultType = await putData<ResultType>({
-			path: URL.REVIEW,
-			body: { estado: APROBADO, detalle: 'Curso aprobado' },
-			params: { id_revision: item.id_revision },
+		setLoading(true);
+		const dictamen = await postData<any>({
+			path: `${URL.PDF}/dictamen`,
+			body: {
+				idStudent: item.id_usuario,
+				title: item.titulo,
+				idReview: item.id_revision,
+				currentStation: ESTACIONES[2].toLowerCase(),
+				nextStation: ESTACIONES[4].toLowerCase(),
+				filename: 'dictamen_curso2',
+			},
 		});
-		if (result.affectedRows) {
-			swal(
-				'Éxito',
-				'Se registró el avance a la siguiente fase del estudiante',
-				'success'
-			);
-		} else {
-			swal('Error', 'No se pudo aprobar el curso', 'error');
-		}
-		refetch();
-	};
 
-	const onFail = async (item: any) => {
 		Promise.all([
-			putData<ResultType>({
-				path: URL.REVIEW,
-				body: { estado: RECHAZADO, detalle: 'Curso reprobado' },
+			putData<TResult>({
+				path: `${URL.REVIEW}`,
+				body: {
+					estado: APROBADO,
+					detalle: 'Curso aprobado',
+					ruta_dictamen: dictamen.name ?? '',
+				},
 				params: { id_revision: item.id_revision },
 			}),
-			postData<ResultType>({
-				path: URL.REVIEW,
-				body: { id_tesis: item.id_tesis, estado: ESPERA, estacion: 3 },
+			postData<TResult>({
+				path: `${URL.REVIEW}`,
+				body: {
+					id_tesis: item.id_tesis,
+					estacion: 5,
+					estado: PENDIENTE,
+				},
+				params: {},
+			}),
+			postData<TResult>({
+				path: `${URL.NOTIFICATION}`,
+				body: {
+					id_receptor: item.id_usuario,
+					mensaje: `El curso de Elaboración y planeación de tesis fue aprobado por el evaluador ${item.tutor}`,
+					action: 'aprobado',
+				},
+				params: {},
 			}),
 		])
-			.then(([result1, result2]) => {
-				if (result1.affectedRows && result2.affectedRows) {
+			.then(([putReview, postReview, postNotify]) => {
+				if (putReview.affectedRows) {
 					swal(
-						'Éxito',
-						'Se reprobó al estudiante y se envió a repetir el curso',
+						'¡Bien hecho!',
+						'Se ha registrado el avance a la siguiente fase del estudiante',
 						'success'
 					);
-				} else {
-					swal('Error', 'No se pudo aprobar el curso', 'error');
 				}
 				refetch();
 			})
 			.catch(() => {
-				swal('Error', 'No se pudo aprobar el curso', 'error');
+				swal('Error', 'No se pudo completar la operación', 'error');
+			})
+			.finally(() => {
+				setLoading(false);
+			});
+	};
+
+	const onFail = async (item: any) => {
+		setLoading(true);
+		Promise.all([
+			putData<TResult>({
+				path: `${URL.REVIEW}`,
+				body: {
+					estado: RECHAZADO,
+					detalle: 'Curso reprobado',
+				},
+				params: { id_revision: item.id_revision },
+			}),
+			postData<TResult>({
+				path: `${URL.REVIEW}`,
+				body: {
+					id_tesis: item.id_tesis,
+					estacion: 3,
+					estado: ESPERA,
+				},
+				params: {},
+			}),
+			postData<TResult>({
+				path: `${URL.NOTIFICATION}`,
+				body: {
+					id_receptor: item.id_usuario,
+					mensaje: `El curso de Elaboración y planeación de tesis fue rechazado por el evaluador ${item.tutor}`,
+					action: 'rechazado',
+				},
+				params: {},
+			}),
+		])
+			.then(([putReview, postReview, postNotify]) => {
+				if (putReview.affectedRows) {
+					swal(
+						'¡Bien hecho!',
+						'Se ha registrado la reprobación del curso',
+						'success'
+					);
+				}
+				refetch();
+			})
+			.catch(() => {
+				swal('Error', 'No se pudo completar la operación', 'error');
+			})
+			.finally(() => {
+				setLoading(false);
 			});
 	};
 
@@ -86,6 +156,7 @@ const SndCourseD: React.FC<SndCourseDProps> = ({}) => {
 					onFail={onFail}
 				/>
 			</Contenedor>
+			{loading && <DotsLoaders />}
 		</>
 	);
 };

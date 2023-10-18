@@ -2,8 +2,8 @@ import { URL } from '@/api/server';
 import { Contenedor } from '@/components';
 import { useCustomFetch } from '@/hooks/useFetch';
 import { UserType } from '@/models/Perfil';
-import { PeriodType } from '@/models/Period';
-import { ScheduleType } from '@/models/Schedule';
+import { TPeriod } from '@/models/Period';
+import { TSchedule } from '@/models/Schedule';
 import { style } from '@/themes/styles';
 import { Add, Remove } from '@mui/icons-material';
 import {
@@ -26,8 +26,8 @@ export type AsignarProps = {
 };
 
 const Asignar: React.FC<AsignarProps> = ({ rol }) => {
-	const [jornada, setJornada] = useState<PeriodType>({} as PeriodType);
-	const [horario, setHorario] = useState<ScheduleType>({} as ScheduleType);
+	const [jornada, setJornada] = useState<TPeriod>({} as TPeriod);
+	const [horario, setHorario] = useState<TSchedule>({} as TSchedule);
 	const [evaluador, setEvaluador] = useState<UserType>({} as UserType);
 	const [assignment, setAssignment] = useState<any[]>([]);
 	const [unAssignment, setUnAssignment] = useState<any[]>([]);

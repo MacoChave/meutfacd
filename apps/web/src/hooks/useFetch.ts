@@ -41,7 +41,7 @@ export const useFetch = ({
 	url: string;
 	params?: Object;
 }) => {
-	return useQuery(['data', url, params], fetchData);
+	return useQuery(['data', url, params], fetchData, {});
 };
 
 export const useCustomFetch = ({

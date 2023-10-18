@@ -1,10 +1,12 @@
+import { URL } from '@/api/server';
 import { ToolbarWithoutSesion } from '@/components';
+import { TResult } from '@/models/Fetching';
 import {
 	RecoveryType,
 	initialValues,
 	schemaRecovery,
 } from '@/models/Recuperar';
-import { errorHandler } from '@/utils/errorHandler';
+import { putData } from '@/services/fetching';
 import { yupResolver } from '@hookform/resolvers/yup';
 import {
 	Box,
@@ -14,16 +16,16 @@ import {
 	Toolbar,
 	Typography,
 } from '@mui/material';
-import { AxiosError } from 'axios';
-import React, { SyntheticEvent } from 'react';
+import React from 'react';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { useNavigate, useParams } from 'react-router-dom';
+import swal from 'sweetalert';
 
 export type UserRecoveryProps = Record<string, never>;
 
 const UserRecovery: React.FC<UserRecoveryProps> = ({}) => {
 	const navigate = useNavigate();
-	const { rol } = useParams();
+	const { email } = useParams();
 
 	const {
 		control,
@@ -35,18 +37,19 @@ const UserRecovery: React.FC<UserRecoveryProps> = ({}) => {
 		resolver: yupResolver(schemaRecovery),
 	});
 
-	const onSubmit: SubmitHandler<RecoveryType> = async (body) => {
-		try {
-			console.log('Send email to recover password', body);
-		} catch (error: any) {
-			errorHandler(error as AxiosError);
-		}
-	};
-
-	const goToLogin = (event: SyntheticEvent) => {
-		navigate(`/login/${rol}`, {
-			replace: true,
+	const onSubmit: SubmitHandler<RecoveryType> = async (data) => {
+		const result: TResult = await putData<TResult>({
+			path: URL.AUTH.RECOVERY,
+			body: { pass: data.pass },
+			params: { email },
 		});
+		if (result.affectedRows) {
+			swal({
+				icon: 'success',
+				text: 'La contraseña fue actualizaa con éxito',
+				title: '¡Bien!',
+			});
+		}
 	};
 
 	return (
@@ -66,7 +69,6 @@ const UserRecovery: React.FC<UserRecoveryProps> = ({}) => {
 						height: 'auto',
 						mx: 'auto',
 					}}>
-					<Typography variant='h4'>Recuperar contraseña</Typography>
 					<form onSubmit={handleSubmit(onSubmit)}>
 						<Card
 							sx={{
@@ -76,24 +78,41 @@ const UserRecovery: React.FC<UserRecoveryProps> = ({}) => {
 								my: 4,
 								p: 4,
 							}}>
+							<Typography variant='h4'>
+								Recuperar contraseña
+							</Typography>
 							<Controller
 								control={control}
-								name='correo'
+								name='pass'
 								render={({ field }) => (
 									<TextField
 										{...field}
-										label='Correo electrónico'
+										label='Contraseña'
 										variant='filled'
-										type='email'
-										error={!!errors.correo}
+										type='password'
+										error={!!errors.pass}
+										helperText={errors.pass?.message || ''}
+									/>
+								)}
+							/>
+							<Controller
+								control={control}
+								name='confpass'
+								render={({ field }) => (
+									<TextField
+										{...field}
+										label='Confirmar contraseña'
+										variant='filled'
+										type='password'
+										error={!!errors.confpass}
 										helperText={
-											errors.correo?.message || ''
+											errors.confpass?.message || ''
 										}
 									/>
 								)}
 							/>
 							<Button type='submit' variant='contained'>
-								Recuperar
+								Recuperar contraseña
 							</Button>
 						</Card>
 					</form>
@@ -103,10 +122,7 @@ const UserRecovery: React.FC<UserRecoveryProps> = ({}) => {
 							justifyContent: 'space-around',
 							alignItems: 'center',
 						}}>
-						<Typography>Iniciar sesión</Typography>
-						<Button variant='text' onClick={goToLogin}>
-							Iniciar sesión
-						</Button>
+						<Box sx={{ flex: 1 }} />
 					</Box>
 				</Box>
 			</Box>

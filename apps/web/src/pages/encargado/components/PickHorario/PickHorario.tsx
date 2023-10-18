@@ -2,14 +2,14 @@ import { URL } from '@/api/server';
 import { DotsLoaders } from '@/components/Loader/DotsLoaders';
 import { McAutocomplete } from '@/components/McWithoutForms/McAutocomplete';
 import { useCustomFetch } from '@/hooks/useFetch';
-import { ScheduleType } from '@/models/Schedule';
+import { TSchedule } from '@/models/Schedule';
 import { Typography } from '@mui/material';
 import React from 'react';
 
 export type PickHorarioProps = {
 	id_jornada: number;
-	horario: ScheduleType;
-	setHorario: (horario: ScheduleType) => void;
+	horario: TSchedule;
+	setHorario: (horario: TSchedule) => void;
 };
 
 const PickHorario: React.FC<PickHorarioProps> = ({

@@ -15,11 +15,7 @@ const style = {
 };
 
 const Loader = () => {
-	return (
-		<Box sx={style}>
-			<CircularProgress color='secondary' />
-		</Box>
-	);
+	return <Box sx={style}>{/* <CircularProgress color='secondary' /> */}</Box>;
 };
 
 export default Loader;

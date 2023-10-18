@@ -50,5 +50,9 @@ export const formatDate = ({ date, format, type }: TFormatDate) => {
 		}
 	} else if (format === 'iso') {
 		return date.toISOString();
+	} else if (format === 'report') {
+		return date.toLocaleString('es-GT', {
+			dateStyle: 'medium',
+		});
 	}
 };

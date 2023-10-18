@@ -1,6 +1,5 @@
-import React, { Suspense } from 'react';
+import React from 'react';
 import { Outlet } from 'react-router-dom';
-import { SpinLoader } from './Loader/SpinLoader';
 
 export type ProtectedRouteProps = {
 	children?: React.ReactNode;
