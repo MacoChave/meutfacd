@@ -1,5 +1,6 @@
 import { URL } from '@/api/server';
 import Loader from '@/components/Loader';
+import { SpinLoader } from '@/components/Loader/SpinLoader';
 import { ToolbarWithoutSesion } from '@/components/navegacion/Toolbar';
 import { Tipo_Logup, initialValuesLogup, schemaLogup } from '@/models/Logup';
 import { postData } from '@/services/fetching';
@@ -138,7 +139,7 @@ const Logup: React.FC<LogupProps> = () => {
 					</FormProvider>
 				</Box>
 			</Box>
-			{enviando && <Loader />}
+			{enviando && <SpinLoader />}
 		</>
 	);
 };

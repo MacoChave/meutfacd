@@ -14,11 +14,7 @@ export const getItem = async (
 		});
 		res.status(200).json(result);
 	} catch (error: any) {
-		errorHttp(res, {
-			error,
-			msg: 'No se puede obtener el registro',
-			code: 500,
-		});
+		errorHttp(res, error);
 	}
 };
 
@@ -33,11 +29,7 @@ export const getItems = async (
 		});
 		res.status(200).json(results);
 	} catch (error: any) {
-		errorHttp(res, {
-			error,
-			msg: 'No se puede obtener el registro',
-			code: 500,
-		});
+		errorHttp(res, error);
 	}
 };
 
@@ -53,11 +45,7 @@ export const getItemsByCurrentProf = async (
 		});
 		res.status(200).json(results);
 	} catch (error: any) {
-		errorHttp(res, {
-			error,
-			msg: 'No se puede obtener el registro',
-			code: 500,
-		});
+		errorHttp(res, error);
 	}
 };
 
@@ -78,11 +66,7 @@ export const postItem = async ({ body, user }: Request, res: Response) => {
 		});
 		res.status(200).json(results);
 	} catch (error: any) {
-		errorHttp(res, {
-			error,
-			msg: 'No se puede guardar el progreso',
-			code: 500,
-		});
+		errorHttp(res, error);
 	}
 };
 
@@ -110,11 +94,7 @@ export const assignReview = async ({ query, body }: Request, res: Response) => {
 		);
 		res.status(200).json(results);
 	} catch (error: any) {
-		errorHttp(res, {
-			error,
-			msg: 'No se puede actualizar el registro',
-			code: 500,
-		});
+		errorHttp(res, error);
 	}
 };
 
@@ -123,25 +103,24 @@ export const putItem = async (
 	res: Response
 ) => {
 	try {
+		let data = Object.assign({}, body);
+		if (data.id_tutor === 0) data.id_tutor = user.primaryKey;
+
 		const results = await sqlUpdate({
 			table: 'ut_revision',
 			query,
 			datos: {
-				...body,
 				fecha: formatDate({
 					date: new Date(),
 					format: 'mysql',
 					type: 'datetime',
 				}),
+				...data,
 			},
 		});
 		res.status(200).json(results);
 	} catch (error: any) {
-		errorHttp(res, {
-			error,
-			msg: 'No se puede actualizar el registro',
-			code: 500,
-		});
+		errorHttp(res, error);
 	}
 };
 
@@ -154,10 +133,6 @@ export const deleteItem = async ({ query, user }: Request, res: Response) => {
 		});
 		res.status(200).json(results);
 	} catch (error: any) {
-		errorHttp(res, {
-			error,
-			msg: 'No se puede eliminar el registro',
-			code: 500,
-		});
+		errorHttp(res, error);
 	}
 };

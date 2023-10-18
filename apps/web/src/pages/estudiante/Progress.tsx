@@ -1,12 +1,15 @@
 import { URL } from '@/api/server';
 import { Contenedor } from '@/components';
+import { DotsLoaders } from '@/components/Loader/DotsLoaders';
 import { McTable } from '@/components/MyTable';
+import { APROBADO } from '@/consts/vars';
 import { useCustomFetch } from '@/hooks/useFetch';
 import { ProgressType } from '@/interfaces/ProgressType';
+import { getData } from '@/services/fetching';
 import { Typography } from '@mui/material';
 import { useState } from 'react';
+import swal from 'sweetalert';
 import Dialogo from '../../components/Modal';
-import { DotsLoaders } from '@/components/Loader/DotsLoaders';
 
 const Progress = () => {
 	const [open, setOpen] = useState(false);
@@ -20,11 +23,13 @@ const Progress = () => {
 				'id_revision',
 				'fecha_creacion',
 				'fecha_modificacion',
+				'ruta_dictamen',
 				'fecha',
 				'detalle',
 				'tutor',
 				'estado',
 				'estacion',
+				'titulo',
 			],
 			sort: {
 				estacion: 'asc',
@@ -38,6 +43,20 @@ const Progress = () => {
 		setRow(row);
 	};
 
+	const handlePrint = async (row: Object) => {
+		if ((row as ProgressType).estado !== APROBADO) {
+			swal('Error', 'No hay documento dictámen para ver', 'error');
+			return;
+		}
+
+		const { url }: any = await getData({
+			path: URL.STORAGE,
+			body: {},
+			params: { name: (row as ProgressType).ruta_dictamen },
+		});
+		window.open(url);
+	};
+
 	if (isLoading) return <DotsLoaders />;
 	if (isError) return <Typography>Error al cargar los datos</Typography>;
 
@@ -47,6 +66,7 @@ const Progress = () => {
 				<McTable
 					headers={{
 						estacion: 'Estación',
+						titulo: 'Titulo',
 						detalle: 'Observación',
 						tutor: 'Revisor',
 						fecha_creacion: 'Creación',
@@ -56,6 +76,7 @@ const Progress = () => {
 					}}
 					rows={data || []}
 					totalCols={{}}
+					onPrint={handlePrint}
 				/>
 			</Contenedor>
 			<Dialogo open={open} title='Observaciones' setOpen={setOpen}>

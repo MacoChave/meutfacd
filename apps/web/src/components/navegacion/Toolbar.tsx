@@ -1,8 +1,13 @@
 import { URL } from '@/api/server';
 import derechoLogo from '@/assets/svg/logo_derecho_white.svg';
-import { useFetch } from '@/hooks/useFetch';
+import { useCustomFetch, useFetch } from '@/hooks/useFetch';
 import { setLogout } from '@/redux/states';
-import { AccountCircle, Menu, Notifications } from '@mui/icons-material';
+import {
+	AccountCircle,
+	Menu,
+	Message,
+	Notifications,
+} from '@mui/icons-material';
 import {
 	AppBar,
 	Badge,
@@ -40,10 +45,13 @@ export const ToolbarWithoutSesion = ({ children }: ToolbarProps) => {
 				gridArea: 'header',
 				zIndex: (theme) => theme.zIndex.drawer + 1,
 			}}>
-			<Toolbar>
-				<IconButton
-					color='inherit'
-					sx={{ mr: 2, display: { sm: 'none' } }}>
+			<Toolbar
+				sx={{
+					display: 'flex',
+					flexDirection: 'row',
+					justifyContent: 'space-around',
+				}}>
+				<IconButton color='inherit' sx={{ mr: 2 }}>
 					<Menu />
 				</IconButton>
 				<img
@@ -56,13 +64,16 @@ export const ToolbarWithoutSesion = ({ children }: ToolbarProps) => {
 					loading='lazy'
 				/>
 				<Typography
-					variant='h6'
 					component='div'
-					sx={{ flexGrow: 1, display: { sx: 'none', sm: 'block' } }}
+					sx={{
+						cursor: 'pointer',
+						display: { xs: 'none', sm: 'block' },
+					}}
 					onClick={() => goToHome()}>
 					Unidad de tesis
 				</Typography>
-				<Box sx={{ display: { xs: 'none', sm: 'block' } }}>
+				<Box sx={{ flexGrow: 1 }} />
+				<Box sx={{ display: { xs: 'block', sm: 'block' } }}>
 					{children}
 				</Box>
 			</Toolbar>
@@ -75,9 +86,24 @@ export const ToolbarWithSesion = () => {
 	const dispatch = useDispatch();
 	const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
-	const { data, isLoading, isError, refetch } = useFetch({
-		url: `${URL.MESSAGING}/all`,
+	const {
+		data: messages,
+		isLoading: isLoadMessages,
+		isError: isErrorMessages,
+		refetch: refetchMessages,
+	} = useFetch({
+		url: `${URL.NOTIFICATION}/all`,
 		params: { activo: 1 },
+	});
+
+	// GET MESSAGES
+	const {
+		data: chats,
+		isLoading: isLoadChats,
+		isError: isErrorChats,
+	} = useCustomFetch({
+		url: `${URL.CHAT}`,
+		method: 'get',
 	});
 
 	const handleLogout = (_: MouseEvent) => {
@@ -89,31 +115,41 @@ export const ToolbarWithSesion = () => {
 		navigate('perfil');
 	};
 
+	const handleChat = (_: MouseEvent) => {
+		navigate('chat');
+	};
+
 	const openMessages = () => {
-		data.forEach((message: NotificationType) => {
+		messages.forEach((message: NotificationType) => {
 			enqueueSnackbar(message.mensaje, {
 				variant: 'info',
 				onClose: async () => {
 					await putData({
-						path: URL.MESSAGING,
+						path: URL.NOTIFICATION,
 						body: { activo: 0 },
 						params: { id_notificacion: message.id_notificacion },
 					});
-					refetch();
+					refetchMessages();
 					closeSnackbar();
 				},
+				autoHideDuration: 5000,
 			});
 		});
 	};
 
-	if (isLoading) return <DotsLoaders />;
-	if (isError) return <Typography>Error</Typography>;
+	if (isLoadMessages) return <DotsLoaders />;
+	if (isErrorMessages) return <Typography>Error</Typography>;
 
 	return (
 		<>
 			<ToolbarWithoutSesion>
+				<IconButton color='inherit' onClick={handleChat}>
+					<Badge badgeContent={chats?.length ?? 0} color='info'>
+						<Message />
+					</Badge>
+				</IconButton>
 				<IconButton color='inherit' onClick={openMessages}>
-					<Badge badgeContent={data?.length ?? 0} color='info'>
+					<Badge badgeContent={messages?.length ?? 0} color='info'>
 						<Notifications />
 					</Badge>
 				</IconButton>

@@ -2,7 +2,7 @@ import { URL } from '@/api/server';
 import { Contenedor } from '@/components';
 import { useCustomFetch } from '@/hooks/useFetch';
 import { UserType } from '@/models/Perfil';
-import { ResultType } from '@/models/Result';
+import { TResult } from '@/models/Fetching';
 import { ReviewType } from '@/models/Review';
 import { putData } from '@/services/fetching';
 import { style } from '@/themes/styles';
@@ -34,7 +34,7 @@ const ThesisSup: React.FC<ThesisSupProps> = ({}) => {
 		[] as ReviewType[]
 	);
 
-	const { data, isLoading, isError } = useCustomFetch({
+	const { data, isLoading, isError, refetch } = useCustomFetch({
 		url: `${URL.GENERIC}/all`,
 		method: 'post',
 		body: {
@@ -55,7 +55,7 @@ const ThesisSup: React.FC<ThesisSupProps> = ({}) => {
 		const id_tutor = docente.id_usuario;
 		const id_revisiones = assignmentUsers.map((s) => s.id_revision);
 
-		const results: ResultType[] = await putData({
+		const results: TResult[] = await putData({
 			path: `${URL.REVIEW}/assign`,
 			body: { id_revisiones, id_tutor },
 		});

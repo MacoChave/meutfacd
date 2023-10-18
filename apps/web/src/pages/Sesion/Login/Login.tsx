@@ -15,6 +15,7 @@ import { setLogged } from '@/redux/states';
 import store from '@/redux/store';
 import { postData } from '@/services/fetching';
 import { Seguridad } from './Seguridad';
+import swal from 'sweetalert';
 
 export type LoginProps = Record<string, never>;
 
@@ -51,12 +52,19 @@ const Login: React.FC<LoginProps> = () => {
 		});
 	};
 
-	const handleRecovery = (e: SyntheticEvent) => {
+	const handleRecovery = async (e: SyntheticEvent) => {
 		e.preventDefault();
-		navigate(`/recovery/${rol}`, {
-			replace: true,
-			state: { email: methods.getValues('correo') },
+		const response = await postData<any>({
+			path: URL.AUTH.RECOVERY,
+			body: { correo: methods.getValues('correo') },
 		});
+		if (response?.msg) {
+			swal({
+				title: '¡Bien hecho!',
+				text: 'Revisa tu correo electrónico para recuperar tu contraseña',
+				icon: 'success',
+			});
+		}
 	};
 
 	const handleLogup = (e: SyntheticEvent) => {

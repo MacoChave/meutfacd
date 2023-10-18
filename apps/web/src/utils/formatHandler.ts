@@ -1,18 +1,27 @@
-import { APROBADO, ESPERA, PREVIA, RECHAZADO, REVISION } from '@/consts/vars';
+import {
+	APROBADO,
+	ESPERA,
+	PENDIENTE,
+	PREVIA,
+	RECHAZADO,
+	REVISION,
+} from '@/consts/vars';
 import { TypeWithKey } from '@/models/TypeWithKey';
 
 export const getChipLabel = (code: string) => {
 	switch (code) {
+		case PENDIENTE:
+			return 'Pendiente';
 		case ESPERA:
 			return 'En espera';
-		case APROBADO:
-			return 'Aprobado';
+		case REVISION:
+			return 'Revisión';
 		case RECHAZADO:
 			return 'Rechazado';
 		case PREVIA:
-			return 'Previa';
-		case REVISION:
-			return 'Revisión';
+			return 'Previo';
+		case APROBADO:
+			return 'Aprobado';
 		default:
 			return 'Sin datos';
 	}
@@ -20,16 +29,18 @@ export const getChipLabel = (code: string) => {
 
 export const getChipColor = (code: string) => {
 	switch (code) {
+		case PENDIENTE:
+			return 'default';
 		case ESPERA:
 			return 'warning';
-		case APROBADO:
-			return 'success';
+		case REVISION:
+			return 'primary';
 		case RECHAZADO:
 			return 'error';
 		case PREVIA:
 			return 'info';
-		case REVISION:
-			return 'primary';
+		case APROBADO:
+			return 'success';
 		default:
 			return 'default';
 	}
@@ -86,33 +97,41 @@ type TFormatDate = {
 	date: Date;
 	setDay?: number;
 	setHour?: number;
-	onlyTime?: boolean;
+	withTime?: boolean;
 	onlyMonth?: boolean;
 };
 
 export const formatDate = ({
 	date,
-	setDay,
-	setHour,
-	onlyTime,
-	onlyMonth,
+	setDay = undefined,
+	setHour = undefined,
+	withTime = false,
+	onlyMonth = false,
 }: TFormatDate): string => {
 	if (setDay) date.setDate(setDay);
 	if (setHour) date.setHours(setHour);
 
-	const str = date.toLocaleString('es-GT', {
-		year: 'numeric',
-		month: '2-digit',
-		day: '2-digit',
+	const res = date.toLocaleString('es-GT', {
+		dateStyle: onlyMonth ? 'short' : 'long',
+		timeStyle: withTime ? 'medium' : undefined,
 		timeZone: 'America/Guatemala',
 	});
-
-	return str;
+	return res;
 };
 
-export const formatToInputDate = (strDate: string) => {
-	const sep: boolean = strDate.includes('/');
-	const [day, month, year] = strDate.split(sep ? '/' : '-');
+export const formatToInputDate = (
+	strTimestamp: string,
+	includeTime: boolean = false
+) => {
+	const sepDT = strTimestamp.includes('T');
+	const [strDate, strTime] = strTimestamp.split(sepDT ? 'T' : ', ');
+	const sepD: boolean = strDate.includes('/');
+	const [day, month, year] = strDate.split(sepD ? '/' : '-');
+	let stYear = +day > 31 ? day : year;
+	let stDay = +day > 31 ? year : day;
 
-	return `${day}-${month}-${year}`;
+	const result = `${stYear}-${month}-${stDay}${
+		includeTime ? ` ${strTime.replace('Z', '')}` : ''
+	}`;
+	return result;
 };

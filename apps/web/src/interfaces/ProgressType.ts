@@ -14,4 +14,6 @@ export type ProgressType = {
 	detalle_revision: string;
 	estado: string;
 	estacion: string;
+	salon: string;
+	sala: string;
 };

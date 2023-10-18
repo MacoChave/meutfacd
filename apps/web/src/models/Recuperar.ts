@@ -1,17 +1,24 @@
 import * as yup from 'yup';
 
 export type RecoveryType = {
-	correo: string;
+	pass: string;
+	confpass: string;
 };
 
 export const initialValues: RecoveryType = {
-	correo: '',
+	pass: '',
+	confpass: '',
 };
 
 export const schemaRecovery = yup.object().shape({
-	correo: yup
+	pass: yup
 		.string()
-		.email()
-		.required('Correo es requerido')
-		.max(100, 'Correo no puede ser mayor a 100 caracteres'),
+		.required('Contraseña es requerida')
+		.max(15, 'Contraseña no puede ser mayor a 15'),
+	confpass: yup.string().when('pass', {
+		is: (val: string) => (val && val.length > 0 ? true : false),
+		then: yup
+			.string()
+			.oneOf([yup.ref('pass')], 'Las contraseñas no coinciden'),
+	}),
 });

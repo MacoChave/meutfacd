@@ -1,8 +1,15 @@
 import { Request, Response } from 'express';
-import { sqlEjecutar, sqlSelectOne } from '../db/consultas';
+import { sqlEjecutar, sqlSelectOne, sqlUpdate } from '../db/consultas';
 import { TSignIn } from '../models/signIn';
 import { errorHttp } from '../utils/error.handle';
 import { comparePassword, encryptPassword, generarToken } from '../utils/token';
+import {
+	getBodyFromRecovery,
+	getBodyFromVerification,
+	sendEmail,
+} from '../utils/email';
+import { DATA_SOURCES } from '../config/vars.config';
+import { logger } from '../utils/logger';
 
 const signIn = async ({ user, password }: TSignIn) => {
 	try {
@@ -34,6 +41,53 @@ const signIn = async ({ user, password }: TSignIn) => {
 		return { token, name: userData.nombre, roles: userData.roles };
 	} catch (error) {
 		throw error;
+	}
+};
+
+export const verifyEmail = async ({ query }: Request, res: Response) => {
+	try {
+		const response = await sqlUpdate({
+			table: 'usuario',
+			datos: { estado: 'A' },
+			query: { correo: atob(query.email as string) },
+		});
+
+		return res.status(200).json(response);
+	} catch (error: any) {
+		errorHttp(res, error);
+	}
+};
+
+export const recoveryPassword = async ({ body }: Request, res: Response) => {
+	try {
+		const emailData = await sendEmail({
+			to: body.correo,
+			plainText: 'Ingresa al siguiente link para recuperar tu contraseña',
+			subject: 'Recuperar contraseña',
+			content: getBodyFromRecovery({
+				email: body.correo,
+			}),
+		});
+		res.status(200).json({ msg: 'Correo enviado' });
+	} catch (error: any) {
+		errorHttp(res, error);
+	}
+};
+
+export const changePassword = async (
+	{ query, body }: Request,
+	res: Response
+) => {
+	try {
+		const hash = await encryptPassword(body.pass);
+		const response = await sqlUpdate({
+			table: 'usuario',
+			datos: { pass: hash },
+			query: { correo: atob(query.email as string) },
+		});
+		res.status(200).json(response);
+	} catch (error: any) {
+		errorHttp(res, error);
 	}
 };
 
@@ -104,9 +158,27 @@ export const logupHandler = async ({ body, query }: Request, res: Response) => {
 			throw new Error(error_message);
 		}
 
+		// SEND EMAIL VERIFICATION TO USER
+		if (DATA_SOURCES.SEND_EMAIL) {
+			const emailData = await sendEmail({
+				to: correo,
+				plainText: 'Por favor, verifica tu correo electrónico',
+				subject: 'Verificación de correo electrónico',
+				content: getBodyFromVerification({
+					username: nombre,
+					email: correo,
+				}),
+			});
+			logger({
+				dirname: __dirname,
+				proc: 'logupHandler',
+				message: emailData,
+			});
+		}
+
 		res.status(200).json({ msg: 'Usuario creado' });
 	} catch (error: any) {
-		errorHttp(res, { msg: 'Error al crear usuario', error });
+		errorHttp(res, error);
 	}
 };
 
@@ -137,7 +209,7 @@ export const loginHandler = async ({ body }: Request, res: Response) => {
 		// });
 		res.status(200).json(result);
 	} catch (error: any) {
-		errorHttp(res, { msg: 'Error al iniciar sesión', error });
+		errorHttp(res, error);
 	}
 };
 
@@ -169,6 +241,6 @@ export const profileHandler = async ({ user }: Request, res: Response) => {
 			id_horario: result.id_horario,
 		});
 	} catch (error: any) {
-		errorHttp(res, { msg: 'Error al obtener el perfil', error });
+		errorHttp(res, error);
 	}
 };

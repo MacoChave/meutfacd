@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import { errorHttp } from '../utils/error.handle';
 import { validarToken } from '../utils/token';
-import { errorHttp } from '../utils/error.handle';
+import { JsonWebTokenError } from 'jsonwebtoken';
 
 // TODO: Evaluar pros y contras de evaluar token en cada sistema o en microservicio autenticación
 export const requireAuth = (
@@ -30,6 +30,6 @@ export const requireAuth = (
 		req.user = decodedToken as any;
 		next();
 	} catch (error: any) {
-		errorHttp(res, error as any);
+		errorHttp(res, error);
 	}
 };

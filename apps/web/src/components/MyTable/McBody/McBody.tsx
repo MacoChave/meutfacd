@@ -1,3 +1,4 @@
+import { ESTACIONES } from '@/consts/vars';
 import {
 	formatByDataType,
 	getAlignByDataType,
@@ -5,16 +6,12 @@ import {
 	getChipLabel,
 } from '@/utils/formatHandler';
 import {
-	Cancel,
 	CancelOutlined,
 	Check,
 	Delete,
 	Edit,
-	FileOpen,
 	FilePresent,
 	Print,
-	UnfoldLess,
-	UnfoldMore,
 } from '@mui/icons-material';
 import {
 	Chip,
@@ -22,6 +19,7 @@ import {
 	TableBody,
 	TableCell,
 	TableRow,
+	Typography,
 } from '@mui/material';
 import React from 'react';
 
@@ -44,9 +42,22 @@ export const getValue = (key: string, cellValue: any): React.ReactNode => {
 				label={getChipLabel(cellValue)}
 			/>
 		);
+	} else if (key === 'estacion') {
+		return <>{ESTACIONES[cellValue - 1]}</>;
 	} else {
 		const text = formatByDataType({ [key]: cellValue });
-		return <>{text}</>;
+		return (
+			<Typography
+				sx={{
+					textOverflow: 'ellipsis',
+				}}>
+				{!text
+					? ''
+					: text.length > 40
+					? text.slice(0, 40) + '...'
+					: text}
+			</Typography>
+		);
 	}
 };
 

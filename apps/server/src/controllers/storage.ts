@@ -4,31 +4,46 @@ import { errorHttp } from '../utils/error.handle';
 import { logger } from '../utils/logger';
 import { getExtFile, uploadFile } from '../utils/upload';
 
-const uploadDraft = async ({ files, user }: Request, res: Response) => {
+const uploadStudentFile = async (
+	{ files, body, user }: Request,
+	res: Response
+) => {
 	try {
 		logger({ dirname: __dirname, proc: 'uploadDraft', message: files });
-		const result = await uploadFile(
-			files.draft.tempFilePath,
-			files.draft.name,
+
+		if (getExtFile(files.file.name) !== 'pdf') {
+			throw new Error(
+				'Formato no soportado. Convierta su archivo a PDF y vuelva a intentarlo'
+			);
+		}
+
+		await uploadFile(
+			files.file.tempFilePath,
+			files.file.name,
 			user.carnet.toString(),
-			'preview'
+			body.filename
 		);
 		res.status(200).json({
-			name: `${user.carnet}/preview.${getExtFile(files.draft.name)}`,
+			name: `${user.carnet}/${body.filename}.${getExtFile(
+				files.file.name
+			)}`,
 		});
 	} catch (error: any) {
-		errorHttp(res, {
-			error,
-			msg: 'Error al subir el punto de tesis',
-			code: 500,
-		});
+		errorHttp(res, error);
 	}
 };
 
 const uploadTesis = async ({ files, user }: Request, res: Response) => {
 	try {
 		logger({ dirname: __dirname, proc: 'uploadTesis', message: files });
-		const result = await uploadFile(
+
+		if (getExtFile(files) !== 'pdf') {
+			throw new Error(
+				'Formato no soportado. Convierta su archivo a PDF y vuelva a intentarlo'
+			);
+		}
+
+		await uploadFile(
 			files.thesis.tempFilePath,
 			files.thesis.name,
 			user.carnet.toString(),
@@ -38,14 +53,21 @@ const uploadTesis = async ({ files, user }: Request, res: Response) => {
 			name: `${user.carnet}/thesis.${getExtFile(files.thesis.name)}`,
 		});
 	} catch (error: any) {
-		res.status(500).json({ error: 'Error al subir la tesis' });
+		errorHttp(res, error);
 	}
 };
 
 const uploadDictamen = async ({ files, user }: Request, res: Response) => {
 	try {
 		logger({ dirname: __dirname, proc: 'uploadDictamen', message: files });
-		const result = await uploadFile(
+
+		if (getExtFile(files) !== 'pdf') {
+			throw new Error(
+				'Formato no soportado. Convierta su archivo a PDF y vuelva a intentarlo'
+			);
+		}
+
+		await uploadFile(
 			files.dictamen.tempFilePath,
 			files.dictamen.name,
 			user.carnet.toString(),
@@ -55,7 +77,7 @@ const uploadDictamen = async ({ files, user }: Request, res: Response) => {
 			name: `${user.carnet}/dictamen.${getExtFile(files.dictamen.name)}`,
 		});
 	} catch (error: any) {
-		res.status(500).json({ error: 'Error al subir la dictamen' });
+		errorHttp(res, error);
 	}
 };
 
@@ -66,12 +88,13 @@ const getFile = async ({ query }: Request, res: Response) => {
 			url: `https://${DATA_SOURCES.AWS_BUCKET_NAME}.s3.amazonaws.com/${name}`,
 		});
 	} catch (error: any) {
-		errorHttp(res, {
-			error,
-			msg: 'Error al descargar el archivo',
-			code: 500,
-		});
+		errorHttp(res, error);
 	}
 };
 
-export { getFile, uploadDraft, uploadDictamen, uploadTesis };
+export {
+	getFile,
+	uploadStudentFile as uploadDraft,
+	uploadDictamen,
+	uploadTesis,
+};

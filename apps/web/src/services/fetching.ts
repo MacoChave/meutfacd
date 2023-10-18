@@ -3,9 +3,11 @@ import axios from 'axios';
 
 type axiosProps = {
 	path: string;
+	method?: 'GET' | 'POST' | 'PUT' | 'DELETE';
 	body?: any;
 	params?: TypeWithKey<any>;
 	headers?: TypeWithKey<string>;
+	responseType?: string;
 };
 
 // GET DATA
@@ -33,8 +35,10 @@ export async function postData<T>({
 	headers = {
 		'Content-Type': 'application/json',
 	},
+	responseType = 'json',
 }: axiosProps): Promise<T> {
 	const { data } = await axios.post(path, body, {
+		responseType: responseType,
 		headers: {
 			...headers,
 		},
@@ -70,6 +74,28 @@ export async function deleteData<T>({
 	},
 }: axiosProps): Promise<T> {
 	const { data } = await axios.delete(path, {
+		headers: {
+			...headers,
+		},
+		params,
+	});
+	return data;
+}
+
+// GENERIC DATA
+export async function genericData<T>({
+	path,
+	method = 'GET',
+	body = {},
+	params = {},
+	headers = {
+		'Content-Type': 'application/json',
+	},
+}: axiosProps): Promise<T> {
+	const { data } = await axios({
+		method,
+		url: path,
+		data: body,
 		headers: {
 			...headers,
 		},

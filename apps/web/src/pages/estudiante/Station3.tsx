@@ -1,10 +1,13 @@
 import { URL } from '@/api/server';
 import { Contenedor } from '@/components';
+import { EmptyReview } from '@/components/EmptyReview';
 import { DotsLoaders } from '@/components/Loader/DotsLoaders';
 import { useCustomFetch } from '@/hooks/useFetch';
+import { ReviewType } from '@/models/Review';
+import { postData } from '@/services/fetching';
 import { style } from '@/themes/styles';
 import { getChipColor, getChipLabel } from '@/utils/formatHandler';
-import { FileDownload } from '@mui/icons-material';
+import { Chat } from '@mui/icons-material';
 import { Box, Chip, IconButton, TextField, Typography } from '@mui/material';
 
 const boxStyle = {
@@ -16,7 +19,7 @@ const boxStyle = {
 
 const Estacion3 = () => {
 	const {
-		data: asignacion,
+		data: revision,
 		isLoading,
 		isError,
 	} = useCustomFetch({
@@ -31,9 +34,10 @@ const Estacion3 = () => {
 				'estado',
 				'tutor',
 				'salon',
+				'id_tutor',
 			],
-			order: {
-				fecha_revision: 'DESC',
+			sort: {
+				fecha: 'DESC',
 			},
 			limit: 1,
 		},
@@ -42,8 +46,21 @@ const Estacion3 = () => {
 		},
 	});
 
+	const createChat = async () => {
+		const data = await postData({
+			path: URL.CHAT,
+			params: { user_id: (revision as ReviewType).id_tutor },
+		});
+		console.log(data);
+	};
+
 	if (isLoading) return <DotsLoaders />;
 	if (isError) return <Typography>Error</Typography>;
+
+	if (!revision)
+		return (
+			<EmptyReview title='Curso 2: Elaboración y planeación de tesis' />
+		);
 
 	return (
 		<>
@@ -55,32 +72,56 @@ const Estacion3 = () => {
 							flexDirection: 'column',
 							gap: 4,
 						}}>
+						{revision?.id_tutor && (
+							<IconButton
+								sx={{ alignSelf: 'flex-start' }}
+								color='info'
+								title='Crear chat'
+								onClick={createChat}>
+								<Chat />
+							</IconButton>
+						)}
 						<TextField
 							variant='standard'
 							label='Catedrático'
-							value={asignacion?.tutor ?? 'No asignado'}
+							InputProps={{
+								disabled: true,
+							}}
+							value={revision?.tutor ?? 'No asignado'}
 						/>
 						<TextField
 							variant='standard'
 							label='Jornada'
-							value={asignacion?.jornada ?? 'No asignado'}
+							InputProps={{
+								disabled: true,
+							}}
+							value={revision?.jornada ?? 'No asignado'}
 						/>
 						<TextField
 							variant='standard'
 							label='Horario'
-							value={`${asignacion?.hora_inicio ?? 'Inicio'} - ${
-								asignacion?.hora_final ?? 'Final'
+							InputProps={{
+								disabled: true,
+							}}
+							value={`${revision?.hora_inicio ?? 'Inicio'} - ${
+								revision?.hora_final ?? 'Final'
 							}`}
 						/>
 						<TextField
 							variant='standard'
 							label='Días'
-							value={asignacion?.dias ?? 'No asignado'}
+							InputProps={{
+								disabled: true,
+							}}
+							value={revision?.dias ?? 'No asignado'}
 						/>
 						<TextField
 							variant='standard'
 							label='Salón'
-							value={asignacion?.salon ?? 'No asignado'}
+							InputProps={{
+								disabled: true,
+							}}
+							value={revision?.salon ?? 'No asignado'}
 						/>
 					</Box>
 					<Box
@@ -92,16 +133,16 @@ const Estacion3 = () => {
 						<Box sx={boxStyle}>
 							<Typography>Resultado</Typography>
 							<Chip
-								label={getChipLabel(asignacion.estado)}
-								color={getChipColor(asignacion.estado)}
+								label={getChipLabel(revision.estado)}
+								color={getChipColor(revision.estado)}
 							/>
 						</Box>
-						<Box sx={boxStyle}>
+						{/* <Box sx={boxStyle}>
 							<Typography>Certificado</Typography>
 							<IconButton color='primary'>
 								<FileDownload />
 							</IconButton>
-						</Box>
+						</Box> */}
 					</Box>
 				</Box>
 			</Contenedor>

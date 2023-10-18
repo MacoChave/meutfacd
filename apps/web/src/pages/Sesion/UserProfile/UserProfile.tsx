@@ -1,6 +1,6 @@
 import { Contenedor } from '@/components';
 import { DotsLoaders } from '@/components/Loader/DotsLoaders';
-import { ResultType } from '@/models/Result';
+import { TResult } from '@/models/Fetching';
 import { putData } from '@/services/fetching';
 import { formatDate } from '@/utils/formatHandler';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -41,7 +41,7 @@ export const UserProfile = (): JSX.Element => {
 	};
 
 	const onSubmit: SubmitHandler<UserType> = async (data) => {
-		const result: ResultType[] = await putData({
+		const result: TResult[] = await putData({
 			path: `${URL.USER}`,
 			body: data,
 		});

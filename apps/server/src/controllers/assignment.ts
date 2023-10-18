@@ -11,11 +11,12 @@ export const getExcelFile = async (req: Request, res: Response) => {
 				{ column: 'roles', operator: 'like', value: '%curso%' },
 			],
 		});
+
 		const workSheet = XLSX.utils.json_to_sheet(professor as any[]);
 		const workBook = XLSX.utils.book_new();
 
 		XLSX.utils.book_append_sheet(workBook, workSheet, 'profesores');
-		XLSX.writeFile(workBook, 'storage/ut_asignacion.xlsx');
+		XLSX.writeFile(workBook, '/storage/ut_asignacion.xlsx');
 
 		res.status(200).sendFile('ut_asignacion.xlsx', {
 			root: './storage',
@@ -25,11 +26,8 @@ export const getExcelFile = async (req: Request, res: Response) => {
 			},
 		});
 	} catch (error: any) {
-		errorHttp(res, {
-			error,
-			msg: 'No se puede obtener el archivo',
-			code: 500,
-		});
+		console.log({ error });
+		errorHttp(res, error);
 	}
 };
 
@@ -54,11 +52,7 @@ and id_estudiante = ?`,
 
 		res.status(200).json(result[0]);
 	} catch (error: any) {
-		errorHttp(res, {
-			error,
-			msg: 'No se puede obtener el registro',
-			code: 500,
-		});
+		errorHttp(res, error);
 	}
 };
 
@@ -73,11 +67,7 @@ export const getItems = async (
 		});
 		res.status(200).json(results);
 	} catch (error: any) {
-		errorHttp(res, {
-			error,
-			msg: 'No se puede obtener el registro',
-			code: 500,
-		});
+		errorHttp(res, error);
 	}
 };
 
@@ -89,11 +79,7 @@ export const postItem = async ({ body }: Request, res: Response) => {
 		});
 		res.status(200).json(results);
 	} catch (error: any) {
-		errorHttp(res, {
-			error,
-			msg: 'No se puede guardar el progreso',
-			code: 500,
-		});
+		errorHttp(res, error);
 	}
 };
 
@@ -109,11 +95,7 @@ export const putItem = async (
 		});
 		res.status(200).json(results);
 	} catch (error: any) {
-		errorHttp(res, {
-			error,
-			msg: 'No se puede guardar el progreso',
-			code: 500,
-		});
+		errorHttp(res, error);
 	}
 };
 
@@ -126,10 +108,6 @@ export const deleteItem = ({ query }: Request, res: Response) => {
 		});
 		res.status(200).json(results);
 	} catch (error: any) {
-		errorHttp(res, {
-			error,
-			msg: 'No se puede guardar el progreso',
-			code: 500,
-		});
+		errorHttp(res, error);
 	}
 };

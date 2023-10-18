@@ -19,5 +19,5 @@ export const schemaLogin = yup.object().shape({
 	pass: yup
 		.string()
 		.required('Contraseña es requerida')
-		.max(15, 'Contraseña no puede ser mayor a 100 caracteres'),
+		.max(15, 'Contraseña no puede ser mayor a 15 caracteres'),
 });

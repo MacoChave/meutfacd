@@ -10,6 +10,7 @@ export type ReviewType = {
 	ruta_perfil: string;
 	ruta_tesis: string;
 	ruta_asesor: string;
+	ruta_certificado: string;
 	fecha_creacion: string;
 	fecha_modificacion: string;
 	id_usuario: number;

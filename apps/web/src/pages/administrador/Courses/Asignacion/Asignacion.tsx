@@ -2,7 +2,7 @@ import { URL } from '@/api/server';
 import { DotsLoaders } from '@/components/Loader/DotsLoaders';
 import { McTable } from '@/components/MyTable';
 import { useCustomFetch } from '@/hooks/useFetch';
-import { ResultType } from '@/models/Result';
+import { TResult } from '@/models/Fetching';
 import { deleteData } from '@/services/fetching';
 import { Refresh } from '@mui/icons-material';
 import { Box, IconButton, Typography } from '@mui/material';
@@ -29,7 +29,7 @@ const Asignacion: React.FC<AsignacionProps> = ({}) => {
 	const handleSelect = (item: any) => {};
 
 	const handleDelete = async (item: any) => {
-		const result: ResultType = await deleteData({
+		const result: TResult = await deleteData({
 			path: URL.COURSE_TUTOR,
 			params: { id_curso_tutor: item.id_curso_tutor },
 		});
