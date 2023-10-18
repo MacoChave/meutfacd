@@ -2,6 +2,7 @@ import nodemailer from 'nodemailer';
 import { DATA_SOURCES } from '../config/vars.config';
 import {
 	TEmailFromActivity,
+	TEmailFromRecovery,
 	TEmailFromVerification,
 	TEmailHTML,
 	TSendEmail,
@@ -44,7 +45,7 @@ export const getBodyFromVerification = ({
         </div>`;
 };
 
-export const getBodyFromRecovery = ({}) => {
+export const getBodyFromRecovery = ({ email }: TEmailFromRecovery) => {
 	return `
         <!-- CONTENT -->
         <div style="background: #ffffff; padding: 25px;">
@@ -52,7 +53,9 @@ export const getBodyFromRecovery = ({}) => {
             <p>Estimado usuario</p>
             <p>Hemos recibido una solicitud para recuperar tu dirección de correo electrónico asociada a tu cuenta en nuestro sistema de educación.</p>
             <p>Por favor, haz clic en el siguiente enlace para cambiar tu contraseña: <a
-                    href="${DATA_SOURCES.URL_PASS_RECOVERY}">Cambio de contraseña</a></p>
+                    href="${DATA_SOURCES.URL_PASS_RECOVERY}/${btoa(
+		email
+	)}">Cambio de contraseña</a></p>
         </div>`;
 };
 

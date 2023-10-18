@@ -108,7 +108,7 @@ export const router = createBrowserRouter(
 			element: <VerifiedDocument />,
 		},
 		{
-			path: '/recovery/:rol',
+			path: '/recovery/:email',
 			element: <UserRecovery />,
 		},
 		{

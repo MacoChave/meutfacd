@@ -3,6 +3,10 @@ export type TEmailFromVerification = {
 	email: string;
 };
 
+export type TEmailFromRecovery = {
+	email: string;
+};
+
 export type TEmailFromActivity = {
 	username: string;
 	action: 'creado' | 'aprobado' | 'comentado' | 'rechazado';

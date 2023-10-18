@@ -5,6 +5,7 @@ export const URL = {
 		LOGUP: '/api/auth/logup',
 		PROFILE: '/api/auth/profile',
 		VERIFY: '/api/auth/verified-email',
+		RECOVERY: '/api/auth/recovery',
 	},
 	COURSE: {
 		_: '/api/course',

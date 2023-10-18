@@ -3,7 +3,11 @@ import { sqlEjecutar, sqlSelectOne, sqlUpdate } from '../db/consultas';
 import { TSignIn } from '../models/signIn';
 import { errorHttp } from '../utils/error.handle';
 import { comparePassword, encryptPassword, generarToken } from '../utils/token';
-import { getBodyFromVerification, sendEmail } from '../utils/email';
+import {
+	getBodyFromRecovery,
+	getBodyFromVerification,
+	sendEmail,
+} from '../utils/email';
 import { DATA_SOURCES } from '../config/vars.config';
 import { logger } from '../utils/logger';
 
@@ -49,6 +53,39 @@ export const verifyEmail = async ({ query }: Request, res: Response) => {
 		});
 
 		return res.status(200).json(response);
+	} catch (error: any) {
+		errorHttp(res, error);
+	}
+};
+
+export const recoveryPassword = async ({ body }: Request, res: Response) => {
+	try {
+		const emailData = await sendEmail({
+			to: body.correo,
+			plainText: 'Ingresa al siguiente link para recuperar tu contraseña',
+			subject: 'Recuperar contraseña',
+			content: getBodyFromRecovery({
+				email: body.correo,
+			}),
+		});
+		res.status(200).json({ msg: 'Correo enviado' });
+	} catch (error: any) {
+		errorHttp(res, error);
+	}
+};
+
+export const changePassword = async (
+	{ query, body }: Request,
+	res: Response
+) => {
+	try {
+		const hash = await encryptPassword(body.pass);
+		const response = await sqlUpdate({
+			table: 'usuario',
+			datos: { pass: hash },
+			query: { correo: atob(query.email as string) },
+		});
+		res.status(200).json(response);
 	} catch (error: any) {
 		errorHttp(res, error);
 	}
