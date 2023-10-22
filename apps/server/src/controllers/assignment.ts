@@ -15,11 +15,11 @@ export const getExcelFile = async (req: Request, res: Response) => {
 		const workSheet = XLSX.utils.json_to_sheet(professor as any[]);
 		const workBook = XLSX.utils.book_new();
 
-		XLSX.utils.book_append_sheet(workBook, workSheet, 'profesores');
-		XLSX.writeFile(workBook, '/storage/ut_asignacion.xlsx');
+		XLSX.utils.book_append_sheet(workBook, workSheet, 'Profesor');
+		XLSX.writeFile(workBook, './src/storage/ut_asignacion.xlsx');
 
 		res.status(200).sendFile('ut_asignacion.xlsx', {
-			root: './storage',
+			root: './src/storage',
 			headers: {
 				'Content-Type':
 					'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',

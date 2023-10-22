@@ -1,100 +1,112 @@
 import { Contenedor } from '@/components';
-import { style } from '@/themes/styles';
+import { Download } from '@mui/icons-material';
+import { Box, Divider, IconButton, MenuItem, Select } from '@mui/material';
+import { StationBox } from './StationBox';
+import { useState } from 'react';
 import {
-	Box,
-	FormControl,
-	InputLabel,
-	MenuItem,
-	Select,
-	TextField,
-	Typography,
-} from '@mui/material';
+	ESTACION1,
+	ESTACION2,
+	ESTACION3,
+	ESTACION4,
+	ESTACION5,
+	ESTACION6,
+} from '@/consts/vars';
+import { getData } from '@/services/fetching';
+import { URL } from '@/api/server';
+import { downloadFileByBloodPart } from '@/utils/fileManagment';
 
 const Resumen = () => {
+	const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
+
+	const handleDownload = async () => {
+		const data = await getData({
+			path: `${URL.REVIEW}/xlsx`,
+			params: { year: currentYear },
+			headers: {
+				Accept: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+			},
+		});
+		// DOWNLOAD XLSX FILE
+		downloadFileByBloodPart(
+			data as BlobPart,
+			'Resumen por ciclo lectivo.xlsx'
+		);
+	};
+
+	const getYearRange = (begin: number, end: number) => {
+		const years = [];
+		for (let i = begin; i <= end; i++) {
+			years.push(i);
+		}
+		return years;
+	};
+
 	return (
 		<>
 			<Contenedor title='Resumen por ciclo lectivo'>
-				<Box sx={style}>
-					<Box sx={{ display: 'flex', gap: 4 }}>
-						<FormControl sx={{ flex: 1 }}>
-							<InputLabel>Ciclo lectivo</InputLabel>
-							<Select variant='filled'>
-								{[2020, 2021, 2022, 2023, 2024, 2025, 2026].map(
-									(item) => (
-										<MenuItem value={item} key={item}>
-											{item}
-										</MenuItem>
-									)
-								)}
+				<Box
+					sx={{
+						display: 'flex',
+						flexDirection: 'column',
+						gap: 4,
+					}}>
+					<Box
+						sx={{
+							display: 'flex',
+							flexDirection: 'row',
+							justifyContent: 'space-between',
+							flexWrap: 'wrap',
+							gap: 2,
+						}}>
+						<Box>
+							<Select
+								variant='standard'
+								label='Ciclo lectivo'
+								defaultValue={currentYear}
+								onChange={(e) =>
+									setCurrentYear(e.target.value as number)
+								}>
+								{getYearRange(2020, 2030).map((year) => (
+									<MenuItem key={year} value={year}>
+										{year}
+									</MenuItem>
+								))}
 							</Select>
-						</FormControl>
-						<TextField
-							sx={{ flex: 1 }}
-							variant='filled'
-							value='311'
-							label='Estudiantes atendidos'
-							inputProps={{ readOnly: true }}
-						/>
+						</Box>
+						<Box>
+							{/* <TextField
+								variant='standard'
+								label='Estudiantes atendidos'
+								InputProps={{
+									disabled: true,
+								}}
+							/> */}
+						</Box>
+						<Box sx={{ flex: 1 }} />
+						<Box>
+							<IconButton
+								color='primary'
+								title='Descargar XLSX'
+								type='button'
+								onClick={handleDownload}>
+								<Download />
+							</IconButton>
+						</Box>
 					</Box>
+					<Divider />
 					<Box
 						sx={{
 							display: 'grid',
 							gridTemplateColumns:
 								'repeat(auto-fit, minmax(300px, 1fr))',
+							gap: 4,
 						}}>
-						{rows.map((row, index) => (
-							<Box
-								key={index}
-								sx={{
-									p: 2,
-									m: 2,
-									display: 'flex',
-									flexDirection: 'column',
-									alignItems: 'center',
-									justifyContent: 'center',
-									borderRadius: 2,
-									boxShadow: 2,
-								}}
-								bgcolor='#00225B'
-								color='#fff'>
-								<Typography variant='h6'>
-									{row.estacion}
-								</Typography>
-								<Box>
-									<Box
-										sx={{
-											display: 'flex',
-											gap: 4,
-											justifyContent: 'center',
-										}}>
-										<Box>
-											<Typography variant='h4'>
-												{row.aprobados}
-											</Typography>
-											<Typography variant='subtitle1'>
-												Aprobados
-											</Typography>
-										</Box>
-										<Box>
-											<Typography variant='h4'>
-												{row.previo}
-											</Typography>
-											<Typography variant='subtitle1'>
-												Previo
-											</Typography>
-										</Box>
-										<Box>
-											<Typography variant='h4'>
-												{row.rechazos || row.espera}
-											</Typography>
-											<Typography variant='subtitle1'>
-												Rechazado
-											</Typography>
-										</Box>
-									</Box>
-								</Box>
-							</Box>
-						))}
+						<StationBox station={ESTACION1} />
+						<StationBox station={ESTACION2} />
+						<StationBox station={ESTACION3} />
+						<StationBox station={ESTACION4} />
+						<StationBox station={ESTACION5} />
+						<StationBox station={ESTACION6} />
 					</Box>
 				</Box>
 			</Contenedor>

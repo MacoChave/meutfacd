@@ -6,15 +6,17 @@ import {
 	getItem,
 	getItems,
 	getItemsByCurrentProf,
+	getXlsxReport,
 	postItem,
 	putItem,
 } from '../controllers/review';
 
 const router = Router();
 
+router.get('/xlsx', requireAuth, getXlsxReport);
+router.get('/professor', requireAuth, getItemsByCurrentProf);
 router.post('/one', requireAuth, getItem);
 router.post('/all', requireAuth, getItems);
-router.get('/professor', requireAuth, getItemsByCurrentProf);
 router.post('/', requireAuth, postItem);
 router.put('/assign', requireAuth, assignReview);
 router.put('/', requireAuth, putItem);

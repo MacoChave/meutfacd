@@ -1,7 +1,47 @@
 import { Request, Response } from 'express';
+import * as XLSX from 'xlsx';
 import { sqlInsert, sqlSelect, sqlSelectOne, sqlUpdate } from '../db/consultas';
 import { errorHttp } from '../utils/error.handle';
 import { formatDate } from '../utils/formats';
+
+export const getXlsxReport = async ({ query }: Request, res: Response) => {
+	try {
+		const results = await sqlSelect({
+			table: 'ut_v_revision',
+		});
+
+		const wb = XLSX.utils.book_new();
+		const ws = XLSX.utils.json_to_sheet(results as any);
+		XLSX.utils.book_append_sheet(wb, ws, 'StudentsReview');
+		XLSX.writeFile(wb, './src/storage/students-revisions.xlsx');
+
+		res.status(200).sendFile('students-revisions.xlsx', {
+			root: './src/storage',
+			headers: {
+				'Content-Type':
+					'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+			},
+		});
+	} catch (error: any) {
+		errorHttp(res, error);
+	}
+};
+
+export const getItemsByCurrentProf = async (
+	{ query, body, user }: Request,
+	res: Response
+) => {
+	try {
+		const results = await sqlSelect({
+			...body,
+			table: 'ut_v_revision',
+			query: { id_tutor: user.primaryKey, ...query },
+		});
+		res.status(200).json(results);
+	} catch (error: any) {
+		errorHttp(res, error);
+	}
+};
 
 export const getItem = async (
 	{ query, body, user }: Request,
@@ -26,22 +66,6 @@ export const getItems = async (
 		const results = await sqlSelect({
 			...body,
 			query: { id_usuario: user.primaryKey, ...query },
-		});
-		res.status(200).json(results);
-	} catch (error: any) {
-		errorHttp(res, error);
-	}
-};
-
-export const getItemsByCurrentProf = async (
-	{ query, body, user }: Request,
-	res: Response
-) => {
-	try {
-		const results = await sqlSelect({
-			...body,
-			table: 'ut_v_revision',
-			query: { id_tutor: user.primaryKey, ...query },
 		});
 		res.status(200).json(results);
 	} catch (error: any) {
