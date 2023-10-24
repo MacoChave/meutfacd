@@ -71,8 +71,8 @@ export const setQRCode = async (doc: any, idReview: number) => {
 export const getNameStation = (station: number) => {
 	const stations: string[] = [
 		'Punto de tesis',
-		'Curso 1',
-		'Curso 2',
+		'Curso I',
+		'Curso II',
 		'Comisión y estilo',
 		'Previos internos',
 	];
