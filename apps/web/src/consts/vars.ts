@@ -9,8 +9,8 @@ export const ESTACION6 = 6;
 // NOMBRE DE ESTACIONES
 export const ESTACIONES = [
 	'Punto de tesis',
-	'Curso 1',
-	'Curso 2',
+	'Curso I',
+	'Curso II',
 	'Dictámen',
 	'Comisión y estilo',
 	'Previos internos',

@@ -6,7 +6,7 @@ const rolTypes = [
 	{ value: 'encargado', label: 'Encargado' },
 	{ value: 'estudiante', label: 'Estudiante' },
 	{ value: 'docente', label: 'Docente' },
-	{ value: 'analitica', label: 'Analíca' },
+	{ value: 'secretaria', label: 'Secretaría' },
 ];
 
 export type PickerRolProps = {

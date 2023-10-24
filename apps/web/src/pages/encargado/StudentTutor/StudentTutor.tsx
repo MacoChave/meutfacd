@@ -48,20 +48,22 @@ const StudentTutor: React.FC<StudentTutorProps> = ({}) => {
 				filename: 'Nombramiento',
 			},
 		});
-
-		Promise.all([
-			putData<TResult>({
-				path: URL.REVIEW,
-				body: { ruta_certificado: dictamen.name ?? '' },
-				params: { id_revision: item.id_revision },
-			}),
-			postData<TResult>({
+		if (item.ruta_certificado !== '') {
+			await postData<TResult>({
 				path: URL.REVIEW,
 				body: {
 					id_tesis: item.id_tesis,
 					estacion: 3,
 				},
 				params: {},
+			});
+		}
+
+		Promise.all([
+			putData<TResult>({
+				path: URL.REVIEW,
+				body: { ruta_certificado: dictamen.name ?? '' },
+				params: { id_revision: item.id_revision },
 			}),
 			postData<TResult>({
 				path: URL.NOTIFICATION,
@@ -73,7 +75,7 @@ const StudentTutor: React.FC<StudentTutorProps> = ({}) => {
 				params: {},
 			}),
 		])
-			.then(([res1, res2, res3]) => {
+			.then(([res1, res2]) => {
 				if (res1.affectedRows && res2.affectedRows) {
 					swal(
 						'¡Buen trabajo!',

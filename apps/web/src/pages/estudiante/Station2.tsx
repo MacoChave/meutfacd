@@ -71,6 +71,14 @@ const Estacion2 = () => {
 				body: { ruta_asesor: data.name },
 				params: { id_tesis: revision.id_tesis },
 			});
+			if (revision.estado === APROBADO) {
+				// Si la tesis ya está aprobada, elimino el nombramiento anterior
+				await putData({
+					path: URL.REVIEW,
+					body: { ruta_certificado: '' },
+					params: { id_revision: revision.id_revision },
+				});
+			}
 			refetch();
 			swal('¡Listo!', 'Se ha presentado al asesor', 'success');
 		} catch (error) {
