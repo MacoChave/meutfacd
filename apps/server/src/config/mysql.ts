@@ -8,16 +8,17 @@ export async function conectar() {
 		password: DATA_SOURCES.DB_PASS,
 		database: DATA_SOURCES.DB_NAME,
 		port: DATA_SOURCES.DB_PORT,
-	})
-	return connection
+	});
+	return connection;
 }
 
-export const connection = async () => {
+export const connection = async (asArray: boolean = false) => {
 	return await createConnection({
 		host: DATA_SOURCES.DB_HOST,
 		user: DATA_SOURCES.DB_USER,
 		password: DATA_SOURCES.DB_PASS,
 		database: DATA_SOURCES.DB_NAME,
 		port: DATA_SOURCES.DB_PORT,
+		rowsAsArray: asArray,
 	});
 };

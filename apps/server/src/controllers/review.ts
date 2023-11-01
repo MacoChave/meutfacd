@@ -3,25 +3,32 @@ import * as XLSX from 'xlsx';
 import { sqlInsert, sqlSelect, sqlSelectOne, sqlUpdate } from '../db/consultas';
 import { errorHttp } from '../utils/error.handle';
 import { formatDate } from '../utils/formats';
+import { createReadStream, unlinkSync } from 'fs';
 
 export const getXlsxReport = async ({ query }: Request, res: Response) => {
 	try {
-		const results = await sqlSelect({
+		const bookName = 'StudentReview';
+		const filePath = 'StudentReview.xlsx';
+		const data = await sqlSelect({
 			table: 'ut_v_revision',
 		});
 
 		const wb = XLSX.utils.book_new();
-		const ws = XLSX.utils.json_to_sheet(results as any);
-		XLSX.utils.book_append_sheet(wb, ws, 'StudentsReview');
-		XLSX.writeFile(wb, './src/storage/students-revisions.xlsx');
+		const ws = XLSX.utils.json_to_sheet(data as any);
+		XLSX.utils.book_append_sheet(wb, ws, bookName);
+		XLSX.writeFile(wb, filePath);
 
-		res.status(200).sendFile('students-revisions.xlsx', {
-			root: './src/storage',
-			headers: {
-				'Content-Type':
-					'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-			},
-		});
+		const fileStream = createReadStream(filePath);
+		fileStream.pipe(res);
+		unlinkSync(`${filePath}`);
+
+		// res.status(200).sendFile('students-revisions.xlsx', {
+		// 	root: './src/storage',
+		// 	headers: {
+		// 		'Content-Type':
+		// 			'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+		// 	},
+		// });
 	} catch (error: any) {
 		errorHttp(res, error);
 	}

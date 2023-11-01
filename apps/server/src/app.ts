@@ -2,7 +2,7 @@ import './utils/environment';
 import cors from 'cors';
 import express from 'express';
 import fileUpload from 'express-fileupload';
-import { conectar } from './config/mysql';
+import { conectar, connection } from './config/mysql';
 import { DATA_SOURCES } from './config/vars.config';
 import { router } from './routes';
 
@@ -38,16 +38,13 @@ app.listen(PORT, () => {
 });
 
 // Database connection
-const conectarBD = async () => {
-	const conn = await conectar();
-	conn.getConnection()
+const checkDBConection = async () => {
+	const conn = await connection();
+	conn.ping()
 		.then(async () => {
 			console.log('Database connected 👌');
-			// await cargarRolesTutor();
-			// console.log('Roles loaded...');
-			// await crearUsuarioAdministrador();
-			// console.log('Admin user created...');
 		})
-		.catch((err) => console.log('Error connecting to database 😭', err));
+		.catch((err) => console.log('Error connecting to database 😭', err))
+		.finally(() => conn.end());
 };
-conectarBD();
+checkDBConection();

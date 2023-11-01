@@ -1,19 +1,13 @@
-import { Response } from 'express';
 import { join } from 'path';
 import PDFDocument from 'pdfkit';
-import { toDataURL, toString } from 'qrcode';
+import { toDataURL } from 'qrcode';
 import { DATA_SOURCES } from '../config/vars.config';
-
-export const writehead = (name: string, res: Response) => {
-	const filename = `${name}_${new Date().toLocaleDateString('es-GT', {
-		dateStyle: 'short',
-	})}.pdf`;
-
-	return res.writeHead(200, {
-		'Content-Type': 'application/pdf',
-		'Content-Disposition': `attachment; filename=${filename}`,
-	});
-};
+import { formatDate } from './formats';
+import {
+	TContentDictamen,
+	TDestinyAddress,
+	TInfoSignature,
+} from '../models/pdf';
 
 export const createDocument = () => {
 	const doc = new PDFDocument({
@@ -37,7 +31,7 @@ export const createDocument = () => {
 	return doc;
 };
 
-export const setHeader = (doc: any) => {
+export const setLetterHead = (doc: PDFKit.PDFDocument) => {
 	const imagePath = join(__dirname, '/../storage/PDFHeader.png');
 	doc.image(imagePath, 72, 15, {
 		fit: [475, 100],
@@ -45,6 +39,126 @@ export const setHeader = (doc: any) => {
 		valign: 'center',
 	});
 };
+
+export const setCurrentDate = (doc: PDFKit.PDFDocument) => {
+	doc.fontSize(12).text(
+		`Guatemala, ${formatDate({
+			date: new Date(),
+			format: 'report',
+			type: 'date',
+		})}`,
+		{
+			align: 'right',
+			lineGap: 2,
+		}
+	);
+};
+
+export const setDestinyAddress = ({
+	doc,
+	fullname = 'Fullname responsible next station',
+	rol = 'Rol responsible next station',
+}: TDestinyAddress) => {
+	doc.fontSize(12).text(fullname.toUpperCase(), {
+		align: 'left',
+		lineGap: 2,
+	});
+
+	doc.fontSize(12).text(rol.toUpperCase(), {
+		align: 'left',
+		lineGap: 2,
+	});
+
+	doc.fontSize(12).text(`FACULTAD DE CIENCIAS JURÍDICAS Y SOCIALES`, {
+		align: 'left',
+		lineGap: 2,
+	});
+
+	doc.fontSize(12).text(`UNIVERSIDAD DE SAN CARLOS DE GUATEMALA`, {
+		align: 'left',
+		lineGap: 2,
+	});
+};
+
+export const setContentDictamen = ({
+	doc,
+	fullname,
+	title,
+	nextStation,
+	station,
+}: TContentDictamen) => {
+	doc.moveDown();
+	doc.fontSize(12).text(
+		`Respetuosamente a usted informo que procedí a revisar la tesis del bachiller `,
+		{
+			align: 'left',
+			lineGap: 2,
+			continued: true,
+		}
+	);
+
+	doc.font('Helvetica-Bold');
+	doc.fontSize(12).text(fullname.toUpperCase(), {
+		align: 'left',
+		lineGap: 2,
+		continued: true,
+	});
+
+	doc.font('Helvetica');
+	doc.fontSize(12).text(`la cual se titula `, {
+		align: 'left',
+		lineGap: 2,
+		continued: true,
+	});
+
+	doc.font('Helvetica-Bold');
+	doc.fontSize(12).text(`"${title}"`.toUpperCase(), {
+		align: 'left',
+		lineGap: 2,
+	});
+
+	doc.font('Helvetica');
+	doc.moveDown();
+	doc.fontSize(12).text(
+		`Le recomendé al bachiller algunos cambios en la forma, estilo, gramática y redacción de la tesis, por lo que habiendo cumplido con los mismos emito `,
+		{ align: 'left', lineGap: 2, continued: true }
+	);
+
+	doc.font('Helvetica-Bold');
+	doc.fontSize(12).text(`DICTAMEN FAVORABLE `, {
+		align: 'left',
+		lineGap: 2,
+		continued: true,
+	});
+
+	doc.font('Helvetica');
+	doc.fontSize(12).text(
+		`para que se le otorgue el avance a ${nextStation}.`,
+		{ align: 'left', lineGap: 2 }
+	);
+};
+
+export const setInfoSignature = ({ doc, fullname, rol }: TInfoSignature) => {
+	doc.fontSize(12).text(fullname.toUpperCase(), {
+		align: 'left',
+		lineGap: 2,
+	});
+	doc.fontSize(12).text(rol.toUpperCase(), {
+		align: 'left',
+		lineGap: 2,
+	});
+};
+
+// export const writehead = (name: string, res: Response) => {
+// 	const filename = `${name}_${new Date().toLocaleDateString('es-GT', {
+// 		dateStyle: 'short',
+// 	})}.pdf`;
+
+// 	return res.writeHead(200, {
+// 		'Content-Type': 'application/pdf',
+// 		'Content-Disposition': `attachment; filename=${filename}`,
+// 	});
+// };
 
 export const setFooter = (doc: any) => {
 	const imagePath = join(__dirname, '/../storage/PDFFooter.png');

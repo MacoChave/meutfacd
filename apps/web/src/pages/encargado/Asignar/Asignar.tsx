@@ -93,7 +93,7 @@ const Asignar: React.FC<AsignarProps> = ({ rol }) => {
 						<PickHorario
 							horario={horario}
 							setHorario={setHorario}
-							id_jornada={jornada.id_jornada}
+							id_jornada={jornada?.id_jornada ?? 0}
 						/>
 					</Box>
 					<Box

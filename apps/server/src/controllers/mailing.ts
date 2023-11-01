@@ -19,10 +19,6 @@ export const sendInfoEmail = async ({ body, user }: Request, res: Response) => {
 			msg: 'Correo enviado',
 		});
 	} catch (error: any) {
-		errorHttp(res, {
-			error,
-			msg: 'No se puede enviar el correo',
-			code: 500,
-		});
+		errorHttp(res, error);
 	}
 };

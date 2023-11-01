@@ -1,4 +1,4 @@
-import { TFormatDate } from '../models/formatDate';
+import { TDateFormatted, TFormatDate } from '../models/formatDate';
 
 const switchTimezone = (date: Date, style: Record<string, string>) => {
 	return date.toLocaleString('es-GT', {
@@ -22,6 +22,20 @@ export const newDate = (strDate: string, lang: 'es' | 'en'): Date => {
 	if (lang === 'en') return new Date(strDate);
 	const [day, month, year] = strDate.split('/');
 	return new Date(`${year}-${month}-${day}`);
+};
+
+export const getDateFormatted = ({
+	date,
+	dateStyle = undefined,
+	timeStyle = undefined,
+	timezone = 'America/Guatemala',
+	style = 'es-GT',
+}: TDateFormatted) => {
+	return date.toLocaleString(style, {
+		timeZone: timezone,
+		...(dateStyle ? { dateStyle } : {}),
+		...(timeStyle ? { timeStyle } : {}),
+	});
 };
 
 export const formatDate = ({ date, format, type }: TFormatDate) => {
@@ -52,7 +66,7 @@ export const formatDate = ({ date, format, type }: TFormatDate) => {
 		return date.toISOString();
 	} else if (format === 'report') {
 		return date.toLocaleString('es-GT', {
-			dateStyle: 'medium',
+			dateStyle: 'long',
 		});
 	}
 };

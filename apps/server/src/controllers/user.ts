@@ -8,7 +8,7 @@ const obtenerItem = async ({ params }: Request, res: Response) => {
 		const { carnet } = params;
 		res.json({ message: 'Obtener usuario', carnet });
 	} catch (error: any) {
-		errorHttp(res, { error, msg: 'Error al obtener el usuario' });
+		errorHttp(res, error);
 	}
 };
 
@@ -22,10 +22,7 @@ const obtenerItems = async (req: Request, res: Response) => {
 		});
 		res.status(200).json(results);
 	} catch (error: any) {
-		errorHttp(res, {
-			error: error,
-			msg: 'Error al obtener los usuarios',
-		});
+		errorHttp(res, error);
 	}
 };
 
@@ -68,7 +65,7 @@ const actualizarItem = async (
 		]);
 		res.json(results);
 	} catch (error: any) {
-		errorHttp(res, { error, msg: 'Error al actualizar el usuario' });
+		errorHttp(res, error);
 	}
 };
 
@@ -80,7 +77,7 @@ const eliminarItem = async ({ query }: Request, res: Response) => {
 		});
 		res.status(400).json(result);
 	} catch (error: any) {
-		errorHttp(res, { error, msg: 'Error al eliminar el usuario' });
+		errorHttp(res, error);
 	}
 };
 

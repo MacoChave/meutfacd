@@ -22,14 +22,13 @@ const Resumen = () => {
 		const data = await getData({
 			path: `${URL.REVIEW}/xlsx`,
 			params: { year: currentYear },
-			headers: {
-				Accept: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-			},
+			responseType: 'blob',
 		});
 		// DOWNLOAD XLSX FILE
 		downloadFileByBloodPart(
 			data as BlobPart,
-			'Resumen por ciclo lectivo.xlsx'
+			'Resumen por ciclo lectivo.xlsx',
+			'aplication/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
 		);
 	};
 

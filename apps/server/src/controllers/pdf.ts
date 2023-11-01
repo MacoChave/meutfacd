@@ -8,9 +8,17 @@ import { createWriteStream, readFileSync } from 'fs';
 import { DATA_SOURCES } from '../config/vars.config';
 import { sqlSelectOne } from '../db/consultas';
 import { errorHttp } from '../utils/error.handle';
-import { formatDate } from '../utils/formats';
 import { logger } from '../utils/logger';
-import { createDocument, setFooter, setHeader, setQRCode } from '../utils/pdf';
+import {
+	createDocument,
+	setContentDictamen,
+	setCurrentDate,
+	setDestinyAddress,
+	setFooter,
+	setInfoSignature,
+	setLetterHead,
+	setQRCode,
+} from '../utils/pdf';
 import { config } from '../utils/upload';
 
 export const createReport = async ({ body, user }: Request, res: Response) => {
@@ -23,6 +31,32 @@ export const createReport = async ({ body, user }: Request, res: Response) => {
 			nextStation,
 			filename,
 		} = body;
+
+		const results = await Promise.all([
+			sqlSelectOne({
+				table: 'ut_v_usuarios',
+				columns: ['nombre', 'apellidos', 'roles'],
+				conditions: [
+					{
+						column: 'roles',
+						operator: 'like',
+						value: `%Encargado ${nextStation}%`,
+					},
+				],
+			}),
+			sqlSelectOne({
+				table: 'ut_v_usuarios',
+				columns: ['nombre', 'apellidos'],
+				query: { id_usuario: user.primaryKey },
+			}),
+			sqlSelectOne({
+				table: 'usuario',
+				columns: ['carnet', 'nombre', 'apellidos'],
+				query: { id_usuario: idStudent },
+			}),
+		]);
+
+		console.log({ results });
 
 		const responsible = await sqlSelectOne({
 			table: 'ut_v_usuarios',
@@ -61,47 +95,22 @@ export const createReport = async ({ body, user }: Request, res: Response) => {
 		let writeStream = createWriteStream(localFilename);
 		doc.pipe(writeStream);
 
-		setHeader(doc);
+		setLetterHead(doc);
 
 		doc.moveDown(3);
-		doc.fontSize(12).text(
-			`Guatemala, ${formatDate({
-				date: new Date(),
-				format: 'report',
-				type: 'date',
-			})}`,
-			{
-				align: 'right',
-				lineGap: 2,
-			}
-		);
+
+		setCurrentDate(doc);
 
 		doc.font('Helvetica-Bold');
 
 		doc.moveDown(3);
-		doc.fontSize(12).text(
-			`${responsible?.nombre ?? 'Encargado'} ${
-				responsible?.apellidos ?? ''
-			}`.toUpperCase(),
-			{
-				align: 'left',
-				lineGap: 2,
-			}
-		);
 
-		doc.fontSize(12).text(`${responsible?.roles ?? 'Rol'}`.toUpperCase(), {
-			align: 'left',
-			lineGap: 2,
-		});
-
-		doc.fontSize(12).text(`FACULTAD DE CIENCIAS JURÍDICAS Y SOCIALES`, {
-			align: 'left',
-			lineGap: 2,
-		});
-
-		doc.fontSize(12).text(`UNIVERSIDAD DE SAN CARLOS DE GUATEMALA`, {
-			align: 'left',
-			lineGap: 2,
+		setDestinyAddress({
+			doc,
+			fullname: `${responsible?.nombre ?? 'Firstname'} ${
+				responsible?.apellidos ?? 'Lastname'
+			}`,
+			rol: `${responsible?.roles ?? 'Rol'}`,
 		});
 
 		doc.font('Helvetica');
@@ -110,60 +119,69 @@ export const createReport = async ({ body, user }: Request, res: Response) => {
 			lineGap: 2,
 		});
 
-		doc.moveDown();
-		doc.fontSize(12).text(
-			`Respetuosamente a usted informo que procedí a revisar la tesis del bachiller `,
-			{
-				align: 'left',
-				lineGap: 2,
-				continued: true,
-			}
-		);
-
-		doc.font('Helvetica-Bold');
-		doc.fontSize(12).text(
-			`${student?.nombre ?? 'NOMBRES'} ${
-				student?.apellidos ?? 'APELLIDOS'
-			} `.toUpperCase(),
-			{
-				align: 'left',
-				lineGap: 2,
-				continued: true,
-			}
-		);
-
-		doc.font('Helvetica');
-		doc.fontSize(12).text(`la cual se titula `, {
-			align: 'left',
-			lineGap: 2,
-			continued: true,
+		// SET CONTENT DICTAMEN
+		setContentDictamen({
+			doc,
+			fullname: `${student?.nombre ?? ''} ${student?.apellidos ?? ''}`,
+			title: title,
+			nextStation,
+			station: currentStation,
 		});
+		// doc.moveDown();
+		// doc.fontSize(12).text(
+		// 	`Respetuosamente a usted informo que procedí a revisar la tesis del bachiller `,
+		// 	{
+		// 		align: 'left',
+		// 		lineGap: 2,
+		// 		continued: true,
+		// 	}
+		// );
 
-		doc.font('Helvetica-Bold');
-		doc.fontSize(12).text(`"${title}"`.toUpperCase(), {
-			align: 'left',
-			lineGap: 2,
-		});
+		// doc.font('Helvetica-Bold');
+		// doc.fontSize(12).text(
+		// 	`${student?.nombre ?? 'NOMBRES'} ${
+		// 		student?.apellidos ?? 'APELLIDOS'
+		// 	} `.toUpperCase(),
+		// 	{
+		// 		align: 'left',
+		// 		lineGap: 2,
+		// 		continued: true,
+		// 	}
+		// );
 
-		doc.font('Helvetica');
-		doc.moveDown();
-		doc.fontSize(12).text(
-			`Le recomendé al bachiller algunos cambios en la forma, estilo, gramática y redacción de la tesis, por lo que habiendo cumplido con los mismos emito `,
-			{ align: 'left', lineGap: 2, continued: true }
-		);
+		// doc.font('Helvetica');
+		// doc.fontSize(12).text(`la cual se titula `, {
+		// 	align: 'left',
+		// 	lineGap: 2,
+		// 	continued: true,
+		// });
 
-		doc.font('Helvetica-Bold');
-		doc.fontSize(12).text(`DICTAMEN FAVORABLE `, {
-			align: 'left',
-			lineGap: 2,
-			continued: true,
-		});
+		// doc.font('Helvetica-Bold');
+		// doc.fontSize(12).text(`"${title}"`.toUpperCase(), {
+		// 	align: 'left',
+		// 	lineGap: 2,
+		// });
 
-		doc.font('Helvetica');
-		doc.fontSize(12).text(
-			`para que se le otorgue el avance a ${nextStation}.`,
-			{ align: 'left', lineGap: 2 }
-		);
+		// doc.font('Helvetica');
+		// doc.moveDown();
+		// doc.fontSize(12).text(
+		// 	`Le recomendé al bachiller algunos cambios en la forma, estilo, gramática y redacción de la tesis, por lo que habiendo cumplido con los mismos emito `,
+		// 	{ align: 'left', lineGap: 2, continued: true }
+		// );
+
+		// doc.font('Helvetica-Bold');
+		// doc.fontSize(12).text(`DICTAMEN FAVORABLE `, {
+		// 	align: 'left',
+		// 	lineGap: 2,
+		// 	continued: true,
+		// });
+
+		// doc.font('Helvetica');
+		// doc.fontSize(12).text(
+		// 	`para que se le otorgue el avance a ${nextStation}.`,
+		// 	{ align: 'left', lineGap: 2 }
+		// );
+		// END SET CONTENT DICTAMEN
 
 		doc.moveDown(2);
 		doc.fontSize(12).text(`Atentamente.`, { align: 'left', lineGap: 2 });
@@ -175,20 +193,27 @@ export const createReport = async ({ body, user }: Request, res: Response) => {
 		});
 
 		doc.moveDown(3);
-		doc.fontSize(12).text(
-			`${docente?.nombre ?? 'NOMBRE'} ${
-				docente?.apellidos ?? 'APELLIDO'
-			}`,
-			{
-				align: 'center',
-				lineGap: 2,
-			}
-		);
 
-		doc.fontSize(12).text(`Docente ${currentStation}`, {
-			align: 'center',
-			lineGap: 2,
+		setInfoSignature({
+			doc,
+			fullname: `${docente?.nombre ?? ''} ${docente?.apellidos ?? ''}`,
+			rol: `Encargado ${currentStation}`,
 		});
+
+		// doc.fontSize(12).text(
+		// 	`${docente?.nombre ?? 'NOMBRE'} ${
+		// 		docente?.apellidos ?? 'APELLIDO'
+		// 	}`,
+		// 	{
+		// 		align: 'center',
+		// 		lineGap: 2,
+		// 	}
+		// );
+
+		// doc.fontSize(12).text(`Docente ${currentStation}`, {
+		// 	align: 'center',
+		// 	lineGap: 2,
+		// });
 
 		await setQRCode(doc, idReview);
 

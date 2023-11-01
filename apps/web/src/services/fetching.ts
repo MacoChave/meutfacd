@@ -38,7 +38,7 @@ export async function postData<T>({
 	responseType = 'json',
 }: axiosProps): Promise<T> {
 	const { data } = await axios.post(path, body, {
-		responseType: responseType,
+		responseType: responseType as any,
 		headers: {
 			...headers,
 		},

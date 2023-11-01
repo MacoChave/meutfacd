@@ -19,6 +19,7 @@ type sqlSelectType = {
 	q?: any;
 	pageNumber?: number;
 	pageSize?: number;
+	asArray?: boolean;
 };
 
 type sqlEjectType = {
@@ -123,6 +124,7 @@ export const sqlSelect = async ({
 	q = NaN,
 	pageNumber = NaN,
 	pageSize = NaN,
+	asArray = false,
 }: sqlSelectType) => {
 	const filters = [];
 	const values = [];
@@ -194,7 +196,7 @@ export const sqlSelect = async ({
 		message: JSON.stringify({ sql, values }),
 	});
 
-	const conn = await connection();
+	const conn = await connection(asArray);
 	const [results, fields] = await conn.query(sql, values);
 	conn.end();
 	return results;
