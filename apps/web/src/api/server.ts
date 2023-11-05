@@ -1,3 +1,5 @@
+export const API_V1 = import.meta.env.VITE_API_URL || 'http://localhost:3000'
+
 export const URL = {
 	ASSIGNMENT: '/api/assignment',
 	AUTH: {

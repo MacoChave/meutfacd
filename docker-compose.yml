@@ -1,7 +1,7 @@
 version: '3.7'
 services:
     db:
-        image: macochave/meut-db:lts
+        image: macochave/meut-db
         container_name: db
         restart: always
         env_file:
@@ -14,7 +14,7 @@ services:
         volumes:
             - db:/var/lib/mysql
     api:
-        image: macochave/meut-api:lts
+        image: macochave/meut-api
         container_name: api
         restart: always
         volumes:
@@ -25,12 +25,12 @@ services:
             - ut_net:
               ipv4_address: 182.18.7.10
         env_file:
-            - server/.env
+            - api/.env
         depends_on:
             - db
     web:
         stdin_open: true
-        image: macochave/meut-web:lts
+        image: macochave/meut-web
         container_name: web
         restart: always
         volumes:

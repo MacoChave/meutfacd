@@ -1,3 +1,4 @@
+import { API_V1 } from '@/api/server';
 import { Control } from '@/models/Control';
 import { setLogout } from '@/redux/states';
 import store from '@/redux/store';
@@ -19,8 +20,9 @@ const logOnDev = (message: Object) => {
 const onRequest = (config: AxiosRequestConfig): any => {
 	const { auth }: Control = store.getState().control;
 	// const dispatch = useDispatch();
-	const { method, url } = config;
+	const { method } = config;
 
+	config.baseURL = API_V1;
 	config.headers = {
 		...config.headers,
 		Authorization: `Bearer ${auth ? auth.token : ''}`,
