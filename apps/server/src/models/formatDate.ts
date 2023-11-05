@@ -6,8 +6,8 @@ export type TFormatDate = {
 
 export type TDateFormatted = {
 	date: Date;
-	dateStyle: 'short' | 'medium' | 'long' | 'full' | undefined;
-	timeStyle: 'short' | 'medium' | 'long' | 'full' | undefined;
-	timezone: string;
-	style: string;
+	dateStyle?: 'short' | 'medium' | 'long' | 'full' | undefined;
+	timeStyle?: 'short' | 'medium' | 'long' | 'full' | undefined;
+	timezone?: string;
+	style?: string;
 };

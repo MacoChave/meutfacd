@@ -1,8 +1,9 @@
 import { URL } from '@/api/server';
 import { DotsLoaders } from '@/components/Loader/DotsLoaders';
-import { APROBADO, ESPERA, ESTACIONES, PREVIA, RECHAZADO } from '@/consts/vars';
+import { APROBADO, ESPERA, ESTACIONES, PENDIENTE, PREVIA, RECHAZADO } from '@/consts/vars';
 import { TResult } from '@/models/Fetching';
 import { postData, putData } from '@/services/fetching';
+import { formatStationName } from '@/utils/formatHandler';
 import { Box, Button, TextField } from '@mui/material';
 import React, { useState } from 'react';
 import swal from 'sweetalert';
@@ -23,11 +24,11 @@ const ReviewDoc: React.FC<ReviewDocProps> = ({
 	const [loading, setLoading] = useState(false);
 	const [comment, setComment] = useState('');
 
-	const commentEmpty = () => comment === '';
+	const isCommentDirty = () => comment === '' || comment.length > 256;
 
 	const onReject = async () => {
 		setLoading(true);
-		if (commentEmpty()) {
+		if (isCommentDirty()) {
 			swal(
 				'Error',
 				'Debe agregar un comentario para rechazar el documento',
@@ -60,7 +61,7 @@ const ReviewDoc: React.FC<ReviewDocProps> = ({
 
 	const onPrior = async () => {
 		setLoading(true);
-		if (commentEmpty()) {
+		if (isCommentDirty()) {
 			swal(
 				'Error',
 				'Debe agregar un comentario para enviar a previo el documento',
@@ -105,8 +106,8 @@ const ReviewDoc: React.FC<ReviewDocProps> = ({
 				idStudent: curReview.id_usuario,
 				title: curReview.titulo,
 				idReview: curReview.id_revision,
-				currentStation: ESTACIONES[station - 1].toLowerCase(),
-				nextStation: ESTACIONES[station].toLowerCase(),
+				currentStation: formatStationName(ESTACIONES[station - 1]),
+				nextStation: formatStationName(ESTACIONES[station]),
 				filename: filename,
 			},
 		});
@@ -126,7 +127,7 @@ const ReviewDoc: React.FC<ReviewDocProps> = ({
 				body: {
 					id_tesis: curReview.id_tesis,
 					estacion: station + 1,
-					estado: ESPERA,
+					estado: station !== 5 ? ESPERA : PENDIENTE ,
 				},
 			}),
 			postData<TResult>({
@@ -197,6 +198,10 @@ const ReviewDoc: React.FC<ReviewDocProps> = ({
 					rows={4}
 					multiline
 					onChange={(e) => setComment(e.target.value)}
+					error={isCommentDirty()}
+					helperText={
+						isCommentDirty() && 'El comentario debe tener menos de 256 caracteres para enviar a rechazo o previo'
+					}
 				/>
 				<Box
 					sx={{
@@ -205,10 +210,10 @@ const ReviewDoc: React.FC<ReviewDocProps> = ({
 						justifyContent: 'space-between',
 						gap: 2,
 					}}>
-					<Button variant='contained' onClick={onReject}>
+					<Button variant='contained' onClick={onReject} disabled={isCommentDirty()}>
 						Rechazar
 					</Button>
-					<Button variant='contained' onClick={onPrior}>
+					<Button variant='contained' onClick={onPrior} disabled={isCommentDirty()}>
 						Enviar a previo
 					</Button>
 					<Button variant='contained' onClick={onApprove}>

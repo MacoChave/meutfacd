@@ -10,6 +10,7 @@ import {
 } from '../utils/email';
 import { DATA_SOURCES } from '../config/vars.config';
 import { logger } from '../utils/logger';
+import { formatDate } from '../utils/formats';
 
 const signIn = async ({ user, password }: TSignIn) => {
 	try {
@@ -130,7 +131,11 @@ export const logupHandler = async ({ body, query }: Request, res: Response) => {
 			correo,
 			hash,
 			direccion,
-			fecha_nac,
+			fecha_nac: formatDate({
+				date: new Date(fecha_nac),
+				format: 'mysql',
+				type: 'date',
+			}),
 			id_municipio: 1,
 			carnet,
 			cui,
@@ -144,13 +149,15 @@ export const logupHandler = async ({ body, query }: Request, res: Response) => {
 
 		// Almacenar en BD
 		await sqlEjecutar({
-			sql: `call sp_ut_crear_usuario(${keys.join(',')})`,
+			sql: `call ut_sp_crear_usuario(${keys.join(',')})`,
 			values,
 		});
 
 		const [errorInfo]: any = await sqlEjecutar({
 			sql: `select @error_code, @error_message`,
 		});
+
+		console.log({ errorInfo });
 
 		const { error_code, error_message } = errorInfo;
 
@@ -159,7 +166,7 @@ export const logupHandler = async ({ body, query }: Request, res: Response) => {
 		}
 
 		// SEND EMAIL VERIFICATION TO USER
-		if (DATA_SOURCES.SEND_EMAIL) {
+		if (DATA_SOURCES.SEND_EMAIL == 'true') {
 			const emailData = await sendEmail({
 				to: correo,
 				plainText: 'Por favor, verifica tu correo electrónico',

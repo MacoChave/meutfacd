@@ -10,9 +10,8 @@ import {
 } from '@/consts/vars';
 import { CitasSchema, TCitas } from '@/models/Citas';
 import { TResult } from '@/models/Fetching';
-import { ReviewType } from '@/models/Review';
 import { TypeWithKey } from '@/models/TypeWithKey';
-import { genericData, postData, putData } from '@/services/fetching';
+import { postData, putData } from '@/services/fetching';
 import { formatToInputDate } from '@/utils/formatHandler';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Button, Card, TextField } from '@mui/material';
@@ -22,10 +21,11 @@ import swal from 'sweetalert';
 
 export type CitaProps = {
 	userProgress: any;
+	estacion?: number;
 	onClose: () => void;
 };
 
-const Cita: React.FC<CitaProps> = ({ userProgress, onClose }) => {
+const Cita: React.FC<CitaProps> = ({ userProgress, estacion = 6, onClose }) => {
 	const [loading, setLoading] = useState(false);
 	const { control, handleSubmit } = useForm<TCitas>({
 		defaultValues: {
@@ -46,7 +46,7 @@ const Cita: React.FC<CitaProps> = ({ userProgress, onClose }) => {
 		setLoading(true);
 		let putBody: TypeWithKey<any> = {
 			estado: userProgress.estado === PENDIENTE ? REVISION : PREVIA,
-			estacion: 6,
+			estacion: estacion,
 		};
 		let postBody: TypeWithKey<any> = {
 			fecha: data.fecha,
@@ -94,14 +94,14 @@ const Cita: React.FC<CitaProps> = ({ userProgress, onClose }) => {
 	const onPass = async () => {
 		setLoading(true);
 		const dictamen = await postData<any>({
-			path: `${URL.PDF}/dictamen`,
+			path: `${URL.PDF}/${estacion === 6 ? 'dictamen' : 'impresion'}`,
 			body: {
 				idStudent: userProgress.id_usuario,
 				title: userProgress.titulo,
 				idReview: userProgress.id_revision,
-				currentStation: ESTACIONES[5].toLowerCase(),
-				nextStation: ESTACIONES[6].toLowerCase(),
-				filename: 'dictamen_prev_internos',
+				currentStation: ESTACIONES[estacion - 1].toLowerCase(),
+				nextStation: ESTACIONES[estacion].toLowerCase(),
+				filename: estacion === 6 ? 'dictamen_prev_internos' : 'dictamen_impresion',
 			},
 		});
 
@@ -118,8 +118,8 @@ const Cita: React.FC<CitaProps> = ({ userProgress, onClose }) => {
 				path: `${URL.REVIEW}`,
 				body: {
 					id_tesis: userProgress.id_tesis,
-					estacion: 7,
-					estado: ESPERA,
+					estacion: estacion + 1,
+					estado: PENDIENTE,
 				},
 				params: {},
 			}),

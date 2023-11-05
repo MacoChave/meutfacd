@@ -11,10 +11,10 @@ export type TDestinyAddress = {
 
 export type TContentDictamen = {
 	doc: PDFKit.PDFDocument;
-	station: number;
+	station: string;
 	fullname: string;
 	title: string;
-	nextStation: number;
+	nextStation: string;
 };
 
 export type TInfoSignature = {

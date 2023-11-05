@@ -12,6 +12,7 @@ import {
 import { useCustomFetch } from '@/hooks/useFetch';
 import { TResult } from '@/models/Fetching';
 import { postData, putData } from '@/services/fetching';
+import { formatStationName } from '@/utils/formatHandler';
 import { Typography } from '@mui/material';
 import React, { useState } from 'react';
 import swal from 'sweetalert';
@@ -35,9 +36,9 @@ const Course1Professor: React.FC<Course1ProfessorProps> = ({}) => {
 				idStudent: item.id_usuario,
 				title: item.titulo,
 				idReview: item.id_revision,
-				currentStation: ESTACIONES[1].toLowerCase(),
-				nextStation: ESTACIONES[2].toLowerCase(),
-				filename: 'dictmen_curso1',
+				currentStation: formatStationName(ESTACIONES[1]),
+				nextStation: formatStationName(ESTACIONES[2]),
+				filename: 'dictmen_curso_I',
 			},
 		});
 
@@ -122,7 +123,7 @@ const Course1Professor: React.FC<Course1ProfessorProps> = ({}) => {
 
 	return (
 		<>
-			<Contenedor title='Curso 1'>
+			<Contenedor title='Curso I'>
 				<McTable
 					headers={{
 						nombre: 'Estudiante',

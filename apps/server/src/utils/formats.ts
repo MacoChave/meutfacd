@@ -41,26 +41,14 @@ export const getDateFormatted = ({
 export const formatDate = ({ date, format, type }: TFormatDate) => {
 	if (format === 'mysql') {
 		if (type === 'date') {
-			return formatToMySQL(
-				switchTimezone(date, {
-					dateStyle: 'medium',
-					// timeStyle: 'none',
-				})
-			);
+			return date.toISOString().split('T')[0];
 		} else if (type === 'datetime') {
-			return formatToMySQL(
-				switchTimezone(date, {
-					dateStyle: 'medium',
-					timeStyle: 'medium',
-				})
-			);
+			let strDateTime = getDateFormatted({
+				date, dateStyle: 'medium', timeStyle: 'medium', timezone: 'America/Guatemala', style: 'es-GT'
+			})
+			return formatToMySQL(strDateTime);
 		} else if (type === 'time') {
-			return formatToMySQL(
-				switchTimezone(date, {
-					// dateStyle: 'none',
-					timeStyle: 'medium',
-				})
-			);
+			return date.toISOString().split('T')[1].split('.')[0];
 		}
 	} else if (format === 'iso') {
 		return date.toISOString();

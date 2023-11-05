@@ -11,10 +11,11 @@ export const ESTACIONES = [
 	'Punto de tesis',
 	'Curso I',
 	'Curso II',
-	'Dictámen',
+	'Cambio de tema',
 	'Comisión y estilo',
 	'Previos internos',
 	'Finalización',
+	'Impresión'
 ];
 
 // ESTADOS DE REVSIONES

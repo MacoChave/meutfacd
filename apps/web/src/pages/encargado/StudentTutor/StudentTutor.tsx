@@ -6,6 +6,7 @@ import { APROBADO, ESTACIONES } from '@/consts/vars';
 import { useCustomFetch } from '@/hooks/useFetch';
 import { TResult } from '@/models/Fetching';
 import { postData, putData } from '@/services/fetching';
+import { formatStationName } from '@/utils/formatHandler';
 import { Typography } from '@mui/material';
 import React, { useState } from 'react';
 import swal from 'sweetalert';
@@ -29,7 +30,7 @@ const StudentTutor: React.FC<StudentTutorProps> = ({}) => {
 					column: 'ruta_certificado',
 					operator: '=',
 					value: '',
-				},
+				}
 			],
 		},
 		params: { estado: APROBADO, estacion: 2 },
@@ -43,12 +44,12 @@ const StudentTutor: React.FC<StudentTutorProps> = ({}) => {
 				idStudent: item.id_usuario,
 				title: item.titulo,
 				idReview: item.id_revision,
-				currentStation: ESTACIONES[1].toLowerCase(),
-				nextStation: ESTACIONES[2].toLowerCase(),
+				currentStation: formatStationName(ESTACIONES[1]),
+				nextStation: formatStationName(ESTACIONES[2]),
 				filename: 'Nombramiento',
 			},
 		});
-		if (item.ruta_certificado !== '') {
+		if (item.ruta_certificado === '') {
 			await postData<TResult>({
 				path: URL.REVIEW,
 				body: {
@@ -60,6 +61,14 @@ const StudentTutor: React.FC<StudentTutorProps> = ({}) => {
 		}
 
 		Promise.all([
+			// postData<TResult>({
+			// 	path: URL.REVIEW,
+			// 	body: {
+			// 		id_tesis: item.id_tesis,
+			// 		estacion: 3
+			// 	},
+			// 	params: {},
+			// }),
 			putData<TResult>({
 				path: URL.REVIEW,
 				body: { ruta_certificado: dictamen.name ?? '' },

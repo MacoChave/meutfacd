@@ -87,9 +87,10 @@ export const setContentDictamen = ({
 	nextStation,
 	station,
 }: TContentDictamen) => {
+	let info: string = station.includes('Curso') ? 'el curso' : station.includes('Nombramiento') ? 'el nombramiento de asesor' : 'la tesis';
 	doc.moveDown();
 	doc.fontSize(12).text(
-		`Respetuosamente a usted informo que procedí a revisar la tesis del bachiller `,
+		`Respetuosamente a usted informo que procedí a revisar ${info} del bachiller `,
 		{
 			align: 'left',
 			lineGap: 2,
@@ -104,23 +105,28 @@ export const setContentDictamen = ({
 		continued: true,
 	});
 
-	doc.font('Helvetica');
-	doc.fontSize(12).text(`la cual se titula `, {
-		align: 'left',
-		lineGap: 2,
-		continued: true,
-	});
+	if (!(station.includes('Curso') || station.includes('Nombramiento'))) {
+		doc.font('Helvetica');
+		doc.fontSize(12).text(` la cual se titula `, {
+			align: 'left',
+			lineGap: 2,
+			continued: true,
+		});
+	
+		doc.font('Helvetica-Bold');
+		doc.fontSize(12).text(`"${title}"`.toUpperCase(), {
+			align: 'left',
+			lineGap: 2,
+		});
+	} else {
+		doc.text(`.`, { align: 'left', lineGap: 2 })
+	}
 
-	doc.font('Helvetica-Bold');
-	doc.fontSize(12).text(`"${title}"`.toUpperCase(), {
-		align: 'left',
-		lineGap: 2,
-	});
-
+	let detail: string = station.includes('Curso') ? 'Evalué al bachiller en el curso' : station.includes('Nombramiento') ? 'Revisé el nombramiento de asesor del bachiller' : 'Le recomendé al bachiller algunos cambios en la forma, estilo, gramática y redacción de la tesis';
 	doc.font('Helvetica');
 	doc.moveDown();
 	doc.fontSize(12).text(
-		`Le recomendé al bachiller algunos cambios en la forma, estilo, gramática y redacción de la tesis, por lo que habiendo cumplido con los mismos emito `,
+		`${detail}, por lo que habiendo cumplido con los mismos emito `,
 		{ align: 'left', lineGap: 2, continued: true }
 	);
 
@@ -140,11 +146,11 @@ export const setContentDictamen = ({
 
 export const setInfoSignature = ({ doc, fullname, rol }: TInfoSignature) => {
 	doc.fontSize(12).text(fullname.toUpperCase(), {
-		align: 'left',
+		align: 'center',
 		lineGap: 2,
 	});
 	doc.fontSize(12).text(rol.toUpperCase(), {
-		align: 'left',
+		align: 'center',
 		lineGap: 2,
 	});
 };
@@ -182,13 +188,8 @@ export const setQRCode = async (doc: any, idReview: number) => {
 	});
 };
 
-export const getNameStation = (station: number) => {
-	const stations: string[] = [
-		'Punto de tesis',
-		'Curso I',
-		'Curso II',
-		'Comisión y estilo',
-		'Previos internos',
-	];
-	return stations[station + 1];
+export const formatStationName = (station: string) => {
+	if (station.includes('Curso 1')) return station.replace('1', 'I');
+	if (station.includes('Curso 2')) return station.replace('2', 'II');
+	return station;
 };

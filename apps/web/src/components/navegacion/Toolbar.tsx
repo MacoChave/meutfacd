@@ -4,12 +4,14 @@ import { useCustomFetch, useFetch } from '@/hooks/useFetch';
 import { setLogout } from '@/redux/states';
 import {
 	AccountCircle,
+	ExitToApp,
 	Menu,
 	Message,
 	Notifications,
 } from '@mui/icons-material';
 import {
 	AppBar,
+	Avatar,
 	Badge,
 	Box,
 	Button,
@@ -25,6 +27,8 @@ import { NotificationType } from '@/models/Notification';
 import { useSnackbar } from 'notistack';
 import { putData } from '@/services/fetching';
 import { DotsLoaders } from '../Loader/DotsLoaders';
+import { getColorAvatar, getInitialsFullname } from '@/utils/formatHandler';
+import store from '@/redux/store';
 
 interface ToolbarProps {
 	children?: React.ReactNode;
@@ -82,6 +86,7 @@ export const ToolbarWithoutSesion = ({ children }: ToolbarProps) => {
 };
 
 export const ToolbarWithSesion = () => {
+	const { auth } = store.getState().control;
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
 	const { enqueueSnackbar, closeSnackbar } = useSnackbar();
@@ -137,28 +142,50 @@ export const ToolbarWithSesion = () => {
 		});
 	};
 
+	const stringAvatar = () => {
+		let initials: string = auth.name;
+		return {
+			sx: {
+				bgcolor: getColorAvatar(initials),
+			},
+			children: getInitialsFullname(initials),
+		};
+	};
+
 	if (isLoadMessages) return <DotsLoaders />;
 	if (isErrorMessages) return <Typography>Error</Typography>;
 
 	return (
 		<>
 			<ToolbarWithoutSesion>
-				<IconButton color='inherit' onClick={handleChat}>
+				<IconButton
+					onClick={handleChat}
+					color='inherit'
+					title='Mis mensajes'>
 					<Badge badgeContent={chats?.length ?? 0} color='info'>
 						<Message />
 					</Badge>
 				</IconButton>
-				<IconButton color='inherit' onClick={openMessages}>
+				<IconButton
+					onClick={openMessages}
+					color='inherit'
+					title='Mis notificaciones'>
 					<Badge badgeContent={messages?.length ?? 0} color='info'>
 						<Notifications />
 					</Badge>
 				</IconButton>
-				<IconButton onClick={handleProfile} color='inherit'>
-					<AccountCircle />
+				<IconButton
+					onClick={handleLogout}
+					color='inherit'
+					title='Cerrar sesión'>
+					<ExitToApp />
 				</IconButton>
-				<Button onClick={handleLogout} color='inherit'>
-					Cerrar sesión
-				</Button>
+				<IconButton
+					onClick={handleProfile}
+					color='inherit'
+					title='Mi perfil'>
+					<Avatar {...stringAvatar()} />
+				</IconButton>
 			</ToolbarWithoutSesion>
 		</>
 	);

@@ -14,6 +14,7 @@ import { Chat, Download } from '@mui/icons-material';
 import { Box, Chip, IconButton, TextField, Typography } from '@mui/material';
 import { useState } from 'react';
 import swal from 'sweetalert';
+import { PickDays } from '../administrador/Courses/Gestion/PickDays';
 
 const boxStyle = {
 	display: 'flex',
@@ -34,6 +35,15 @@ const Estacion2 = () => {
 		method: 'post',
 		body: {
 			table: 'ut_v_revision',
+			columns: [
+				'id_revision',
+				'dias',
+				'fecha_curso',
+				'estado',
+				'tutor',
+				'salon',
+				'id_tutor',
+			],
 			sort: {
 				fecha: 'DESC',
 			},
@@ -110,12 +120,12 @@ const Estacion2 = () => {
 
 	if (!revision)
 		return (
-			<EmptyReview title='Curso 1: Introducción a la planeación científica' />
+			<EmptyReview title='Curso I: Introducción a la planeación científica' />
 		);
 
 	return (
 		<>
-			<Contenedor title='Curso: Introducción a la planeación científica'>
+			<Contenedor title='Curso I: Introducción a la planeación científica'>
 				<Box sx={style}>
 					<Box
 						sx={{
@@ -142,7 +152,7 @@ const Estacion2 = () => {
 						/>
 						<TextField
 							variant='standard'
-							label='Jornada'
+							label='Fecha de inicio'
 							InputProps={{
 								disabled: true,
 							}}
@@ -152,7 +162,7 @@ const Estacion2 = () => {
 								}) ?? 'Fecha de inicio del curso'
 							}
 						/>
-						<TextField
+						{/* <TextField
 							variant='standard'
 							label='Horario'
 							InputProps={{
@@ -161,14 +171,11 @@ const Estacion2 = () => {
 							value={`${revision?.hora_inicio ?? 'Inicio'} - ${
 								revision?.hora_final ?? 'Final'
 							}`}
-						/>
-						<TextField
-							variant='standard'
-							label='Días'
-							InputProps={{
-								disabled: true,
-							}}
-							value={revision?.dias ?? 'No asignado'}
+						/>	 */}
+						<PickDays
+							days={revision?.dias ?? []}
+							setDays={(days: string[]) => {}}
+							readOnly={true}
 						/>
 						<TextField
 							variant='standard'

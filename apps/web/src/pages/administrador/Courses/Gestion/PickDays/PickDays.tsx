@@ -11,9 +11,10 @@ const daysWeek: string[] = ['L', 'M', 'X', 'J', 'V', 'S', 'D'];
 export type PickDaysProps = {
 	days: string[];
 	setDays: (days: string[]) => void;
+	readOnly?: boolean;
 };
 
-const PickDays: React.FC<PickDaysProps> = ({ days, setDays }) => {
+const PickDays: React.FC<PickDaysProps> = ({ days, readOnly = false, setDays }) => {
 	return (
 		<>
 			<Typography variant='body1'>Días a impartir</Typography>
@@ -28,7 +29,7 @@ const PickDays: React.FC<PickDaysProps> = ({ days, setDays }) => {
 						setDays(newDays || []);
 					}}>
 					{daysWeek.map((day) => (
-						<ToggleButton key={day} value={day}>
+						<ToggleButton key={day} value={day} disabled={readOnly}>
 							{' '}
 							{day}{' '}
 						</ToggleButton>

@@ -110,9 +110,32 @@ values
     (uuid_to_bin('a0a78333-787e-11ee-a624-0a0027000004'),3,1);
 
 -- ----------------------------------------
--- SELECT USERS
+-- COURSES INSERT
 -- ----------------------------------------
-select nombre, apellidos, roles
-from ut_v_usuarios
-where 
-	roles like "%Encargado comisión y estilo%";
+insert into ut_curso 
+	(nombre)
+values 
+	('Inducción a la planeación científica'),
+	('Elaboración y presentación de tesis');
+-- ----------------------------------------
+-- SCHEDULES INSERT
+-- ----------------------------------------
+insert into ut_jornada 
+	(nombre)
+values 
+	('Matutina'),
+	('Vespertina'),
+	('Fin de semana'),
+	('Nocturna');
+-- ----------------------------------------
+-- PERIODS INSERT
+-- ----------------------------------------
+insert into ut_horario 
+	(id_horario, id_jornada , hora_inicio , hora_final) 
+values 
+	(uuid_to_bin(uuid()), uuid_to_bin('ae99cdf9-7ad6-11ee-8a29-0a0027000005'), '13:00', '13:50'),
+	(uuid_to_bin(uuid()), uuid_to_bin('ae99cdf9-7ad6-11ee-8a29-0a0027000005'), '14:00', '14:50'),
+	(uuid_to_bin(uuid()), uuid_to_bin('ae99cdf9-7ad6-11ee-8a29-0a0027000005'), '15:00', '15:50'),
+	(uuid_to_bin(uuid()), uuid_to_bin('ae99cec9-7ad6-11ee-8a29-0a0027000005'), '17:00', '17:50'),
+	(uuid_to_bin(uuid()), uuid_to_bin('ae99cec9-7ad6-11ee-8a29-0a0027000005'), '18:00', '18:50'),
+	(uuid_to_bin(uuid()), uuid_to_bin('ae99cec9-7ad6-11ee-8a29-0a0027000005'), '19:00', '19:50');

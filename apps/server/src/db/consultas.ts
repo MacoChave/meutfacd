@@ -48,6 +48,17 @@ type sqlDeleteType = {
 	query: Object;
 };
 
+const isFixedTable = (key: string) => {
+	return [
+		'id_usuario',
+		'id_receptor',
+		'id_emisor',
+		'id_rol',
+		'id_municipio',
+		'id_departamento',
+	].includes(key);
+};
+
 const getWhereClause = (query: Object) => {
 	const values: any[] = [];
 	const where = Object.entries(query)

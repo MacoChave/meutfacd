@@ -16,7 +16,7 @@ const errorHttp = (
 		console.log('JwonWebTokenError', error);
 		res.status(401).json({ error: error.message });
 		return;
-	} else if (error instanceof Error) {
+	} else if ((error as QueryError)?.errno === undefined) {
 		res.status(500).json({ error: error.message });
 		return;
 	}
@@ -38,6 +38,10 @@ const errorHttp = (
 	} else if (errorCode === 1172) {
 		res.status(400).json({
 			error: 'El registro contiene datos no válidos',
+		});
+	} else if (errorCode === 1406) {
+		res.status(400).json({
+			error: 'Revisar la longitud de los datos',
 		});
 	} else {
 		console.log('Unknown', error);

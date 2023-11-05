@@ -106,23 +106,24 @@ export const assignReview = async ({ query, body }: Request, res: Response) => {
 		const id_reviews: number[] = body.id_revisiones;
 		const id_tutor: number = body.id_tutor;
 		// For each id_review, update the id_tutor
-		const results = await Promise.all(
-			id_reviews.map((id_revision) =>
-				sqlUpdate({
-					table: 'ut_revision',
-					query: { id_revision },
-					datos: {
-						id_tutor,
-						estado: 'V',
-						fecha: formatDate({
-							date: new Date(),
-							format: 'mysql',
-							type: 'datetime',
-						}),
-					},
-				})
-			)
-		);
+		const results = [];
+		for await (const id_review of id_reviews) {
+			results.push(await
+			sqlUpdate({
+				table: 'ut_revision',
+				query: { id_revision: id_review },
+				datos: {
+					id_tutor,
+					estado: 'V',
+					fecha: formatDate({
+						date: new Date(),
+						format: 'mysql',
+						type: 'datetime',
+					}),
+				}
+			})
+			);
+		}
 		res.status(200).json(results);
 	} catch (error: any) {
 		errorHttp(res, error);

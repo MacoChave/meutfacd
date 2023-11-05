@@ -6,9 +6,10 @@ import { useCustomFetch } from '@/hooks/useFetch';
 import { ReviewType } from '@/models/Review';
 import { postData } from '@/services/fetching';
 import { style } from '@/themes/styles';
-import { getChipColor, getChipLabel } from '@/utils/formatHandler';
-import { Chat } from '@mui/icons-material';
-import { Box, Chip, IconButton, TextField, Typography } from '@mui/material';
+import { formatDate, getChipColor, getChipLabel } from '@/utils/formatHandler';
+import { Chat, Label } from '@mui/icons-material';
+import { Box, Chip, IconButton, InputLabel, Link, TextField, Typography } from '@mui/material';
+import { PickDays } from '../administrador/Courses/Gestion/PickDays';
 
 const boxStyle = {
 	display: 'flex',
@@ -59,12 +60,12 @@ const Estacion3 = () => {
 
 	if (!revision)
 		return (
-			<EmptyReview title='Curso 2: Elaboración y planeación de tesis' />
+			<EmptyReview title='Curso II: Elaboración y planeación de tesis' />
 		);
 
 	return (
 		<>
-			<Contenedor title='Curso: Elaboración y planeación de tesis'>
+			<Contenedor title='Curso II: Elaboración y planeación de tesis'>
 				<Box sx={style}>
 					<Box
 						sx={{
@@ -91,13 +92,17 @@ const Estacion3 = () => {
 						/>
 						<TextField
 							variant='standard'
-							label='Jornada'
+							label='Fecha de inicio'
 							InputProps={{
 								disabled: true,
 							}}
-							value={revision?.jornada ?? 'No asignado'}
+							value={
+								formatDate({
+									date: new Date(revision?.fecha_curso),
+								}) ?? 'Fecha de inicio del curso'
+							}
 						/>
-						<TextField
+						{/* <TextField
 							variant='standard'
 							label='Horario'
 							InputProps={{
@@ -106,14 +111,11 @@ const Estacion3 = () => {
 							value={`${revision?.hora_inicio ?? 'Inicio'} - ${
 								revision?.hora_final ?? 'Final'
 							}`}
-						/>
-						<TextField
-							variant='standard'
-							label='Días'
-							InputProps={{
-								disabled: true,
-							}}
-							value={revision?.dias ?? 'No asignado'}
+						/>	 */}
+						<PickDays
+							days={revision?.dias ?? []}
+							setDays={(days: string[]) => {}}
+							readOnly={true}
 						/>
 						<TextField
 							variant='standard'
@@ -137,12 +139,6 @@ const Estacion3 = () => {
 								color={getChipColor(revision.estado)}
 							/>
 						</Box>
-						{/* <Box sx={boxStyle}>
-							<Typography>Certificado</Typography>
-							<IconButton color='primary'>
-								<FileDownload />
-							</IconButton>
-						</Box> */}
 					</Box>
 				</Box>
 			</Contenedor>

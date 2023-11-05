@@ -32,13 +32,13 @@ create table if not exists municipio (
 );
 
 create table if not exists ut_jornada (
-	id_jornada binary(16) primary key default (uuid_to_bin(uuid())),
+	id_jornada integer unsigned auto_increment primary key ,
 	nombre varchar(45) not null
 );
 
 create table if not exists ut_horario (
-	id_horario binary(16) not null,
-	id_jornada binary(16) not null,
+	id_horario integer unsigned auto_increment not null,
+	id_jornada integer unsigned not null,
 	hora_inicio time not null,
 	hora_final time not null,
 	constraint pk_horario primary key (id_horario, id_jornada),
@@ -81,8 +81,8 @@ create table if not exists usuario_rol (
 
 create table if not exists ut_perfil (
 	id_usuario integer unsigned primary key,
-	id_horario binary(16),
-	id_jornada binary(16),
+	id_horario integer unsigned,
+	id_jornada integer unsigned,
 	constraint fk_perfil_usuario 
 		foreign key (id_usuario) 
 		references usuario (id_usuario) on
@@ -96,7 +96,7 @@ create table if not exists ut_perfil (
 );
 
 create table if not exists ut_pagina (
-	id_pagina binary(16) primary key default (uuid_to_bin(uuid())),
+	id_pagina integer unsigned auto_increment primary key ,
 	nombre varchar(50) not null,
 	descripcion varchar(128) not null,
 	indice integer not null,
@@ -105,7 +105,7 @@ create table if not exists ut_pagina (
 
 create table if not exists ut_permiso (
 	id_rol integer unsigned,
-	id_pagina binary(16),
+	id_pagina integer unsigned,
 	permiso integer,
 	constraint pk_ut_permiso 
 		primary key (id_rol, id_pagina),
@@ -125,32 +125,29 @@ create table if not exists ut_permiso (
 -- COURSE MODULE
 -- ------------------------------------------------- 
 create table if not exists ut_curso (
-	id_curso binary(16) primary key default (uuid_to_bin(uuid())),
+	id_curso integer unsigned auto_increment primary key ,
 	nombre varchar(128) not null
 );
 
 create table if not exists ut_curso_tutor (
-	id_curso_tutor binary(16) primary key default (uuid_to_bin(uuid())),
+	id_curso_tutor integer unsigned auto_increment primary key ,
 	fecha date not null default (curdate()),
 	salon varchar(128) not null default '', 
-	id_curso binary(16) not null,
+	id_curso integer unsigned not null,
 	id_tutor integer unsigned not null,
-	id_horario binary(16) not null,
-	id_jornada binary(16) not null,
+	id_horario integer unsigned not null,
+	id_jornada integer unsigned not null,
 	activo bool default 1,
 	dias json, 
-	constraint fk_curso_tutor_curso 
-		foreign key (id_curso) 
+	constraint fk_curso_tutor_curso foreign key (id_curso) 
 		references ut_curso(id_curso) 
 		on delete restrict 
 		on update cascade,
-	constraint fk_curso_tutor_tutor 
-		foreign key (id_tutor) 
+	constraint fk_curso_tutor_tutor foreign key (id_tutor) 
 		references usuario(id_usuario) 
 		on delete restrict 
 		on update cascade,
-	constraint fk_curso_tutor_horario 
-		foreign key (id_horario, id_jornada) 
+	constraint fk_curso_tutor_horario foreign key (id_horario, id_jornada) 
 		references ut_horario(id_horario, id_jornada) 
 		on delete restrict 
 		on update cascade
@@ -185,30 +182,32 @@ create table if not exists ut_curso_tutor (
 -- COMMUNICATION MODULE
 -- ------------------------------------------------- 
 create table if not exists ut_notificacion (
-	id_notificacion binary(16) primary key default (uuid_to_bin(uuid())),
+	id_notificacion integer unsigned auto_increment primary key ,
 	mensaje varchar(255) not null,
 	fecha datetime not null default now(),
 	activo tinyint(1) not null default 1,
 	id_emisor integer unsigned not null,
 	id_receptor integer unsigned not null,
-	constraint fk_notificacion_emisor foreign key (id_emisor) references usuario (id_usuario) on
-	delete restrict on
-	update cascade,
-		constraint fk_notificacion_receptor foreign key (id_receptor) references usuario (id_usuario) on
-	delete restrict on
-	update cascade
+	constraint fk_notificacion_emisor foreign key (id_emisor) 
+		references usuario (id_usuario) 
+		on delete restrict 
+		on update cascade,
+	constraint fk_notificacion_receptor foreign key (id_receptor) 
+		references usuario (id_usuario) 
+		on delete restrict 
+		on update cascade
 );
 
 create table if not exists ut_chat (
-	id_chat binary(16) primary key default (uuid_to_bin(uuid())),
+	id_chat integer unsigned auto_increment primary key ,
 	miembros json , 
 	fecha_creacion datetime default now() , 
 	fecha_modificacion datetime default now() 
 ) ; 
 
 create table if not exists ut_message (
-	id_message binary(16) primary key default (uuid_to_bin(uuid())),
-	id_chat binary(16) , 
+	id_message integer unsigned auto_increment primary key ,
+	id_chat integer unsigned, 
 	autor integer , 
 	texto varchar(255) , 
 	estado char(1) default 'E' , 
@@ -224,7 +223,7 @@ create table if not exists ut_message (
 -- THESIS MODULE
 -- ------------------------------------------------- 
 create table if not exists ut_tesis (
-	id_tesis binary(16) primary key default (uuid_to_bin(uuid())),
+	id_tesis integer unsigned auto_increment primary key ,
 	titulo varchar(255) not null,
 	ruta_perfil varchar(255) not null,
 	ruta_tesis varchar(255) null,
@@ -232,29 +231,32 @@ create table if not exists ut_tesis (
 	fecha_creacion datetime not null default now(),
 	fecha_modificacion datetime not null default now(),
 	id_estudiante integer unsigned not null,
-		constraint fk_tesis_estudiante foreign key (id_estudiante) references usuario(id_usuario) on
-	delete restrict on
-	update cascade
+	constraint fk_tesis_estudiante foreign key (id_estudiante) 
+		references usuario(id_usuario) 
+		on delete restrict 
+		on update cascade
 );
 
 create table if not exists ut_revision (
-	id_revision binary(16) primary key default (uuid_to_bin(uuid())),
+	id_revision integer unsigned auto_increment primary key ,
 	fecha datetime not null default now(),
 	detalle varchar(500) ,
 	ruta_certificado varchar(100) , 
 	ruta_dictamen varchar(255) ,
-	id_curso_tutor binary(16) , 
+	id_curso_tutor integer unsigned , 
 	id_tutor integer unsigned ,
-	id_tesis binary(16) ,
+	id_tesis integer unsigned ,
 	estado char(1) not null default 'E',
 	estacion smallint not null default 1,
 	sala varchar(100),
-	constraint fk_revision_tutor foreign key (id_tutor) references usuario(id_usuario) on
-	delete restrict on
-	update cascade,
-		constraint fk_revision_tesis foreign key (id_tesis) references ut_tesis(id_tesis) on
-	delete restrict on
-	update cascade , 
+	constraint fk_revision_tutor foreign key (id_tutor) 
+		references usuario(id_usuario) 
+		on delete restrict 
+		on update cascade,
+	constraint fk_revision_tesis foreign key (id_tesis) 
+		references ut_tesis(id_tesis) 
+		on delete restrict 
+		on update cascade , 
 	constraint fk_revision_curso foreign key (id_curso_tutor) 
 		references ut_curso_tutor (id_curso_tutor) 
 		on delete restrict 
@@ -291,10 +293,10 @@ end;
 -- -------------------------------------------------
 -- UPDATE TESIS
 -- -------------------------------------------------
-create trigger if not exists ut_tr_update_tesis 
-after update on ut_tesis 
-for each row 
-begin
+-- create trigger if not exists ut_tr_update_tesis 
+-- after update on ut_tesis 
+-- for each row 
+-- begin
 --	declare v_estado char(1) ; 
 
 --	select ur.estado 
@@ -322,59 +324,59 @@ begin
 --			order by ur.fecha desc 
 --			limit 1 ; 
 --	end if ; 
-end ; 
+-- end ; 
 
 -- -------------------------------------------------
 -- NEW ROL
 -- -------------------------------------------------
-create trigger if not exists ut_tr_new_rol 
-after insert on rol 
-for each row
-begin
-	declare pagina_id int;
-	declare done int default false;
-	declare pageCursor cursor for select up.id_pagina from ut_pagina up ;
-	declare continue handler for not found set done = true;
+-- create trigger if not exists ut_tr_new_rol 
+-- after insert on rol 
+-- for each row
+-- begin
+-- 	declare pagina_id int;
+-- 	declare done int default false;
+-- 	declare pageCursor cursor for select up.id_pagina from ut_pagina up ;
+-- 	declare continue handler for not found set done = true;
 
-	open pageCursor;
-	read_loop: loop
-		fetch pageCursor into pagina_id;
-		if done then 
-			leave read_loop;
-		end if;
+-- 	open pageCursor;
+-- 	read_loop: loop
+-- 		fetch pageCursor into pagina_id;
+-- 		if done then 
+-- 			leave read_loop;
+-- 		end if;
 		
-		insert into ut_permiso 
-		(id_rol, id_pagina, permiso) 
-		values (new.id_rol, pagina_id, 0);
-	end loop;
-	close pageCursor;
-end;
+-- 		insert into ut_permiso 
+-- 		(id_rol, id_pagina, permiso) 
+-- 		values (new.id_rol, pagina_id, 0);
+-- 	end loop;
+-- 	close pageCursor;
+-- end;
 
 -- -------------------------------------------------
 -- NEW PAGE
 -- -------------------------------------------------
-create trigger if not exists ut_tr_new_page 
-after insert on ut_pagina 
-for each row
-begin
-	declare rol_id int;
-	declare done int default false;
-	declare rolCursor cursor for select r.id_rol from rol r ;
-	declare continue handler for not found set done = true;
+-- create trigger if not exists ut_tr_new_page 
+-- after insert on ut_pagina 
+-- for each row
+-- begin
+-- 	declare rol_id int;
+-- 	declare done int default false;
+-- 	declare rolCursor cursor for select r.id_rol from rol r ;
+-- 	declare continue handler for not found set done = true;
 
-	open rolCursor;
-	read_loop: loop
-		fetch rolCursor into rol_id;
-		if done then 
-			leave read_loop;
-		end if;
+-- 	open rolCursor;
+-- 	read_loop: loop
+-- 		fetch rolCursor into rol_id;
+-- 		if done then 
+-- 			leave read_loop;
+-- 		end if;
 		
-		insert into ut_permiso 
-		(id_rol, id_pagina, permiso) 
-		values (rol_id, new.id_pagina, 0);
-	end loop;
-	close rolCursor;
-end;
+-- 		insert into ut_permiso 
+-- 		(id_rol, id_pagina, permiso) 
+-- 		values (rol_id, new.id_pagina, 0);
+-- 	end loop;
+-- 	close rolCursor;
+-- end;
 
 -- -------------------------------------------------
 -- UPDATE REVISION
@@ -411,7 +413,7 @@ end;
 -- -- -------------------------------------------------
 -- CREAR USUARIO
 -- ----------------------------------------------------
-create procedure if not exists sp_ut_crear_usuario (
+create procedure if not exists ut_sp_crear_usuario (
 	in p_nombre varchar(50),
 	in p_apellido varchar(75),
 	in p_genero char(1),
@@ -542,7 +544,6 @@ left join ut_curso_tutor uct
 -- -------------------------------------------------
 -- CURSOS
 -- -------------------------------------------------
-drop view if exists ut_v_cursos ; 
 create view ut_v_cursos as 
 select 
 	* 
@@ -580,35 +581,34 @@ inner join ut_jornada uj
 -- -------------------------------------------------
 -- ASIGNACION
 -- -------------------------------------------------
-drop view if exists ut_v_asignacion ; 
-create view ut_v_asignacion as 
-select
-	uct.id_curso_tutor , 
-	uct.salon , 
-	uct.dias , 
-	uct.id_tutor , 
-	uh.hora_inicio , 
-	uh.hora_final , 
-	uj.nombre as jornada , 
-	ua.id_estudiante , 
-	ua.estado , 
-	ua.ruta_certificado, 
-	tt.nombre as tutor 
-from ut_curso_tutor uct 
-inner join ut_asignacion ua 
-	on uct.id_curso_tutor = ua.id_curso_tutor 
-inner join usuario tt 
-	on uct.id_tutor = tt.id_usuario 
-inner join ut_horario uh 
-	on uct.id_horario = uh.id_horario 
-	and uct.id_jornada = uh.id_jornada 
-inner join ut_jornada uj 
-	on uh.id_jornada = uj.id_jornada ; 
+-- drop view if exists ut_v_asignacion ; 
+-- create view ut_v_asignacion as 
+-- select
+-- 	uct.id_curso_tutor , 
+-- 	uct.salon , 
+-- 	uct.dias , 
+-- 	uct.id_tutor , 
+-- 	uh.hora_inicio , 
+-- 	uh.hora_final , 
+-- 	uj.nombre as jornada , 
+-- 	ua.id_estudiante , 
+-- 	ua.estado , 
+-- 	ua.ruta_certificado, 
+-- 	tt.nombre as tutor 
+-- from ut_curso_tutor uct 
+-- inner join ut_asignacion ua 
+-- 	on uct.id_curso_tutor = ua.id_curso_tutor 
+-- inner join usuario tt 
+-- 	on uct.id_tutor = tt.id_usuario 
+-- inner join ut_horario uh 
+-- 	on uct.id_horario = uh.id_horario 
+-- 	and uct.id_jornada = uh.id_jornada 
+-- inner join ut_jornada uj 
+-- 	on uh.id_jornada = uj.id_jornada ; 
 
 -- -------------------------------------------------
 -- NOTIFICACION
 -- -------------------------------------------------
-drop view if exists ut_v_notification;
 create view ut_v_notification as 
 select 
 	un.* , 
@@ -623,7 +623,6 @@ inner join usuario ure
 -- -------------------------------------------------
 -- NOTIFICACION
 -- -------------------------------------------------
-drop view if exists ut_v_chat;
 create view ut_v_chat as 
 select
 	uc.id_chat , 
@@ -641,7 +640,6 @@ inner join usuario u2
 -- -------------------------------------------------
 -- RESUMEN
 -- -------------------------------------------------
-drop view if exists ut_v_resumen;
 create view ut_v_resumen as 
 select 
 	ur.estacion , 

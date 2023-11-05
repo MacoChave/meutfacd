@@ -118,7 +118,7 @@ const FstCourse: React.FC<FstCourseProps> = ({}) => {
 
 	return (
 		<>
-			<Contenedor title='Asignación al curso 1'>
+			<Contenedor title='Asignación al curso I'>
 				<Box sx={style}>
 					<Box
 						sx={{
