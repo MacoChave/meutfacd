@@ -335,7 +335,7 @@ export const router = createBrowserRouter(
 			],
 		},
 		{
-			path: '/secretaría',
+			path: '/secretaria',
 			element: (
 				<ProtectedRoute rol='analitica'>
 					{<HomeAnalitycs />}

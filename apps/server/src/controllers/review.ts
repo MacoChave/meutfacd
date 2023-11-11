@@ -7,8 +7,8 @@ import { createReadStream, unlinkSync } from 'fs';
 
 export const getXlsxReport = async ({ query }: Request, res: Response) => {
 	try {
-		const bookName = 'StudentReview';
-		const filePath = 'StudentReview.xlsx';
+		const bookName: string = 'StudentReview';
+		const filePath: string = 'src/storage/StudentReview.xlsx';
 		const data = await sqlSelect({
 			table: 'ut_v_revision',
 		});

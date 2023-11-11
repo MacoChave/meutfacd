@@ -88,7 +88,7 @@ const Estacion5 = () => {
 			formData.append('file', file);
 			formData.append('filename', 'thesis');
 			const data = await postData<UploadFile>({
-				path: URL.STORAGE,
+				path: `${URL.STORAGE}/draft`,
 				body: formData,
 				headers: {
 					'Content-Type': 'multipart/form-data',
@@ -185,7 +185,7 @@ const Estacion5 = () => {
 						/>
 						<TextField
 							variant='standard'
-							label='Fecha'
+							label='Fecha de cita'
 							InputProps={{
 								disabled: true,
 							}}

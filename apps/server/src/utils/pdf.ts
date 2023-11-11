@@ -2,12 +2,12 @@ import { join } from 'path';
 import PDFDocument from 'pdfkit';
 import { toDataURL } from 'qrcode';
 import { DATA_SOURCES } from '../config/vars.config';
-import { formatDate } from './formats';
 import {
 	TContentDictamen,
 	TDestinyAddress,
 	TInfoSignature,
 } from '../models/pdf';
+import { formatDate } from './formats';
 
 export const createDocument = () => {
 	const doc = new PDFDocument({
@@ -32,7 +32,8 @@ export const createDocument = () => {
 };
 
 export const setLetterHead = (doc: PDFKit.PDFDocument) => {
-	const imagePath = join(__dirname, '/../storage/PDFHeader.png');
+	let imagePath = join(__dirname, '/../storage/PDFHeader.png');
+	imagePath = imagePath.replace('/dist', '');
 	doc.image(imagePath, 72, 15, {
 		fit: [475, 100],
 		align: 'center',
@@ -167,7 +168,8 @@ export const setInfoSignature = ({ doc, fullname, rol }: TInfoSignature) => {
 // };
 
 export const setFooter = (doc: any) => {
-	const imagePath = join(__dirname, '/../storage/PDFFooter.png');
+	let imagePath = join(__dirname, '/../storage/PDFFooter.png');
+	imagePath = imagePath.replace('/dist', '');
 	doc.image(imagePath, 72, doc.page.height - 125, {
 		fit: [475, 100],
 		align: 'center',

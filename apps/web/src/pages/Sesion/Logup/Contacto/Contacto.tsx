@@ -25,7 +25,7 @@ const Contacto: React.FC<ContactoProps> = () => {
 					<TextField
 						{...field}
 						sx={{ width: { xs: '200px', sm: '300px' } }}
-						label='Registro universitario (Carnet)'
+						label='Registro universitario'
 						variant='outlined'
 						error={!!errors.carnet}
 					/>

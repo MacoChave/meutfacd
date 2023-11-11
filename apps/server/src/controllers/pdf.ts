@@ -129,7 +129,7 @@ export const createReport = async ({ body, user }: Request, res: Response) => {
 			
 			if (DATA_SOURCES.UPLOAD_S3) {
 				const params: PutObjectCommandInput = {
-					Bucket: 'ut-src',
+					Bucket: DATA_SOURCES.AWS_BUCKET_NAME,
 					Key: `${student.carnet}/${filename}.pdf`,
 					Body: fileContent,
 					ACL: 'public-read',
@@ -227,7 +227,7 @@ export const createPrintReport = async ({ body }: Request, res: Response) => {
 			
 			if (DATA_SOURCES.UPLOAD_S3) {
 				const params: PutObjectCommandInput = {
-					Bucket: 'ut-src',
+					Bucket: DATA_SOURCES.AWS_BUCKET_NAME,
 					Key: `${student.carnet}/${filename}.pdf`,
 					Body: fileContent,
 					ACL: 'public-read',

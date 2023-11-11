@@ -6,12 +6,14 @@ export type SesionPorRolProps = {
 	handleLogin: (rol: string) => void;
 	handleLogup: (rol: string) => void;
 	rol: string;
+	title: string
 };
 
 const SesionPorRol: React.FC<SesionPorRolProps> = ({
 	handleLogin,
 	handleLogup,
 	rol,
+	title
 }) => {
 	return (
 		<Box
@@ -29,7 +31,7 @@ const SesionPorRol: React.FC<SesionPorRolProps> = ({
 					gap: 2,
 				}}>
 				<Person />
-				<Typography>{rol.toUpperCase()}</Typography>
+				<Typography>{title.toUpperCase()}</Typography>
 			</Box>
 			<MenuItem onClick={() => handleLogin(rol)}>Iniciar sesión</MenuItem>
 			<MenuItem onClick={() => handleLogup(rol)}>Crear usuario</MenuItem>

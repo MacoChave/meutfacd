@@ -6,7 +6,7 @@ import {
 } from '@mui/material';
 import React from 'react';
 
-const daysWeek: string[] = ['L', 'M', 'X', 'J', 'V', 'S', 'D'];
+const daysWeek: string[] = ['Lun', 'Mar', 'Mie', 'Jue', 'Vie', 'Sab', 'Dom'];
 
 export type PickDaysProps = {
 	days: string[];

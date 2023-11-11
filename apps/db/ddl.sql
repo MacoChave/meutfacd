@@ -329,54 +329,54 @@ end;
 -- -------------------------------------------------
 -- NEW ROL
 -- -------------------------------------------------
--- create trigger if not exists ut_tr_new_rol 
--- after insert on rol 
--- for each row
--- begin
--- 	declare pagina_id int;
--- 	declare done int default false;
--- 	declare pageCursor cursor for select up.id_pagina from ut_pagina up ;
--- 	declare continue handler for not found set done = true;
+create trigger if not exists ut_tr_new_rol 
+after insert on rol 
+for each row
+begin
+	declare pagina_id int;
+	declare done int default false;
+	declare pageCursor cursor for select up.id_pagina from ut_pagina up ;
+	declare continue handler for not found set done = true;
 
--- 	open pageCursor;
--- 	read_loop: loop
--- 		fetch pageCursor into pagina_id;
--- 		if done then 
--- 			leave read_loop;
--- 		end if;
+	open pageCursor;
+	read_loop: loop
+		fetch pageCursor into pagina_id;
+		if done then 
+			leave read_loop;
+		end if;
 		
--- 		insert into ut_permiso 
--- 		(id_rol, id_pagina, permiso) 
--- 		values (new.id_rol, pagina_id, 0);
--- 	end loop;
--- 	close pageCursor;
--- end;
+		insert into ut_permiso 
+		(id_rol, id_pagina, permiso) 
+		values (new.id_rol, pagina_id, 0);
+	end loop;
+	close pageCursor;
+end;
 
 -- -------------------------------------------------
 -- NEW PAGE
 -- -------------------------------------------------
--- create trigger if not exists ut_tr_new_page 
--- after insert on ut_pagina 
--- for each row
--- begin
--- 	declare rol_id int;
--- 	declare done int default false;
--- 	declare rolCursor cursor for select r.id_rol from rol r ;
--- 	declare continue handler for not found set done = true;
+create trigger if not exists ut_tr_new_page 
+after insert on ut_pagina 
+for each row
+begin
+	declare rol_id int;
+	declare done int default false;
+	declare rolCursor cursor for select r.id_rol from rol r ;
+	declare continue handler for not found set done = true;
 
--- 	open rolCursor;
--- 	read_loop: loop
--- 		fetch rolCursor into rol_id;
--- 		if done then 
--- 			leave read_loop;
--- 		end if;
+	open rolCursor;
+	read_loop: loop
+		fetch rolCursor into rol_id;
+		if done then 
+			leave read_loop;
+		end if;
 		
--- 		insert into ut_permiso 
--- 		(id_rol, id_pagina, permiso) 
--- 		values (rol_id, new.id_pagina, 0);
--- 	end loop;
--- 	close rolCursor;
--- end;
+		insert into ut_permiso 
+		(id_rol, id_pagina, permiso) 
+		values (rol_id, new.id_pagina, 0);
+	end loop;
+	close rolCursor;
+end;
 
 -- -------------------------------------------------
 -- UPDATE REVISION

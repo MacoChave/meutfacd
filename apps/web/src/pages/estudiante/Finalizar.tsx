@@ -49,7 +49,7 @@ const Finalizar = () => {
 	if (isLoading) return <DotsLoaders />;
 	if (isError) return <Typography>Error</Typography>;
 
-	if (!data) return <EmptyReview title='Cita a previos internos' />;
+	if (!data) return <EmptyReview title='Solicitud de impresión de tesis' />;
 
 	return (
 		<>
@@ -90,10 +90,10 @@ const Finalizar = () => {
 							disabled: true,
 						}}
 						value={
-							formatDate({
+							data?.sala !== '' ? formatDate({
 								date: new Date(data?.fecha),
 								withTime: true,
-							}) || ''
+							}) : ''
 						}
 					/>
 					<TextField

@@ -43,6 +43,8 @@ const Estacion2 = () => {
 				'tutor',
 				'salon',
 				'id_tutor',
+				'ruta_asesor',
+				'ruta_certificado',
 			],
 			sort: {
 				fecha: 'DESC',
@@ -69,7 +71,7 @@ const Estacion2 = () => {
 			formData.append('file', file);
 			formData.append('filename', 'asesor');
 			const data = await postData<UploadFile>({
-				path: URL.STORAGE,
+				path: `${URL.STORAGE}/draft`,
 				body: formData,
 				headers: {
 					'Content-Type': 'multipart/form-data',
