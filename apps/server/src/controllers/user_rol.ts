@@ -6,11 +6,7 @@ export const getItem = ({ query, body, user }: Request, res: Response) => {
 	res.status(200).json({ message: 'OK' });
 	try {
 	} catch (error: any) {
-		errorHttp(res, {
-			error,
-			msg: 'No se puede obtener el registro',
-			code: 500,
-		});
+		errorHttp(res, error);
 	}
 };
 
@@ -25,11 +21,7 @@ export const getItems = async (
 		});
 		res.status(200).json(results);
 	} catch (error: any) {
-		errorHttp(res, {
-			error,
-			msg: 'No se puede obtener el registro',
-			code: 500,
-		});
+		errorHttp(res, error);
 	}
 };
 
@@ -41,11 +33,7 @@ export const postItem = async ({ body, user }: Request, res: Response) => {
 		});
 		res.status(200).json(results);
 	} catch (error: any) {
-		errorHttp(res, {
-			error,
-			msg: 'No se puede crear el registro',
-			code: 500,
-		});
+		errorHttp(res, error);
 	}
 };
 
@@ -61,11 +49,7 @@ export const putItem = async (
 		});
 		res.status(200).json(results);
 	} catch (error: any) {
-		errorHttp(res, {
-			error,
-			msg: 'No se puede actualizar el registro',
-			code: 500,
-		});
+		errorHttp(res, error);
 	}
 };
 
@@ -77,10 +61,6 @@ export const deleteItem = ({ query, user }: Request, res: Response) => {
 		});
 		res.status(200).json(results);
 	} catch (error: any) {
-		errorHttp(res, {
-			error,
-			msg: 'No se puede eliminar el registro',
-			code: 500,
-		});
+		errorHttp(res, error);
 	}
 };

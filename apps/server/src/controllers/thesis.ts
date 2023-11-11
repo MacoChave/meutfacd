@@ -13,11 +13,7 @@ export const getItem = async (
 		});
 		res.status(200).json(result);
 	} catch (error: any) {
-		errorHttp(res, {
-			error,
-			msg: 'No se puede obtener el registro',
-			code: 500,
-		});
+		errorHttp(res, error);
 	}
 };
 
@@ -32,11 +28,7 @@ export const getItems = async (
 		});
 		res.status(200).json(results);
 	} catch (error: any) {
-		errorHttp(res, {
-			error,
-			msg: 'No se puede obtener el registro',
-			code: 500,
-		});
+		errorHttp(res, error);
 	}
 };
 
@@ -48,11 +40,7 @@ export const postItem = async ({ body, user }: Request, res: Response) => {
 		});
 		res.status(200).json(results);
 	} catch (error: any) {
-		errorHttp(res, {
-			error,
-			msg: 'No se puede guardar el progreso',
-			code: 500,
-		});
+		errorHttp(res, error);
 	}
 };
 
@@ -65,11 +53,7 @@ export const putItem = async ({ body, user }: Request, res: Response) => {
 		});
 		res.status(200).json(results);
 	} catch (error: any) {
-		errorHttp(res, {
-			error,
-			msg: 'No se puede guardar el progreso',
-			code: 500,
-		});
+		errorHttp(res, error);
 	}
 };
 
@@ -82,10 +66,6 @@ export const deleteItem = async ({ query, user }: Request, res: Response) => {
 		});
 		res.status(200).json(results);
 	} catch (error: any) {
-		errorHttp(res, {
-			error,
-			msg: 'No se puede guardar el progreso',
-			code: 500,
-		});
+		errorHttp(res, error);
 	}
 };

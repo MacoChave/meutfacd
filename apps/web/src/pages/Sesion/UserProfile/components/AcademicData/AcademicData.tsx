@@ -1,7 +1,5 @@
 import { McAutocomplete } from '@/components/McWithForms/McAutocomplete';
 import { UserType } from '@/models/Perfil';
-import { PickHorario } from '@/pages/encargado/components/PickHorario';
-import { PickJornada } from '@/pages/encargado/components/PickJornada';
 import { Box } from '@mui/material';
 import React from 'react';
 import { FieldValues, useFormContext } from 'react-hook-form';
@@ -22,7 +20,7 @@ const AcademicData: React.FC<AcademicDataProps> = ({}) => {
 				gap: 4,
 			}}>
 			<McAutocomplete
-				control={control as FieldValues}
+				control={control as any}
 				name='id_jornada'
 				label='Jornada'
 				options={[]}

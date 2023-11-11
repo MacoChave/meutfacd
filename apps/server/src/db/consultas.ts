@@ -19,6 +19,7 @@ type sqlSelectType = {
 	q?: any;
 	pageNumber?: number;
 	pageSize?: number;
+	asArray?: boolean;
 };
 
 type sqlEjectType = {
@@ -45,6 +46,17 @@ type sqlUpdateType = {
 type sqlDeleteType = {
 	table: string;
 	query: Object;
+};
+
+const isFixedTable = (key: string) => {
+	return [
+		'id_usuario',
+		'id_receptor',
+		'id_emisor',
+		'id_rol',
+		'id_municipio',
+		'id_departamento',
+	].includes(key);
 };
 
 const getWhereClause = (query: Object) => {
@@ -123,6 +135,7 @@ export const sqlSelect = async ({
 	q = NaN,
 	pageNumber = NaN,
 	pageSize = NaN,
+	asArray = false,
 }: sqlSelectType) => {
 	const filters = [];
 	const values = [];
@@ -194,7 +207,7 @@ export const sqlSelect = async ({
 		message: JSON.stringify({ sql, values }),
 	});
 
-	const conn = await connection();
+	const conn = await connection(asArray);
 	const [results, fields] = await conn.query(sql, values);
 	conn.end();
 	return results;

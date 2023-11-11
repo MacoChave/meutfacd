@@ -1,7 +1,5 @@
-import { URL } from '@/api/server';
-import { useCustomFetch } from '@/hooks/useFetch';
 import { style } from '@/themes/styles';
-import { Box, Typography } from '@mui/material';
+import { Box } from '@mui/material';
 import React, { lazy } from 'react';
 const Asignacion = lazy(() => import('./Asignacion/Asignacion'));
 const Gestion = lazy(() => import('./Gestion/Gestion'));
@@ -13,17 +11,6 @@ const DotsLoaders = lazy(
 export type CoursesProps = {};
 
 const Courses: React.FC<CoursesProps> = ({}) => {
-	const { data, isLoading, isError } = useCustomFetch({
-		url: `${URL.GENERIC}/all`,
-		method: 'post',
-		body: {
-			table: 'ut_curso',
-		},
-	});
-
-	if (isLoading) return <DotsLoaders />;
-	if (isError) return <Typography>Error</Typography>;
-
 	return (
 		<>
 			<Contenedor title='Gestión de cursos'>

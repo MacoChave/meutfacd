@@ -31,9 +31,10 @@
   "name": "web",
   "private": true,
   "scripts": {
-    "build": "tsc && vite build",
+    "build": "vite build",
     "dev": "vite",
-    "start": "vite preview"
+    "preview": "vite preview",
+    "serve": "serve -s build"
   },
   "type": "module",
   "version": "0.0.0"

@@ -5,7 +5,7 @@ import { SpinLoader } from '@/components/Loader/SpinLoader';
 import { APROBADO, REVISION } from '@/consts/vars';
 import { useCustomFetch } from '@/hooks/useFetch';
 import { UploadFile } from '@/interfaces/UploadFile';
-import { Draft, draftDefault, draftSchema } from '@/models/Draft';
+import { TDictamen, dictamenDefault, dictamenSchema } from '@/models/Dictamen';
 import { getData, postData, putData } from '@/services/fetching';
 import { style } from '@/themes/styles';
 import { errorHandler } from '@/utils/errorHandler';
@@ -65,10 +65,10 @@ const Dictamen: React.FC<DictamenProps> = ({}) => {
 		reset,
 		setValue,
 		handleSubmit,
-	} = useForm<Draft>({
-		defaultValues: draftDefault,
+	} = useForm<TDictamen>({
+		defaultValues: dictamenDefault,
 		mode: 'onBlur',
-		resolver: yupResolver(draftSchema),
+		resolver: yupResolver(dictamenSchema),
 	});
 
 	const onUpload = async (file: File) => {
@@ -85,7 +85,7 @@ const Dictamen: React.FC<DictamenProps> = ({}) => {
 					'Access-Control-Allow-Origin': '*', // Required for CORS support to work
 				},
 			});
-			setValue('name', data.name);
+			setValue('ruta_dictamen', data.name);
 			swal(
 				'¡Bien hecho!',
 				'El archivo se subió correctamente',
@@ -99,7 +99,7 @@ const Dictamen: React.FC<DictamenProps> = ({}) => {
 		}
 	};
 
-	const onSubmit: SubmitHandler<Draft> = async (draft) => {
+	const onSubmit: SubmitHandler<TDictamen> = async (draft) => {
 		try {
 			await putData({
 				path: URL.THESIS,
@@ -112,7 +112,8 @@ const Dictamen: React.FC<DictamenProps> = ({}) => {
 				path: URL.REVIEW,
 				body: {
 					estacion: 4,
-					ruta_dictamen: draft.name,
+					ruta_dictamen: draft.ruta_dictamen,
+					detalle: `Se cambió el título de la tesis de: ${draft.detalle} a: ${draft.titulo}`,
 					estado: APROBADO,
 				},
 			});
@@ -176,14 +177,24 @@ const Dictamen: React.FC<DictamenProps> = ({}) => {
 							<Typography>{revision?.detalle ?? ''}</Typography>
 						</Box>
 						<Box>
-							<TextField
-								value={revision?.titulo || ''}
-								fullWidth
-								label='Título actual del punto de tesis'
-								variant='standard'
-								InputProps={{
-									readOnly: true,
-								}}
+							<Controller
+								control={control}
+								name='detalle'
+								render={({ field }) => (
+									<TextField
+										{...field}
+										fullWidth
+										label='Título actual de la tesis'
+										variant='standard'
+										InputProps={{
+											readOnly:
+												revision.estado === REVISION ||
+												revision.estado === APROBADO,
+										}}
+										error={!!errors.titulo}
+										helperText={errors.titulo?.message}
+									/>
+								)}
 							/>
 							<Controller
 								control={control}
@@ -192,7 +203,7 @@ const Dictamen: React.FC<DictamenProps> = ({}) => {
 									<TextField
 										{...field}
 										fullWidth
-										label='Nuevo título del punto de tesis'
+										label='Nuevo título de la tesis'
 										variant='standard'
 										InputProps={{
 											readOnly:

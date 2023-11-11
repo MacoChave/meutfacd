@@ -9,12 +9,13 @@ export const ESTACION6 = 6;
 // NOMBRE DE ESTACIONES
 export const ESTACIONES = [
 	'Punto de tesis',
-	'Curso 1',
-	'Curso 2',
-	'Dictámen',
+	'Curso I',
+	'Curso II',
+	'Cambio de tema',
 	'Comisión y estilo',
 	'Previos internos',
 	'Finalización',
+	'Impresión'
 ];
 
 // ESTADOS DE REVSIONES

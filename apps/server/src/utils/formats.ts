@@ -1,4 +1,4 @@
-import { TFormatDate } from '../models/formatDate';
+import { TDateFormatted, TFormatDate } from '../models/formatDate';
 
 const switchTimezone = (date: Date, style: Record<string, string>) => {
 	return date.toLocaleString('es-GT', {
@@ -24,35 +24,37 @@ export const newDate = (strDate: string, lang: 'es' | 'en'): Date => {
 	return new Date(`${year}-${month}-${day}`);
 };
 
+export const getDateFormatted = ({
+	date,
+	dateStyle = undefined,
+	timeStyle = undefined,
+	timezone = 'America/Guatemala',
+	style = 'es-GT',
+}: TDateFormatted) => {
+	return date.toLocaleString(style, {
+		timeZone: timezone,
+		...(dateStyle ? { dateStyle } : {}),
+		...(timeStyle ? { timeStyle } : {}),
+	});
+};
+
 export const formatDate = ({ date, format, type }: TFormatDate) => {
 	if (format === 'mysql') {
 		if (type === 'date') {
-			return formatToMySQL(
-				switchTimezone(date, {
-					dateStyle: 'medium',
-					// timeStyle: 'none',
-				})
-			);
+			return date.toISOString().split('T')[0];
 		} else if (type === 'datetime') {
-			return formatToMySQL(
-				switchTimezone(date, {
-					dateStyle: 'medium',
-					timeStyle: 'medium',
-				})
-			);
+			let strDateTime = getDateFormatted({
+				date, dateStyle: 'medium', timeStyle: 'medium', timezone: 'America/Guatemala', style: 'es-GT'
+			})
+			return formatToMySQL(strDateTime);
 		} else if (type === 'time') {
-			return formatToMySQL(
-				switchTimezone(date, {
-					// dateStyle: 'none',
-					timeStyle: 'medium',
-				})
-			);
+			return date.toISOString().split('T')[1].split('.')[0];
 		}
 	} else if (format === 'iso') {
 		return date.toISOString();
 	} else if (format === 'report') {
 		return date.toLocaleString('es-GT', {
-			dateStyle: 'medium',
+			dateStyle: 'long',
 		});
 	}
 };

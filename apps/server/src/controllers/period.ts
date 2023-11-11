@@ -17,7 +17,7 @@ export const getItem = async ({ body, query }: Request, res: Response) => {
 		});
 		return res.status(200).json(result);
 	} catch (error) {
-		errorHttp(res, { error: error as any, msg: '', code: 500 });
+		errorHttp(res, error as any);
 	}
 };
 
@@ -30,7 +30,7 @@ export const getItems = async ({ body, query }: Request, res: Response) => {
 		});
 		return res.status(200).json(result);
 	} catch (error) {
-		errorHttp(res, { error: error as any, msg: '', code: 500 });
+		errorHttp(res, error as any);
 	}
 };
 
@@ -42,7 +42,7 @@ export const createItem = async ({ body }: Request, res: Response) => {
 		});
 		return res.status(200).json(result);
 	} catch (error) {
-		errorHttp(res, { error: error as any, msg: '', code: 500 });
+		errorHttp(res, error as any);
 	}
 };
 
@@ -55,7 +55,7 @@ export const updateItem = async ({ body, query }: Request, res: Response) => {
 		});
 		return res.status(200).json(result);
 	} catch (error) {
-		errorHttp(res, { error: error as any, msg: '', code: 500 });
+		errorHttp(res, error as any);
 	}
 };
 
@@ -67,6 +67,6 @@ export const deleteItem = async ({ query }: Request, res: Response) => {
 		});
 		return res.status(200).json(result);
 	} catch (error) {
-		errorHttp(res, { error: error as any, msg: '', code: 500 });
+		errorHttp(res, error as any);
 	}
 };

@@ -1,0 +1,1 @@
+export { default as AproveThesis } from './AproveThesis';

@@ -2,7 +2,7 @@ import { URL } from '@/api/server';
 import { Contenedor, McModal } from '@/components';
 import { DotsLoaders } from '@/components/Loader/DotsLoaders';
 import { McTable } from '@/components/MyTable';
-import { ESPERA, PENDIENTE, REVISION } from '@/consts/vars';
+import { PENDIENTE, REVISION } from '@/consts/vars';
 import { useCustomFetch } from '@/hooks/useFetch';
 import { getData } from '@/services/fetching';
 import { Typography } from '@mui/material';
@@ -22,7 +22,6 @@ const ReviewThesisResponsible: React.FC<
 > = ({}) => {
 	const [open, setOpen] = useState(false);
 	const [row, setRow] = useState<ProgressType>({} as ProgressType);
-	const [estado, setEstado] = useState(PENDIENTE);
 
 	const { data, isLoading, isError, refetch } = useCustomFetch({
 		url: `${URL.GENERIC}/all`,
@@ -81,7 +80,7 @@ const ReviewThesisResponsible: React.FC<
 				/>
 			</Contenedor>
 			<McModal title='Gestión de citas' open={open} onClose={onClose}>
-				<Cita userProgress={row} onClose={onClose} />
+				<Cita userProgress={row} onClose={onClose} estacion={6} />
 			</McModal>
 		</>
 	);

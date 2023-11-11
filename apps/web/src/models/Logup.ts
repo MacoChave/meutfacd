@@ -50,11 +50,11 @@ export const schemaLogup = yup.object().shape({
 	pass: yup
 		.string()
 		.required('Contraseña es requerida')
-		.max(100, 'Contraseña no puede ser mayor a 100 caracteres'),
+		.max(16, 'Contraseña no puede ser mayor a 100 caracteres'),
 	confpass: yup
 		.string()
 		.required('Confirmar contraseña es requerido')
-		.max(100, 'Confirmar contraseña no puede ser mayor a 100 caracteres')
+		.max(16, 'Confirmar contraseña no puede ser mayor a 100 caracteres')
 		.when('pass', {
 			is: (val: string) => (val && val.length > 0 ? true : false),
 			then: yup

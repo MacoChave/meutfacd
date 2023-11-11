@@ -86,7 +86,7 @@ export const ContactData: React.FC<DataProps> = ({ editing }) => {
 				)}
 			/>
 			<McAutocomplete
-				control={control as FormValues}
+				control={control as any}
 				name='id_jornada'
 				label='Jornada'
 				options={[]}

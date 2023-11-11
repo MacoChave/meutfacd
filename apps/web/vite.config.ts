@@ -13,12 +13,18 @@ export default defineConfig({
 			},
 		],
 	},
+	build: {
+		outDir: 'build',
+	},
 	server: {
-		proxy: {
-			'/api': {
-				target: 'http://localhost:5000',
-				changeOrigin: true,
-			},
-		},
+		host: true,
+		strictPort: true,
+		port: 4173
+		// proxy: {
+		// 	'/api': {
+		// 		target: 'http://3.90.206.28:5000',
+		// 		changeOrigin: true,
+		// 	},
+		// },
 	},
 });

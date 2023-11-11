@@ -1,7 +1,54 @@
 import { Request, Response } from 'express';
+import * as XLSX from 'xlsx';
 import { sqlInsert, sqlSelect, sqlSelectOne, sqlUpdate } from '../db/consultas';
 import { errorHttp } from '../utils/error.handle';
 import { formatDate } from '../utils/formats';
+import { createReadStream, unlinkSync } from 'fs';
+
+export const getXlsxReport = async ({ query }: Request, res: Response) => {
+	try {
+		const bookName: string = 'StudentReview';
+		const filePath: string = 'src/storage/StudentReview.xlsx';
+		const data = await sqlSelect({
+			table: 'ut_v_revision',
+		});
+
+		const wb = XLSX.utils.book_new();
+		const ws = XLSX.utils.json_to_sheet(data as any);
+		XLSX.utils.book_append_sheet(wb, ws, bookName);
+		XLSX.writeFile(wb, filePath);
+
+		const fileStream = createReadStream(filePath);
+		fileStream.pipe(res);
+		unlinkSync(`${filePath}`);
+
+		// res.status(200).sendFile('students-revisions.xlsx', {
+		// 	root: './src/storage',
+		// 	headers: {
+		// 		'Content-Type':
+		// 			'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+		// 	},
+		// });
+	} catch (error: any) {
+		errorHttp(res, error);
+	}
+};
+
+export const getItemsByCurrentProf = async (
+	{ query, body, user }: Request,
+	res: Response
+) => {
+	try {
+		const results = await sqlSelect({
+			...body,
+			table: 'ut_v_revision',
+			query: { id_tutor: user.primaryKey, ...query },
+		});
+		res.status(200).json(results);
+	} catch (error: any) {
+		errorHttp(res, error);
+	}
+};
 
 export const getItem = async (
 	{ query, body, user }: Request,
@@ -26,22 +73,6 @@ export const getItems = async (
 		const results = await sqlSelect({
 			...body,
 			query: { id_usuario: user.primaryKey, ...query },
-		});
-		res.status(200).json(results);
-	} catch (error: any) {
-		errorHttp(res, error);
-	}
-};
-
-export const getItemsByCurrentProf = async (
-	{ query, body, user }: Request,
-	res: Response
-) => {
-	try {
-		const results = await sqlSelect({
-			...body,
-			table: 'ut_v_revision',
-			query: { id_tutor: user.primaryKey, ...query },
 		});
 		res.status(200).json(results);
 	} catch (error: any) {
@@ -75,23 +106,24 @@ export const assignReview = async ({ query, body }: Request, res: Response) => {
 		const id_reviews: number[] = body.id_revisiones;
 		const id_tutor: number = body.id_tutor;
 		// For each id_review, update the id_tutor
-		const results = await Promise.all(
-			id_reviews.map((id_revision) =>
-				sqlUpdate({
-					table: 'ut_revision',
-					query: { id_revision },
-					datos: {
-						id_tutor,
-						estado: 'V',
-						fecha: formatDate({
-							date: new Date(),
-							format: 'mysql',
-							type: 'datetime',
-						}),
-					},
-				})
-			)
-		);
+		const results = [];
+		for await (const id_review of id_reviews) {
+			results.push(await
+			sqlUpdate({
+				table: 'ut_revision',
+				query: { id_revision: id_review },
+				datos: {
+					id_tutor,
+					estado: 'V',
+					fecha: formatDate({
+						date: new Date(),
+						format: 'mysql',
+						type: 'datetime',
+					}),
+				}
+			})
+			);
+		}
 		res.status(200).json(results);
 	} catch (error: any) {
 		errorHttp(res, error);

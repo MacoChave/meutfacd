@@ -47,7 +47,7 @@ export const postItem = async ({ body, user }: Request, res: Response) => {
 			throw new Error('El usuario receptor no existe');
 		}
 
-		if (DATA_SOURCES.SEND_EMAIL) {
+		if (DATA_SOURCES.SEND_EMAIL == 'true') {
 			await sendEmail({
 				to: receiver.correo,
 				plainText: 'Por favor, revisa tus notificaciones en la app',

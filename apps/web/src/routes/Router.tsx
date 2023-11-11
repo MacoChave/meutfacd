@@ -1,3 +1,4 @@
+import { AproveThesis } from '@/pages/administrador/AproveThesis';
 import { lazy } from 'react';
 import { createBrowserRouter } from 'react-router-dom';
 // PAGES WITHOUT SESSIONS
@@ -334,7 +335,7 @@ export const router = createBrowserRouter(
 			],
 		},
 		{
-			path: '/analitica',
+			path: '/secretaria',
 			element: (
 				<ProtectedRoute rol='analitica'>
 					{<HomeAnalitycs />}
@@ -400,6 +401,14 @@ export const router = createBrowserRouter(
 					),
 				},
 				{
+					path: 'resumen',
+					element: (
+						<ProtectedRoute rol='analitica'>
+							{<Resumen />}
+						</ProtectedRoute>
+					),
+				},
+				{
 					path: 'chat',
 					element: (
 						<ProtectedRoute rol='administrador'>
@@ -452,6 +461,14 @@ export const router = createBrowserRouter(
 					element: (
 						<ProtectedRoute rol='administrador'>
 							<ProblemsApp />
+						</ProtectedRoute>
+					),
+				},
+				{
+					path: 'finalizacion',
+					element: (
+						<ProtectedRoute rol='administrador'>
+							<AproveThesis />
 						</ProtectedRoute>
 					),
 				},

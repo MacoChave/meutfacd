@@ -10,7 +10,7 @@ import { requireAuth } from '../middlewares/requireAuth';
 const router = Router();
 
 router.get('/', requireAuth, getFile);
-router.post('/', requireAuth, uploadDraft);
+router.post('/draft', requireAuth, uploadDraft);
 router.post('/thesis', requireAuth, uploadTesis);
 router.post('/dictamen', requireAuth, uploadDictamen);
 

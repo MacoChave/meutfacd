@@ -79,7 +79,7 @@ const Estacion1 = () => {
 			formData.append('file', file);
 			formData.append('filename', 'preview');
 			const data = await postData<UploadFile>({
-				path: URL.STORAGE,
+				path: `${URL.STORAGE}/draft`,
 				body: formData,
 				headers: {
 					'Content-Type': 'multipart/form-data',

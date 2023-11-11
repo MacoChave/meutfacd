@@ -135,3 +135,42 @@ export const formatToInputDate = (
 	}`;
 	return result;
 };
+
+export const getInitialsFullname = (fullname: string) => {
+	const [firstName, lastName] = fullname.split(' ');
+	const firstLetter = firstName?.charAt(0) ?? '';
+	const lastLetter = lastName?.charAt(0) ?? '';
+	return `${firstLetter}${lastLetter}`;
+};
+
+export const getColorAvatar = (avatarName: string) => {
+	const colors = [
+		'#f44336',
+		'#e91e63',
+		'#9c27b0',
+		'#673ab7',
+		'#3f51b5',
+		'#2196f3',
+		'#03a9f4',
+		'#00bcd4',
+		'#009688',
+		'#4caf50',
+		'#8bc34a',
+		'#cddc39',
+		'#ffeb3b',
+		'#ffc107',
+		'#ff9800',
+		'#ff5722',
+		'#795548',
+		'#9e9e9e',
+		'#607d8b',
+	];
+	const randomColor = Math.floor(Math.random() * colors.length);
+	return colors[randomColor];
+};
+
+export const formatStationName = (station: string): string => {
+	if (station === 'Curso I') return 'Curso 1';
+	if (station === 'Curso II') return 'Curso 2';
+	return station;
+}

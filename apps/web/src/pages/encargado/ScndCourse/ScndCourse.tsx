@@ -118,7 +118,7 @@ const ScndCourse: React.FC<ScndCourseProps> = ({}) => {
 
 	return (
 		<>
-			<Contenedor title='Asignación al curso 2'>
+			<Contenedor title='Asignación al curso II'>
 				<Box sx={style}>
 					<Box
 						sx={{

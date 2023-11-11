@@ -61,19 +61,21 @@ const SesionMenu: React.FC<SesionMenuProps> = ({
 					}}>
 					<SesionPorRol
 						rol='estudiante'
+						title='Estudiante'
 						handleLogin={handleLogin}
 						handleLogup={handleLogup}
 					/>
 					<SesionPorRol
 						rol='docente'
+						title='Administrativo'
 						handleLogin={handleLogin}
 						handleLogup={handleLogup}
 					/>
-					<SesionPorRol
+					{/* <SesionPorRol
 						rol='administrador'
 						handleLogin={handleLogin}
 						handleLogup={handleLogup}
-					/>
+					/> */}
 				</Box>
 			</Menu>
 		</>

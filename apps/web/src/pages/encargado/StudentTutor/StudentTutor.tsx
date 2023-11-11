@@ -6,6 +6,7 @@ import { APROBADO, ESTACIONES } from '@/consts/vars';
 import { useCustomFetch } from '@/hooks/useFetch';
 import { TResult } from '@/models/Fetching';
 import { postData, putData } from '@/services/fetching';
+import { formatStationName } from '@/utils/formatHandler';
 import { Typography } from '@mui/material';
 import React, { useState } from 'react';
 import swal from 'sweetalert';
@@ -29,7 +30,7 @@ const StudentTutor: React.FC<StudentTutorProps> = ({}) => {
 					column: 'ruta_certificado',
 					operator: '=',
 					value: '',
-				},
+				}
 			],
 		},
 		params: { estado: APROBADO, estacion: 2 },
@@ -43,25 +44,35 @@ const StudentTutor: React.FC<StudentTutorProps> = ({}) => {
 				idStudent: item.id_usuario,
 				title: item.titulo,
 				idReview: item.id_revision,
-				currentStation: ESTACIONES[1].toLowerCase(),
-				nextStation: ESTACIONES[2].toLowerCase(),
+				currentStation: formatStationName(ESTACIONES[1]),
+				nextStation: formatStationName(ESTACIONES[2]),
 				filename: 'Nombramiento',
 			},
 		});
-
-		Promise.all([
-			putData<TResult>({
-				path: URL.REVIEW,
-				body: { ruta_certificado: dictamen.name ?? '' },
-				params: { id_revision: item.id_revision },
-			}),
-			postData<TResult>({
+		if (item.ruta_certificado === '') {
+			await postData<TResult>({
 				path: URL.REVIEW,
 				body: {
 					id_tesis: item.id_tesis,
 					estacion: 3,
 				},
 				params: {},
+			});
+		}
+
+		Promise.all([
+			// postData<TResult>({
+			// 	path: URL.REVIEW,
+			// 	body: {
+			// 		id_tesis: item.id_tesis,
+			// 		estacion: 3
+			// 	},
+			// 	params: {},
+			// }),
+			putData<TResult>({
+				path: URL.REVIEW,
+				body: { ruta_certificado: dictamen.name ?? '' },
+				params: { id_revision: item.id_revision },
 			}),
 			postData<TResult>({
 				path: URL.NOTIFICATION,
@@ -73,7 +84,7 @@ const StudentTutor: React.FC<StudentTutorProps> = ({}) => {
 				params: {},
 			}),
 		])
-			.then(([res1, res2, res3]) => {
+			.then(([res1, res2]) => {
 				if (res1.affectedRows && res2.affectedRows) {
 					swal(
 						'¡Buen trabajo!',
