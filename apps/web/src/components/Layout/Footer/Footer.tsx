@@ -7,7 +7,6 @@ const Footer: React.FC<FooterProps> = ({}) => {
 	return (
 		<Box
 			sx={{
-				gridArea: 'footer',
 				mx: 'auto',
 				p: 1,
 			}}>

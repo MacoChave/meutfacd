@@ -28,7 +28,6 @@ const Chat = lazy(() => import('../pages/Chat/Chat'));
 // --------------------
 // STUDENT PAGES
 // --------------------
-const StudentHome = lazy(() => import('../pages/estudiante'));
 const StudentProgress = lazy(
 	() => import('../pages/estudiante/Progress/Progress')
 );
@@ -59,7 +58,6 @@ const StudentPrintedThesis = lazy(
 // --------------------
 // PROFESSOR PAGES
 // --------------------
-const HomeProfessor = lazy(() => import('../pages/evaluador'));
 const DraftProfessor = lazy(
 	() => import('@/pages/evaluador/DraftProfessor/DraftProfessor')
 );
@@ -75,7 +73,6 @@ const ThesisProfessor = lazy(
 // --------------------
 // COORDINATOR PAGES
 // --------------------
-const HomeResponsible = lazy(() => import('../pages/encargado'));
 const DraftResponsible = lazy(() => import('@/pages/encargado/Draft/Draft'));
 const FstCourseResponsible = lazy(
 	() => import('@/pages/encargado/FstCourse/FstCourse')
@@ -95,14 +92,12 @@ const ReviewThesisResponsible = lazy(
 // --------------------
 // ANALYTICS PAGES
 // --------------------
-const HomeAnalitycs = lazy(() => import('../pages/analitica'));
 const ByEstacion = lazy(() => import('../pages/analitica/ByEstacion'));
 const ByRol = lazy(() => import('../pages/analitica/ByRol'));
 const Resumen = lazy(() => import('../pages/analitica/Resumen'));
 // --------------------
 // ADMINISTRATOR PAGES
 // --------------------
-const HomeAdmin = lazy(() => import('../pages/administrador'));
 const PagesApp = lazy(() => import('@/pages/administrador/PagesApp/PagesApp'));
 const UsersApp = lazy(() => import('../pages/administrador/Usuarios/Usuarios'));
 const Courses = lazy(() => import('@/pages/administrador/Courses/Courses'));
@@ -239,9 +234,7 @@ export const router = createBrowserRouter(
 		{
 			path: '/encargado/',
 			element: (
-				<ProtectedRoute rol='encargado'>
-					{<HomeResponsible />}
-				</ProtectedRoute>
+				<ProtectedRoute rol='encargado'>{<Dashboard />}</ProtectedRoute>
 			),
 			children: [
 				{
@@ -313,9 +306,7 @@ export const router = createBrowserRouter(
 		{
 			path: '/docente',
 			element: (
-				<ProtectedRoute rol='profesor'>
-					{<HomeProfessor />}
-				</ProtectedRoute>
+				<ProtectedRoute rol='profesor'>{<Dashboard />}</ProtectedRoute>
 			),
 			children: [
 				{
@@ -371,9 +362,7 @@ export const router = createBrowserRouter(
 		{
 			path: '/secretaria',
 			element: (
-				<ProtectedRoute rol='analitica'>
-					{<HomeAnalitycs />}
-				</ProtectedRoute>
+				<ProtectedRoute rol='analitica'>{<Dashboard />}</ProtectedRoute>
 			),
 			children: [
 				{
@@ -422,7 +411,7 @@ export const router = createBrowserRouter(
 			path: '/administrador',
 			element: (
 				<ProtectedRoute rol='administrador'>
-					{<HomeAdmin />}
+					{<Dashboard />}
 				</ProtectedRoute>
 			),
 			children: [

@@ -8,10 +8,8 @@ const Content: React.FC<ContentProps> = ({}) => {
 	return (
 		<Box
 			sx={{
-				gridArea: 'main',
 				overflowY: 'scroll',
 			}}>
-			<Toolbar />
 			<Toolbar />
 			<Outlet />
 		</Box>

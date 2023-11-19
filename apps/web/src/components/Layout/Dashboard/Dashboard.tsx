@@ -29,18 +29,20 @@ const Dashboard: FC<DashboardProps> = ({}) => {
 		<Box
 			component='main'
 			sx={{
-				display: 'grid',
-				gridTemplateAreas: `'header header' '${
-					open ? 'sidebar' : 'main'
-				} main' 'footer footer'`,
-				gridTemplateRows: 'auto 1fr auto',
-				// gridTemplateColumns: { xs: '50px 1fr', md: '200px 1fr' },
-				height: '95vh',
-			}}>
+				display: 'flex',
+				flexDirection: 'column',
+				gap: 3,
+				height: '96vh',
+				justifyContent: 'space-between',
+				overflow: 'hidden',
+			}}
+			width={open ? 'calc(100% - 200px)' : '100%'}
+			pl={open ? '200px' : '0'}>
 			<>
 				<ToolbarWithSesion handleToogleMenu={handleToogleMenu} />
 				<Sidebar menuArray={data || []} open={open} setOpen={setOpen} />
 				<Content />
+				<Box sx={{ flex: 1 }} />
 				<Footer />
 			</>
 		</Box>

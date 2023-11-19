@@ -5,16 +5,13 @@ import {
 	List,
 	ListItem,
 	ListItemButton,
-	ListItemIcon,
 	ListItemText,
-	Toolbar,
-	Tooltip,
-	Typography,
+	Toolbar
 } from '@mui/material';
 import { FC } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
-const drawerWidth = 240;
+const drawerWidth = 200;
 
 export type SidebarProps = {
 	menuArray: PageAppType[];
@@ -41,7 +38,6 @@ const Sidebar: FC<SidebarProps> = ({ menuArray, open, setOpen }) => {
 			// 	keepMounted: true, // Better open performance on mobile.
 			// }}
 			sx={{
-				gridArea: 'sidebar',
 				width: drawerWidth,
 				flexShrink: 0,
 				'& .MuiDrawer-paper': {
@@ -74,7 +70,7 @@ const Sidebar: FC<SidebarProps> = ({ menuArray, open, setOpen }) => {
 									item.ruta
 								}
 								onClick={() => handleSelectItem(item.ruta)}>
-								<Tooltip title={item.descripcion}>
+								{/* <Tooltip title={item.descripcion}>
 									<ListItemIcon
 										sx={{
 											color: 'inherit',
@@ -84,7 +80,7 @@ const Sidebar: FC<SidebarProps> = ({ menuArray, open, setOpen }) => {
 												item.nombre.slice(0, 3)}
 										</Typography>
 									</ListItemIcon>
-								</Tooltip>
+								</Tooltip> */}
 								<ListItemText primary={item.nombre} />
 							</ListItemButton>
 						</ListItem>

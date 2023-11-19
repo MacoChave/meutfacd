@@ -21,7 +21,6 @@ const ToolbarWithoutSession: React.FC<ToolbarWithoutSessionProps> = ({
 			// position='fixed'
 			color='primary'
 			sx={{
-				gridArea: 'header',
 				zIndex: (theme) => theme.zIndex.drawer + 1,
 			}}>
 			<Toolbar
