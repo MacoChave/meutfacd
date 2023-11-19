@@ -8,6 +8,17 @@ import {
 } from '@/consts/vars';
 import { TypeWithKey } from '@/models/TypeWithKey';
 
+/**
+ * Formatea la primera letra de cada palabra a mayúscula
+ * @param value Cadena de texto a formatear
+ * @returns Cadena de texto formateada
+ */
+export const stringToCapitalize = (value: string): string => {
+	return value.split(' ').reduce((acc, word) => {
+		return acc + word.charAt(0).toUpperCase() + word.slice(1) + ' ';
+	}, '');
+};
+
 export const getChipLabel = (code: string) => {
 	switch (code) {
 		case PENDIENTE:
@@ -173,4 +184,4 @@ export const formatStationName = (station: string): string => {
 	if (station === 'Curso I') return 'Curso 1';
 	if (station === 'Curso II') return 'Curso 2';
 	return station;
-}
+};

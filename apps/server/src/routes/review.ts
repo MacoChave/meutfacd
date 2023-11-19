@@ -13,7 +13,7 @@ import {
 
 const router = Router();
 
-router.get('/xlsx', requireAuth, getXlsxReport);
+router.get('/xlsx', getXlsxReport);
 router.get('/professor', requireAuth, getItemsByCurrentProf);
 router.post('/one', requireAuth, getItem);
 router.post('/all', requireAuth, getItems);

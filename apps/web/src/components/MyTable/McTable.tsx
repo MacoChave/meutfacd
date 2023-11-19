@@ -31,8 +31,8 @@ const McTable: React.FC<McTableProps> = ({
 		<Box
 			sx={{
 				mx: 'auto',
-				overflowX: 'scroll',
-				scrollbarWidth: 'none',
+				// overflowX: 'scroll',
+				// scrollbarWidth: 'none',
 			}}>
 			<Table>
 				<McHeaders headers={headers} />

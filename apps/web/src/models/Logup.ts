@@ -7,7 +7,7 @@ export const initialValuesLogup: Tipo_Logup = {
 	genero: '',
 	correo: '',
 	pass: '',
-	carnet: 0,
+	carnet: '',
 	cui: '',
 	direccion: '',
 	fecha_nac: new Date(),
@@ -23,7 +23,7 @@ export type Tipo_Logup = {
 	genero: string;
 	correo: string;
 	pass: string;
-	carnet: number;
+	carnet: string;
 	cui: string;
 	direccion: string;
 	fecha_nac: Date;
@@ -67,9 +67,10 @@ export const schemaLogup = yup.object().shape({
 		.positive('Carnet no puede ser negativo')
 		.integer('Carnet debe ser un número entero'),
 	cui: yup
-		.string()
+		.number()
 		.required('DPI es requerido')
-		.max(20, 'DPI no puede ser mayor a 20 caracteres'),
+		.max(20, 'DPI no puede ser mayor a 20 caracteres')
+		.integer('DPI debe ser un número entero'),
 	direccion: yup
 		.string()
 		.required('Dirección es requerido')

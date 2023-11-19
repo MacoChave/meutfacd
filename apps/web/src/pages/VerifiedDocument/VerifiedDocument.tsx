@@ -1,18 +1,26 @@
 import { URL } from '@/api/server';
-import { Contenedor, ToolbarWithoutSesion } from '@/components';
-import { DotsLoaders } from '@/components/Loader/DotsLoaders';
 import { APROBADO } from '@/consts/vars';
 import { useCustomFetch } from '@/hooks/useFetch';
 import { getData } from '@/services/fetching';
 import { formatToInputDate } from '@/utils/formatHandler';
 import { Box, TextField, Toolbar, Typography } from '@mui/material';
-import React from 'react';
+import { FC, lazy } from 'react';
 import { useParams } from 'react-router-dom';
 import swal from 'sweetalert';
+const Contenedor = lazy(() => import('@/components/Contenedor/Contenedor'));
+const ToolbarWithoutSesion = lazy(
+	() =>
+		import(
+			'@/components/Layout/ToolbarWithoutSession/ToolbarWithoutSession'
+		)
+);
+const DotsLoaders = lazy(
+	() => import('@/components/Loader/DotsLoaders/DotsLoaders')
+);
 
 export type VerifiedDocumentProps = {};
 
-const VerifiedDocument: React.FC<VerifiedDocumentProps> = ({}) => {
+const VerifiedDocument: FC<VerifiedDocumentProps> = ({}) => {
 	const params = useParams();
 	const { data, isLoading, isError } = useCustomFetch({
 		url: `${URL.GENERIC}/public/one`,

@@ -11,9 +11,3 @@ export interface MenuItem {
 	icon: JSX.Element;
 	ruta: string;
 }
-
-export interface DrawerProps {
-	menuArray: PageAppType[];
-	open: boolean;
-	setOpen: (open: boolean) => void;
-}

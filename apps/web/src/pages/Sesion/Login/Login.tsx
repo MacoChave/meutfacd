@@ -1,21 +1,29 @@
+import { URL } from '@/api/server';
+import { AuthState } from '@/interfaces/AuthState';
+import { Tipo_Login, schemaLogin } from '@/models/Login';
+import { setLogged } from '@/redux/states';
+import store from '@/redux/store';
+import { postData } from '@/services/fetching';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Box, Button, Card, Toolbar, Typography } from '@mui/material';
 import React, { SyntheticEvent, lazy } from 'react';
 import { FormProvider, SubmitHandler, useForm } from 'react-hook-form';
 import { useDispatch } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
-import { URL } from '@/api/server';
+import swal from 'sweetalert';
+const Footer = lazy(() => import('@/components/Layout/Footer/Footer'));
+const Seguridad = lazy(
+	() => import('@/pages/Sesion/Login/Seguridad/Seguridad')
+);
 const SpinLoader = lazy(
 	() => import('@/components/Loader/SpinLoader/SpinLoader')
 );
-import { ToolbarWithoutSesion } from '@/components/navegacion/Toolbar';
-import { AuthState } from '@/interfaces/AuthState';
-import { Tipo_Login, schemaLogin } from '@/models/Login';
-import { setLogged } from '@/redux/states';
-import store from '@/redux/store';
-import { postData } from '@/services/fetching';
-import { Seguridad } from './Seguridad';
-import swal from 'sweetalert';
+const ToolbarWithoutSesion = lazy(
+	() =>
+		import(
+			'@/components/Layout/ToolbarWithoutSession/ToolbarWithoutSession'
+		)
+);
 
 export type LoginProps = Record<string, never>;
 
@@ -125,6 +133,7 @@ const Login: React.FC<LoginProps> = () => {
 						</form>
 					</FormProvider>
 				</Box>
+				<Footer />
 			</Box>
 			{control.loading && <SpinLoader />}
 		</>
