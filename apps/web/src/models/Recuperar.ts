@@ -1,11 +1,11 @@
 import * as yup from 'yup';
 
-export type RecoveryType = {
+export type TRecovery = {
 	pass: string;
 	confpass: string;
 };
 
-export const initialValues: RecoveryType = {
+export const recoveryDefault: TRecovery = {
 	pass: '',
 	confpass: '',
 };

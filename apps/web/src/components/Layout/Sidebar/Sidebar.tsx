@@ -1,4 +1,4 @@
-import { PageAppType } from '@/models/PageApp';
+import { TPageApp } from '@/models/PageApp';
 import {
 	Divider,
 	Drawer,
@@ -6,7 +6,7 @@ import {
 	ListItem,
 	ListItemButton,
 	ListItemText,
-	Toolbar
+	Toolbar,
 } from '@mui/material';
 import { FC } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -14,7 +14,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 const drawerWidth = 200;
 
 export type SidebarProps = {
-	menuArray: PageAppType[];
+	menuArray: TPageApp[];
 	open: boolean;
 	setOpen: (open: boolean) => void;
 };

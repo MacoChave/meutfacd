@@ -8,13 +8,9 @@ import { Box, Button, Divider, Typography } from '@mui/material';
 import { SyntheticEvent, useEffect, useState } from 'react';
 import { FormProvider, SubmitHandler, useForm } from 'react-hook-form';
 import swal from 'sweetalert';
-import { URL } from '../../../api/server';
+import { URL } from '../../../consts/Api';
 import { useFetch } from '../../../hooks/useFetch';
-import {
-	UserType,
-	defaultProfile,
-	schemaUsuario,
-} from '../../../models/Perfil';
+import { TUser, profileDefault, schemaUsuario } from '../../../models/Perfil';
 import { ErrorPage } from '../../ErrorPage';
 import { ContactData } from './components/ContactData';
 import { PersonalData } from './components/PersonalData';
@@ -29,8 +25,8 @@ export const UserProfile = (): JSX.Element => {
 	} = useFetch({
 		url: URL.AUTH.PROFILE,
 	});
-	const methods = useForm<UserType>({
-		defaultValues: defaultProfile,
+	const methods = useForm<TUser>({
+		defaultValues: profileDefault,
 		mode: 'onBlur',
 		resolver: yupResolver(schemaUsuario),
 	});
@@ -40,7 +36,7 @@ export const UserProfile = (): JSX.Element => {
 		setIsEditing(!isEditing);
 	};
 
-	const onSubmit: SubmitHandler<UserType> = async (data) => {
+	const onSubmit: SubmitHandler<TUser> = async (data) => {
 		const result: TResult[] = await putData({
 			path: `${URL.USER}`,
 			body: data,

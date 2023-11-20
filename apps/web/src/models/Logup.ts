@@ -1,22 +1,6 @@
 import * as yup from 'yup';
 
-export const initialValuesLogup: Tipo_Logup = {
-	id_usuario: 0,
-	nombre: '',
-	apellido: '',
-	genero: '',
-	correo: '',
-	pass: '',
-	carnet: '',
-	cui: '',
-	direccion: '',
-	fecha_nac: new Date(),
-	estado: '',
-	telefono: '',
-	confpass: '',
-};
-
-export type Tipo_Logup = {
+export type TLogup = {
 	id_usuario: number;
 	nombre: string;
 	apellido: string;
@@ -30,6 +14,22 @@ export type Tipo_Logup = {
 	estado: string;
 	telefono: string;
 	confpass: string;
+};
+
+export const logupDefault: TLogup = {
+	id_usuario: 0,
+	nombre: '',
+	apellido: '',
+	genero: '',
+	correo: '',
+	pass: '',
+	carnet: '',
+	cui: '',
+	direccion: '',
+	fecha_nac: new Date(),
+	estado: '',
+	telefono: '',
+	confpass: '',
 };
 
 export const schemaLogup = yup.object().shape({

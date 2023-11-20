@@ -1,5 +1,5 @@
-import { Tipo_Logup } from '@/models/Logup';
-import { VisibilityOff, Visibility} from '@mui/icons-material';
+import { TLogup } from '@/models/Logup';
+import { VisibilityOff, Visibility } from '@mui/icons-material';
 import { Box, IconButton, InputAdornment, TextField } from '@mui/material';
 import React, { useState } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
@@ -7,12 +7,12 @@ import { Controller, useFormContext } from 'react-hook-form';
 export type SeguridadProps = {};
 
 const Seguridad: React.FC<SeguridadProps> = () => {
-	const [passType, setPassType] = useState('password')
-	const [rePassType, setRePassType] = useState('password')
+	const [passType, setPassType] = useState('password');
+	const [rePassType, setRePassType] = useState('password');
 	const {
 		control,
 		formState: { errors },
-	} = useFormContext<Tipo_Logup>();
+	} = useFormContext<TLogup>();
 
 	return (
 		<Box
@@ -53,10 +53,22 @@ const Seguridad: React.FC<SeguridadProps> = () => {
 								<InputAdornment position='end'>
 									<IconButton
 										aria-label='toggle password visibility'
-										onClick={() => setPassType((prev) => prev === 'password' ? 'text' : 'password')}
-										onMouseDown={(event) => event.preventDefault()}
+										onClick={() =>
+											setPassType((prev) =>
+												prev === 'password'
+													? 'text'
+													: 'password'
+											)
+										}
+										onMouseDown={(event) =>
+											event.preventDefault()
+										}
 										edge='end'>
-										{passType === 'password' ? <VisibilityOff /> : <Visibility />}
+										{passType === 'password' ? (
+											<VisibilityOff />
+										) : (
+											<Visibility />
+										)}
 									</IconButton>
 								</InputAdornment>
 							),
@@ -81,10 +93,22 @@ const Seguridad: React.FC<SeguridadProps> = () => {
 								<InputAdornment position='end'>
 									<IconButton
 										aria-label='toggle password visibility'
-										onClick={() => setRePassType((prev) => prev === 'password' ? 'text' : 'password')}
-										onMouseDown={(event) => event.preventDefault()}
+										onClick={() =>
+											setRePassType((prev) =>
+												prev === 'password'
+													? 'text'
+													: 'password'
+											)
+										}
+										onMouseDown={(event) =>
+											event.preventDefault()
+										}
 										edge='end'>
-										{rePassType === 'password' ? <VisibilityOff /> : <Visibility />}
+										{rePassType === 'password' ? (
+											<VisibilityOff />
+										) : (
+											<Visibility />
+										)}
 									</IconButton>
 								</InputAdornment>
 							),

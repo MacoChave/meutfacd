@@ -1,8 +1,8 @@
-import { URL } from '@/api/server';
+import { URL } from '@/consts/Api';
 import { Contenedor } from '@/components';
 import { DotsLoaders } from '@/components/Loader/DotsLoaders';
 import { McTable } from '@/components/MyTable';
-import { APROBADO, ESTACIONES } from '@/consts/vars';
+import { APROBADO, ESTACIONES } from '@/consts/Vars';
 import { useCustomFetch } from '@/hooks/useFetch';
 import { TResult } from '@/models/Fetching';
 import { postData, putData } from '@/services/fetching';
@@ -30,7 +30,7 @@ const StudentTutor: React.FC<StudentTutorProps> = ({}) => {
 					column: 'ruta_certificado',
 					operator: '=',
 					value: '',
-				}
+				},
 			],
 		},
 		params: { estado: APROBADO, estacion: 2 },

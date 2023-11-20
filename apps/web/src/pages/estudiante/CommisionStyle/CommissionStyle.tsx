@@ -1,4 +1,4 @@
-import { URL } from '@/api/server';
+import { URL } from '@/consts/Api';
 import { Contenedor } from '@/components';
 import { SpinLoader } from '@/components/Loader/SpinLoader';
 import {
@@ -8,10 +8,10 @@ import {
 	PREVIA,
 	RECHAZADO,
 	REVISION,
-} from '@/consts/vars';
+} from '@/consts/Vars';
 import { useCustomFetch } from '@/hooks/useFetch';
-import { UploadFile } from '@/interfaces/UploadFile';
-import { Draft, draftDefault, draftSchema } from '@/models/Draft';
+import { TUploadFile } from '@/models/UploadFile';
+import { TDraft, draftDefault, draftSchema } from '@/models/Draft';
 import { getData, postData, putData } from '@/services/fetching';
 import { style } from '@/themes/styles';
 import { errorHandler } from '@/utils/errorHandler';
@@ -32,7 +32,7 @@ import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import swal from 'sweetalert';
 import FileChooser from '../../../components/controles/FileChooser';
 import { DotsLoaders } from '@/components/Loader/DotsLoaders';
-import { ReviewType } from '@/models/Review';
+import { TReview } from '@/models/Review';
 import { EmptyReview } from '@/components/EmptyReview';
 
 export type CommissionStyleProps = {};
@@ -76,7 +76,7 @@ const CommissionStyle: FC<CommissionStyleProps> = ({}) => {
 		reset,
 		setValue,
 		handleSubmit,
-	} = useForm<Draft>({
+	} = useForm<TDraft>({
 		defaultValues: draftDefault,
 		mode: 'onBlur',
 		resolver: yupResolver(draftSchema),
@@ -88,7 +88,7 @@ const CommissionStyle: FC<CommissionStyleProps> = ({}) => {
 			const formData = new FormData();
 			formData.append('file', file);
 			formData.append('filename', 'thesis');
-			const data = await postData<UploadFile>({
+			const data = await postData<TUploadFile>({
 				path: `${URL.STORAGE}/draft`,
 				body: formData,
 				headers: {
@@ -110,7 +110,7 @@ const CommissionStyle: FC<CommissionStyleProps> = ({}) => {
 		}
 	};
 
-	const onSubmit: SubmitHandler<Draft> = async (draft) => {
+	const onSubmit: SubmitHandler<TDraft> = async (draft) => {
 		try {
 			if (revision.estado === PREVIA || revision.estado === RECHAZADO) {
 				Promise.all([
@@ -188,7 +188,7 @@ const CommissionStyle: FC<CommissionStyleProps> = ({}) => {
 	const createChat = async () => {
 		const data = await postData({
 			path: URL.CHAT,
-			params: { user_id: (revision as ReviewType).id_tutor },
+			params: { user_id: (revision as TReview).id_tutor },
 		});
 		console.log(data);
 	};

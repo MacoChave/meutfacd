@@ -1,12 +1,12 @@
-import { URL } from '@/api/server';
+import { URL } from '@/consts/Api';
 import { Contenedor, FileChooser } from '@/components';
 import { EmptyReview } from '@/components/EmptyReview';
 import { DotsLoaders } from '@/components/Loader/DotsLoaders';
 import { SpinLoader } from '@/components/Loader/SpinLoader';
-import { APROBADO } from '@/consts/vars';
+import { APROBADO } from '@/consts/Vars';
 import { useCustomFetch } from '@/hooks/useFetch';
-import { UploadFile } from '@/interfaces/UploadFile';
-import { ReviewType } from '@/models/Review';
+import { TUploadFile } from '@/models/UploadFile';
+import { TReview } from '@/models/Review';
 import { getData, postData, putData } from '@/services/fetching';
 import { style } from '@/themes/styles';
 import { formatDate, getChipColor, getChipLabel } from '@/utils/formatHandler';
@@ -61,7 +61,7 @@ const CourseI: FC<CourseIProps> = ({}) => {
 	const createChat = async () => {
 		const data = await postData({
 			path: URL.CHAT,
-			params: { user_id: (revision as ReviewType).id_tutor },
+			params: { user_id: (revision as TReview).id_tutor },
 		});
 		console.log(data);
 	};
@@ -72,7 +72,7 @@ const CourseI: FC<CourseIProps> = ({}) => {
 			const formData = new FormData();
 			formData.append('file', file);
 			formData.append('filename', 'asesor');
-			const data = await postData<UploadFile>({
+			const data = await postData<TUploadFile>({
 				path: `${URL.STORAGE}/draft`,
 				body: formData,
 				headers: {
@@ -105,7 +105,7 @@ const CourseI: FC<CourseIProps> = ({}) => {
 		const { url }: any = await getData({
 			path: URL.STORAGE,
 			body: {},
-			params: { name: (revision as ReviewType).ruta_asesor },
+			params: { name: (revision as TReview).ruta_asesor },
 		});
 		window.open(url);
 	};
@@ -114,7 +114,7 @@ const CourseI: FC<CourseIProps> = ({}) => {
 		const { url }: any = await getData({
 			path: URL.STORAGE,
 			body: {},
-			params: { name: (revision as ReviewType).ruta_certificado },
+			params: { name: (revision as TReview).ruta_certificado },
 		});
 		window.open(url);
 	};

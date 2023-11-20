@@ -1,12 +1,12 @@
-import { URL } from '@/api/server';
+import { URL } from '@/consts/Api';
 import { Contenedor, FileChooser } from '@/components';
 import { EmptyReview } from '@/components/EmptyReview';
 import { DotsLoaders } from '@/components/Loader/DotsLoaders';
 import { SpinLoader } from '@/components/Loader/SpinLoader';
-import { PREVIA, RECHAZADO, REVISION } from '@/consts/vars';
+import { PREVIA, RECHAZADO, REVISION } from '@/consts/Vars';
 import { useCustomFetch } from '@/hooks/useFetch';
-import { UploadFile } from '@/interfaces/UploadFile';
-import { ReviewType } from '@/models/Review';
+import { TUploadFile } from '@/models/UploadFile';
+import { TReview } from '@/models/Review';
 import { getData, postData, putData } from '@/services/fetching';
 import { style } from '@/themes/styles';
 import { errorHandler } from '@/utils/errorHandler';
@@ -78,7 +78,7 @@ const InternalReviews: FC<InternalReviewsProps> = ({}) => {
 	const createChat = async () => {
 		const data = await postData({
 			path: URL.CHAT,
-			params: { user_id: (revision as ReviewType).id_tutor },
+			params: { user_id: (revision as TReview).id_tutor },
 		});
 		console.log(data);
 	};
@@ -89,7 +89,7 @@ const InternalReviews: FC<InternalReviewsProps> = ({}) => {
 			const formData = new FormData();
 			formData.append('file', file);
 			formData.append('filename', 'thesis');
-			const data = await postData<UploadFile>({
+			const data = await postData<TUploadFile>({
 				path: `${URL.STORAGE}/draft`,
 				body: formData,
 				headers: {

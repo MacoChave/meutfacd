@@ -1,11 +1,11 @@
-import { URL } from '@/api/server';
+import { URL } from '@/consts/Api';
 import { Contenedor } from '@/components';
 import { DotsLoaders } from '@/components/Loader/DotsLoaders';
 import { SpinLoader } from '@/components/Loader/SpinLoader';
-import { APROBADO, ESPERA, PREVIA, RECHAZADO, REVISION } from '@/consts/vars';
+import { APROBADO, ESPERA, PREVIA, RECHAZADO, REVISION } from '@/consts/Vars';
 import { useCustomFetch } from '@/hooks/useFetch';
-import { UploadFile } from '@/interfaces/UploadFile';
-import { Draft, draftDefault, draftSchema } from '@/models/Draft';
+import { TUploadFile } from '@/models/UploadFile';
+import { TDraft, draftDefault, draftSchema } from '@/models/Draft';
 import { getData, postData, putData } from '@/services/fetching';
 import { style } from '@/themes/styles';
 import { errorHandler } from '@/utils/errorHandler';
@@ -25,7 +25,7 @@ import { FC, useEffect, useState } from 'react';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import swal from 'sweetalert';
 import FileChooser from '../../../components/controles/FileChooser';
-import { ReviewType } from '@/models/Review';
+import { TReview } from '@/models/Review';
 
 export type ThesisCoverProps = {};
 
@@ -68,7 +68,7 @@ const ThesisCover: FC<ThesisCoverProps> = ({}) => {
 		reset,
 		setValue,
 		handleSubmit,
-	} = useForm<Draft>({
+	} = useForm<TDraft>({
 		defaultValues: draftDefault,
 		mode: 'onBlur',
 		resolver: yupResolver(draftSchema),
@@ -80,7 +80,7 @@ const ThesisCover: FC<ThesisCoverProps> = ({}) => {
 			const formData = new FormData();
 			formData.append('file', file);
 			formData.append('filename', 'preview');
-			const data = await postData<UploadFile>({
+			const data = await postData<TUploadFile>({
 				path: `${URL.STORAGE}/draft`,
 				body: formData,
 				headers: {
@@ -102,7 +102,7 @@ const ThesisCover: FC<ThesisCoverProps> = ({}) => {
 		}
 	};
 
-	const onSubmit: SubmitHandler<Draft> = async (draft) => {
+	const onSubmit: SubmitHandler<TDraft> = async (draft) => {
 		try {
 			if (revision.estado === PREVIA || revision.estado === RECHAZADO) {
 				Promise.all([
@@ -177,7 +177,7 @@ const ThesisCover: FC<ThesisCoverProps> = ({}) => {
 	const createChat = async () => {
 		const data = await postData({
 			path: URL.CHAT,
-			params: { user_id: (revision as ReviewType).id_tutor },
+			params: { user_id: (revision as TReview).id_tutor },
 		});
 		console.log(data);
 	};

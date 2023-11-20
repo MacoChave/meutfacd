@@ -1,6 +1,6 @@
-import { URL } from '@/api/server';
+import { URL } from '@/consts/Api';
 import { McInput } from '@/components/McWithForms/McInput';
-import { PeriodDefault, PeriodSchema, TPeriod } from '@/models/Period';
+import { periodDefault, schemaPeriod, TPeriod } from '@/models/Period';
 import { TResult } from '@/models/Fetching';
 import { postData } from '@/services/fetching';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -20,9 +20,9 @@ const FormPeriod: React.FC<FormPeriodProps> = ({ onClose }) => {
 		reset,
 		handleSubmit,
 	} = useForm<TPeriod>({
-		defaultValues: PeriodDefault,
+		defaultValues: periodDefault,
 		mode: 'onBlur',
-		resolver: yupResolver(PeriodSchema),
+		resolver: yupResolver(schemaPeriod),
 	});
 
 	const onSubmit: SubmitHandler<TPeriod> = async (data) => {

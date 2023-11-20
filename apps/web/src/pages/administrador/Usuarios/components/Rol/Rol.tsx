@@ -1,9 +1,9 @@
-import { URL } from '@/api/server';
+import { URL } from '@/consts/Api';
 import { McAutocomplete } from '@/components/McWithForms/McAutocomplete';
 import { Option } from '@/components/McWithForms/McAutocomplete/McAutocomplete';
 import { McTable } from '@/components/MyTable';
 import { useCustomFetch } from '@/hooks/useFetch';
-import { RolType, defaultRol } from '@/models/Rol';
+import { TRol, defaultRol } from '@/models/Rol';
 import { deleteData, postData } from '@/services/fetching';
 import { Box, Button, Typography } from '@mui/material';
 import React, { useState } from 'react';
@@ -44,12 +44,12 @@ const Rol: React.FC<TabsProps> = ({ usuario, index, ...other }) => {
 		},
 	});
 
-	const { control, handleSubmit } = useForm<RolType>({
+	const { control, handleSubmit } = useForm<TRol>({
 		defaultValues: defaultRol,
 		mode: 'onBlur',
 	});
 
-	const onSubmit: SubmitHandler<RolType> = async (data) => {
+	const onSubmit: SubmitHandler<TRol> = async (data) => {
 		const diffRol = vRol.filter(
 			(vr: any) => vr.r_nombre.split(' ')[0].toLowerCase() !== rootRol
 		);
@@ -118,7 +118,7 @@ const Rol: React.FC<TabsProps> = ({ usuario, index, ...other }) => {
 							name='id_rol'
 							label='Seleccionar rol'
 							options={rols.map(
-								(rol: RolType): Option => ({
+								(rol: TRol): Option => ({
 									id: rol.id_rol,
 									label: rol.nombre,
 								})

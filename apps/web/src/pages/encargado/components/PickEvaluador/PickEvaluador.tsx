@@ -1,15 +1,15 @@
-import { URL } from '@/api/server';
+import { URL } from '@/consts/Api';
 import { DotsLoaders } from '@/components/Loader/DotsLoaders';
 import { McAutocomplete } from '@/components/McWithoutForms/McAutocomplete';
 import { useCustomFetch } from '@/hooks/useFetch';
-import { UserType } from '@/models/Perfil';
+import { TUser } from '@/models/Perfil';
 import { Typography } from '@mui/material';
 import React from 'react';
 
 export type PickEvaluadorProps = {
-	evaluador: UserType;
+	evaluador: TUser;
 	rol?: string;
-	setEvaluador: (evaluador: UserType) => void;
+	setEvaluador: (evaluador: TUser) => void;
 };
 
 const PickEvaluador: React.FC<PickEvaluadorProps> = ({

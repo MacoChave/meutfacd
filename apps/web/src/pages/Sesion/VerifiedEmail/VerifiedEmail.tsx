@@ -1,4 +1,4 @@
-import { URL } from '@/api/server';
+import { URL } from '@/consts/Api';
 import { setLoading } from '@/redux/states';
 import { putData } from '@/services/fetching';
 import { Box, Button, Card, Toolbar, Typography } from '@mui/material';

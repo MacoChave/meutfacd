@@ -1,7 +1,7 @@
 import React from 'react';
 import { DataProps } from '../../propTypes/DataProps';
 import { Controller, useFormContext } from 'react-hook-form';
-import { UserType } from '@/models/Perfil';
+import { TUser } from '@/models/Perfil';
 import { Box, TextField } from '@mui/material';
 import { McAutocomplete } from '@/components/McWithForms/McAutocomplete';
 
@@ -9,7 +9,7 @@ export const ContactData: React.FC<DataProps> = ({ editing }) => {
 	const {
 		control,
 		formState: { errors },
-	} = useFormContext<UserType>();
+	} = useFormContext<TUser>();
 	return (
 		<Box
 			sx={{

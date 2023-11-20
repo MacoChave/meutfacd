@@ -1,4 +1,4 @@
-import { generos } from '@/consts/genres';
+import { GENRES } from '@/consts/Genres';
 import { Autocomplete, Box, TextField } from '@mui/material';
 import React from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
@@ -55,10 +55,10 @@ const Personales: React.FC<PersonalesProps> = () => {
 						{...field}
 						value={
 							field.value
-								? generos.find((g) => g.value === field.value)
+								? GENRES.find((g) => g.value === field.value)
 								: null
 						}
-						options={generos}
+						options={GENRES}
 						autoHighlight
 						getOptionLabel={(option) => option.label}
 						onChange={(e, newValue) =>

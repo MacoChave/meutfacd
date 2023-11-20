@@ -1,4 +1,4 @@
-import { URL } from '@/api/server';
+import { URL } from '@/consts/Api';
 import { DotsLoaders } from '@/components/Loader/DotsLoaders';
 import { useFetch } from '@/hooks/useFetch';
 import { Box, Typography } from '@mui/material';

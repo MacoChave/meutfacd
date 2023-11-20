@@ -1,11 +1,11 @@
-import { URL } from '@/api/server';
+import { URL } from '@/consts/Api';
 import { Contenedor, Loader } from '@/components';
 import { DotsLoaders } from '@/components/Loader/DotsLoaders';
-import { ESPERA, REVISION } from '@/consts/vars';
+import { ESPERA, REVISION } from '@/consts/Vars';
 import { useCustomFetch } from '@/hooks/useFetch';
 import { TCourseTutor } from '@/models/CourseTutor';
 import { TPeriod } from '@/models/Period';
-import { ReviewType } from '@/models/Review';
+import { TReview } from '@/models/Review';
 import { TSchedule } from '@/models/Schedule';
 import { postData, putData } from '@/services/fetching';
 import { style } from '@/themes/styles';
@@ -35,11 +35,9 @@ const ScndCourse: React.FC<ScndCourseProps> = ({}) => {
 	const [courseTutor, setCourseTutor] = useState<TCourseTutor>(
 		{} as TCourseTutor
 	);
-	const [assignment, setAssignment] = useState<ReviewType[]>(
-		[] as ReviewType[]
-	);
-	const [unAssignment, setUnAssignment] = useState<ReviewType[]>(
-		[] as ReviewType[]
+	const [assignment, setAssignment] = useState<TReview[]>([] as TReview[]);
+	const [unAssignment, setUnAssignment] = useState<TReview[]>(
+		[] as TReview[]
 	);
 	const [waiting, setWaiting] = useState(false);
 

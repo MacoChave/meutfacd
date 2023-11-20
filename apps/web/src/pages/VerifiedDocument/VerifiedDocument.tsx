@@ -1,5 +1,5 @@
-import { URL } from '@/api/server';
-import { APROBADO } from '@/consts/vars';
+import { URL } from '@/consts/Api';
+import { APROBADO } from '@/consts/Vars';
 import { useCustomFetch } from '@/hooks/useFetch';
 import { getData } from '@/services/fetching';
 import { formatToInputDate } from '@/utils/formatHandler';

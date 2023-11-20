@@ -1,10 +1,10 @@
-import { URL } from '@/api/server';
+import { URL } from '@/consts/Api';
 import { Contenedor, FileChooser } from '@/components';
 import { DotsLoaders } from '@/components/Loader/DotsLoaders';
 import { SpinLoader } from '@/components/Loader/SpinLoader';
-import { APROBADO, REVISION } from '@/consts/vars';
+import { APROBADO, REVISION } from '@/consts/Vars';
 import { useCustomFetch } from '@/hooks/useFetch';
-import { UploadFile } from '@/interfaces/UploadFile';
+import { TUploadFile } from '@/models/UploadFile';
 import { TDictamen, dictamenDefault, dictamenSchema } from '@/models/Dictamen';
 import { getData, postData, putData } from '@/services/fetching';
 import { style } from '@/themes/styles';
@@ -77,7 +77,7 @@ const TopicChange: FC<TopicChangeProps> = ({}) => {
 			const formData = new FormData();
 			formData.append('file', file);
 			formData.append('filename', 'dictamen');
-			const data = await postData<UploadFile>({
+			const data = await postData<TUploadFile>({
 				path: URL.STORAGE,
 				body: formData,
 				headers: {

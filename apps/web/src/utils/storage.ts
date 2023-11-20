@@ -1,4 +1,4 @@
-import { STORAGE_TYPES } from '@/models/Storage';
+import { STORAGE_TYPES } from '@/consts/Storage';
 
 export const setStorage = (key: STORAGE_TYPES, value: any) => {
 	localStorage.setItem(key, JSON.stringify(value));

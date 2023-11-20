@@ -1,6 +1,13 @@
-import { URL } from '@/api/server';
+import { URL } from '@/consts/Api';
 import { DotsLoaders } from '@/components/Loader/DotsLoaders';
-import { APROBADO, ESPERA, ESTACIONES, PENDIENTE, PREVIA, RECHAZADO } from '@/consts/vars';
+import {
+	APROBADO,
+	ESPERA,
+	ESTACIONES,
+	PENDIENTE,
+	PREVIA,
+	RECHAZADO,
+} from '@/consts/Vars';
 import { TResult } from '@/models/Fetching';
 import { postData, putData } from '@/services/fetching';
 import { formatStationName } from '@/utils/formatHandler';
@@ -127,7 +134,7 @@ const ReviewDoc: React.FC<ReviewDocProps> = ({
 				body: {
 					id_tesis: curReview.id_tesis,
 					estacion: station + 1,
-					estado: station !== 5 ? ESPERA : PENDIENTE ,
+					estado: station !== 5 ? ESPERA : PENDIENTE,
 				},
 			}),
 			postData<TResult>({
@@ -200,7 +207,8 @@ const ReviewDoc: React.FC<ReviewDocProps> = ({
 					onChange={(e) => setComment(e.target.value)}
 					error={isCommentDirty()}
 					helperText={
-						isCommentDirty() && 'El comentario debe tener menos de 256 caracteres para enviar a rechazo o previo'
+						isCommentDirty() &&
+						'El comentario debe tener menos de 256 caracteres para enviar a rechazo o previo'
 					}
 				/>
 				<Box
@@ -210,10 +218,16 @@ const ReviewDoc: React.FC<ReviewDocProps> = ({
 						justifyContent: 'space-between',
 						gap: 2,
 					}}>
-					<Button variant='contained' onClick={onReject} disabled={isCommentDirty()}>
+					<Button
+						variant='contained'
+						onClick={onReject}
+						disabled={isCommentDirty()}>
 						Rechazar
 					</Button>
-					<Button variant='contained' onClick={onPrior} disabled={isCommentDirty()}>
+					<Button
+						variant='contained'
+						onClick={onPrior}
+						disabled={isCommentDirty()}>
 						Enviar a previo
 					</Button>
 					<Button variant='contained' onClick={onApprove}>

@@ -1,5 +1,5 @@
-import { URL } from '@/api/server';
-import { Tipo_Logup, initialValuesLogup, schemaLogup } from '@/models/Logup';
+import { URL } from '@/consts/Api';
+import { TLogup, logupDefault, schemaLogup } from '@/models/Logup';
 import { postData } from '@/services/fetching';
 import { errorHandler } from '@/utils/errorHandler';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -32,15 +32,15 @@ export type LogupProps = {};
 const Logup: React.FC<LogupProps> = () => {
 	const [enviando, setEnviando] = useState(false);
 	const { rol } = useParams();
-	const methods = useForm<Tipo_Logup>({
-		defaultValues: initialValuesLogup,
+	const methods = useForm<TLogup>({
+		defaultValues: logupDefault,
 		resolver: yupResolver(schemaLogup),
 		mode: 'onBlur',
 	});
 
 	const navigate = useNavigate();
 
-	const onSubmit: SubmitHandler<Tipo_Logup> = async (data) => {
+	const onSubmit: SubmitHandler<TLogup> = async (data) => {
 		try {
 			setEnviando(true);
 			const response = await postData({

@@ -1,4 +1,4 @@
-import { UserType } from '@/models/Perfil';
+import { TUser } from '@/models/Perfil';
 import { Box, Tab, Tabs, Typography } from '@mui/material';
 import React, { SyntheticEvent, useState } from 'react';
 import { Informacion } from '../components/Informacion';
@@ -6,7 +6,7 @@ import { Logs } from '../components/Logs';
 import { Rol } from '../components/Rol';
 
 export type DetalleUsuarioProps = {
-	registro: UserType;
+	registro: TUser;
 };
 
 const allyProps = (index: any) => {

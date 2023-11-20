@@ -5,12 +5,12 @@ export type TPeriod = {
 	nombre: string;
 };
 
-export const PeriodDefault: TPeriod = {
+export const periodDefault: TPeriod = {
 	id_jornada: 0,
 	nombre: '',
 };
 
-export const PeriodSchema = yup.object().shape({
+export const schemaPeriod = yup.object().shape({
 	nombre: yup
 		.string()
 		.max(128, 'Nombre no debe exceder los 128 carácteres')

@@ -1,9 +1,9 @@
-import { URL } from '@/api/server';
+import { URL } from '@/consts/Api';
 import { Contenedor } from '@/components';
 import { EmptyReview } from '@/components/EmptyReview';
 import { DotsLoaders } from '@/components/Loader/DotsLoaders';
 import { useCustomFetch } from '@/hooks/useFetch';
-import { ReviewType } from '@/models/Review';
+import { TReview } from '@/models/Review';
 import { postData } from '@/services/fetching';
 import { style } from '@/themes/styles';
 import { formatDate, getChipColor, getChipLabel } from '@/utils/formatHandler';
@@ -53,7 +53,7 @@ const CourseII: FC<CourseIIProps> = ({}) => {
 	const createChat = async () => {
 		const data = await postData({
 			path: URL.CHAT,
-			params: { user_id: (revision as ReviewType).id_tutor },
+			params: { user_id: (revision as TReview).id_tutor },
 		});
 		console.log(data);
 	};

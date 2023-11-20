@@ -1,4 +1,4 @@
-export type ProgressType = {
+export type TProgress = {
 	id_tesis: number;
 	id_revision: number;
 	titulo: string;

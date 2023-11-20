@@ -1,10 +1,10 @@
-import { URL } from '@/api/server';
+import { URL } from '@/consts/Api';
 import { Contenedor } from '@/components';
 import { EmptyReview } from '@/components/EmptyReview';
 import { DotsLoaders } from '@/components/Loader/DotsLoaders';
 import { useCustomFetch } from '@/hooks/useFetch';
 import { TResult } from '@/models/Fetching';
-import { ReviewType } from '@/models/Review';
+import { TReview } from '@/models/Review';
 import { postData } from '@/services/fetching';
 import { style } from '@/themes/styles';
 import { formatDate, getChipColor, getChipLabel } from '@/utils/formatHandler';
@@ -44,7 +44,7 @@ const PrintingRequest: FC<PrintingRequestProps> = ({}) => {
 	const createChat = async () => {
 		const result: TResult = await postData({
 			path: URL.CHAT,
-			params: { user_id: (data as ReviewType).id_tutor },
+			params: { user_id: (data as TReview).id_tutor },
 		});
 		console.log(result);
 	};

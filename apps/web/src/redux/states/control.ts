@@ -1,5 +1,5 @@
-import { Control, initialControl } from '@/models/Control';
-import { STORAGE_TYPES } from '@/models/Storage';
+import { TControl, controlDefault } from '@/models/Control';
+import { STORAGE_TYPES } from '@/consts/Storage';
 import { getStorage, setStorage } from '@/utils/storage';
 import { createSlice } from '@reduxjs/toolkit';
 
@@ -7,25 +7,25 @@ export const controlSlice = createSlice({
 	name: 'control',
 	initialState: getStorage(STORAGE_TYPES.CONTROL)
 		? getStorage(STORAGE_TYPES.CONTROL)
-		: initialControl,
+		: controlDefault,
 	reducers: {
-		setLogged: (state: Control, action) => {
+		setLogged: (state: TControl, action) => {
 			state = { ...state, auth: action.payload };
 			setStorage(STORAGE_TYPES.CONTROL, state);
 			return state;
 		},
-		setLoading: (state: Control, action) => {
+		setLoading: (state: TControl, action) => {
 			state = { ...state, loading: action.payload };
 			setStorage(STORAGE_TYPES.CONTROL, state);
 			return state;
 		},
-		setLogout: (state: Control) => {
-			state = { ...initialControl, loading: state.loading };
+		setLogout: (state: TControl) => {
+			state = { ...controlDefault, loading: state.loading };
 			setStorage(STORAGE_TYPES.CONTROL, state);
 			return state;
 		},
 		reset: () => {
-			return initialControl;
+			return controlDefault;
 		},
 	},
 });

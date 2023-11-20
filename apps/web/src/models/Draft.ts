@@ -1,11 +1,11 @@
 import * as yup from 'yup';
 
-export type Draft = {
+export type TDraft = {
 	name: string;
 	titulo: string;
 };
 
-export const draftDefault: Draft = {
+export const draftDefault: TDraft = {
 	name: '',
 	titulo: '',
 };

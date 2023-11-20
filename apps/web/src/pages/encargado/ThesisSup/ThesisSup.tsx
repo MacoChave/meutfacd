@@ -1,9 +1,9 @@
-import { URL } from '@/api/server';
+import { URL } from '@/consts/Api';
 import { Contenedor } from '@/components';
 import { useCustomFetch } from '@/hooks/useFetch';
-import { UserType } from '@/models/Perfil';
+import { TUser } from '@/models/Perfil';
 import { TResult } from '@/models/Fetching';
-import { ReviewType } from '@/models/Review';
+import { TReview } from '@/models/Review';
 import { putData } from '@/services/fetching';
 import { style } from '@/themes/styles';
 import {
@@ -20,18 +20,18 @@ import React, { useEffect, useState } from 'react';
 import swal from 'sweetalert';
 import { PickEvaluador } from '../components/PickEvaluador';
 import { SwitchLeft, SwitchRight } from '@mui/icons-material';
-import { ESPERA } from '@/consts/vars';
+import { ESPERA } from '@/consts/Vars';
 import { DotsLoaders } from '@/components/Loader/DotsLoaders';
 
 export type ThesisSupProps = Record<string, never>;
 
 const ThesisSup: React.FC<ThesisSupProps> = ({}) => {
-	const [docente, setDocente] = useState<UserType>({} as UserType);
-	const [unAssignmentUsers, setUnassignmentUsers] = useState<ReviewType[]>(
-		[] as ReviewType[]
+	const [docente, setDocente] = useState<TUser>({} as TUser);
+	const [unAssignmentUsers, setUnassignmentUsers] = useState<TReview[]>(
+		[] as TReview[]
 	);
-	const [assignmentUsers, setAssignmentUsers] = useState<ReviewType[]>(
-		[] as ReviewType[]
+	const [assignmentUsers, setAssignmentUsers] = useState<TReview[]>(
+		[] as TReview[]
 	);
 
 	const { data, isLoading, isError, refetch } = useCustomFetch({
@@ -73,7 +73,7 @@ const ThesisSup: React.FC<ThesisSupProps> = ({}) => {
 				'success'
 			);
 			setAssignmentUsers([]);
-			setDocente({} as UserType);
+			setDocente({} as TUser);
 		}
 	};
 

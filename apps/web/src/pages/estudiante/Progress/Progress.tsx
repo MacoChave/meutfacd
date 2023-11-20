@@ -1,10 +1,10 @@
-import { URL } from '@/api/server';
+import { URL } from '@/consts/Api';
 import { Contenedor } from '@/components';
 import { DotsLoaders } from '@/components/Loader/DotsLoaders';
 import { McTable } from '@/components/MyTable';
-import { APROBADO } from '@/consts/vars';
+import { APROBADO } from '@/consts/Vars';
 import { useCustomFetch } from '@/hooks/useFetch';
-import { ProgressType } from '@/interfaces/ProgressType';
+import { TProgress } from '@/models/Progress';
 import { getData } from '@/services/fetching';
 import { Typography } from '@mui/material';
 import { FC, useState } from 'react';
@@ -15,7 +15,7 @@ export type ProgressProps = {};
 
 const Progress: FC<ProgressProps> = ({}) => {
 	const [open, setOpen] = useState(false);
-	const [row, setRow] = useState({} as ProgressType);
+	const [row, setRow] = useState({} as TProgress);
 	const { data, isLoading, isError } = useCustomFetch({
 		url: `${URL.REVIEW}/all`,
 		method: 'post',
@@ -40,13 +40,13 @@ const Progress: FC<ProgressProps> = ({}) => {
 		},
 	});
 
-	const handleShow = (row: ProgressType) => {
+	const handleShow = (row: TProgress) => {
 		setOpen(true);
 		setRow(row);
 	};
 
 	const handlePrint = async (row: Object) => {
-		if ((row as ProgressType).estado !== APROBADO) {
+		if ((row as TProgress).estado !== APROBADO) {
 			swal('Error', 'No hay documento dictámen para ver', 'error');
 			return;
 		}
@@ -54,7 +54,7 @@ const Progress: FC<ProgressProps> = ({}) => {
 		const { url }: any = await getData({
 			path: URL.STORAGE,
 			body: {},
-			params: { name: (row as ProgressType).ruta_dictamen },
+			params: { name: (row as TProgress).ruta_dictamen },
 		});
 		window.open(url);
 	};

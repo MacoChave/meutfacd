@@ -1,7 +1,7 @@
-import { URL } from '@/api/server';
+import { URL } from '@/consts/Api';
 import { DotsLoaders } from '@/components/Loader/DotsLoaders';
 import { useCustomFetch, useFetch } from '@/hooks/useFetch';
-import { NotificationType } from '@/models/Notification';
+import { TNotification } from '@/models/Notification';
 import { setLogout } from '@/redux/states';
 import store from '@/redux/store';
 import { putData } from '@/services/fetching';
@@ -62,7 +62,7 @@ const ToolbarWithSession: React.FC<ToolbarWithSessionProps> = ({
 	};
 
 	const openMessages = () => {
-		messages.forEach((message: NotificationType) => {
+		messages.forEach((message: TNotification) => {
 			enqueueSnackbar(message.mensaje, {
 				variant: 'info',
 				onClose: async () => {

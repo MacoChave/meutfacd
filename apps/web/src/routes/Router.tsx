@@ -153,6 +153,9 @@ export const router = createBrowserRouter(
 					path: 'perfil',
 					element: (
 						<ProtectedRoute rol='estudiante'>
+							{/* <Suspense fallback={<Profile />}>
+								<UserProfile />
+							</Suspense> */}
 							<UserProfile />
 						</ProtectedRoute>
 					),

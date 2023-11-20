@@ -5,7 +5,7 @@ import {
 	PREVIA,
 	RECHAZADO,
 	REVISION,
-} from '@/consts/vars';
+} from '@/consts/Vars';
 import { TypeWithKey } from '@/models/TypeWithKey';
 
 /**

@@ -1,7 +1,7 @@
-import { URL } from '@/api/server';
+import { URL } from '@/consts/Api';
 import { Contenedor } from '@/components';
 import { useCustomFetch } from '@/hooks/useFetch';
-import { UserType } from '@/models/Perfil';
+import { TUser } from '@/models/Perfil';
 import { TPeriod } from '@/models/Period';
 import { TSchedule } from '@/models/Schedule';
 import { style } from '@/themes/styles';
@@ -28,7 +28,7 @@ export type AsignarProps = {
 const Asignar: React.FC<AsignarProps> = ({ rol }) => {
 	const [jornada, setJornada] = useState<TPeriod>({} as TPeriod);
 	const [horario, setHorario] = useState<TSchedule>({} as TSchedule);
-	const [evaluador, setEvaluador] = useState<UserType>({} as UserType);
+	const [evaluador, setEvaluador] = useState<TUser>({} as TUser);
 	const [assignment, setAssignment] = useState<any[]>([]);
 	const [unAssignment, setUnAssignment] = useState<any[]>([]);
 
