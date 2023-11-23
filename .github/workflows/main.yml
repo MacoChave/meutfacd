@@ -1,65 +1,54 @@
-name: Build and Deploy Docker Images
+name: devops
 
-on: 
-  push:
-      branches: [ develop ]
-  pull_request:
-      branches: [ develop ]
+on:
+    push:
+        branches: ['main', 'develop']
+    pull_request:
+        branches: ['main', 'develop']
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
+    docker-images:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout the code
+              uses: actions/checkout@v2
 
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v2
+            - name: Login to GitHub Container
+              uses: docker/login-action@v1
+              with:
+                  registry: ghcr.io
+                  username: ${{ github.actor }}
+                  password: ${{ secrets.CD_TOKEN }}
 
-      -name: Setup Node
-        uses: actions/setup-node@v3
-        with:
-          node-version: '20.8.1'
-      
-      - name: Install Dependencies of apps/server
-        run: npm install
-        working-directory: ./apps/server
-      
-      - name: Build App of apps/server
-        run: npm run build
-        working-directory: ./apps/server
-      
-      - name: Install Dependencies of apps/web
-        run: npm install
-        working-directory: ./apps/web
-      
-      - name: Build App of apps/web
-        run: npm run build
-        working-directory: ./apps/web
-  
-  docker:
-    runs-on: ubuntu-latest
+            - name: Get image tag name
+              run: echo "TAG_NAME=$(if [ $GITHUB_REF == 'refs/heads/main' ]; then echo 'prod'; elif [ $GITHUB_REF == 'refs/heads/develop' ]; then echo 'dev'; else echo 'test'; fi)" >> $GITHUB_ENV
 
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v2
-      
-      - name: Login to DockerHub
-        uses: docker/login-action@v3
-        with:
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
+            - name: Build the meut-api Docker image
+              run: |
+                  docker build -t ghcr.io/macochave/meut-api:${{ env.TAG_NAME }} -f apps/server/Dockerfile .  
+                  docker push ghcr.io/macochave/meut-api:${{ env.TAG_NAME }}
 
-      - name: Build and Push Docker Image of apps/server
-        uses: docker/build-push-action@v2
-        with:
-          context: ./apps/server
-          push: true
-          tags: ${{ secrets.DOCKER_USERNAME }}/meut-api:latest
-      
-      - name: Build and Push Docker Image of apps/web
-        env:
-          VITE_API_URL: ${{ secrets.VITE_API_URL }}
-        uses: docker/build-push-action@v2
-        with:
-          context: ./apps/web
-          push: true
-          tags: ${{ secrets.DOCKER_USERNAME }}/meut-web:latest
+            - name: Build the meut-web Docker image
+              run: |
+                  docker build -t ghcr.io/macochave/meut-web:${{ env.TAG_NAME }} -f apps/web/Dockerfile .  
+                  docker push ghcr.io/macochave/meut-web:${{ env.TAG_NAME }}
+
+    # deploy:
+    #   needs: docker-images
+    #   runs-on: ubuntu-latest
+    #   steps:
+    #     - name: Install sshpass
+    #       run: sudo apt-get install -y sshpass
+
+    #     - name: SSH into Server
+    #       run: |
+    #         sshpass -p ${{secrets.AUTH_PASS}} ssh -o StrictHostKeyChecking=no ${{secrets.AUTH_SERVER}} << EOF
+    #           cd /root/unidad-tesis/
+    #           docker login ghcr.io -u macochave -p ${{secrets.CD_TOKEN}}
+    #           docker pull ghcr.io/macochave/meut-api:prod
+    #           docker pull ghcr.io/macochave/meut-web:prod
+    #           docker run -d \
+    #             --name meut-api \
+    #             -p 5000:5000 \
+    #             ghcr.io/macochave/meut-api:prod
+    #         EOF
