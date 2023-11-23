@@ -1,9 +1,9 @@
-import { Control } from '@/models/Control';
+import { TControl } from '@/models/Control';
 import { configureStore } from '@reduxjs/toolkit';
 import { controlSlice } from './states';
 
 export interface AppStore {
-	control: Control;
+	control: TControl;
 }
 
 export default configureStore<AppStore>({

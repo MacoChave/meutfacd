@@ -1,13 +1,13 @@
 import * as yup from 'yup';
 
-export const initialValuesLogin: Tipo_Login = {
-	correo: '',
-	pass: '',
-};
-
-export type Tipo_Login = {
+export type TLogin = {
 	correo: string;
 	pass: string;
+};
+
+export const loginDefualt: TLogin = {
+	correo: '',
+	pass: '',
 };
 
 export const schemaLogin = yup.object().shape({

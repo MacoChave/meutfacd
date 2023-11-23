@@ -1,7 +1,10 @@
-import svgStation1 from '@/assets/svg/estacion1.svg';
-import svgStation2 from '@/assets/svg/estacion2.svg';
-import svgStation4 from '@/assets/svg/estacion4.svg';
-import svgStation5 from '@/assets/svg/estacion5.svg';
+import webpCourseAssign from '@/assets/webp/CourseAssignment.webp';
+import webpDocAuth from '@/assets/webp/DocsAuth.webp';
+import webpThesisPrintAuth from '@/assets/webp/ThesisPrintAuth.webp';
+import jpgCourseAssign from '@/assets/jpg/CourseAssignment.jpeg';
+import jpgDocAuth from '@/assets/jpg/DocsAuth.jpeg';
+import jpgThesisPrintAuth from '@/assets/jpg/ThesisPrintAuth.jpeg';
+import { Footer } from '@/components/Layout/Footer';
 import { Box, Typography } from '@mui/material';
 import { lazy } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -52,42 +55,44 @@ const Home = (props: any) => {
 				</Box>
 				<InfoEstacion
 					title='Recepción de punto de tesis'
-					img={svgStation1}
+					webp={webpDocAuth}
+					jpg={webpDocAuth}
 					alt='Flujo del proceso de recepción del punto de tesis'
 				/>
 				<InfoEstacion
 					title='Curso'
 					subtitle='Inducción a la planeación científica'
-					img={svgStation2}
+					webp={webpCourseAssign}
+					jpg={webpCourseAssign}
 					alt='Flujo del proceso del curso inducción a la planeación científica'
 				/>
 				<InfoEstacion
 					title='Curso'
 					subtitle='Elaboración y presentación de tesis'
-					img={svgStation2}
+					webp={webpCourseAssign}
+					jpg={webpCourseAssign}
 					alt='Flujo del proceso del curso elaboración y presentación de tesis'
 				/>
 				<InfoEstacion
 					title='Comisión y estilo'
-					img={svgStation4}
+					webp={webpDocAuth}
+					jpg={webpDocAuth}
 					alt='Flujo del proceso de comisión y estilo'
 				/>
 				<InfoEstacion
 					title='Previos internos'
-					img={svgStation5}
+					webp={webpDocAuth}
+					jpg={webpDocAuth}
 					alt='Flujo del proceso de previos internos'
 				/>
 				<InfoEstacion
 					title='Finalización del proceso'
-					img={svgStation1}
+					webp={webpThesisPrintAuth}
+					jpg={webpThesisPrintAuth}
 					alt='Flujo del proceso de finalización del proceso'
 				/>
 			</Box>
-			<Box>
-				<Typography textAlign='center'>
-					Administración 2021-2025 Decano Henry Arriaga
-				</Typography>
-			</Box>
+			<Footer />
 		</Box>
 	);
 };

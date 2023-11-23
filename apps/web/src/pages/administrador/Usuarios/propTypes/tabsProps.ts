@@ -1,6 +1,6 @@
-import { UserType } from '@/models/Perfil';
+import { TUser } from '@/models/Perfil';
 
 export type TabsProps = {
-	usuario: UserType;
+	usuario: TUser;
 	index: number;
 };

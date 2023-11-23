@@ -1,11 +1,11 @@
-import { URL } from '@/api/server';
+import { URL } from '@/consts/Api';
 import { DotsLoaders } from '@/components/Loader/DotsLoaders';
 import { McAutocomplete } from '@/components/McWithForms/McAutocomplete';
 import { McInput } from '@/components/McWithForms/McInput';
 import { useCustomFetch } from '@/hooks/useFetch';
 import { TPeriod } from '@/models/Period';
 import { TResult } from '@/models/Fetching';
-import { ScheduleDefault, ScheduleSchema, TSchedule } from '@/models/Schedule';
+import { scheduleDefault, scheduleSchema, TSchedule } from '@/models/Schedule';
 import { postData } from '@/services/fetching';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Refresh } from '@mui/icons-material';
@@ -25,9 +25,9 @@ const FormSchedule: React.FC<FormScheduleProps> = ({ onClose }) => {
 		reset,
 		handleSubmit,
 	} = useForm<TSchedule>({
-		defaultValues: ScheduleDefault,
+		defaultValues: scheduleDefault,
 		mode: 'onBlur',
-		resolver: yupResolver(ScheduleSchema),
+		resolver: yupResolver(scheduleSchema),
 	});
 
 	const { data, isLoading, isError, refetch } = useCustomFetch({

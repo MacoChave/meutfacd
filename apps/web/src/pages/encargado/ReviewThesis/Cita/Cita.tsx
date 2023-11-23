@@ -1,4 +1,4 @@
-import { URL } from '@/api/server';
+import { URL } from '@/consts/Api';
 import { DotsLoaders } from '@/components/Loader/DotsLoaders';
 import {
 	APROBADO,
@@ -7,7 +7,7 @@ import {
 	PENDIENTE,
 	PREVIA,
 	REVISION,
-} from '@/consts/vars';
+} from '@/consts/Vars';
 import { CitasSchema, TCitas } from '@/models/Citas';
 import { TResult } from '@/models/Fetching';
 import { TypeWithKey } from '@/models/TypeWithKey';
@@ -101,7 +101,10 @@ const Cita: React.FC<CitaProps> = ({ userProgress, estacion = 6, onClose }) => {
 				idReview: userProgress.id_revision,
 				currentStation: ESTACIONES[estacion - 1].toLowerCase(),
 				nextStation: ESTACIONES[estacion].toLowerCase(),
-				filename: estacion === 6 ? 'dictamen_prev_internos' : 'dictamen_impresion',
+				filename:
+					estacion === 6
+						? 'dictamen_prev_internos'
+						: 'dictamen_impresion',
 			},
 		});
 

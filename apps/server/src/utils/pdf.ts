@@ -19,7 +19,6 @@ export const createDocument = () => {
 			left: 72,
 			right: 72,
 		},
-		font: 'Helvetica',
 		bufferPages: true,
 		permissions: {
 			annotating: false,
@@ -28,6 +27,10 @@ export const createDocument = () => {
 			printing: 'highResolution',
 		},
 	});
+	doc.registerFont('NotoSans', join(__dirname, '/NotoSans-Regular.ttf'));
+	doc.registerFont('NotoSans-Bold', join(__dirname, '/NotoSans-Bold.ttf'));
+	// doc.registerFont('NotoSans', ``, 'Noto Sans');
+	// doc.registerFont('NotoSans-Bold', `/../assets/NotoSans-Bold.ttf`, 'Noto Sans Bold');
 	return doc;
 };
 
@@ -93,55 +96,55 @@ export const setContentDictamen = ({
 	doc.fontSize(12).text(
 		`Respetuosamente a usted informo que procedí a revisar ${info} del bachiller `,
 		{
-			align: 'left',
+			align: 'justify',
 			lineGap: 2,
 			continued: true,
 		}
 	);
 
-	doc.font('Helvetica-Bold');
+	doc.font('NotoSans-Bold');
 	doc.fontSize(12).text(fullname.toUpperCase(), {
-		align: 'left',
+		align: 'justify',
 		lineGap: 2,
 		continued: true,
 	});
 
 	if (!(station.includes('Curso') || station.includes('Nombramiento'))) {
-		doc.font('Helvetica');
+		doc.font('NotoSans');
 		doc.fontSize(12).text(` la cual se titula `, {
-			align: 'left',
+			align: 'justify',
 			lineGap: 2,
 			continued: true,
 		});
 	
-		doc.font('Helvetica-Bold');
+		doc.font('NotoSans-Bold');
 		doc.fontSize(12).text(`"${title}"`.toUpperCase(), {
-			align: 'left',
+			align: 'justify',
 			lineGap: 2,
 		});
 	} else {
-		doc.text(`.`, { align: 'left', lineGap: 2 })
+		doc.text(`.`, { align: 'justify', lineGap: 2 })
 	}
 
 	let detail: string = station.includes('Curso') ? 'Evalué al bachiller en el curso' : station.includes('Nombramiento') ? 'Revisé el nombramiento de asesor del bachiller' : 'Le recomendé al bachiller algunos cambios en la forma, estilo, gramática y redacción de la tesis';
-	doc.font('Helvetica');
+	doc.font('NotoSans');
 	doc.moveDown();
 	doc.fontSize(12).text(
 		`${detail}, por lo que habiendo cumplido con los mismos emito `,
-		{ align: 'left', lineGap: 2, continued: true }
+		{ align: 'justify', lineGap: 2, continued: true }
 	);
 
-	doc.font('Helvetica-Bold');
+	doc.font('NotoSans-Bold');
 	doc.fontSize(12).text(`DICTAMEN FAVORABLE `, {
-		align: 'left',
+		align: 'justify',
 		lineGap: 2,
 		continued: true,
 	});
 
-	doc.font('Helvetica');
+	doc.font('NotoSans');
 	doc.fontSize(12).text(
 		`para que se le otorgue el avance a ${nextStation}.`,
-		{ align: 'left', lineGap: 2 }
+		{ align: 'justify', lineGap: 2 }
 	);
 };
 

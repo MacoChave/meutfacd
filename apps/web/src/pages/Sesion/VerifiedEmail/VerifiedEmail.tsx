@@ -1,13 +1,19 @@
-import { URL } from '@/api/server';
-import { ToolbarWithoutSesion } from '@/components';
-import { DotsLoaders } from '@/components/Loader/DotsLoaders';
-import { SpinLoader } from '@/components/Loader/SpinLoader';
+import { URL } from '@/consts/Api';
 import { setLoading } from '@/redux/states';
 import { putData } from '@/services/fetching';
 import { Box, Button, Card, Toolbar, Typography } from '@mui/material';
-import React, { SyntheticEvent, useState } from 'react';
+import React, { SyntheticEvent, lazy, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import swal from 'sweetalert';
+const SpinLoader = lazy(
+	() => import('@/components/Loader/SpinLoader/SpinLoader')
+);
+const ToolbarWithoutSesion = lazy(
+	() =>
+		import(
+			'@/components/Layout/ToolbarWithoutSession/ToolbarWithoutSession'
+		)
+);
 
 export type VerifiedEmailProps = {};
 

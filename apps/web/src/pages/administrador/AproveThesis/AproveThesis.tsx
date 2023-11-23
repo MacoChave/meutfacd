@@ -1,21 +1,19 @@
-import { URL } from '@/api/server';
+import { URL } from '@/consts/Api';
 import { Contenedor, McModal } from '@/components';
 import { DotsLoaders } from '@/components/Loader/DotsLoaders';
 import { McTable } from '@/components/MyTable';
-import { PENDIENTE, REVISION } from '@/consts/vars';
+import { PENDIENTE, REVISION } from '@/consts/Vars';
 import { useCustomFetch } from '@/hooks/useFetch';
-import { ProgressType } from '@/interfaces/ProgressType';
+import { TProgress } from '@/models/Progress';
 import { Cita } from '@/pages/encargado/ReviewThesis/Cita';
-import { getData } from '@/services/fetching';
 import { Typography } from '@mui/material';
 import React, { useState } from 'react';
 
-export type AproveThesisProps = {
-}
+export type AproveThesisProps = {};
 
-const AproveThesis: React.FC<AproveThesisProps>  = ({}) => {
-	const [open, setOpen] = useState(false)
-	const [row, setRow] = useState<ProgressType>({} as ProgressType)
+const AproveThesis: React.FC<AproveThesisProps> = ({}) => {
+	const [open, setOpen] = useState(false);
+	const [row, setRow] = useState<TProgress>({} as TProgress);
 
 	const { data, isLoading, isError, refetch } = useCustomFetch({
 		url: `${URL.GENERIC}/all`,
@@ -26,21 +24,21 @@ const AproveThesis: React.FC<AproveThesisProps>  = ({}) => {
 				{ column: 'estado', value: PENDIENTE, operator: '=' },
 				{ column: 'estado', value: REVISION, operator: '=' },
 			],
-			sort: { fecha: 'DESC' }
+			sort: { fecha: 'DESC' },
 		},
 		params: {
-			estacion: 7
+			estacion: 7,
 		},
-	})
+	});
 
 	const setReview = (item: any) => {
-		setRow(item as ProgressType);
+		setRow(item as TProgress);
 		setOpen(true);
 	};
 
 	const onClose = () => {
 		setOpen(false);
-		setRow({} as ProgressType);
+		setRow({} as TProgress);
 		refetch();
 	};
 
@@ -49,25 +47,25 @@ const AproveThesis: React.FC<AproveThesisProps>  = ({}) => {
 
 	return (
 		<>
-		<Contenedor title='Impresión de tesis'>
-			<McTable
-				headers={{
-					estado: 'Estado',
-					nombre: 'Estudiante',
-					detalle: 'Detalle',
-					sala: 'Sala',
-					fecha: 'Revisión'
-				}}
-				rows={data}
-				totalCols={{}}
-				onEdit={setReview}
-			/>
-		</Contenedor>
-		<McModal title='Gestión de citas' open={open} onClose={onClose} >
-			<Cita userProgress={row} onClose={onClose} estacion={7} />
-		</McModal>
+			<Contenedor title='Impresión de tesis'>
+				<McTable
+					headers={{
+						estado: 'Estado',
+						nombre: 'Estudiante',
+						detalle: 'Detalle',
+						sala: 'Sala',
+						fecha: 'Revisión',
+					}}
+					rows={data}
+					totalCols={{}}
+					onEdit={setReview}
+				/>
+			</Contenedor>
+			<McModal title='Gestión de citas' open={open} onClose={onClose}>
+				<Cita userProgress={row} onClose={onClose} estacion={7} />
+			</McModal>
 		</>
-	)
+	);
 };
 
 export default AproveThesis;

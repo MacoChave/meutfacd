@@ -1,11 +1,6 @@
-import { URL } from '@/api/server';
-import { ToolbarWithoutSesion } from '@/components';
+import { URL } from '@/consts/Api';
 import { TResult } from '@/models/Fetching';
-import {
-	RecoveryType,
-	initialValues,
-	schemaRecovery,
-} from '@/models/Recuperar';
+import { TRecovery, recoveryDefault, schemaRecovery } from '@/models/Recuperar';
 import { putData } from '@/services/fetching';
 import { yupResolver } from '@hookform/resolvers/yup';
 import {
@@ -16,10 +11,16 @@ import {
 	Toolbar,
 	Typography,
 } from '@mui/material';
-import React from 'react';
+import React, { lazy } from 'react';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { useNavigate, useParams } from 'react-router-dom';
 import swal from 'sweetalert';
+const ToolbarWithoutSesion = lazy(
+	() =>
+		import(
+			'@/components/Layout/ToolbarWithoutSession/ToolbarWithoutSession'
+		)
+);
 
 export type UserRecoveryProps = Record<string, never>;
 
@@ -31,13 +32,13 @@ const UserRecovery: React.FC<UserRecoveryProps> = ({}) => {
 		control,
 		handleSubmit,
 		formState: { errors },
-	} = useForm<RecoveryType>({
-		defaultValues: initialValues,
+	} = useForm<TRecovery>({
+		defaultValues: recoveryDefault,
 		mode: 'onBlur',
 		resolver: yupResolver(schemaRecovery),
 	});
 
-	const onSubmit: SubmitHandler<RecoveryType> = async (data) => {
+	const onSubmit: SubmitHandler<TRecovery> = async (data) => {
 		const result: TResult = await putData<TResult>({
 			path: URL.AUTH.RECOVERY,
 			body: { pass: data.pass },

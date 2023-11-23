@@ -10,9 +10,9 @@ import {
 	ESTACION4,
 	ESTACION5,
 	ESTACION6,
-} from '@/consts/vars';
+} from '@/consts/Vars';
 import { getData } from '@/services/fetching';
-import { URL } from '@/api/server';
+import { URL } from '@/consts/Api';
 import { downloadFileByBloodPart } from '@/utils/fileManagment';
 
 const Resumen = () => {

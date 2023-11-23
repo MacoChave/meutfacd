@@ -1,4 +1,4 @@
-import { URL } from '@/api/server';
+import { URL } from '@/consts/Api';
 import { useCustomFetch } from '@/hooks/useFetch';
 import { createContext, useEffect, useState } from 'react';
 

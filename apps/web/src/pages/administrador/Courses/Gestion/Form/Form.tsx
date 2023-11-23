@@ -1,14 +1,14 @@
-import { URL } from '@/api/server';
+import { URL } from '@/consts/Api';
 import { McAutocomplete } from '@/components/McWithForms/McAutocomplete';
 import { McInput } from '@/components/McWithForms/McInput';
 import { useCustomFetch } from '@/hooks/useFetch';
-import { Course } from '@/models/Course';
+import { TCourse } from '@/models/Course';
 import {
 	TCourseTutor,
 	courseTutorDefault,
 	courseTutorSchema,
 } from '@/models/CourseTutor';
-import { UserType } from '@/models/Perfil';
+import { TUser } from '@/models/Perfil';
 import { TPeriod } from '@/models/Period';
 import { TResult } from '@/models/Fetching';
 import { TSchedule } from '@/models/Schedule';
@@ -31,7 +31,7 @@ export type FormProps = {
 const Form: React.FC<FormProps> = ({ onClose }) => {
 	const [jornada, setJornada] = useState({} as TPeriod);
 	const [horario, setHorario] = useState({} as TSchedule);
-	const [professor, setProfessor] = useState({} as UserType);
+	const [professor, setProfessor] = useState({} as TUser);
 	const [days, setDays] = React.useState<string[]>([]);
 
 	const { control, reset, setValue, getValues, handleSubmit } = useForm({
@@ -67,7 +67,7 @@ const Form: React.FC<FormProps> = ({ onClose }) => {
 			reset();
 			setHorario({} as TSchedule);
 			setJornada({} as TPeriod);
-			setProfessor({} as UserType);
+			setProfessor({} as TUser);
 			setDays([]);
 			swal('¡Listo!', 'El curso se ha asignado correctamente', 'success');
 			onClose();
@@ -91,7 +91,7 @@ const Form: React.FC<FormProps> = ({ onClose }) => {
 						control={control as any}
 						name='id_curso'
 						label='Curso'
-						options={data.map((item: Course) => ({
+						options={data.map((item: TCourse) => ({
 							id: item.id_curso,
 							label: item.nombre,
 						}))}
@@ -134,7 +134,7 @@ const Form: React.FC<FormProps> = ({ onClose }) => {
 					/>
 					<PickEvaluador
 						evaluador={professor}
-						setEvaluador={(professor: UserType) => {
+						setEvaluador={(professor: TUser) => {
 							setValue('id_tutor', professor.id_usuario);
 							setProfessor(professor);
 						}}

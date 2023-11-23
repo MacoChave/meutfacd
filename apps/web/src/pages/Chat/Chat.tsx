@@ -1,4 +1,4 @@
-import { URL } from '@/api/server';
+import { URL } from '@/consts/Api';
 import { Contenedor } from '@/components';
 import { DotsLoaders } from '@/components/Loader/DotsLoaders';
 import { useCustomFetch } from '@/hooks/useFetch';

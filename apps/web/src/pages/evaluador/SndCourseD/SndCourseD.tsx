@@ -1,4 +1,4 @@
-import { URL } from '@/api/server';
+import { URL } from '@/consts/Api';
 import { Contenedor } from '@/components';
 import { DotsLoaders } from '@/components/Loader/DotsLoaders';
 import { McTable } from '@/components/MyTable';
@@ -9,7 +9,7 @@ import {
 	PENDIENTE,
 	RECHAZADO,
 	REVISION,
-} from '@/consts/vars';
+} from '@/consts/Vars';
 import { useCustomFetch } from '@/hooks/useFetch';
 import { TResult } from '@/models/Fetching';
 import { postData, putData } from '@/services/fetching';

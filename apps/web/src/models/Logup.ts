@@ -1,35 +1,35 @@
 import * as yup from 'yup';
 
-export const initialValuesLogup: Tipo_Logup = {
-	id_usuario: 0,
-	nombre: '',
-	apellido: '',
-	genero: '',
-	correo: '',
-	pass: '',
-	carnet: 0,
-	cui: '',
-	direccion: '',
-	fecha_nac: new Date(),
-	estado: '',
-	telefono: '',
-	confpass: '',
-};
-
-export type Tipo_Logup = {
+export type TLogup = {
 	id_usuario: number;
 	nombre: string;
 	apellido: string;
 	genero: string;
 	correo: string;
 	pass: string;
-	carnet: number;
+	carnet: string;
 	cui: string;
 	direccion: string;
 	fecha_nac: Date;
 	estado: string;
 	telefono: string;
 	confpass: string;
+};
+
+export const logupDefault: TLogup = {
+	id_usuario: 0,
+	nombre: '',
+	apellido: '',
+	genero: '',
+	correo: '',
+	pass: '',
+	carnet: '',
+	cui: '',
+	direccion: '',
+	fecha_nac: new Date(),
+	estado: '',
+	telefono: '',
+	confpass: '',
 };
 
 export const schemaLogup = yup.object().shape({
@@ -67,9 +67,10 @@ export const schemaLogup = yup.object().shape({
 		.positive('Carnet no puede ser negativo')
 		.integer('Carnet debe ser un número entero'),
 	cui: yup
-		.string()
+		.number()
 		.required('DPI es requerido')
-		.max(20, 'DPI no puede ser mayor a 20 caracteres'),
+		.max(20, 'DPI no puede ser mayor a 20 caracteres')
+		.integer('DPI debe ser un número entero'),
 	direccion: yup
 		.string()
 		.required('Dirección es requerido')

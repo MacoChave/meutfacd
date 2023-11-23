@@ -1,4 +1,4 @@
-export type ReviewType = {
+export type TReview = {
 	id_revision: number;
 	estado: string;
 	detalle: string;

@@ -1,4 +1,4 @@
-import { URL } from '@/api/server';
+import { URL } from '@/consts/Api';
 import { DotsLoaders } from '@/components/Loader/DotsLoaders';
 import { McAutocomplete } from '@/components/McWithoutForms/McAutocomplete';
 import { useCustomFetch } from '@/hooks/useFetch';

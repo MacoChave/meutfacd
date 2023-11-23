@@ -1,4 +1,4 @@
-export const generos = [
+export const GENRES = [
 	{ value: 'M', label: 'Masculino' },
 	{ value: 'F', label: 'Femenino' },
 ];

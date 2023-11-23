@@ -1,4 +1,4 @@
-export type NotificationType = {
+export type TNotification = {
 	id_notificacion: number;
 	mensaje: string;
 	fecha: string;

@@ -1,6 +1,6 @@
-import { URL } from '@/api/server';
+import { URL } from '@/consts/Api';
 import { McInput } from '@/components/McWithForms/McInput';
-import { PageAppType } from '@/models/PageApp';
+import { TPageApp } from '@/models/PageApp';
 import { TResult } from '@/models/Fetching';
 import { putData } from '@/services/fetching';
 import { Box, Button } from '@mui/material';
@@ -9,17 +9,17 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 import swal from 'sweetalert';
 
 export type FormPagesAppProps = {
-	page: PageAppType;
+	page: TPageApp;
 	onClose: () => void;
 };
 
 const FormPagesApp: React.FC<FormPagesAppProps> = ({ page, onClose }) => {
-	const { control, handleSubmit } = useForm<PageAppType>({
+	const { control, handleSubmit } = useForm<TPageApp>({
 		defaultValues: { ...page, icono: page.icono || '' },
 		mode: 'onBlur',
 	});
 
-	const onSubmit: SubmitHandler<PageAppType> = async (data) => {
+	const onSubmit: SubmitHandler<TPageApp> = async (data) => {
 		const result: TResult = await putData({
 			path: `${URL.GENERIC}`,
 			body: {

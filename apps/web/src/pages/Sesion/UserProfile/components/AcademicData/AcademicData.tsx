@@ -1,5 +1,5 @@
 import { McAutocomplete } from '@/components/McWithForms/McAutocomplete';
-import { UserType } from '@/models/Perfil';
+import { TUser } from '@/models/Perfil';
 import { Box } from '@mui/material';
 import React from 'react';
 import { FieldValues, useFormContext } from 'react-hook-form';
@@ -10,7 +10,7 @@ const AcademicData: React.FC<AcademicDataProps> = ({}) => {
 	const {
 		control,
 		formState: { errors },
-	} = useFormContext<UserType>();
+	} = useFormContext<TUser>();
 
 	return (
 		<Box

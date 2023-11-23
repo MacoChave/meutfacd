@@ -1,28 +1,28 @@
-export interface Permission {
-	code: number;
-	name: number;
+export type TPermisos = {
+	codigo: number;
+	nombre: number;
 	description: string;
 	menu: string;
-}
+};
 
-export type AuthState = {
+export type TAuthState = {
 	token: string;
 	name: string;
-	rol: string;
-	permissions: Permission[];
+	roles: string;
+	paginas: TPermisos[];
 };
 
-export type Control = {
+export type TControl = {
 	loading: boolean;
-	auth: AuthState;
+	auth: TAuthState;
 };
 
-export const initialControl: Control = {
+export const controlDefault: TControl = {
 	loading: false,
 	auth: {
 		token: '',
 		name: '',
-		rol: '',
-		permissions: [],
+		roles: '',
+		paginas: [],
 	},
 };

@@ -1,8 +1,8 @@
-import { URL } from '@/api/server';
+import { URL } from '@/consts/Api';
 import { Contenedor, McModal } from '@/components';
 import { DotsLoaders } from '@/components/Loader/DotsLoaders';
 import { McTable } from '@/components/MyTable';
-import { PENDIENTE, REVISION } from '@/consts/vars';
+import { PENDIENTE, REVISION } from '@/consts/Vars';
 import { useCustomFetch } from '@/hooks/useFetch';
 import { getData } from '@/services/fetching';
 import { Typography } from '@mui/material';

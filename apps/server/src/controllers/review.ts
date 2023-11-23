@@ -13,22 +13,22 @@ export const getXlsxReport = async ({ query }: Request, res: Response) => {
 			table: 'ut_v_revision',
 		});
 
-		const wb = XLSX.utils.book_new();
 		const ws = XLSX.utils.json_to_sheet(data as any);
+		const wb = XLSX.utils.book_new();
 		XLSX.utils.book_append_sheet(wb, ws, bookName);
 		XLSX.writeFile(wb, filePath);
 
-		const fileStream = createReadStream(filePath);
-		fileStream.pipe(res);
-		unlinkSync(`${filePath}`);
+		// const fileStream = createReadStream(filePath);
+		// fileStream.pipe(res);
+		// unlinkSync(`${filePath}`);
 
-		// res.status(200).sendFile('students-revisions.xlsx', {
-		// 	root: './src/storage',
-		// 	headers: {
-		// 		'Content-Type':
-		// 			'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-		// 	},
-		// });
+		res.status(200).sendFile(filePath, {
+			root: './src/storage',
+			headers: {
+				'Content-Type':
+					'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+			},
+		});
 	} catch (error: any) {
 		errorHttp(res, error);
 	}
