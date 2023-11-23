@@ -1,0 +1,1 @@
+export { default as PrintedThesis } from './PrintedThesis';

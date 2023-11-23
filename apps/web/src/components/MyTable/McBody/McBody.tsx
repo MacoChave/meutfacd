@@ -1,4 +1,4 @@
-import { ESTACIONES } from '@/consts/vars';
+import { ESTACIONES } from '@/consts/Vars';
 import {
 	formatByDataType,
 	getAlignByDataType,

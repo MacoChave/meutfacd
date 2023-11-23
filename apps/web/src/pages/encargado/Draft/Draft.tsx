@@ -1,11 +1,11 @@
-import { URL } from '@/api/server';
+import { URL } from '@/consts/Api';
 import { Contenedor } from '@/components';
 import { DotsLoaders } from '@/components/Loader/DotsLoaders';
-import { ESPERA } from '@/consts/vars';
+import { ESPERA } from '@/consts/Vars';
 import { useCustomFetch } from '@/hooks/useFetch';
-import { UserType } from '@/models/Perfil';
+import { TUser } from '@/models/Perfil';
 import { TResult } from '@/models/Fetching';
-import { ReviewType } from '@/models/Review';
+import { TReview } from '@/models/Review';
 import { putData } from '@/services/fetching';
 import { style } from '@/themes/styles';
 import { SwitchLeft, SwitchRight } from '@mui/icons-material';
@@ -26,12 +26,12 @@ import { PickEvaluador } from '../components/PickEvaluador';
 export type DraftProps = Record<string, never>;
 
 const Draft: React.FC<DraftProps> = ({}) => {
-	const [docente, setDocente] = useState<UserType>({} as UserType);
-	const [unAssignmentUsers, setUnassignmentUsers] = useState<ReviewType[]>(
-		[] as ReviewType[]
+	const [docente, setDocente] = useState<TUser>({} as TUser);
+	const [unAssignmentUsers, setUnassignmentUsers] = useState<TReview[]>(
+		[] as TReview[]
 	);
-	const [assignmentUsers, setAssignmentUsers] = useState<ReviewType[]>(
-		[] as ReviewType[]
+	const [assignmentUsers, setAssignmentUsers] = useState<TReview[]>(
+		[] as TReview[]
 	);
 
 	const { data, isLoading, isError } = useCustomFetch({
@@ -73,7 +73,7 @@ const Draft: React.FC<DraftProps> = ({}) => {
 				'success'
 			);
 			setAssignmentUsers([]);
-			setDocente({} as UserType);
+			setDocente({} as TUser);
 		}
 	};
 

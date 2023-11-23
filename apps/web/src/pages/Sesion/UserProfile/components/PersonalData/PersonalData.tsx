@@ -1,18 +1,18 @@
-import React from 'react';
-import { DataProps } from '../../propTypes/DataProps';
-import { Controller, useFormContext } from 'react-hook-form';
-import { UserType } from '@/models/Perfil';
-import { Box, TextField } from '@mui/material';
 import { McAutocomplete } from '@/components/McWithForms/McAutocomplete';
-import { generos } from '@/consts/genres';
 import { McInput } from '@/components/McWithForms/McInput';
+import { GENRES } from '@/consts/Genres';
+import { TUser } from '@/models/Perfil';
+import { Box, TextField } from '@mui/material';
+import React from 'react';
+import { Controller, useFormContext } from 'react-hook-form';
+import { DataProps } from '../../propTypes/DataProps';
 
 const PersonalData: React.FC<DataProps> = ({ editing }) => {
 	const {
 		control,
 		setValue,
 		formState: { errors },
-	} = useFormContext<UserType>();
+	} = useFormContext<TUser>();
 
 	return (
 		<Box
@@ -59,7 +59,7 @@ const PersonalData: React.FC<DataProps> = ({ editing }) => {
 				control={control as any}
 				name='genero'
 				label='Género'
-				options={generos.map((g) => ({ id: g.value, label: g.label }))}
+				options={GENRES.map((g) => ({ id: g.value, label: g.label }))}
 				disabled={!editing}
 			/>
 			<McInput

@@ -1,4 +1,4 @@
-export type PageAppType = {
+export type TPageApp = {
 	id_pagina: number;
 	nombre: string;
 	descripcion: string;

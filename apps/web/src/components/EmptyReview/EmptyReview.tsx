@@ -1,6 +1,7 @@
 import React from 'react';
 import { Contenedor } from '../Contenedor';
 import { Box, Typography } from '@mui/material';
+import imgEmpty from '@/assets/svg/no_data.svg';
 
 export type EmptyReviewProps = {
 	title: string;

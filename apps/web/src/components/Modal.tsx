@@ -1,6 +1,6 @@
-import { Box, Divider, IconButton, Modal, Typography } from '@mui/material';
-import { ModalProps } from '../propTypes/Modal';
 import { Close } from '@mui/icons-material';
+import { Box, Divider, IconButton, Modal, Typography } from '@mui/material';
+import { FC, ReactNode } from 'react';
 
 const style = {
 	position: 'absolute' as 'absolute',
@@ -14,7 +14,19 @@ const style = {
 	p: 4,
 };
 
-const Dialogo = ({ title, open, setOpen: setOpen, children }: ModalProps) => {
+export type DialogoProps = {
+	title: string;
+	open: boolean;
+	children: ReactNode;
+	setOpen: (open: boolean) => void;
+};
+
+const Dialogo: FC<DialogoProps> = ({
+	title,
+	open,
+	children,
+	setOpen: setOpen,
+}) => {
 	return (
 		<>
 			<Modal open={open} onClose={() => setOpen(false)}>

@@ -1,4 +1,5 @@
 import store from '@/redux/store';
+import { stringToCapitalize } from '@/utils/formatHandler';
 import { Box, Card, Typography } from '@mui/material';
 import React from 'react';
 
@@ -11,36 +12,33 @@ const Contenedor: React.FC<ContenedorProps> = ({ title, children }) => {
 	const { auth } = store.getState().control;
 
 	return (
-		<>
-			<Card
+		<Card
+			sx={{
+				p: 2,
+				mx: 'auto',
+				display: 'flex',
+				flexDirection: 'column',
+				width: { xs: '90%', md: '85%' },
+				overflowX: 'scroll',
+			}}>
+			<Typography variant='h4' component='h2' textAlign='center'>
+				{stringToCapitalize(title)}
+			</Typography>
+			<Typography variant='body1' component='p' textAlign='center'>
+				{auth.name || 'Usuario X'}
+			</Typography>
+			<Box
 				sx={{
 					p: 2,
-					// mx: 'auto',
-					// display: 'flex',
-					// flexDirection: 'column',
-					// placeContent: 'center',
-					// placeItems: 'center',
-					// width: { xs: '90%', md: '80%' },
+					width: {
+						xs: 'calc(90vw - 60px)',
+						md: 'calc(90vw - 200px)',
+					},
+					mx: 'auto',
 				}}>
-				<Typography variant='h4' component='h2' textAlign='center'>
-					{title}
-				</Typography>
-				<Typography variant='body1' component='p' textAlign='center'>
-					{auth.name || 'Usuario X'}
-				</Typography>
-				<Box
-					sx={{
-						py: 2,
-						width: {
-							xs: 'calc(90vw - 60px)',
-							md: 'calc(90vw - 200px)',
-						},
-						mx: 'auto',
-					}}>
-					{children}
-				</Box>
-			</Card>
-		</>
+				{children}
+			</Box>
+		</Card>
 	);
 };
 

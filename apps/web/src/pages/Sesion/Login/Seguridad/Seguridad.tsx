@@ -1,4 +1,4 @@
-import { Tipo_Login } from '@/models/Login';
+import { TLogin } from '@/models/Login';
 import { Box, TextField } from '@mui/material';
 import React from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
@@ -9,7 +9,7 @@ const Seguridad: React.FC<SeguridadProps> = () => {
 	const {
 		control,
 		formState: { errors },
-	} = useFormContext<Tipo_Login>();
+	} = useFormContext<TLogin>();
 
 	return (
 		<Box
@@ -26,7 +26,7 @@ const Seguridad: React.FC<SeguridadProps> = () => {
 					<TextField
 						{...field}
 						label='Correo electrónico'
-						variant='filled'
+						variant='standard'
 						type='email'
 						error={!!errors.correo}
 						helperText={errors.correo?.message || ''}
@@ -40,7 +40,7 @@ const Seguridad: React.FC<SeguridadProps> = () => {
 					<TextField
 						{...field}
 						label='Contraseña'
-						variant='filled'
+						variant='standard'
 						type='password'
 						error={!!errors.pass}
 						helperText={errors.pass?.message || ''}

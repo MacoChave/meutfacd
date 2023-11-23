@@ -1,8 +1,8 @@
-import { URL } from '@/api/server';
+import { URL } from '@/consts/Api';
 import { Contenedor, McModal } from '@/components';
 import { McTable } from '@/components/MyTable';
 import { useCustomFetch } from '@/hooks/useFetch';
-import { PageAppType } from '@/models/PageApp';
+import { TPageApp } from '@/models/PageApp';
 import { TResult } from '@/models/Fetching';
 import { putData } from '@/services/fetching';
 import React, { useState } from 'react';
@@ -12,7 +12,7 @@ import { FormPagesApp } from './FormPagesApp';
 export type PagesAppProps = Record<string, never>;
 
 const PagesApp: React.FC<PagesAppProps> = ({}) => {
-	const [editPage, setEditPage] = useState<PageAppType>({} as PageAppType);
+	const [editPage, setEditPage] = useState<TPageApp>({} as TPageApp);
 	const [editing, setEditing] = useState(false);
 
 	const { data, isLoading, isError, refetch } = useCustomFetch({
@@ -48,7 +48,7 @@ const PagesApp: React.FC<PagesAppProps> = ({}) => {
 
 	const onClose = () => {
 		setEditing(false);
-		setEditPage({} as PageAppType);
+		setEditPage({} as TPageApp);
 		refetch();
 	};
 

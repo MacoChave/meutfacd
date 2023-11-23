@@ -1,5 +1,5 @@
-import { API_V1 } from '@/api/server';
-import { Control } from '@/models/Control';
+import { API_V1 } from '@/consts/Api';
+import { TControl } from '@/models/Control';
 import { setLogout } from '@/redux/states';
 import store from '@/redux/store';
 import { getValidatorError } from '@/utils/getValidatorError';
@@ -18,7 +18,7 @@ const logOnDev = (message: Object) => {
 };
 
 const onRequest = (config: AxiosRequestConfig): any => {
-	const { auth }: Control = store.getState().control;
+	const { auth }: TControl = store.getState().control;
 	// const dispatch = useDispatch();
 	const { method } = config;
 

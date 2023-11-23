@@ -1,4 +1,4 @@
-import { URL as URI } from '@/api/server';
+import { URL as URI } from '@/consts/Api';
 import { Contenedor, McModal } from '@/components';
 import { DotsLoaders } from '@/components/Loader/DotsLoaders';
 import { McTable } from '@/components/MyTable';

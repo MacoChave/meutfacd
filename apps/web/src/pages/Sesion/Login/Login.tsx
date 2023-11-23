@@ -1,21 +1,29 @@
+import { URL } from '@/consts/Api';
+import { TAuthState } from '@/models/Control';
+import { TLogin, schemaLogin } from '@/models/Login';
+import { setLogged } from '@/redux/states';
+import store from '@/redux/store';
+import { postData } from '@/services/fetching';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Box, Button, Card, Toolbar, Typography } from '@mui/material';
 import React, { SyntheticEvent, lazy } from 'react';
 import { FormProvider, SubmitHandler, useForm } from 'react-hook-form';
 import { useDispatch } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
-import { URL } from '@/api/server';
+import swal from 'sweetalert';
+const Footer = lazy(() => import('@/components/Layout/Footer/Footer'));
+const Seguridad = lazy(
+	() => import('@/pages/Sesion/Login/Seguridad/Seguridad')
+);
 const SpinLoader = lazy(
 	() => import('@/components/Loader/SpinLoader/SpinLoader')
 );
-import { ToolbarWithoutSesion } from '@/components/navegacion/Toolbar';
-import { AuthState } from '@/interfaces/AuthState';
-import { Tipo_Login, schemaLogin } from '@/models/Login';
-import { setLogged } from '@/redux/states';
-import store from '@/redux/store';
-import { postData } from '@/services/fetching';
-import { Seguridad } from './Seguridad';
-import swal from 'sweetalert';
+const ToolbarWithoutSesion = lazy(
+	() =>
+		import(
+			'@/components/Layout/ToolbarWithoutSession/ToolbarWithoutSession'
+		)
+);
 
 export type LoginProps = Record<string, never>;
 
@@ -25,7 +33,7 @@ const Login: React.FC<LoginProps> = () => {
 	const dispatch = useDispatch();
 	const { rol } = useParams();
 
-	const methods = useForm<Tipo_Login>({
+	const methods = useForm<TLogin>({
 		defaultValues: {
 			correo: '',
 			pass: '',
@@ -34,8 +42,8 @@ const Login: React.FC<LoginProps> = () => {
 		resolver: yupResolver(schemaLogin),
 	});
 
-	const onSubmit: SubmitHandler<Tipo_Login> = async (body) => {
-		const response = await postData<AuthState>({
+	const onSubmit: SubmitHandler<TLogin> = async (body) => {
+		const response = await postData<TAuthState>({
 			path: URL.AUTH.LOGIN,
 			body,
 		});
@@ -76,36 +84,40 @@ const Login: React.FC<LoginProps> = () => {
 
 	return (
 		<>
-			<ToolbarWithoutSesion />
-			<Box component='main' sx={{ p: 3 }}>
-				<Toolbar />
-				<Box
-					sx={{
-						width: {
-							xs: '90vw',
-							sm: '80vw',
-							md: '70vw',
-							lg: '60vw',
-						},
-						mx: 'auto',
-						height: '100%',
-					}}>
+			<Box
+				component={'main'}
+				sx={{
+					display: 'flex',
+					flexDirection: 'column',
+					gap: 2,
+					height: '96vh',
+					justifyContent: 'space-between',
+					overflow: 'hidden',
+				}}>
+				<ToolbarWithoutSesion />
+				<Box sx={{ overflowY: 'scroll' }}>
+					<Toolbar />
 					<FormProvider {...methods}>
-						<form onSubmit={methods.handleSubmit(onSubmit)}>
+						<Box
+							component={'form'}
+							onSubmit={methods.handleSubmit(onSubmit)}>
 							<Card
 								sx={{
+									p: 2,
+									mx: 'auto',
 									display: 'flex',
 									flexDirection: 'column',
-									p: 4,
-									gap: 4,
+									width: { xs: '90%', md: '50%', lg: '30%' },
+									gap: 3,
 								}}>
-								<Typography variant='h4'>
+								<Typography variant='h4' component={'h2'}>
 									Iniciar sesión
 								</Typography>
 								<Typography variant='body1' color='GrayText'>
-									¿No tienes cuenta?{' '}
+									¿No tienes cuenta?
 									<Button
 										variant='text'
+										type='button'
 										onClick={handleLogup}>
 										Registrate
 									</Button>
@@ -117,14 +129,17 @@ const Login: React.FC<LoginProps> = () => {
 								<Box>
 									<Button
 										variant='text'
+										type='button'
 										onClick={handleRecovery}>
 										Recuperar contraseña
 									</Button>
 								</Box>
 							</Card>
-						</form>
+						</Box>
 					</FormProvider>
 				</Box>
+				<Box flex={1} />
+				<Footer />
 			</Box>
 			{control.loading && <SpinLoader />}
 		</>

@@ -1,19 +1,19 @@
 import { formatDate } from '@/utils/formatHandler';
 import * as yup from 'yup';
 
-export type Tipo_PerfilTutor = {
+export type TPerfilTutor = {
 	id_tutor: number;
 	no_colegiado: string;
 	id_rol: number;
 };
 
-export type Tipo_PerfilEstudiante = {
+export type TPerfilEstudiante = {
 	id_estudiante: number;
 	id_horario: number;
 	id_jornada: number;
 };
 
-export type UserType = {
+export type TUser = {
 	id_usuario: number;
 	nombre: string;
 	apellidos: string;
@@ -34,7 +34,7 @@ export type UserType = {
 	id_jornada: number;
 };
 
-export const defaultProfile: UserType = {
+export const profileDefault: TUser = {
 	id_usuario: 0,
 	nombre: '',
 	apellidos: '',

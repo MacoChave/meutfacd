@@ -1,8 +1,5 @@
-import { URL } from '@/api/server';
-import Loader from '@/components/Loader';
-import { SpinLoader } from '@/components/Loader/SpinLoader';
-import { ToolbarWithoutSesion } from '@/components/navegacion/Toolbar';
-import { Tipo_Logup, initialValuesLogup, schemaLogup } from '@/models/Logup';
+import { URL } from '@/consts/Api';
+import { TLogup, logupDefault, schemaLogup } from '@/models/Logup';
 import { postData } from '@/services/fetching';
 import { errorHandler } from '@/utils/errorHandler';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -12,24 +9,38 @@ import React, { SyntheticEvent, lazy, useState } from 'react';
 import { FormProvider, SubmitHandler, useForm } from 'react-hook-form';
 import { useNavigate, useParams } from 'react-router-dom';
 import swal from 'sweetalert';
-const Contacto = lazy(() => import('./Contacto/Contacto'));
-const Personales = lazy(() => import('./Personales/Personales'));
-const Seguridad = lazy(() => import('./Seguridad/Seguridad'));
+const Footer = lazy(() => import('@/components/Layout/Footer/Footer'));
+const SpinLoader = lazy(
+	() => import('@/components/Loader/SpinLoader/SpinLoader')
+);
+const ToolbarWithoutSesion = lazy(
+	() =>
+		import(
+			'@/components/Layout/ToolbarWithoutSession/ToolbarWithoutSession'
+		)
+);
+const Contacto = lazy(() => import('@/pages/Sesion/Logup/Contacto/Contacto'));
+const Personales = lazy(
+	() => import('@/pages/Sesion/Logup/Personales/Personales')
+);
+const Seguridad = lazy(
+	() => import('@/pages/Sesion/Logup/Seguridad/Seguridad')
+);
 
 export type LogupProps = {};
 
 const Logup: React.FC<LogupProps> = () => {
 	const [enviando, setEnviando] = useState(false);
 	const { rol } = useParams();
-	const methods = useForm<Tipo_Logup>({
-		defaultValues: initialValuesLogup,
+	const methods = useForm<TLogup>({
+		defaultValues: logupDefault,
 		resolver: yupResolver(schemaLogup),
 		mode: 'onBlur',
 	});
 
 	const navigate = useNavigate();
 
-	const onSubmit: SubmitHandler<Tipo_Logup> = async (data) => {
+	const onSubmit: SubmitHandler<TLogup> = async (data) => {
 		try {
 			setEnviando(true);
 			const response = await postData({
@@ -138,6 +149,7 @@ const Logup: React.FC<LogupProps> = () => {
 						</form>
 					</FormProvider>
 				</Box>
+				<Footer />
 			</Box>
 			{enviando && <SpinLoader />}
 		</>

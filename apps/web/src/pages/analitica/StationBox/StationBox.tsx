@@ -1,6 +1,6 @@
-import { URL } from '@/api/server';
+import { URL } from '@/consts/Api';
 import { DotsLoaders } from '@/components/Loader/DotsLoaders';
-import { ESTACIONES } from '@/consts/vars';
+import { ESTACIONES } from '@/consts/Vars';
 import { useCustomFetch } from '@/hooks/useFetch';
 import { Box, Card, Typography } from '@mui/material';
 import React from 'react';

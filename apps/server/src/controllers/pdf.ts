@@ -73,7 +73,7 @@ export const createReport = async ({ body, user }: Request, res: Response) => {
 		
 		setCurrentDate(doc);
 		
-		doc.font('Helvetica-Bold');
+		doc.font('NotoSans-Bold');
 		
 		doc.moveDown(3);
 
@@ -85,7 +85,7 @@ export const createReport = async ({ body, user }: Request, res: Response) => {
 			rol: `${responsible?.roles ?? 'Jefe de Unidad de Asesoría de Tesis'}`,
 		});
 		
-		doc.font('Helvetica');
+		doc.font('NotoSans');
 		doc.fontSize(12).moveDown(2).text(`Estimado`, {
 			align: 'left',
 			lineGap: 2,
@@ -198,7 +198,7 @@ export const createPrintReport = async ({ body }: Request, res: Response) => {
 			continued: true
 		})
 		
-		doc.font('Helvetica');
+		doc.font('NotoSans');
 		doc.text(' titulado ', {
 			lineGap: 2,
 			continued: true
@@ -210,7 +210,7 @@ export const createPrintReport = async ({ body }: Request, res: Response) => {
 			continued: true
 		})
 		
-		doc.font('Helvetica');
+		doc.font('NotoSans');
 		doc.text(`. Artículos 31, 33 y 34 del Normativo para la Elaboración de Tesis de Licenciaturas en Ciencias Jurídicas y Sociales y del Exámen General Público.`, {
 			lineGap: 2,
 		})

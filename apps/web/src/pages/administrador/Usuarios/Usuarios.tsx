@@ -1,16 +1,16 @@
-import { URL } from '@/api/server';
+import { URL } from '@/consts/Api';
 import { Contenedor, McModal } from '@/components';
 import { ErrorOperacion } from '@/components/ErrorOperacion';
 import { McTable } from '@/components/MyTable';
 import { useCustomFetch } from '@/hooks/useFetch';
-import { UserType } from '@/models/Perfil';
+import { TUser } from '@/models/Perfil';
 import { useState } from 'react';
 import { DetalleUsuario } from './DetalleUsuario';
 import { deleteData } from '@/services/fetching';
 
 const Usuarios = () => {
 	const [openModal, setOpenModal] = useState(false);
-	const [usuario, setUsuario] = useState<UserType>({} as UserType);
+	const [usuario, setUsuario] = useState<TUser>({} as TUser);
 	const { data, isSuccess, error, refetch } = useCustomFetch({
 		url: `${URL.GENERIC}/all`,
 		method: 'post',
@@ -18,7 +18,7 @@ const Usuarios = () => {
 	});
 
 	const onEdit = (registro: object) => {
-		setUsuario(registro as UserType);
+		setUsuario(registro as TUser);
 		setOpenModal(true);
 	};
 
@@ -54,7 +54,7 @@ const Usuarios = () => {
 						roles: 'Rol',
 					}}
 					rows={
-						data.map((d: UserType) => ({
+						data.map((d: TUser) => ({
 							...d,
 							roles: d.roles ? d.roles.split(' ')[0] : 'Sin rol',
 						})) || []

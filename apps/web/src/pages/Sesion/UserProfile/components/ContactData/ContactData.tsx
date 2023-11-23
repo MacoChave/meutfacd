@@ -1,10 +1,10 @@
-import { UserType } from '@/models/Perfil';
+import { TUser } from '@/models/Perfil';
 import { Box, TextField } from '@mui/material';
 import React, { useEffect } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 import { DataProps } from '../../propTypes/DataProps';
 import { useCustomFetch } from '@/hooks/useFetch';
-import { URL } from '@/api/server';
+import { URL } from '@/consts/Api';
 import { McAutocomplete } from '@/components/McWithForms/McAutocomplete';
 import { DotsLoaders } from '@/components/Loader/DotsLoaders';
 
@@ -14,7 +14,7 @@ const ContactData: React.FC<DataProps> = ({ editing }) => {
 		formState: { errors },
 		getValues,
 		watch,
-	} = useFormContext<UserType>();
+	} = useFormContext<TUser>();
 
 	const {
 		data: periods,
