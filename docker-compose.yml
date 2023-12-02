@@ -1,20 +1,20 @@
 version: '3.7'
 services:
     db:
-        image: macochave/meut-db
+        image: macochave/meut-db:local
         container_name: db
         restart: always
         env_file:
-            - db/.env
+            - apps/db/.env.development.local
         networks:
-            - ut_net:
-              ipv4_address: 182.18.7.5
+            ut_net:
+                ipv4_address: 182.18.7.5
         ports:
-            - '3306:3306'
+            - '3300:3306'
         volumes:
             - db:/var/lib/mysql
     api:
-        image: macochave/meut-api
+        image: macochave/meut-api:local
         container_name: api
         restart: always
         volumes:
@@ -22,15 +22,15 @@ services:
         ports:
             - '5000:5000'
         networks:
-            - ut_net:
-              ipv4_address: 182.18.7.10
+            ut_net:
+                ipv4_address: 182.18.7.10
         env_file:
-            - api/.env
+            - apps/server/.env.development.local
         depends_on:
             - db
     web:
         stdin_open: true
-        image: macochave/meut-web
+        image: macochave/meut-web:local
         container_name: web
         restart: always
         volumes:
@@ -38,12 +38,10 @@ services:
         ports:
             - '4173:4173'
         networks:
-            - ut_net:
-              ipv4_address: 182.18.7.15
+            ut_net:
+                ipv4_address: 182.18.7.15
         env_file:
-            - web/.env
-        depends_on:
-            - api
+            - apps/web/.env.development.local
 volumes:
     db:
     api:
