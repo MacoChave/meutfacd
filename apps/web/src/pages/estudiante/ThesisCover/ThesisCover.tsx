@@ -24,8 +24,11 @@ import { AxiosError } from 'axios';
 import { FC, useEffect, useState } from 'react';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import swal from 'sweetalert';
-import FileChooser from '../../../components/controles/FileChooser';
+import FileChooser from '@/components/controles/FileChooser';
 import { TReview } from '@/models/Review';
+import { TutorInfo } from '../components/TutorInfo';
+import { DetailReview } from '../components/DetailReview';
+import { UploadsReview } from '../components/UploadsReview';
 
 export type ThesisCoverProps = {};
 
@@ -195,7 +198,19 @@ const ThesisCover: FC<ThesisCoverProps> = ({}) => {
 	return (
 		<>
 			<Contenedor title='Presentar punto de tesis'>
-				<form onSubmit={handleSubmit(onSubmit)}>
+				<TutorInfo
+					tutor={revision?.tutor || 'Sin asignación'}
+					openChat={createChat}
+				/>
+				<DetailReview review={revision} isEditing={false} />
+				<UploadsReview>
+					<FileChooser
+						title='Punto de tesis'
+						onUpload={onUpload}
+						disabled={true}
+					/>
+				</UploadsReview>
+				{/* <form onSubmit={handleSubmit(onSubmit)}>
 					<Box sx={style}>
 						<Box>
 							<Typography variant='h6'>
@@ -281,7 +296,7 @@ const ThesisCover: FC<ThesisCoverProps> = ({}) => {
 							</Box>
 						)}
 					</Box>
-				</form>
+				</form> */}
 			</Contenedor>
 			{isUploading && <SpinLoader message='Subiendo punto de tesis' />}
 		</>
