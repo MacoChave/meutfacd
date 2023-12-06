@@ -185,7 +185,7 @@ export const router = createBrowserRouter(
 					),
 				},
 				{
-					path: 'curso-introduccion',
+					path: 'curso-I',
 					element: (
 						<ProtectedRoute rol='estudiante'>
 							{<StudentCourseI />}
@@ -193,7 +193,7 @@ export const router = createBrowserRouter(
 					),
 				},
 				{
-					path: 'curso-elaboracion',
+					path: 'curso-II',
 					element: (
 						<ProtectedRoute rol='estudiante'>
 							{<StudentCourseII />}
@@ -201,7 +201,7 @@ export const router = createBrowserRouter(
 					),
 				},
 				{
-					path: 'dictamen',
+					path: 'cambio-tema',
 					element: (
 						<ProtectedRoute rol='estudiante'>
 							{<StudentThemeChange />}
@@ -209,7 +209,7 @@ export const router = createBrowserRouter(
 					),
 				},
 				{
-					path: 'tesis',
+					path: 'comision-y-estilos',
 					element: (
 						<ProtectedRoute rol='estudiante'>
 							{<StudentCommissionStyle />}
@@ -225,7 +225,15 @@ export const router = createBrowserRouter(
 					),
 				},
 				{
-					path: 'finalizacion',
+					path: 'solicitud-impresion',
+					element: (
+						<ProtectedRoute rol='estudiante'>
+							{<StudentPrintingRequest />}
+						</ProtectedRoute>
+					),
+				},
+				{
+					path: 'entrega-tesis',
 					element: (
 						<ProtectedRoute rol='estudiante'>
 							{<StudentPrintingRequest />}

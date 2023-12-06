@@ -6,3 +6,10 @@ export type TPageApp = {
 	ruta: string;
 	icono: string;
 };
+
+export type TSidebarMenu = {
+	nombre: string;
+	descripcion: string;
+	indice: number;
+	ruta: string;
+};

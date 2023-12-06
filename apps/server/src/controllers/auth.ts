@@ -137,7 +137,7 @@ export const logupHandler = async ({ body, query }: Request, res: Response) => {
 				type: 'date',
 			}),
 			id_municipio: 1,
-			carnet,
+			carnet: +carnet.toString().replace(' ', ''),
 			cui,
 			rol: rolFinded[0].id_rol,
 		};

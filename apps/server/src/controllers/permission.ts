@@ -13,22 +13,24 @@ const getItem = (res: Response) => {
 const getItems = async ({ user }: Request, res: Response) => {
 	try {
 		const sql = `select 
-	uperm.id_rol , uperm.id_pagina , 
-	upag.nombre , upag.descripcion , 
-	upag.indice , upag.ruta 
-from ut_permiso uperm 
-left join rol r 
-	using (id_rol)
-left join ut_pagina upag 
-	using (id_pagina)
-where r.id_rol in (
-	select id_rol 
-	from rol r2 
-	left join usuario_rol ur 
-	using (id_rol)
-	where ur.id_usuario = ?
-	and uperm.permiso = ?
-) ; `;
+	uperm.n_padre , uperm.n_hijo , 
+	uperm.i_padre , uperm.i_hijo ,
+	uperm.descripcion , uperm.ruta 
+from ut_permiso up 
+inner join (
+	select 
+		uph.id_pagina , 
+		upp.nombre n_padre, uph.nombre n_hijo , 
+		upp.indice i_padre, uph.indice i_hijo , 
+		uph.descripcion , concat(upp.ruta, uph.ruta) ruta
+	from ut_pagina upp  
+	inner join ut_pagina uph 
+		on upp.id_pagina = uph.id_padre
+) uperm
+	on up.id_pagina = uperm.id_pagina 
+where up.id_usuario = 2 
+and up.id_rol = 37 
+and up.permiso = 1`;
 		const rows = await sqlEjecutar({ sql, values: [user.primaryKey, 1] });
 		res.status(200).json(rows);
 	} catch (error: any) {

@@ -62,15 +62,21 @@ export const schemaLogup = yup.object().shape({
 				.oneOf([yup.ref('pass')], 'Las contraseñas no coinciden'),
 		}),
 	carnet: yup
-		.number()
+		.string()
 		.required('Carnet es requerido')
-		.positive('Carnet no puede ser negativo')
-		.integer('Carnet debe ser un número entero'),
+		.test('carnt', 'Carnet no es válido', (value: string | undefined) => {
+			if (!value) return false;
+			let carnetTest = /\d{2,4}\s?\d{5}/;
+			return carnetTest.test(value);
+		}),
 	cui: yup
-		.number()
+		.string()
 		.required('DPI es requerido')
-		.max(20, 'DPI no puede ser mayor a 20 caracteres')
-		.integer('DPI debe ser un número entero'),
+		.test('cui', 'DPI no es válido', (value: string | undefined) => {
+			if (!value) return false;
+			let cuiTest = /\d{4}\s?\d{5}\s?\d{4}/;
+			return cuiTest.test(value);
+		}),
 	direccion: yup
 		.string()
 		.required('Dirección es requerido')
