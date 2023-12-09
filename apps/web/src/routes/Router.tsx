@@ -142,10 +142,226 @@ export const router = createBrowserRouter(
 			element: <UserRecovery />,
 		},
 		{
+			path: '/administrador',
+			element: (
+				<ProtectedRoute rol='administrador'>
+					<Dashboard />
+				</ProtectedRoute>
+			),
+			children: [
+				{
+					path: 'perfil',
+					element: (
+						<ProtectedRoute rol='administrador'>
+							<UserProfile />
+						</ProtectedRoute>
+					),
+				},
+				{
+					path: 'chat',
+					element: (
+						<ProtectedRoute rol='administrador'>
+							{<Chat />}
+						</ProtectedRoute>
+					),
+				},
+				{
+					path: 'revisiones-tesis',
+					element: (
+						<ProtectedRoute rol='administrador'>
+							<Aplicacion />
+						</ProtectedRoute>
+					),
+				},
+				{
+					path: 'impresion-tesis',
+					element: (
+						<ProtectedRoute rol='administrador'>
+							<ProblemsApp />
+						</ProtectedRoute>
+					),
+				},
+			],
+		},
+		{
+			path: '/aplicacion',
+			element: (
+				<ProtectedRoute rol='administrador'>
+					<Dashboard />
+				</ProtectedRoute>
+			),
+			children: [
+				{
+					path: 'paginas',
+					element: (
+						<ProtectedRoute rol='administrador'>
+							<PagesApp />
+						</ProtectedRoute>
+					),
+				},
+				{
+					path: 'usuarios',
+					element: (
+						<ProtectedRoute rol='administrador'>
+							<UsersApp />
+						</ProtectedRoute>
+					),
+				},
+				{
+					path: 'horarios',
+					element: (
+						<ProtectedRoute rol='administrador'>
+							<Schedule />
+						</ProtectedRoute>
+					),
+				},
+				{
+					path: 'cursos',
+					element: (
+						<ProtectedRoute rol='administrador'>
+							<Courses />
+						</ProtectedRoute>
+					),
+				},
+			],
+		},
+		{
+			path: '/docente',
+			element: (
+				<ProtectedRoute rol='profesor'>
+					<Dashboard />
+				</ProtectedRoute>
+			),
+			children: [
+				{
+					path: 'perfil',
+					element: (
+						<ProtectedRoute rol='profesor'>
+							<UserProfile />
+						</ProtectedRoute>
+					),
+				},
+				{
+					path: 'chat',
+					element: (
+						<ProtectedRoute rol='profesor'>
+							{<Chat />}
+						</ProtectedRoute>
+					),
+				},
+				{
+					path: 'punto-tesis',
+					element: (
+						<ProtectedRoute rol='profesor'>
+							{<DraftProfessor />}
+						</ProtectedRoute>
+					),
+				},
+				{
+					path: 'curso-I',
+					element: (
+						<ProtectedRoute rol='profesor'>
+							{<FstCourseProfessor />}
+						</ProtectedRoute>
+					),
+				},
+				{
+					path: 'curso-II',
+					element: (
+						<ProtectedRoute rol='profesor'>
+							{<SndCourseProfessor />}
+						</ProtectedRoute>
+					),
+				},
+				{
+					path: 'comision-y-estilos',
+					element: (
+						<ProtectedRoute rol='profesor'>
+							{<ThesisProfessor />}
+						</ProtectedRoute>
+					),
+				},
+				{
+					path: 'previos-internos',
+					element: (
+						<ProtectedRoute rol='profesor'>
+							{<ThesisProfessor />}
+						</ProtectedRoute>
+					),
+				},
+			],
+		},
+		{
+			path: '/encargado/',
+			element: (
+				<ProtectedRoute rol='encargado'>
+					<Dashboard />
+				</ProtectedRoute>
+			),
+			children: [
+				{
+					path: 'perfil',
+					element: (
+						<ProtectedRoute rol='encargado'>
+							<UserProfile />
+						</ProtectedRoute>
+					),
+				},
+				{
+					path: 'chat',
+					element: (
+						<ProtectedRoute rol='encargado'>
+							{<Chat />}
+						</ProtectedRoute>
+					),
+				},
+				{
+					path: 'punto-tesis',
+					element: (
+						<ProtectedRoute rol='encargado'>
+							<DraftResponsible />
+						</ProtectedRoute>
+					),
+				},
+				{
+					path: 'curso-I',
+					element: (
+						<ProtectedRoute rol='encargado'>
+							{<FstCourseResponsible />}
+						</ProtectedRoute>
+					),
+				},
+				{
+					path: 'curso-II',
+					element: (
+						<ProtectedRoute rol='encargado'>
+							{<SndCourseResponsible />}
+						</ProtectedRoute>
+					),
+				},
+				{
+					path: 'comision-y-estilos',
+					element: (
+						<ProtectedRoute rol='encargado'>
+							{<ThesisResponsible />}
+						</ProtectedRoute>
+					),
+				},
+				{
+					path: 'previos-internos',
+					element: (
+						<ProtectedRoute rol='encargado'>
+							{<ReviewThesisResponsible />}
+						</ProtectedRoute>
+					),
+				},
+			],
+		},
+		{
 			path: '/estudiante',
 			element: (
 				<ProtectedRoute rol='estudiante'>
-					{<Dashboard />}
+					<Dashboard />
 				</ProtectedRoute>
 			),
 			children: [
@@ -243,128 +459,26 @@ export const router = createBrowserRouter(
 			],
 		},
 		{
-			path: '/encargado/',
+			path: '/reporte',
 			element: (
-				<ProtectedRoute rol='encargado'>{<Dashboard />}</ProtectedRoute>
+				<ProtectedRoute rol='analitica'>
+					<Dashboard />
+				</ProtectedRoute>
 			),
 			children: [
 				{
-					path: 'perfil',
+					path: 'resumen',
 					element: (
-						<ProtectedRoute rol='encargado'>
-							<UserProfile />
+						<ProtectedRoute rol='analitica'>
+							{<Resumen />}
 						</ProtectedRoute>
 					),
 				},
 				{
-					path: 'chat',
+					path: 'progresos',
 					element: (
-						<ProtectedRoute rol='encargado'>
-							{<Chat />}
-						</ProtectedRoute>
-					),
-				},
-				{
-					path: 'punto-tesis',
-					element: (
-						<ProtectedRoute rol='encargado'>
-							<DraftResponsible />
-						</ProtectedRoute>
-					),
-				},
-				{
-					path: 'curso-introduccion',
-					element: (
-						<ProtectedRoute rol='encargado'>
-							{<FstCourseResponsible />}
-						</ProtectedRoute>
-					),
-				},
-				{
-					path: 'tutor-estudiante',
-					element: (
-						<ProtectedRoute rol='encargado'>
-							{<StudentTutor />}
-						</ProtectedRoute>
-					),
-				},
-				{
-					path: 'curso-elaboracion',
-					element: (
-						<ProtectedRoute rol='encargado'>
-							{<SndCourseResponsible />}
-						</ProtectedRoute>
-					),
-				},
-				{
-					path: 'tesis',
-					element: (
-						<ProtectedRoute rol='encargado'>
-							{<ThesisResponsible />}
-						</ProtectedRoute>
-					),
-				},
-				{
-					path: 'previos-internos',
-					element: (
-						<ProtectedRoute rol='encargado'>
-							{<ReviewThesisResponsible />}
-						</ProtectedRoute>
-					),
-				},
-			],
-		},
-		{
-			path: '/docente',
-			element: (
-				<ProtectedRoute rol='profesor'>{<Dashboard />}</ProtectedRoute>
-			),
-			children: [
-				{
-					path: 'perfil',
-					element: (
-						<ProtectedRoute rol='profesor'>
-							<UserProfile />
-						</ProtectedRoute>
-					),
-				},
-				{
-					path: 'chat',
-					element: (
-						<ProtectedRoute rol='profesor'>
-							{<Chat />}
-						</ProtectedRoute>
-					),
-				},
-				{
-					path: 'punto-tesis',
-					element: (
-						<ProtectedRoute rol='profesor'>
-							{<DraftProfessor />}
-						</ProtectedRoute>
-					),
-				},
-				{
-					path: 'curso-introduccion',
-					element: (
-						<ProtectedRoute rol='profesor'>
-							{<FstCourseProfessor />}
-						</ProtectedRoute>
-					),
-				},
-				{
-					path: 'curso-elaboracion',
-					element: (
-						<ProtectedRoute rol='profesor'>
-							{<SndCourseProfessor />}
-						</ProtectedRoute>
-					),
-				},
-				{
-					path: 'tesis',
-					element: (
-						<ProtectedRoute rol='profesor'>
-							{<ThesisProfessor />}
+						<ProtectedRoute rol='analitica'>
+							{<Resumen />}
 						</ProtectedRoute>
 					),
 				},
@@ -373,139 +487,59 @@ export const router = createBrowserRouter(
 		{
 			path: '/secretaria',
 			element: (
-				<ProtectedRoute rol='analitica'>{<Dashboard />}</ProtectedRoute>
-			),
-			children: [
-				{
-					path: 'perfil',
-					element: (
-						<ProtectedRoute rol='analitica'>
-							<UserProfile />
-						</ProtectedRoute>
-					),
-				},
-				{
-					path: 'chat',
-					element: (
-						<ProtectedRoute rol='analitica'>
-							{<Chat />}
-						</ProtectedRoute>
-					),
-				},
-				{
-					path: 'resumen',
-					element: (
-						<ProtectedRoute rol='analitica'>
-							{<Resumen />}
-						</ProtectedRoute>
-					),
-				},
-				{
-					path: 'por-estacion',
-					element: (
-						<ProtectedRoute rol='analitica'>
-							{<ByEstacion />}
-						</ProtectedRoute>
-					),
-				},
-				{
-					path: 'por-rol',
-					element: (
-						<ProtectedRoute rol='analitica'>
-							{<ByRol />}
-						</ProtectedRoute>
-					),
-				},
-			],
-		},
-		{
-			path: '/administrador',
-			element: (
-				<ProtectedRoute rol='administrador'>
-					{<Dashboard />}
+				<ProtectedRoute rol='analitica'>
+					<Dashboard />
 				</ProtectedRoute>
 			),
 			children: [
 				{
 					path: 'perfil',
 					element: (
-						<ProtectedRoute rol='administrador'>
-							<UserProfile />
-						</ProtectedRoute>
-					),
-				},
-				{
-					path: 'resumen',
-					element: (
 						<ProtectedRoute rol='analitica'>
-							{<Resumen />}
+							<UserProfile />
 						</ProtectedRoute>
 					),
 				},
 				{
 					path: 'chat',
 					element: (
-						<ProtectedRoute rol='administrador'>
+						<ProtectedRoute rol='analitica'>
 							{<Chat />}
 						</ProtectedRoute>
 					),
 				},
 				{
-					path: 'usuarios',
+					path: 'asesor-tesis',
 					element: (
-						<ProtectedRoute rol='administrador'>
-							<UsersApp />
+						<ProtectedRoute rol='encargado'>
+							{<StudentTutor />}
 						</ProtectedRoute>
 					),
 				},
-				{
-					path: 'paginas',
-					element: (
-						<ProtectedRoute rol='administrador'>
-							<PagesApp />
-						</ProtectedRoute>
-					),
-				},
-				{
-					path: 'cursos',
-					element: (
-						<ProtectedRoute rol='administrador'>
-							<Courses />
-						</ProtectedRoute>
-					),
-				},
-				{
-					path: 'horarios',
-					element: (
-						<ProtectedRoute rol='administrador'>
-							<Schedule />
-						</ProtectedRoute>
-					),
-				},
-				{
-					path: 'aplicacion',
-					element: (
-						<ProtectedRoute rol='administrador'>
-							<Aplicacion />
-						</ProtectedRoute>
-					),
-				},
-				{
-					path: 'problemas',
-					element: (
-						<ProtectedRoute rol='administrador'>
-							<ProblemsApp />
-						</ProtectedRoute>
-					),
-				},
-				{
-					path: 'finalizacion',
-					element: (
-						<ProtectedRoute rol='administrador'>
-							<AproveThesis />
-						</ProtectedRoute>
-					),
-				},
+				// {
+				// 	path: 'resumen',
+				// 	element: (
+				// 		<ProtectedRoute rol='analitica'>
+				// 			{<Resumen />}
+				// 		</ProtectedRoute>
+				// 	),
+				// },
+				// {
+				// 	path: 'por-estacion',
+				// 	element: (
+				// 		<ProtectedRoute rol='analitica'>
+				// 			{<ByEstacion />}
+				// 		</ProtectedRoute>
+				// 	),
+				// },
+				// {
+				// 	path: 'por-rol',
+				// 	element: (
+				// 		<ProtectedRoute rol='analitica'>
+				// 			{<ByRol />}
+				// 		</ProtectedRoute>
+				// 	),
+				// },
 			],
 		},
 	],

@@ -12,6 +12,7 @@ const getItem = (res: Response) => {
 
 const getItems = async ({ user }: Request, res: Response) => {
 	try {
+		console.log('user', user);
 		const sql = `select 
 	uperm.n_padre , uperm.n_hijo , 
 	uperm.i_padre , uperm.i_hijo ,
@@ -28,9 +29,8 @@ inner join (
 		on upp.id_pagina = uph.id_padre
 ) uperm
 	on up.id_pagina = uperm.id_pagina 
-where up.id_usuario = 2 
-and up.id_rol = 37 
-and up.permiso = 1`;
+where up.id_usuario = ? 
+and up.permiso = ?`;
 		const rows = await sqlEjecutar({ sql, values: [user.primaryKey, 1] });
 		res.status(200).json(rows);
 	} catch (error: any) {
