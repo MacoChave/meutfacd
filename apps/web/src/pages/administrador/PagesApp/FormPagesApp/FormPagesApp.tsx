@@ -1,12 +1,13 @@
 import { URL } from '@/consts/Api';
 import { McInput } from '@/components/McWithForms/McInput';
-import { TPageApp } from '@/models/PageApp';
+import { TPageApp, schemaPageApp } from '@/models/PageApp';
 import { TResult } from '@/models/Fetching';
 import { putData } from '@/services/fetching';
 import { Box, Button } from '@mui/material';
 import React from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import swal from 'sweetalert';
+import { yupResolver } from '@hookform/resolvers/yup';
 
 export type FormPagesAppProps = {
 	page: TPageApp;
@@ -15,7 +16,8 @@ export type FormPagesAppProps = {
 
 const FormPagesApp: React.FC<FormPagesAppProps> = ({ page, onClose }) => {
 	const { control, handleSubmit } = useForm<TPageApp>({
-		defaultValues: { ...page, icono: page.icono || '' },
+		defaultValues: { ...page },
+		resolver: yupResolver(schemaPageApp),
 		mode: 'onBlur',
 	});
 
@@ -25,9 +27,9 @@ const FormPagesApp: React.FC<FormPagesAppProps> = ({ page, onClose }) => {
 			body: {
 				table: 'ut_pagina',
 				datos: {
-					nombre: data.nombre,
+					nombre: data.n_hijo,
 					descripcion: data.descripcion,
-					// icono: data.icono,
+					indice: data.i_hijo,
 				},
 			},
 			params: { id_pagina: data.id_pagina },
@@ -52,7 +54,7 @@ const FormPagesApp: React.FC<FormPagesAppProps> = ({ page, onClose }) => {
 				}}>
 				<McInput
 					control={control as any}
-					name='nombre'
+					name='n_hijo'
 					label='Nombre de página'
 				/>
 				<McInput
@@ -62,8 +64,8 @@ const FormPagesApp: React.FC<FormPagesAppProps> = ({ page, onClose }) => {
 				/>
 				<McInput
 					control={control as any}
-					name='icono'
-					label='Abreviatura de la página'
+					name='i_hijo'
+					label='Indice de la página'
 				/>
 				<Box
 					sx={{

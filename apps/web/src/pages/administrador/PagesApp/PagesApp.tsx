@@ -16,11 +16,9 @@ const PagesApp: React.FC<PagesAppProps> = ({}) => {
 	const [editing, setEditing] = useState(false);
 
 	const { data, isLoading, isError, refetch } = useCustomFetch({
-		url: `${URL.GENERIC}/all`,
-		method: 'post',
-		body: {
-			table: 'ut_pagina',
-		},
+		url: `${URL.PERMISSION}/all`,
+		method: 'get',
+		body: {},
 	});
 
 	const onSave = async (item: any) => {
@@ -60,9 +58,10 @@ const PagesApp: React.FC<PagesAppProps> = ({}) => {
 			<Contenedor title='Gestión de páginas'>
 				<McTable
 					headers={{
-						nombre: 'Nombre',
+						n_padre: 'Categoría',
+						n_hijo: 'Nombre',
 						descripcion: 'Descripción',
-						icono: 'Abr',
+						ruta: 'Ruta de la página',
 					}}
 					rows={data}
 					totalCols={{}}

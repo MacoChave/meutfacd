@@ -1,4 +1,4 @@
-export const API_V1 = import.meta.env.VITE_API_URL || 'http://localhost:3000'
+export const API_V1 = import.meta.env.VITE_API_URL || 'http://localhost:3000';
 
 export const URL = {
 	ASSIGNMENT: '/api/assignment',
@@ -31,4 +31,5 @@ export const URL = {
 	THESIS: '/api/thesis',
 	USER_ROL: '/api/user_rol',
 	USER: '/api/user',
+	ACCESS: '/api/access',
 };

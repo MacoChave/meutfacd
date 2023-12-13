@@ -2,11 +2,12 @@ import { Autocomplete, TextField } from '@mui/material';
 import React from 'react';
 
 const rolTypes = [
+	{ value: 'super', label: 'Super administrador' },
 	{ value: 'administrador', label: 'Administrador' },
 	{ value: 'encargado', label: 'Encargado' },
-	{ value: 'estudiante', label: 'Estudiante' },
 	{ value: 'docente', label: 'Docente' },
 	{ value: 'secretaria', label: 'Secretaría' },
+	{ value: 'estudiante', label: 'Estudiante' },
 ];
 
 export type PickerRolProps = {

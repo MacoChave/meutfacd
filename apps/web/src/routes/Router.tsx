@@ -1,5 +1,4 @@
 import Dashboard from '@/components/Layout/Dashboard/Dashboard';
-import { AproveThesis } from '@/pages/administrador/AproveThesis';
 import { lazy } from 'react';
 import { createBrowserRouter } from 'react-router-dom';
 // --------------------
@@ -104,6 +103,10 @@ const Courses = lazy(() => import('@/pages/administrador/Courses/Courses'));
 const Schedule = lazy(() => import('@/pages/administrador/Schedule/Schedule'));
 const Aplicacion = lazy(() => import('../pages/administrador/Aplicacion'));
 const ProblemsApp = lazy(() => import('../pages/administrador/Problemas'));
+const AproveThesis = lazy(
+	() => import('@/pages/administrador/AproveThesis/AproveThesis')
+);
+const Acceso = lazy(() => import('@/pages/aplicacion/Acceso/Acceso'));
 // --------------------
 // ERROR PAGES
 // --------------------
@@ -223,6 +226,14 @@ export const router = createBrowserRouter(
 						</ProtectedRoute>
 					),
 				},
+				{
+					path: 'accesos-rol',
+					element: (
+						<ProtectedRoute rol='administrador'>
+							<Acceso />
+						</ProtectedRoute>
+					),
+				},
 			],
 		},
 		{
@@ -292,7 +303,7 @@ export const router = createBrowserRouter(
 			],
 		},
 		{
-			path: '/encargado/',
+			path: '/encargado',
 			element: (
 				<ProtectedRoute rol='encargado'>
 					<Dashboard />

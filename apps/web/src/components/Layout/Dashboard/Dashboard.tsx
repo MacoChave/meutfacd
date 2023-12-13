@@ -14,7 +14,7 @@ export type DashboardProps = {};
 
 const Dashboard: FC<DashboardProps> = ({}) => {
 	const { data, isLoading, isError } = useFetch({
-		url: `${URL.PERMISSION}/all`,
+		url: `${URL.PERMISSION}`,
 	});
 	const [open, setOpen] = useState(false);
 
