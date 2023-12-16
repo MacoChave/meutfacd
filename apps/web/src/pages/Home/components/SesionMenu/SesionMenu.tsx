@@ -1,6 +1,6 @@
 import { Box, Button, Menu } from '@mui/material';
-import React, { useState } from 'react';
-import { SesionPorRol } from '../SesionPorRol';
+import React, { lazy, useState } from 'react';
+const SesionPorRol = lazy(() => import('../SesionPorRol/SesionPorRol'));
 
 export type SesionMenuProps = {
 	handleLogin: (rol: string) => void;
@@ -33,8 +33,8 @@ const SesionMenu: React.FC<SesionMenuProps> = ({
 						left: 0,
 						right: 0,
 						marginX: 'auto',
-						width: '90%',
-						maxWidth: '90%',
+						width: { xs: '90%', sm: '50%', md: '30%' },
+						// maxWidth: '90%',
 					},
 				}}
 				aria-labelledby='login-boton'
@@ -61,16 +61,16 @@ const SesionMenu: React.FC<SesionMenuProps> = ({
 					}}>
 					<SesionPorRol
 						rol='estudiante'
-						title='Estudiante'
+						title='Sesión'
 						handleLogin={handleLogin}
 						handleLogup={handleLogup}
 					/>
-					<SesionPorRol
+					{/* <SesionPorRol
 						rol='docente'
 						title='Administrativo'
 						handleLogin={handleLogin}
 						handleLogup={handleLogup}
-					/>
+					/> */}
 					{/* <SesionPorRol
 						rol='administrador'
 						handleLogin={handleLogin}

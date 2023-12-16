@@ -30,19 +30,36 @@ and up.permiso = ?`;
 	}
 };
 
-const getItems = async ({ user }: Request, res: Response) => {
+const getItems = async ({ query }: Request, res: Response) => {
 	try {
-		console.log('user', user);
+		console.log('query', query);
+
 		const sql = `select 
-	uph.id_pagina , 
+	uph.id_pagina id_hijo , upp.id_pagina id_padre ,
 	upp.nombre n_padre, uph.nombre n_hijo , 
-	upp.indice i_padre, uph.indice i_hijo , 
-	uph.descripcion , concat(upp.ruta, uph.ruta) ruta
-from ut_pagina upp  
-right join ut_pagina uph 
-	on upp.id_pagina = uph.id_padre
-order by n_padre`;
-		const rows = await sqlEjecutar({ sql, values: [user.primaryKey, 1] });
+	uph.descripcion , up.permiso , up.permiso 
+from ut_permiso up 
+inner join ut_pagina uph 
+	on up.id_pagina = uph.id_pagina 
+inner join ut_pagina upp 
+	on uph.id_padre = upp.id_pagina 
+where up.id_usuario = ?
+	and upp.id_pagina in (
+		select distinct uar.id_pagina
+		from ut_acceso_rol uar 
+		inner join usuario_rol ur  
+			on uar.id_rol = ur.id_rol
+		where uar.activo = ? 
+		and uar.id_rol in (
+			select distinct ur2.id_rol 
+			from usuario_rol ur2 
+			where ur2.id_usuario = ?
+		)
+	)`;
+		const rows = await sqlEjecutar({
+			sql,
+			values: [query.id_usuario, 1, query.id_usuario],
+		});
 		res.status(200).json(rows);
 	} catch (error: any) {
 		console.log(error);
