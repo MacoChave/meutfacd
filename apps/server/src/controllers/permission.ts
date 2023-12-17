@@ -37,7 +37,8 @@ const getItems = async ({ query }: Request, res: Response) => {
 		const sql = `select 
 	uph.id_pagina id_hijo , upp.id_pagina id_padre ,
 	upp.nombre n_padre, uph.nombre n_hijo , 
-	uph.descripcion , up.permiso , up.permiso 
+	uph.descripcion , up.permiso , up.permiso , 
+	up.id_rol
 from ut_permiso up 
 inner join ut_pagina uph 
 	on up.id_pagina = uph.id_pagina 

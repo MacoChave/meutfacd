@@ -1,18 +1,39 @@
-import { Box, Typography } from '@mui/material';
+import { Box, Checkbox, Typography } from '@mui/material';
 import React from 'react';
 import { TabsProps } from '../../propTypes/tabsProps';
 import { useFetch } from '@/hooks/useFetch';
 import { URL } from '@/consts/Api';
-import { DotsLoaders } from '@/components';
+import { DotsLoaders, ErrorOperacion } from '@/components';
+import { TResult } from '@/models/Fetching';
+import { putData } from '@/services/fetching';
 
 const Permisos: React.FC<TabsProps> = ({ usuario, index, ...other }) => {
-	const { data, isLoading, isError } = useFetch({
+	const { data, isLoading, isError, refetch } = useFetch({
 		url: `${URL.PERMISSION}/all`,
 		params: { id_usuario: usuario.id_usuario },
 	});
 
+	const edit = async (page: any) => {
+		const result: TResult = await putData({
+			path: `${URL.GENERIC}`,
+			body: { table: 'ut_permiso', datos: { permiso: !page.permiso } },
+			params: {
+				id_usuario: usuario.id_usuario,
+				id_rol: page.id_rol,
+				id_pagina: page.id_hijo,
+			},
+		});
+		refetch();
+	};
+
 	if (isLoading) return <DotsLoaders />;
-	if (isError) return <div>Error</div>;
+	if (isError)
+		return (
+			<ErrorOperacion
+				mensaje='Error al obtener los permisos del usuario'
+				error={null}
+			/>
+		);
 
 	return (
 		<>
@@ -20,34 +41,48 @@ const Permisos: React.FC<TabsProps> = ({ usuario, index, ...other }) => {
 				sx={{
 					display: 'flex',
 					flexDirection: 'column',
-					width: { xs: '150px', sm: '300px', md: '400px' },
+					// width: { xs: '150px', sm: '300px', md: '400px' },
 					gap: 2,
 					p: 3,
 				}}>
 				{Object.entries(
 					data.reduce((acc: any, item: any) => {
-						if (acc[item.n_padre]) acc[item.n_padre] = [];
+						if (!acc[item.n_padre]) acc[item.n_padre] = [];
 						acc[item.n_padre].push(item);
 						return acc;
-					})
+					}, {})
 				).map(([key, value]: any) => (
-					<Box key={key}>
-						<Typography variant='h6'>{key}</Typography>
+					<>
+						<Typography variant='body1'>{key}</Typography>
 						<Box
 							sx={{
-								display: 'flex',
-								flexDirection: 'column',
-								gap: 1,
+								display: 'grid',
+								gridTemplateColumns:
+									'repeat(auto-fit, minmax(100px, 1fr))',
+								gap: 2,
+								p: 2,
+								width: '100%',
 							}}>
-							{value.map((item: any) => (
-								<Typography
-									key={item.id_permiso}
-									variant='body1'>
-									{item.n_permiso}
-								</Typography>
+							{value.map((v: any) => (
+								<Box
+									sx={{
+										display: 'flex',
+										justifyContent: 'space-between',
+										flexDirection: 'column',
+										placeContent: 'center',
+										alignItems: 'center',
+									}}>
+									<Typography variant='body2' align='center'>
+										{v.n_hijo}
+									</Typography>
+									<Checkbox
+										checked={v.permiso}
+										onChange={() => edit(v)}
+									/>
+								</Box>
 							))}
 						</Box>
-					</Box>
+					</>
 				))}
 			</Box>
 		</>

@@ -18,14 +18,6 @@ const Acceso: React.FC<AccesoProps> = ({}) => {
 	});
 
 	const onEdit = async (registro: any) => {
-		console.log({
-			update: 'ut_acceso_rol',
-			set: { activo: !registro.activo },
-			where: {
-				id_rol: registro.id_rol,
-				id_pagina: registro.id_pagina,
-			},
-		});
 		const result: TResult = await putData({
 			path: `${URL.ACCESS}`,
 			body: {
@@ -49,7 +41,7 @@ const Acceso: React.FC<AccesoProps> = ({}) => {
 		);
 
 	return (
-		<Contenedor title='Gestión de accesos'>
+		<Contenedor title='Gestión de accesos por rol'>
 			{Object.entries(
 				data.reduce((acc: any, item: any) => {
 					if (!acc[item.rol]) acc[item.rol] = [];
@@ -75,23 +67,33 @@ const Acceso: React.FC<AccesoProps> = ({}) => {
 						variant='body1'>
 						{key}
 					</Typography>
-					{value.map((v: any) => (
-						<Box
-							sx={{
-								display: 'grid',
-								gridTemplateColumns: '1fr 1fr 1fr',
-								placeItems: 'center',
-								gap: 2,
-								p: 3,
-							}}>
-							<Typography variant='body2'>{v.pagina}</Typography>
-							<Checkbox
-								checked={v.activo}
-								onChange={() => onEdit(v)}
-								inputProps={{ 'aria-label': 'controlled' }}
-							/>
-						</Box>
-					))}
+					<Box
+						sx={{
+							display: 'grid',
+							gridTemplateColumns:
+								'repeat(auto-fit, minmax(300px, 1fr))',
+							gap: 2,
+							p: 2,
+						}}>
+						{value.map((v: any) => (
+							<Box
+								sx={{
+									display: 'flex',
+									justifyContent: 'space-between',
+									flexDirection: 'column',
+									alignItems: 'center',
+								}}>
+								<Typography variant='body2'>
+									{v.pagina}
+								</Typography>
+								<Checkbox
+									checked={v.activo}
+									onChange={() => onEdit(v)}
+									inputProps={{ 'aria-label': 'controlled' }}
+								/>
+							</Box>
+						))}
+					</Box>
 				</>
 			))}
 		</Contenedor>
