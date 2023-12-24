@@ -62,6 +62,7 @@ const Sidebar: FC<SidebarProps> = ({ menuArray, open, setOpen }) => {
 				<List
 					component={'nav'}
 					aria-labelledby={key}
+					key={key.toString().replace(' ', '-')}
 					sx={{
 						'&& .Mui-selected': {
 							background:

@@ -35,6 +35,11 @@ const Dashboard: FC<DashboardProps> = ({}) => {
 				height: '96vh',
 				justifyContent: 'space-between',
 				overflow: 'hidden',
+				backgroundImage:
+					'url(https://images.pexels.com/photos/574283/pexels-photo-574283.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1)',
+				backgroundRepeat: 'no-repeat',
+				backgroundSize: 'cover',
+				backgroundPosition: 'center',
 			}}
 			width={open ? 'calc(100% - 200px)' : '100%'}
 			pl={open ? '200px' : '0'}>

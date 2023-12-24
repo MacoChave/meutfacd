@@ -18,35 +18,33 @@ const VerifiedDocument = lazy(
 // --------------------
 // PAGES WITH SESSIONS
 // --------------------
-const Home = lazy(() => import('../pages/Home/Home'));
-const ProtectedRoute = lazy(() => import('../components/ProtectedRoute'));
+const Home = lazy(() => import('@/pages/Home/Home'));
+const ProtectedRoute = lazy(() => import('@/components/ProtectedRoute'));
 const UserProfile = lazy(
-	() => import('../pages/Sesion/UserProfile/UserProfile')
+	() => import('@/pages/Sesion/UserProfile/UserProfile')
 );
-const Chat = lazy(() => import('../pages/Chat/Chat'));
+const Chat = lazy(() => import('@/pages/Chat/Chat'));
 // --------------------
 // STUDENT PAGES
 // --------------------
 const StudentProgress = lazy(
-	() => import('../pages/estudiante/Progress/Progress')
+	() => import('@/pages/estudiante/Progress/Progress')
 );
 const StudentThesisCover = lazy(
-	() => import('../pages/estudiante/ThesisCover/ThesisCover')
+	() => import('@/pages/estudiante/ThesisCover/ThesisCover')
 );
-const StudentCourseI = lazy(
-	() => import('../pages/estudiante/CourseI/CourseI')
-);
+const StudentCourseI = lazy(() => import('@/pages/estudiante/CourseI/CourseI'));
 const StudentCourseII = lazy(
-	() => import('../pages/estudiante/CourseII/CourseII')
+	() => import('@/pages/estudiante/CourseII/CourseII')
 );
 const StudentThemeChange = lazy(
 	() => import('@/pages/estudiante/TopicChange/TopicChange')
 );
 const StudentCommissionStyle = lazy(
-	() => import('../pages/estudiante/CommisionStyle/CommissionStyle')
+	() => import('@/pages/estudiante/CommisionStyle/CommissionStyle')
 );
 const StudentInternaReviews = lazy(
-	() => import('../pages/estudiante/InternalReviews/InternalReviews')
+	() => import('@/pages/estudiante/InternalReviews/InternalReviews')
 );
 const StudentPrintingRequest = lazy(
 	() => import('@/pages/estudiante/PrintingRequest/PrintingRequest')
@@ -86,23 +84,24 @@ const ThesisResponsible = lazy(
 	() => import('@/pages/encargado/ThesisSup/ThesisSup')
 );
 const ReviewThesisResponsible = lazy(
-	() => import('../pages/encargado/ReviewThesis/ReviewThesis')
+	() => import('@/pages/encargado/ReviewThesis/ReviewThesis')
 );
 // --------------------
-// ANALYTICS PAGES
+// REPORT PAGES
 // --------------------
-const ByEstacion = lazy(() => import('../pages/analitica/ByEstacion'));
-const ByRol = lazy(() => import('../pages/analitica/ByRol'));
-const Resumen = lazy(() => import('../pages/analitica/Resumen'));
+// const ByEstacion = lazy(() => import('@/pages/analitica/ByEstacion'));
+// const ByRol = lazy(() => import('@/pages/analitica/ByRol'));
+const Resumen = lazy(() => import('@/pages/reporte/Resumen/Resumen'));
+const Progresos = lazy(() => import('@/pages/reporte/Progresos/Progresos'));
 // --------------------
 // ADMINISTRATOR PAGES
 // --------------------
 const PagesApp = lazy(() => import('@/pages/administrador/PagesApp/PagesApp'));
-const UsersApp = lazy(() => import('../pages/administrador/Usuarios/Usuarios'));
+const UsersApp = lazy(() => import('@/pages/administrador/Usuarios/Usuarios'));
 const Courses = lazy(() => import('@/pages/administrador/Courses/Courses'));
 const Schedule = lazy(() => import('@/pages/administrador/Schedule/Schedule'));
-const Aplicacion = lazy(() => import('../pages/administrador/Aplicacion'));
-const ProblemsApp = lazy(() => import('../pages/administrador/Problemas'));
+const Aplicacion = lazy(() => import('@/pages/administrador/Aplicacion'));
+const ProblemsApp = lazy(() => import('@/pages/administrador/Problemas'));
 const AproveThesis = lazy(
 	() => import('@/pages/administrador/AproveThesis/AproveThesis')
 );
@@ -489,7 +488,7 @@ export const router = createBrowserRouter(
 					path: 'progresos',
 					element: (
 						<ProtectedRoute rol='analitica'>
-							{<Resumen />}
+							{<Progresos />}
 						</ProtectedRoute>
 					),
 				},

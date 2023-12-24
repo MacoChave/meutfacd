@@ -1,8 +1,5 @@
 import { Contenedor } from '@/components';
-import { Download } from '@mui/icons-material';
-import { Box, Divider, IconButton, MenuItem, Select } from '@mui/material';
-import { StationBox } from './StationBox';
-import { useState } from 'react';
+import { URL } from '@/consts/Api';
 import {
 	ESTACION1,
 	ESTACION2,
@@ -12,16 +9,22 @@ import {
 	ESTACION6,
 } from '@/consts/Vars';
 import { getData } from '@/services/fetching';
-import { URL } from '@/consts/Api';
 import { downloadFileByBloodPart } from '@/utils/fileManagment';
+import { Download } from '@mui/icons-material';
+import { Box, Divider, IconButton, TextField } from '@mui/material';
+import { lazy, useState } from 'react';
+import dayjs from 'dayjs';
+const StationBox = lazy(() => import('../components/StationBox/StationBox'));
 
 const Resumen = () => {
-	const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
+	const [selectedMonth, setSelectedMonth] = useState(
+		dayjs(new Date()).format('YYYY-MM')
+	);
 
 	const handleDownload = async () => {
 		const data = await getData({
 			path: `${URL.REVIEW}/xlsx`,
-			params: { year: currentYear },
+			params: { year: selectedMonth },
 			responseType: 'blob',
 		});
 		// DOWNLOAD XLSX FILE
@@ -58,28 +61,18 @@ const Resumen = () => {
 							gap: 2,
 						}}>
 						<Box>
-							<Select
-								variant='standard'
+							{/* TextField type month */}
+							<TextField
 								label='Ciclo lectivo'
-								defaultValue={currentYear}
-								onChange={(e) =>
-									setCurrentYear(e.target.value as number)
-								}>
-								{getYearRange(2020, 2030).map((year) => (
-									<MenuItem key={year} value={year}>
-										{year}
-									</MenuItem>
-								))}
-							</Select>
-						</Box>
-						<Box>
-							{/* <TextField
-								variant='standard'
-								label='Estudiantes atendidos'
-								InputProps={{
-									disabled: true,
+								type='month'
+								value={selectedMonth}
+								InputLabelProps={{
+									shrink: true,
 								}}
-							/> */}
+								onChange={(e) => {
+									setSelectedMonth(e.target.value);
+								}}
+							/>
 						</Box>
 						<Box sx={{ flex: 1 }} />
 						<Box>
@@ -97,15 +90,15 @@ const Resumen = () => {
 						sx={{
 							display: 'grid',
 							gridTemplateColumns:
-								'repeat(auto-fit, minmax(300px, 1fr))',
+								'repeat(auto-fit, minmax(250px, 1fr))',
 							gap: 4,
 						}}>
-						<StationBox station={ESTACION1} />
-						<StationBox station={ESTACION2} />
-						<StationBox station={ESTACION3} />
-						<StationBox station={ESTACION4} />
-						<StationBox station={ESTACION5} />
-						<StationBox station={ESTACION6} />
+						<StationBox station={ESTACION1} date={selectedMonth} />
+						<StationBox station={ESTACION2} date={selectedMonth} />
+						<StationBox station={ESTACION3} date={selectedMonth} />
+						<StationBox station={ESTACION4} date={selectedMonth} />
+						<StationBox station={ESTACION5} date={selectedMonth} />
+						<StationBox station={ESTACION6} date={selectedMonth} />
 					</Box>
 				</Box>
 			</Contenedor>

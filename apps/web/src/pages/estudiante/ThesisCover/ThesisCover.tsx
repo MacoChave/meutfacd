@@ -198,7 +198,7 @@ const ThesisCover: FC<ThesisCoverProps> = ({}) => {
 	return (
 		<>
 			<Contenedor title='Presentar punto de tesis'>
-				<TutorInfo
+				{/* <TutorInfo
 					tutor={revision?.tutor || 'Sin asignación'}
 					openChat={createChat}
 				/>
@@ -209,8 +209,8 @@ const ThesisCover: FC<ThesisCoverProps> = ({}) => {
 						onUpload={onUpload}
 						disabled={true}
 					/>
-				</UploadsReview>
-				{/* <form onSubmit={handleSubmit(onSubmit)}>
+				</UploadsReview> */}
+				<form onSubmit={handleSubmit(onSubmit)}>
 					<Box sx={style}>
 						<Box>
 							<Typography variant='h6'>
@@ -296,7 +296,7 @@ const ThesisCover: FC<ThesisCoverProps> = ({}) => {
 							</Box>
 						)}
 					</Box>
-				</form> */}
+				</form>
 			</Contenedor>
 			{isUploading && <SpinLoader message='Subiendo punto de tesis' />}
 		</>

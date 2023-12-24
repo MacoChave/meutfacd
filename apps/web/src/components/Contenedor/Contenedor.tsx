@@ -18,6 +18,8 @@ const Contenedor: React.FC<ContenedorProps> = ({ title, children }) => {
 				mx: 'auto',
 				display: 'flex',
 				flexDirection: 'column',
+				background: 'rgba(255,255,255,0.25)',
+				backdropFilter: 'blur(5px)',
 				// width: { xs: '90%', md: '85%' },
 				overflowX: 'scroll',
 			}}>

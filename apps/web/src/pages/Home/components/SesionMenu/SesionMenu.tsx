@@ -72,6 +72,7 @@ const SesionMenu: React.FC<SesionMenuProps> = ({
 						handleLogup={handleLogup}
 					/> */}
 					{/* <SesionPorRol
+						title='Administrador'
 						rol='administrador'
 						handleLogin={handleLogin}
 						handleLogup={handleLogup}

@@ -1,10 +1,10 @@
+import './utils/environment';
 import cors from 'cors';
 import express from 'express';
 import fileUpload from 'express-fileupload';
 import { connection } from './config/mysql';
 import { DATA_SOURCES } from './config/vars.config';
 import { router } from './routes';
-import './utils/environment';
 
 const PORT = DATA_SOURCES.API_PORT;
 

@@ -4,9 +4,6 @@ import React, { lazy } from 'react';
 const Asignacion = lazy(() => import('./Asignacion/Asignacion'));
 const Gestion = lazy(() => import('./Gestion/Gestion'));
 const Contenedor = lazy(() => import('@/components/Contenedor/Contenedor'));
-const DotsLoaders = lazy(
-	() => import('@/components/Loader/DotsLoaders/DotsLoaders')
-);
 
 export type CoursesProps = {};
 
