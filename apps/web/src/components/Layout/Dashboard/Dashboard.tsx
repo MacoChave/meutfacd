@@ -1,7 +1,7 @@
 import { URL } from '@/consts/Api';
 import { DotsLoaders } from '@/components/Loader/DotsLoaders';
 import { useFetch } from '@/hooks/useFetch';
-import { Box, Typography } from '@mui/material';
+import { Box, Toolbar, Typography } from '@mui/material';
 import { FC, lazy, useState } from 'react';
 const ToolbarWithSesion = lazy(
 	() => import('../ToolbarWithSession/ToolbarWithSession')
@@ -31,12 +31,12 @@ const Dashboard: FC<DashboardProps> = ({}) => {
 			sx={{
 				display: 'flex',
 				flexDirection: 'column',
-				gap: 3,
+				gap: 2,
 				height: '96vh',
 				justifyContent: 'space-between',
 				overflow: 'hidden',
 				backgroundImage:
-					'url(https://images.pexels.com/photos/574283/pexels-photo-574283.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1)',
+					'url(https://images.pexels.com/photos/891059/pexels-photo-891059.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1)',
 				backgroundRepeat: 'no-repeat',
 				backgroundSize: 'cover',
 				backgroundPosition: 'center',

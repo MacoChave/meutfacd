@@ -36,10 +36,13 @@ const FileChooser: React.FC<fileChooserProps> = ({
 		<>
 			<Box
 				sx={{
-					backgroundColor: active ? 'lightblue' : 'white',
-					border: active
-						? '3px solid darkblue'
-						: '3px dashed darkblue',
+					backgroundColor: active
+						? 'primary'
+						: 'rgba(255,255,255,0.25)',
+					backdropFilter: 'blur(5px)',
+					borderColor: active ? 'secondary.main' : 'primary.main',
+					borderStyle: 'solid',
+					borderWidth: 3,
 					borderRadius: 4,
 					boxSizing: 'border-box',
 					display: 'flex',

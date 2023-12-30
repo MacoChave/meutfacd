@@ -21,14 +21,18 @@ import {
 	Typography,
 } from '@mui/material';
 import { AxiosError } from 'axios';
-import { FC, useEffect, useState } from 'react';
+import { FC, lazy, useEffect, useState } from 'react';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import swal from 'sweetalert';
-import FileChooser from '@/components/controles/FileChooser';
 import { TReview } from '@/models/Review';
-import { TutorInfo } from '../components/TutorInfo';
-import { DetailReview } from '../components/DetailReview';
-import { UploadsReview } from '../components/UploadsReview';
+const TutorInfo = lazy(() => import('../components/TutorInfo/TutorInfo'));
+const DetailReview = lazy(
+	() => import('../components/DetailReview/DetailReview')
+);
+const UploadsReview = lazy(
+	() => import('../components/UploadsReview/UploadsReview')
+);
+const FileChooser = lazy(() => import('@/components/controles/FileChooser'));
 
 export type ThesisCoverProps = {};
 

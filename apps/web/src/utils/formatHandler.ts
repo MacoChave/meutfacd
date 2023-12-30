@@ -7,6 +7,14 @@ import {
 	REVISION,
 } from '@/consts/Vars';
 import { TypeWithKey } from '@/models/TypeWithKey';
+import dayjs from 'dayjs';
+import timezone from 'dayjs/plugin/timezone';
+import utc from 'dayjs/plugin/utc';
+import relativeTime from 'dayjs/plugin/relativeTime';
+
+dayjs.extend(utc);
+dayjs.extend(timezone);
+dayjs.extend(relativeTime);
 
 /**
  * Formatea la primera letra de cada palabra a mayúscula
@@ -94,9 +102,14 @@ export const formatByDataType = (cellValue: TypeWithKey<string>): string => {
 		case 'number':
 			return new Intl.NumberFormat().format(Number(value));
 		case 'date':
-			return new Date(value).toLocaleDateString('es-GT', {
-				dateStyle: 'long',
-			});
+			const date = dayjs(value).locale('es').tz('America/Guatemala');
+			// console.log(date);
+			return date.fromNow();
+		// return new Date(value).toLocaleString('es-GT', {
+		// 	dateStyle: 'long',
+		// 	timeStyle: 'short',
+		// 	timeZone: 'America/Guatemala',
+		// });
 		case 'boolean':
 			return value ? 'Si' : 'No';
 		default:
