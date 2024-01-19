@@ -1,14 +1,12 @@
+'use client';
+import { Contenedor, DotsLoaders, McModal, McTable } from '@/components';
 import { URL } from '@/consts/Api';
-import { Contenedor, McModal } from '@/components';
-import { DotsLoaders } from '@/components/Loader/DotsLoaders';
-import { McTable } from '@/components/MyTable';
-import { PENDIENTE, REVISION } from '@/consts/Vars';
+import { ESPERA, PENDIENTE, REVISION } from '@/consts/Vars';
 import { useCustomFetch } from '@/hooks/useFetch';
+import { Cita } from '@/pages/encargado/ReviewThesis/Cita';
 import { getData } from '@/services/fetching';
 import { Box, Typography } from '@mui/material';
 import React, { useState } from 'react';
-import { Cita } from './Cita';
-import { AsignReviewTutor } from './components/AsignReviewTutor';
 
 type ProgressType = {
 	estacion: string;
@@ -16,26 +14,20 @@ type ProgressType = {
 	fecha_carga: string;
 };
 
-export type ReviewThesisResponsibleProps = {};
+export type ReviewThesisProps = {
+	// types...
+};
 
-const ReviewThesisResponsible: React.FC<
-	ReviewThesisResponsibleProps
-> = ({}) => {
+const ReviewThesis: React.FC<ReviewThesisProps> = ({}) => {
 	const [open, setOpen] = useState(false);
 	const [row, setRow] = useState<ProgressType>({} as ProgressType);
 
 	const { data, isLoading, isError, refetch } = useCustomFetch({
-		url: `${URL.GENERIC}/all`,
-		method: 'post',
-		body: {
-			table: 'ut_v_revision',
-			conditions: [
-				{ column: 'estado', value: PENDIENTE, operator: '=' },
-				{ column: 'estado', value: REVISION, operator: '=' },
-			],
-			sort: { fecha: 'DESC' },
-		},
+		url: `${URL.REVIEW}/professor`,
+		method: 'get',
+		body: {},
 		params: {
+			estado: REVISION,
 			estacion: 6,
 		},
 	});
@@ -72,7 +64,6 @@ const ReviewThesisResponsible: React.FC<
 						flexDirection: { xs: 'column', md: 'row' },
 						gap: 4,
 					}}>
-					<AsignReviewTutor />
 					<McTable
 						headers={{
 							estado: 'Estado',
@@ -95,4 +86,4 @@ const ReviewThesisResponsible: React.FC<
 	);
 };
 
-export default ReviewThesisResponsible;
+export default ReviewThesis;

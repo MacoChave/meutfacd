@@ -1,7 +1,6 @@
+'use client';
+import { Contenedor, DotsLoaders, McModal, McTable } from '@/components';
 import { URL } from '@/consts/Api';
-import { Contenedor, McModal } from '@/components';
-import { DotsLoaders } from '@/components/Loader/DotsLoaders';
-import { McTable } from '@/components/MyTable';
 import { PENDIENTE, REVISION } from '@/consts/Vars';
 import { useCustomFetch } from '@/hooks/useFetch';
 import { TProgress } from '@/models/Progress';
@@ -9,9 +8,11 @@ import { Cita } from '@/pages/encargado/ReviewThesis/Cita';
 import { Typography } from '@mui/material';
 import React, { useState } from 'react';
 
-export type AproveThesisProps = {};
+export type PrintThesisProps = {
+	// types...
+};
 
-const AproveThesis: React.FC<AproveThesisProps> = ({}) => {
+const PrintThesis: React.FC<PrintThesisProps> = ({}) => {
 	const [open, setOpen] = useState(false);
 	const [row, setRow] = useState<TProgress>({} as TProgress);
 
@@ -27,7 +28,7 @@ const AproveThesis: React.FC<AproveThesisProps> = ({}) => {
 			sort: { fecha: 'DESC' },
 		},
 		params: {
-			estacion: 7,
+			estacion: 8,
 		},
 	});
 
@@ -62,10 +63,10 @@ const AproveThesis: React.FC<AproveThesisProps> = ({}) => {
 				/>
 			</Contenedor>
 			<McModal title='Gestión de citas' open={open} onClose={onClose}>
-				<Cita userProgress={row} onClose={onClose} estacion={7} />
+				<Cita userProgress={row} onClose={onClose} estacion={8} />
 			</McModal>
 		</>
 	);
 };
 
-export default AproveThesis;
+export default PrintThesis;

@@ -41,7 +41,8 @@ const Permisos: React.FC<TabsProps> = ({ usuario, index, ...other }) => {
 				sx={{
 					display: 'flex',
 					flexDirection: 'column',
-					// width: { xs: '150px', sm: '300px', md: '400px' },
+					maxHeight: 'calc(100dvh - 300px)',
+					overflowY: 'scroll',
 					gap: 2,
 					p: 3,
 				}}>

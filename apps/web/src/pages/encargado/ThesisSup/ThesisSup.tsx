@@ -40,7 +40,7 @@ const ThesisSup: React.FC<ThesisSupProps> = ({}) => {
 		body: {
 			table: 'ut_v_revision',
 		},
-		params: { estado: PENDIENTE, estacion: 5 },
+		params: { estado: ESPERA, estacion: 5 },
 	});
 
 	const saveAssign = async () => {

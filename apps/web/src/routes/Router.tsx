@@ -67,6 +67,10 @@ const SndCourseProfessor = lazy(
 const ThesisProfessor = lazy(
 	() => import('@/pages/evaluador/StylesComision/StylesComision')
 );
+const ReviewThesisProfessor = lazy(
+	() => import('@/pages/evaluador/ReviewThesis/ReviewThesis')
+);
+
 // --------------------
 // COORDINATOR PAGES
 // --------------------
@@ -104,6 +108,9 @@ const Aplicacion = lazy(() => import('@/pages/administrador/Aplicacion'));
 const ProblemsApp = lazy(() => import('@/pages/administrador/Problemas'));
 const AproveThesis = lazy(
 	() => import('@/pages/administrador/AproveThesis/AproveThesis')
+);
+const PrintThesis = lazy(
+	() => import('@/pages/administrador/PrintThesis/PrintThesis/PrintThesis')
 );
 const Acceso = lazy(() => import('@/pages/aplicacion/Acceso/Acceso'));
 // --------------------
@@ -167,11 +174,27 @@ export const router = createBrowserRouter(
 						</ProtectedRoute>
 					),
 				},
+				// {
+				// 	path: 'revisiones-tesis',
+				// 	element: (
+				// 		<ProtectedRoute rol='administrador'>
+				// 			<Aplicacion />
+				// 		</ProtectedRoute>
+				// 	),
+				// },
+				// {
+				// 	path: 'impresion-tesis',
+				// 	element: (
+				// 		<ProtectedRoute rol='administrador'>
+				// 			<ProblemsApp />
+				// 		</ProtectedRoute>
+				// 	),
+				// },
 				{
-					path: 'revisiones-tesis',
+					path: 'solicitud-impresion',
 					element: (
 						<ProtectedRoute rol='administrador'>
-							<Aplicacion />
+							<AproveThesis />
 						</ProtectedRoute>
 					),
 				},
@@ -179,7 +202,7 @@ export const router = createBrowserRouter(
 					path: 'impresion-tesis',
 					element: (
 						<ProtectedRoute rol='administrador'>
-							<ProblemsApp />
+							<PrintThesis />
 						</ProtectedRoute>
 					),
 				},
@@ -295,7 +318,7 @@ export const router = createBrowserRouter(
 					path: 'previos-internos',
 					element: (
 						<ProtectedRoute rol='profesor'>
-							{<ThesisProfessor />}
+							{<ReviewThesisProfessor />}
 						</ProtectedRoute>
 					),
 				},
@@ -526,30 +549,6 @@ export const router = createBrowserRouter(
 						</ProtectedRoute>
 					),
 				},
-				// {
-				// 	path: 'resumen',
-				// 	element: (
-				// 		<ProtectedRoute rol='analitica'>
-				// 			{<Resumen />}
-				// 		</ProtectedRoute>
-				// 	),
-				// },
-				// {
-				// 	path: 'por-estacion',
-				// 	element: (
-				// 		<ProtectedRoute rol='analitica'>
-				// 			{<ByEstacion />}
-				// 		</ProtectedRoute>
-				// 	),
-				// },
-				// {
-				// 	path: 'por-rol',
-				// 	element: (
-				// 		<ProtectedRoute rol='analitica'>
-				// 			{<ByRol />}
-				// 		</ProtectedRoute>
-				// 	),
-				// },
 			],
 		},
 	],
