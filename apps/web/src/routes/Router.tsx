@@ -462,7 +462,7 @@ export const router = createBrowserRouter(
 					path: 'entrega-tesis',
 					element: (
 						<ProtectedRoute rol='estudiante'>
-							{<StudentPrintingRequest />}
+							{<StudentPrintedThesis />}
 						</ProtectedRoute>
 					),
 				},

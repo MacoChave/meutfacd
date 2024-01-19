@@ -45,13 +45,7 @@ const Permisos: React.FC<TabsProps> = ({ usuario, index, ...other }) => {
 					gap: 2,
 					p: 3,
 				}}>
-				{Object.entries(
-					data.reduce((acc: any, item: any) => {
-						if (!acc[item.n_padre]) acc[item.n_padre] = [];
-						acc[item.n_padre].push(item);
-						return acc;
-					}, {})
-				).map(([key, value]: any) => (
+				{Object.entries(data).map(([key, value]: any) => (
 					<>
 						<Typography variant='body1'>{key}</Typography>
 						<Box

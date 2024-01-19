@@ -8,13 +8,23 @@ import React from 'react';
 
 export type PickEvaluadorProps = {
 	evaluador: TUser;
+	ruta?: string;
 	rol?: string;
+	page?: string;
+	status?: number;
+	horario?: number;
+	jornada?: number;
 	setEvaluador: (evaluador: TUser) => void;
 };
 
 const PickEvaluador: React.FC<PickEvaluadorProps> = ({
 	evaluador,
-	rol = 'Docente perfil',
+	ruta = 'all',
+	rol = 'Docente',
+	page = 'Punto de tesis',
+	status = 1,
+	horario,
+	jornada,
 	setEvaluador,
 }) => {
 	const {
@@ -22,17 +32,14 @@ const PickEvaluador: React.FC<PickEvaluadorProps> = ({
 		isLoading: isLoadingTeacher,
 		isError: isErrorTeacher,
 	} = useCustomFetch({
-		url: `${URL.GENERIC}/all`,
-		method: 'post',
-		body: {
-			table: 'ut_v_usuarios',
-			conditions: [
-				{
-					column: 'roles',
-					operator: 'like',
-					value: `%${rol}%`,
-				},
-			],
+		url: `${URL.PROFESOR}/${ruta}`,
+		method: 'get',
+		params: {
+			rol,
+			page,
+			status,
+			horario,
+			jornada,
 		},
 	});
 	if (isLoadingTeacher) return <DotsLoaders />;

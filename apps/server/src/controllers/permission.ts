@@ -23,45 +23,71 @@ inner join (
 	on up.id_pagina = uperm.id_pagina 
 where up.id_usuario = ? 
 and up.permiso = ?`;
-		const rows = await sqlEjecutar({ sql, values: [user.primaryKey, 1] });
-		res.status(200).json(rows);
+		const rows: any = await sqlEjecutar({
+			sql,
+			values: [user.primaryKey, 1],
+		});
+
+		let menu = rows.reduce((acc: any, item: any) => {
+			const { n_padre, n_hijo, i_padre, i_hijo, descripcion, ruta } =
+				item;
+			if (!acc[n_padre]) acc[n_padre] = [];
+			acc[n_padre].push({
+				n_padre,
+				n_hijo,
+				i_padre,
+				i_hijo,
+				descripcion,
+				ruta,
+			});
+			return acc;
+		}, {});
+
+		res.status(200).json(menu);
 	} catch (error: any) {
 		errorHttp(res, error as any);
 	}
 };
 
-const getItems = async ({ query }: Request, res: Response) => {
+const getItems = async ({ user, query }: Request, res: Response) => {
 	try {
-		console.log('query', query);
-
-		const sql = `select 
-	uph.id_pagina id_hijo , upp.id_pagina id_padre ,
-	upp.nombre n_padre, uph.nombre n_hijo , 
-	uph.descripcion , up.permiso , up.permiso , 
-	up.id_rol
-from ut_permiso up 
-inner join ut_pagina uph 
-	on up.id_pagina = uph.id_pagina 
-inner join ut_pagina upp 
-	on uph.id_padre = upp.id_pagina 
-where up.id_usuario = ?
-	and upp.id_pagina in (
-		select distinct uar.id_pagina
-		from ut_acceso_rol uar 
-		inner join usuario_rol ur  
-			on uar.id_rol = ur.id_rol
-		where uar.activo = ? 
-		and uar.id_rol in (
-			select distinct ur2.id_rol 
-			from usuario_rol ur2 
-			where ur2.id_usuario = ?
-		)
-	)`;
-		const rows = await sqlEjecutar({
+		console.log({ user, query });
+		const sql = `call ut_sp_get_pages_per_user(?)`;
+		const rows: any = await sqlEjecutar({
 			sql,
-			values: [query.id_usuario, 1, query.id_usuario],
+			values: [query.id_usuario],
 		});
-		res.status(200).json(rows);
+
+		const pages = rows[0].reduce((acc: any, item: any) => {
+			const {
+				idx_padre,
+				id_padre,
+				n_padre,
+				idx_hijo,
+				id_hijo,
+				n_hijo,
+				ruta,
+				permiso,
+				id_usuario,
+				id_rol,
+			} = item;
+			if (!acc[n_padre]) acc[n_padre] = [];
+			acc[n_padre].push({
+				idx_padre,
+				id_padre,
+				n_padre,
+				idx_hijo,
+				id_hijo,
+				n_hijo,
+				ruta,
+				permiso,
+				id_usuario,
+				id_rol,
+			});
+			return acc;
+		}, {});
+
+		res.status(200).json(pages);
 	} catch (error: any) {
 		console.log(error);
 		errorHttp(res, error as any);

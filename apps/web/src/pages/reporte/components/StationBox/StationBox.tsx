@@ -15,6 +15,7 @@ const StationBox: React.FC<StationBoxProps> = ({ station, date }) => {
 		url: `${URL.GENERIC}/all`,
 		body: {
 			table: 'ut_v_resumen',
+			columns: ['sum(A) A', 'sum(R) R'],
 			conditions: [
 				{
 					column: 'fecha',

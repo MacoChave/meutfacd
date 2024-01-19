@@ -47,55 +47,46 @@ const Sidebar: FC<SidebarProps> = ({ menuArray, open, setOpen }) => {
 			}}>
 			<Toolbar />
 			<Divider />
-			{Object.entries(
-				menuArray.reduce((acc: any, item: any) => {
-					if (!acc[item.n_padre]) acc[item.n_padre] = [];
-					acc[item.n_padre].push({
-						nombre: item.n_hijo,
-						descripcion: item.descripcion,
-						ruta: item.ruta,
-						indice: item.i_hijo,
-					});
-					return acc;
-				}, {})
-			).map(([key, value]: any, index: number) => (
-				<List
-					component={'nav'}
-					aria-labelledby={key}
-					key={key.toString().replace(' ', '-')}
-					sx={{
-						'&& .Mui-selected': {
-							background:
-								'linear-gradient(90deg, transparent 0%, #c62828 100%)',
-							'& .MuiListItemIcon-root': {
-								color: 'white',
+			{Object.entries(menuArray).map(
+				([key, value]: any, index: number) => (
+					<List
+						component={'nav'}
+						aria-labelledby={key}
+						key={key.toString().replace(' ', '-')}
+						sx={{
+							'&& .Mui-selected': {
+								background:
+									'linear-gradient(90deg, transparent 0%, #c62828 100%)',
+								'& .MuiListItemIcon-root': {
+									color: 'white',
+								},
+								'& .MuiListItemText-root': {
+									color: 'white',
+								},
 							},
-							'& .MuiListItemText-root': {
-								color: 'white',
-							},
-						},
-					}}
-					subheader={
-						<ListSubheader
-							sx={{
-								fontWeight: 'bold',
-								position: 'sticky',
-								top: 65,
-							}}
-							component={'div'}>
-							{key}
-						</ListSubheader>
-					}>
-					{value.map((item: any, index: number) => (
-						<ListItemButton
-							key={index}
-							selected={location.pathname === item.ruta}
-							onClick={() => handleSelectItem(item.ruta)}>
-							<ListItemText primary={item.nombre} />
-						</ListItemButton>
-					))}
-				</List>
-			))}
+						}}
+						subheader={
+							<ListSubheader
+								sx={{
+									fontWeight: 'bold',
+									position: 'sticky',
+									top: 65,
+								}}
+								component={'div'}>
+								{key}
+							</ListSubheader>
+						}>
+						{value.map((item: any, index: number) => (
+							<ListItemButton
+								key={index}
+								selected={location.pathname === item.ruta}
+								onClick={() => handleSelectItem(item.ruta)}>
+								<ListItemText primary={item.n_hijo} />
+							</ListItemButton>
+						))}
+					</List>
+				)
+			)}
 		</Drawer>
 	);
 };

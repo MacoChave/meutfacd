@@ -20,7 +20,7 @@ import React, { useEffect, useState } from 'react';
 import swal from 'sweetalert';
 import { PickEvaluador } from '../components/PickEvaluador';
 import { SwitchLeft, SwitchRight } from '@mui/icons-material';
-import { ESPERA } from '@/consts/Vars';
+import { ESPERA, PENDIENTE } from '@/consts/Vars';
 import { DotsLoaders } from '@/components/Loader/DotsLoaders';
 
 export type ThesisSupProps = Record<string, never>;
@@ -40,7 +40,7 @@ const ThesisSup: React.FC<ThesisSupProps> = ({}) => {
 		body: {
 			table: 'ut_v_revision',
 		},
-		params: { estado: ESPERA, estacion: 5 },
+		params: { estado: PENDIENTE, estacion: 5 },
 	});
 
 	const saveAssign = async () => {
@@ -94,7 +94,6 @@ const ThesisSup: React.FC<ThesisSupProps> = ({}) => {
 	}, [data]);
 
 	if (isLoading) return <DotsLoaders />;
-
 	if (isError) return <Typography>Error...</Typography>;
 
 	return (
@@ -112,7 +111,9 @@ const ThesisSup: React.FC<ThesisSupProps> = ({}) => {
 						<PickEvaluador
 							evaluador={docente}
 							setEvaluador={setDocente}
-							rol={'Docente comisión y estilo'}
+							rol={'Docente'}
+							page='Comisión y estilo'
+							status={1}
 						/>
 						<Button variant='contained' onClick={saveAssign}>
 							Guardar asignación

@@ -1,3 +1,4 @@
+import { McInput } from '@/components';
 import { Box, TextField } from '@mui/material';
 import React from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
@@ -18,7 +19,25 @@ const Contacto: React.FC<ContactoProps> = () => {
 				placeContent: 'center',
 				gap: 2,
 			}}>
-			<Controller
+			<McInput
+				control={control}
+				name='carnet'
+				label='Registro universitario'
+				type='text'
+			/>
+			<McInput
+				control={control}
+				name='cui'
+				label='Código único de identificación (CUI)'
+				type='text'
+			/>
+			<McInput
+				control={control}
+				name='direccion'
+				label='Dirección de residencia'
+				type='text'
+			/>
+			{/* <Controller
 				control={control}
 				name='carnet'
 				render={({ field }) => (
@@ -30,8 +49,8 @@ const Contacto: React.FC<ContactoProps> = () => {
 						error={!!errors.carnet}
 					/>
 				)}
-			/>
-			<Controller
+			/> */}
+			{/* <Controller
 				control={control}
 				name='cui'
 				render={({ field }) => (
@@ -43,8 +62,8 @@ const Contacto: React.FC<ContactoProps> = () => {
 						error={!!errors.cui}
 					/>
 				)}
-			/>
-			<Controller
+			/> */}
+			{/* <Controller
 				control={control}
 				name='direccion'
 				render={({ field }) => (
@@ -56,7 +75,7 @@ const Contacto: React.FC<ContactoProps> = () => {
 						error={!!errors.nombre}
 					/>
 				)}
-			/>
+			/> */}
 		</Box>
 	);
 };

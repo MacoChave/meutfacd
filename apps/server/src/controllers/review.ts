@@ -44,6 +44,7 @@ export const getItemsByCurrentProf = async (
 			table: 'ut_v_revision',
 			query: { id_tutor: user.primaryKey, ...query },
 		});
+		console.log({ results });
 		res.status(200).json(results);
 	} catch (error: any) {
 		errorHttp(res, error);
@@ -108,20 +109,20 @@ export const assignReview = async ({ query, body }: Request, res: Response) => {
 		// For each id_review, update the id_tutor
 		const results = [];
 		for await (const id_review of id_reviews) {
-			results.push(await
-			sqlUpdate({
-				table: 'ut_revision',
-				query: { id_revision: id_review },
-				datos: {
-					id_tutor,
-					estado: 'V',
-					fecha: formatDate({
-						date: new Date(),
-						format: 'mysql',
-						type: 'datetime',
-					}),
-				}
-			})
+			results.push(
+				await sqlUpdate({
+					table: 'ut_revision',
+					query: { id_revision: id_review },
+					datos: {
+						id_tutor,
+						estado: 'V',
+						fecha: formatDate({
+							date: new Date(),
+							format: 'mysql',
+							type: 'datetime',
+						}),
+					},
+				})
 			);
 		}
 		res.status(200).json(results);

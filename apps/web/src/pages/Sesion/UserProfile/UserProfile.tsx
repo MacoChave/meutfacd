@@ -15,6 +15,7 @@ import { ErrorPage } from '../../ErrorPage';
 import { ContactData } from './components/ContactData';
 import { PersonalData } from './components/PersonalData';
 import { SesionData } from './components/SesionData';
+import dayjs from 'dayjs';
 
 export const UserProfile = (): JSX.Element => {
 	const [isEditing, setIsEditing] = useState(false);
@@ -69,9 +70,7 @@ export const UserProfile = (): JSX.Element => {
 			methods.setValue('direccion', perfil.direccion);
 			methods.setValue(
 				'fecha_nac',
-				formatDate({
-					date: new Date(perfil.fecha_nac),
-				})
+				dayjs(perfil.fecha_nac).format('YYYY-MM-DD')
 			);
 			methods.setValue('estado', perfil.estado);
 			methods.setValue('telefono', perfil.telefono);

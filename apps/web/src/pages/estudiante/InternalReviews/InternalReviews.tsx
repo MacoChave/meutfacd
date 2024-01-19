@@ -66,11 +66,11 @@ const InternalReviews: FC<InternalReviewsProps> = ({}) => {
 		},
 	});
 
-	const openPDF = async (filename: string) => {
+	const openPDF = async () => {
 		const { url }: any = await getData({
 			path: URL.STORAGE,
 			body: {},
-			params: { name: filename },
+			params: { name: revision.ruta_tesis },
 		});
 		window.open(url);
 	};
@@ -151,24 +151,28 @@ const InternalReviews: FC<InternalReviewsProps> = ({}) => {
 		<>
 			<Contenedor title='Cita a previos internos'>
 				<Box sx={style}>
-					<Box
-						sx={{
-							display: 'flex',
-							flexDirection: 'column',
-							gap: 4,
-						}}>
-						<Box>
-							<Chip
-								color={getChipColor(revision.estado)}
-								label={getChipLabel(revision.estado)}
-							/>
-							<IconButton
-								color='info'
-								title='Ver archivo'
-								onClick={() => openPDF(revision.ruta_tesis)}>
-								<OpenInBrowser />
-							</IconButton>
-							{revision.id_tutor && (
+					<Box>
+						<Typography variant='h6'>
+							Detalle del previo
+							<Box component={'span'} sx={{ ml: 2 }}>
+								<Chip
+									color={getChipColor(revision.estado)}
+									label={getChipLabel(revision.estado)}
+								/>
+								{revision.ruta_tesis && (
+									<IconButton
+										color='info'
+										title='Ver archivo'
+										onClick={() => openPDF()}>
+										<OpenInBrowser />
+									</IconButton>
+								)}
+							</Box>
+						</Typography>
+						<Typography>
+							Docente revisor{' '}
+							{revision?.tutor && 'Sin asignación'}
+							{revision?.id_tutor && (
 								<IconButton
 									color='info'
 									title='Crear chat'
@@ -176,7 +180,11 @@ const InternalReviews: FC<InternalReviewsProps> = ({}) => {
 									<Chat />
 								</IconButton>
 							)}
-						</Box>
+						</Typography>
+						<Typography>
+							{revision?.detalle ??
+								'Aún no hay detalle del previo'}
+						</Typography>
 						<TextField
 							variant='standard'
 							label='Catedrático'
@@ -192,10 +200,12 @@ const InternalReviews: FC<InternalReviewsProps> = ({}) => {
 								disabled: true,
 							}}
 							value={
-								formatDate({
-									date: new Date(revision?.fecha),
-									withTime: true,
-								}) || ''
+								(revision?.sala &&
+									formatDate({
+										date: new Date(revision?.fecha),
+										withTime: true,
+									})) ||
+								''
 							}
 						/>
 						<TextField

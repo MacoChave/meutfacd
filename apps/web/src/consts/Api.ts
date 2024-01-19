@@ -21,7 +21,7 @@ export const URL = {
 	MAILING: '/api/mailing',
 	PERIOD: '/api/period',
 	PERMISSION: '/api/permission',
-	PROFESOR: '/api/profesor',
+	PROFESOR: '/api/professor',
 	PDF: '/api/pdf',
 	REVIEW: '/api/review',
 	ROL: '/api/rol',

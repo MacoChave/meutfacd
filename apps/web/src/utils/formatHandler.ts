@@ -7,14 +7,16 @@ import {
 	REVISION,
 } from '@/consts/Vars';
 import { TypeWithKey } from '@/models/TypeWithKey';
-import dayjs from 'dayjs';
+import dayjs, { Dayjs } from 'dayjs';
 import timezone from 'dayjs/plugin/timezone';
 import utc from 'dayjs/plugin/utc';
+import localeData from 'dayjs/plugin/localeData';
 import relativeTime from 'dayjs/plugin/relativeTime';
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
 dayjs.extend(relativeTime);
+dayjs.extend(localeData);
 
 /**
  * Formatea la primera letra de cada palabra a mayúscula
@@ -92,6 +94,7 @@ export const getAlignByDataType = (
 export const formatByDataType = (cellValue: TypeWithKey<string>): string => {
 	const [key, value] = Object.entries(cellValue)[0];
 	const dataType = getDataType(key);
+	let date: Dayjs;
 
 	switch (dataType) {
 		case 'money':
@@ -102,14 +105,15 @@ export const formatByDataType = (cellValue: TypeWithKey<string>): string => {
 		case 'number':
 			return new Intl.NumberFormat().format(Number(value));
 		case 'date':
-			const date = dayjs(value).locale('es').tz('America/Guatemala');
-			// console.log(date);
+			dayjs.locale('es');
+			date = dayjs(value).locale('es').tz('America/Guatemala');
 			return date.fromNow();
-		// return new Date(value).toLocaleString('es-GT', {
-		// 	dateStyle: 'long',
-		// 	timeStyle: 'short',
-		// 	timeZone: 'America/Guatemala',
-		// });
+		case 'time':
+			date = dayjs(value).locale('es').tz('America/Guatemala');
+			return date.format('HH:mm:ss');
+		case 'datetime':
+			date = dayjs(value).locale('es').tz('America/Guatemala');
+			return date.format('DD/MM/YYYY HH:mm:ss');
 		case 'boolean':
 			return value ? 'Si' : 'No';
 		default:

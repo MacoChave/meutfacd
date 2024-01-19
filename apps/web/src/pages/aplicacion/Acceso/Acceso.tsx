@@ -42,19 +42,7 @@ const Acceso: React.FC<AccesoProps> = ({}) => {
 
 	return (
 		<Contenedor title='Gestión de accesos por rol'>
-			{Object.entries(
-				data.reduce((acc: any, item: any) => {
-					if (!acc[item.rol]) acc[item.rol] = [];
-					acc[item.rol].push({
-						id_rol: item.id_rol,
-						rol: item.rol,
-						id_pagina: item.id_pagina,
-						pagina: item.pagina,
-						activo: item.activo,
-					});
-					return acc;
-				}, [])
-			).map(([key, value]: any, index: number) => (
+			{Object.entries(data).map(([key, value]: any, index: number) => (
 				<>
 					<Typography
 						sx={{
@@ -65,7 +53,7 @@ const Acceso: React.FC<AccesoProps> = ({}) => {
 							fontWeight: 'bold',
 						}}
 						variant='body1'>
-						{key}
+						Área de {key}
 					</Typography>
 					<Box
 						sx={{

@@ -15,7 +15,7 @@ export const getItems = async (
 	res: Response
 ) => {
 	try {
-		const result = await sqlEjecutar({
+		const result: any = await sqlEjecutar({
 			sql: `select 
 	uar.id_rol , r.nombre rol , 
 	uar.id_pagina , up.nombre pagina , 
@@ -26,8 +26,23 @@ inner join rol r
 inner join ut_pagina up 
 	on uar.id_pagina = up.id_pagina`,
 		});
-		console.log(result);
-		res.status(200).json(result);
+
+		let accesos = result.reduce((acc: any, item: any) => {
+			const { id_rol, rol, id_pagina, pagina, activo } = item;
+			if (!acc[rol]) {
+				acc[rol] = [];
+			}
+			acc[rol].push({
+				id_rol,
+				rol,
+				id_pagina,
+				pagina,
+				activo,
+			});
+			return acc;
+		}, {});
+
+		res.status(200).json(accesos);
 	} catch (error: any) {
 		errorHttp(res, error);
 	}

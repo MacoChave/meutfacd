@@ -14,6 +14,8 @@
     "nodemailer": "^6.9.5",
     "pdfkit": "0.13.0",
     "qrcode": "^1.5.3",
+    "reflect-metadata": "^0.2.1",
+    "typeorm": "^0.3.17",
     "xlsx": "^0.18.5"
   },
   "description": "Servidor del sistema de modulos de la unidad de tesis de la facultad de ciencias juridicas y sociales",

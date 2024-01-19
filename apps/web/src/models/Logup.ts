@@ -10,7 +10,7 @@ export type TLogup = {
 	carnet: string;
 	cui: string;
 	direccion: string;
-	fecha_nac: Date;
+	fecha_nac: string;
 	estado: string;
 	telefono: string;
 	confpass: string;
@@ -26,7 +26,7 @@ export const logupDefault: TLogup = {
 	carnet: '',
 	cui: '',
 	direccion: '',
-	fecha_nac: new Date(),
+	fecha_nac: '',
 	estado: '',
 	telefono: '',
 	confpass: '',

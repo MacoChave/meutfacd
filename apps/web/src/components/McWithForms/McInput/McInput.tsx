@@ -1,6 +1,7 @@
 import { formatToInputDate } from '@/utils/formatHandler';
-import { TextField } from '@mui/material';
-import React, { HTMLInputTypeAttribute } from 'react';
+import { Visibility, VisibilityOff } from '@mui/icons-material';
+import { IconButton, InputAdornment, TextField } from '@mui/material';
+import React, { HTMLInputTypeAttribute, useState } from 'react';
 import { Control, Controller, FieldValues, Path } from 'react-hook-form';
 
 export type McInputProps = {
@@ -20,6 +21,8 @@ const McInput: React.FC<McInputProps> = ({
 	disabled = false,
 	customChange = undefined,
 }) => {
+	const [inputType, setInputType] = useState(type);
+
 	return (
 		<Controller
 			control={control}
@@ -29,12 +32,13 @@ const McInput: React.FC<McInputProps> = ({
 				return (
 					<TextField
 						{...field}
+						sx={{ width: '100%', minWidth: { xs: '300px' } }}
 						variant='standard'
 						label={label}
 						value={
 							type === 'date' ? formatToInputDate(value) : value
 						}
-						type={type}
+						type={inputType}
 						onChange={(e) => {
 							customChange
 								? customChange(e)
@@ -43,6 +47,27 @@ const McInput: React.FC<McInputProps> = ({
 						disabled={disabled ?? false}
 						error={!!error}
 						helperText={error?.message ?? null}
+						InputProps={{
+							endAdornment: type === 'password' && (
+								<InputAdornment position='end'>
+									<IconButton
+										aria-label='toggle password visibility'
+										onClick={() =>
+											setInputType((prev) =>
+												prev === 'password'
+													? 'text'
+													: 'password'
+											)
+										}>
+										{inputType === 'password' ? (
+											<VisibilityOff />
+										) : (
+											<Visibility />
+										)}
+									</IconButton>
+								</InputAdornment>
+							),
+						}}
 					/>
 				);
 			}}
