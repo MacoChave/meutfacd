@@ -12,8 +12,8 @@ import { getData } from '@/services/fetching';
 import { downloadFileByBloodPart } from '@/utils/fileManagment';
 import { Download } from '@mui/icons-material';
 import { Box, Divider, IconButton, TextField } from '@mui/material';
-import { lazy, useState } from 'react';
 import dayjs from 'dayjs';
+import { lazy, useState } from 'react';
 const StationBox = lazy(() => import('../components/StationBox/StationBox'));
 
 const Resumen = () => {
@@ -24,15 +24,13 @@ const Resumen = () => {
 	const handleDownload = async () => {
 		const data = await getData({
 			path: `${URL.REVIEW}/xlsx`,
-			params: { year: selectedMonth },
+			params: {
+				date: selectedMonth,
+			},
 			responseType: 'blob',
 		});
-		// DOWNLOAD XLSX FILE
-		downloadFileByBloodPart(
-			data as BlobPart,
-			'Resumen por ciclo lectivo.xlsx',
-			'aplication/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-		);
+
+		downloadFileByBloodPart(data as BlobPart, 'resumen.xlsx');
 	};
 
 	const getYearRange = (begin: number, end: number) => {
@@ -105,44 +103,5 @@ const Resumen = () => {
 		</>
 	);
 };
-
-const rows = [
-	{
-		estacion: 'Estacion 1',
-		aprobados: 12,
-		previo: 5,
-		rechazos: 3,
-	},
-	{
-		estacion: 'Estacion 2',
-		aprobados: 12,
-		previo: 0,
-		rechazos: 5,
-	},
-	{
-		estacion: 'Estacion 3',
-		aprobados: 16,
-		previo: 0,
-		rechazos: 7,
-	},
-	{
-		estacion: 'Estacion 4',
-		aprobados: 11,
-		previo: 10,
-		rechazos: 5,
-	},
-	{
-		estacion: 'Estacion 5',
-		aprobados: 17,
-		previo: 9,
-		rechazos: 13,
-	},
-	{
-		estacion: 'Impresiones',
-		aprobados: 8,
-		previo: 19,
-		espera: 17,
-	},
-];
 
 export default Resumen;

@@ -11,11 +11,11 @@ import {
 
 const router = Router();
 
-router.get('/', getExcelFile);
-router.post('/one', requireAuth, getItem);
-router.post('/all', requireAuth, getItems);
-router.post('/', requireAuth, postItem);
-router.put('/', requireAuth, putItem);
-router.delete('/', requireAuth, deleteItem);
+router.get('/', requireAuth, getExcelFile);
+router.post('/one', requireAuth, requireAuth, getItem);
+router.post('/all', requireAuth, requireAuth, getItems);
+router.post('/', requireAuth, requireAuth, postItem);
+router.put('/', requireAuth, requireAuth, putItem);
+router.delete('/', requireAuth, requireAuth, deleteItem);
 
 export { router };

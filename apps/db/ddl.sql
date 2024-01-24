@@ -70,7 +70,7 @@ create table if not exists rol (
 	nombre varchar(45) not null,
 	descripcion varchar(255) not null
 );
-
+-- 
 create table if not exists usuario_rol (
 	id_usuario integer unsigned,
 	id_rol integer unsigned,
@@ -83,6 +83,7 @@ create table if not exists ut_perfil (
 	id_usuario integer unsigned primary key,
 	id_horario integer unsigned,
 	id_jornada integer unsigned,
+	ocupacion varchar(50),
 	constraint fk_perfil_usuario 
 		foreign key (id_usuario) 
 		references usuario (id_usuario) on
@@ -90,34 +91,59 @@ create table if not exists ut_perfil (
 		update cascade,
 	constraint fk_perfil_horario 
 		foreign key (id_horario, id_jornada) 
-		references ut_horario (id_horario, id_jornada) on
-		delete restrict on
-		update cascade
+		references ut_horario (id_horario, id_jornada) 
+		on delete cascade 
+		on update cascade
 );
 
 create table if not exists ut_pagina (
 	id_pagina integer unsigned auto_increment primary key ,
 	nombre varchar(50) not null,
-	descripcion varchar(128) not null,
+	descripcion varchar(128) default '',
+	ruta varchar(50) not null,
+	id_padre integer unsigned,
 	indice integer not null,
-	ruta varchar(128) not null
+	constraint fk_ut_pagina_padre 
+		foreign key (id_padre) 
+		references ut_pagina (id_pagina)
+		on update cascade
+		on delete cascade
+);
+
+create table if not exists ut_acceso_rol (
+	id_rol integer unsigned,
+	id_pagina integer unsigned,
+	activo tinyint default 0,
+	constraint pk_accrol 
+		primary key (id_rol, id_pagina),
+	constraint fk_accrol_rol 
+		foreign key (id_rol) 
+		references rol (id_rol) 
+		on delete cascade 
+		on update cascade,
+	constraint fk_accrol_pagina 
+		foreign key (id_pagina)
+		references ut_pagina (id_pagina) 
+		on delete cascade 
+		on update cascade
 );
 
 create table if not exists ut_permiso (
+	id_usuario integer unsigned,
 	id_rol integer unsigned,
 	id_pagina integer unsigned,
-	permiso integer,
+	permiso tinyint default 0,
 	constraint pk_ut_permiso 
-		primary key (id_rol, id_pagina),
-	constraint fk_permiso_rol 
-		foreign key (id_rol)
-		references rol (id_rol) on 
-		delete restrict on 
+		primary key (id_usuario, id_rol, id_pagina),
+	constraint fk_permiso_usuario 
+		foreign key (id_usuario, id_rol)
+		references usuario_rol (id_usuario, id_rol) on 
+		delete cascade on 
 		update cascade,
 	constraint fk_permiso_pagina 
 		foreign key (id_pagina)
 		references ut_pagina (id_pagina) on 
-		delete restrict on 
+		delete cascade on 
 		update cascade
 );
 
@@ -153,21 +179,6 @@ create table if not exists ut_curso_tutor (
 		on update cascade
 );
 
--- 
--- create table if not exists ut_asignacion (
--- 	id_estudiante integer unsigned not null,
--- 	id_curso_tutor integer unsigned not null,
--- 	estado char(1) not null default 'E',
--- 	ruta_certificado varchar(255),
--- 	constraint pk_asignacion primary key(id_estudiante, id_curso_tutor), 
--- 	constraint fk_asignacion_estudiante foreign key (id_estudiante) references usuario(id_usuario) on
--- 	delete restrict on
--- 	update cascade,
--- 		constraint fk_asignacion_curso_tutor foreign key (id_curso_tutor) references ut_curso_tutor (id_curso_tutor) on
--- 	delete restrict on
--- 	update cascade
--- );
-
 -- -------------------------------------------------
 -- LOG MODULE
 -- ------------------------------------------------- 
@@ -185,7 +196,7 @@ create table if not exists ut_notificacion (
 	id_notificacion integer unsigned auto_increment primary key ,
 	mensaje varchar(255) not null,
 	fecha datetime not null default now(),
-	activo tinyint(1) not null default 1,
+	activo tinyint not null default 1,
 	id_emisor integer unsigned not null,
 	id_receptor integer unsigned not null,
 	constraint fk_notificacion_emisor foreign key (id_emisor) 
@@ -240,6 +251,7 @@ create table if not exists ut_tesis (
 create table if not exists ut_revision (
 	id_revision integer unsigned auto_increment primary key ,
 	fecha datetime not null default now(),
+	titulo varchar(255), 
 	detalle varchar(500) ,
 	ruta_certificado varchar(100) , 
 	ruta_dictamen varchar(255) ,
@@ -286,8 +298,8 @@ create trigger if not exists ut_tr_new_tesis
 after insert on ut_tesis
 for each row
 begin
-	insert into ut_revision (id_tesis) 
-	values (new.id_tesis);
+	insert into ut_revision (id_tesis, titulo, estacion, estado) 
+	values (new.id_tesis, new.titulo, 1, 'E');
 end;
 
 -- -------------------------------------------------
@@ -333,23 +345,24 @@ create trigger if not exists ut_tr_new_rol
 after insert on rol 
 for each row
 begin
-	declare pagina_id int;
+	declare id_pagina int;
 	declare done int default false;
-	declare pageCursor cursor for select up.id_pagina from ut_pagina up ;
+	declare pagCursor cursor for select up.id_pagina from ut_pagina up ;
 	declare continue handler for not found set done = true;
 
-	open pageCursor;
+	open pagCursor;
 	read_loop: loop
-		fetch pageCursor into pagina_id;
+		fetch pagCursor into id_pagina;
 		if done then 
 			leave read_loop;
 		end if;
 		
-		insert into ut_permiso 
-		(id_rol, id_pagina, permiso) 
-		values (new.id_rol, pagina_id, 0);
-	end loop;
-	close pageCursor;
+		insert into ut_acceso_rol
+		(id_pagina, id_rol, activo) 
+		values (new.id_rol, id_pagina, 0);
+	
+end loop;
+	close pagCursor;
 end;
 
 -- -------------------------------------------------
@@ -359,24 +372,54 @@ create trigger if not exists ut_tr_new_page
 after insert on ut_pagina 
 for each row
 begin
-	declare rol_id int;
+	declare id_rol int;
 	declare done int default false;
-	declare rolCursor cursor for select r.id_rol from rol r ;
+	declare rolCursor cursor for select r.id_rol from rol r ; 
 	declare continue handler for not found set done = true;
 
 	open rolCursor;
 	read_loop: loop
-		fetch rolCursor into rol_id;
+		fetch rolCursor into id_rol;
 		if done then 
 			leave read_loop;
 		end if;
 		
-		insert into ut_permiso 
-		(id_rol, id_pagina, permiso) 
-		values (rol_id, new.id_pagina, 0);
+		insert into ut_acceso_rol 
+		(id_rol, id_pagina, activo) 
+		values (id_rol, new.id_pagina, 0);
 	end loop;
 	close rolCursor;
 end;
+
+-- -------------------------------------------------
+-- NEW ACCESO ROL
+-- -------------------------------------------------
+-- create trigger if not exists ut_tr_new_accrol
+-- after update on ut_acceso_rol 
+-- for each row
+-- fill_perm: begin
+-- 	if new.activo = 0 then 
+-- 		leave fill_perm;
+-- 	end if;
+-- 
+-- 	declare id_usuario int;
+-- 	declare done int default false;
+-- 	declare userCursor cursor for select id_usuario from usuario_rol ur where ur.id_rol = new.id_rol ;
+-- 	declare continue handler for not found set done = true;
+-- 
+-- 	open userCursor;
+-- 	read_loop: loop
+-- 		fetch userCursor into id_usuario;
+-- 		if done then 
+-- 			leave read_loop;
+-- 		end if;
+-- 		
+-- 		insert into ut_permiso 
+-- 		(id_usuario, id_rol, id_pagina, permiso) 
+-- 		values (id_usuario, new.id_rol, new.id_pagina, 0);
+-- 	end loop;
+-- 	close userCursor;
+-- end;
 
 -- -------------------------------------------------
 -- UPDATE REVISION
@@ -446,9 +489,13 @@ this_proc:begin
 	end if; 
 
 	insert ignore into usuario 
-		(nombre, apellidos, genero, correo, pass, direccion, fecha_nac, id_municipio, carnet, cui)
+		(nombre, apellidos, genero, correo, 
+		pass, direccion, fecha_nac, id_municipio, 
+		carnet, cui)
 	values 
-		(p_nombre, p_apellido, p_genero, p_correo, p_pass, p_direccion, p_fecha_nac, p_municipio, p_carnet, p_cui) ; 
+		(p_nombre, p_apellido, p_genero, p_correo, 
+		p_pass, p_direccion, p_fecha_nac, p_municipio, 
+		p_carnet, p_cui) ; 
 	
 	set v_new_user = last_insert_id() ; 
 	
@@ -461,6 +508,174 @@ this_proc:begin
 	insert ignore into usuario_rol (id_usuario, id_rol)
 	values (v_new_user, p_rol) ; 
 end ; 
+
+-- -------------------------------------------------
+-- OBTENER PAGINAS DISPONIBLES POR USUARIO
+-- -------------------------------------------------
+create procedure ut_sp_get_pages_per_user(
+    in p_user_id int
+) 
+begin
+    -- Declare variables to hold the data from the cursor
+    declare v_id_pagina int;
+    declare v_id_rol int;
+    -- Declare cursor to hold the data from first select query
+    declare done int default false;
+    declare cur_access cursor for
+        select uar.id_pagina, uar.id_rol 
+        from ut_acceso_rol uar 
+        where uar.activo = 1 
+        and uar.id_rol in (
+            select id_rol from usuario_rol 
+            where id_usuario = p_user_id
+        );
+    declare continue handler for not found set done = true;
+
+    -- Create a temporary table to hold the data
+    create temporary table ut_pages_per_user(
+        idx_padre int, 
+        id_padre int unsigned, 
+        n_padre varchar(50), 
+        idx_hijo int, 
+        id_hijo int unsigned, 
+        n_hijo varchar(50), 
+        ruta varchar(100), 
+        permiso tinyint, 
+        id_usuario int unsigned, 
+        id_rol int unsigned 
+    );
+
+    -- Open the cursor
+    open cur_access;
+    -- Loop through the cursor
+    read_loop: loop
+        -- Fetch the data from the cursor
+        fetch cur_access into v_id_pagina, v_id_rol;
+        -- If there is no more data, exit the loop
+        if done then
+            leave read_loop;
+        end if;
+        -- Insert the data into the temporary table
+        insert into ut_pages_per_user
+        select
+            p2.indice idx_padre , p2.id_pagina id_padre, p2.nombre n_padre , 
+            p1.indice idx_hijo , p1.id_pagina id_hijo , p1.nombre n_hijo , 
+            concat(p2.ruta , '' , p1.ruta) ruta , 
+            up.permiso , ur.id_usuario , ur.id_rol 
+        from ut_permiso up 
+        inner join usuario_rol ur 
+            on up.id_usuario = ur.id_usuario 
+            and up.id_rol = ur.id_rol 
+        inner join ut_pagina p1 
+            on up.id_pagina = p1.id_pagina
+        inner join ut_pagina p2 
+            on p1.id_padre = p2.id_pagina 
+        where up.id_usuario = p_user_id 
+            and up.id_rol = v_id_rol 
+            and p1.id_padre = v_id_pagina;
+    end loop;
+
+    -- Close the cursor
+    close cur_access;
+
+    -- Select the data from the temporary table
+    select * from ut_pages_per_user;
+    
+    -- Drop the temporary table
+    drop temporary table ut_pages_per_user;
+end;
+
+-- -------------------------------------------------
+-- GET USER PER PAGES
+-- -------------------------------------------------
+create procedure ut_sp_get_user_per_pages(
+    in p_rol varchar(45), 
+    in p_page varchar(50), 
+    in p_status int 
+) 
+begin
+    select 
+		u.id_usuario, 
+		concat(u.apellidos, ', ', u.nombre) nombre,
+		up.id_pagina , 
+		up.id_rol , 
+		up.permiso 
+	from ut_permiso up 
+	inner join usuario_rol ur 
+		on up.id_usuario = ur.id_usuario 
+		and up.id_rol = ur.id_rol 
+	inner join usuario u 
+		on ur.id_usuario = u.id_usuario 
+	where up.id_rol in (
+			select 
+				r.id_rol 
+			from rol r 
+			where r.nombre like concat('%', p_rol, '%')
+		) 
+		and up.id_pagina in (
+			select 
+				up2.id_pagina  
+			from ut_pagina up2 
+			where up2.nombre like concat('%', p_page) 
+				and up2.id_padre in (
+					select 
+						up3.id_pagina  
+					from ut_pagina up3 
+					where up3.nombre like '%docente%'
+				) 
+		) 
+		and up.permiso = p_status ; 
+end;
+
+-- -------------------------------------------------
+-- GET USER BY SCHEDULE & PERIOD
+-- -------------------------------------------------
+create procedure ut_sp_get_user_per_schedule(
+    in p_rol varchar(45), 
+    in p_page varchar(50), 
+    in p_status int, 
+    in p_schedule int, 
+    in p_period int 
+) 
+begin
+	select 
+		u.id_usuario, 
+		concat(u.apellidos, ', ', u.nombre) nombre,
+		up.id_pagina , 
+		up.id_rol , 
+		up.permiso , 
+		up4.id_horario , 
+		up4.id_jornada 
+	from ut_permiso up 
+	inner join usuario_rol ur 
+		on up.id_usuario = ur.id_usuario 
+		and up.id_rol = ur.id_rol 
+	inner join usuario u 
+		on ur.id_usuario = u.id_usuario 
+	inner join ut_perfil up4 
+		on u.id_usuario = up4.id_usuario 
+	where up.id_rol in (
+			select 
+				r.id_rol 
+			from rol r 
+			where r.nombre like concat('%', p_rol, '%')
+		) 
+		and up.id_pagina in (
+			select 
+				up2.id_pagina  
+			from ut_pagina up2 
+			where up2.nombre like concat('%', p_page) 
+				and up2.id_padre in (
+					select 
+						up3.id_pagina  
+					from ut_pagina up3 
+					where up3.nombre like '%docente%'
+				) 
+		) 
+		and up.permiso = 1
+		and up4.id_horario = p_schedule 
+		and up4.id_jornada = p_period  ; 
+end;
 
 -- 
 -- -------------------------------------------------
@@ -475,7 +690,6 @@ end ;
 -- -------------------------------------------------
 -- USUARIOS
 -- -------------------------------------------------
-drop view if exists ut_v_usuarios ; 
 create view ut_v_usuarios as 
 select 
 	u.id_usuario , u.fecha_nac ,
@@ -496,7 +710,6 @@ group by
 -- -------------------------------------------------
 -- ROL
 -- -------------------------------------------------
-drop view if exists ut_v_rol ; 
 create view ut_v_rol as 
 select
 	ur.id_usuario , u.nombre u_nombre , u.correo ,  
@@ -508,9 +721,21 @@ inner join rol r
 	using (id_rol);
 
 -- -------------------------------------------------
+-- PAGINAS
+-- -------------------------------------------------
+create view ut_v_pagina as 
+select 
+	uph.id_pagina , 
+	upp.nombre n_padre, uph.nombre n_hijo , 
+	upp.indice i_padre, uph.indice i_hijo , 
+	uph.descripcion , concat(upp.ruta, uph.ruta) ruta
+from ut_pagina upp  
+right join ut_pagina uph 
+	on upp.id_pagina = uph.id_padre
+
+-- -------------------------------------------------
 -- REVISION
 -- -------------------------------------------------
-drop view if exists ut_v_revision ; 
 create view ut_v_revision as 
 select 
 	ur.id_revision , 
@@ -554,7 +779,6 @@ using (id_curso);
 -- -------------------------------------------------
 -- CURSOS
 -- -------------------------------------------------
-drop view if exists ut_v_cursotutor ; 
 create view ut_v_cursotutor as 
 select 
 	uct.id_curso_tutor , 
@@ -579,32 +803,8 @@ inner join ut_jornada uj
 	on uct.id_jornada = uj.id_jornada ; 
 
 -- -------------------------------------------------
--- ASIGNACION
+-- 
 -- -------------------------------------------------
--- drop view if exists ut_v_asignacion ; 
--- create view ut_v_asignacion as 
--- select
--- 	uct.id_curso_tutor , 
--- 	uct.salon , 
--- 	uct.dias , 
--- 	uct.id_tutor , 
--- 	uh.hora_inicio , 
--- 	uh.hora_final , 
--- 	uj.nombre as jornada , 
--- 	ua.id_estudiante , 
--- 	ua.estado , 
--- 	ua.ruta_certificado, 
--- 	tt.nombre as tutor 
--- from ut_curso_tutor uct 
--- inner join ut_asignacion ua 
--- 	on uct.id_curso_tutor = ua.id_curso_tutor 
--- inner join usuario tt 
--- 	on uct.id_tutor = tt.id_usuario 
--- inner join ut_horario uh 
--- 	on uct.id_horario = uh.id_horario 
--- 	and uct.id_jornada = uh.id_jornada 
--- inner join ut_jornada uj 
--- 	on uh.id_jornada = uj.id_jornada ; 
 
 -- -------------------------------------------------
 -- NOTIFICACION
@@ -643,6 +843,7 @@ inner join usuario u2
 create view ut_v_resumen as 
 select 
 	ur.estacion , 
+	ur.fecha , 
 	count(case when ur.estado = 'N' then 1 else null end) N ,
 	count(case when ur.estado = 'E' then 1 else null end) E ,
 	count(case when ur.estado = 'V' then 1 else null end) V ,
@@ -650,4 +851,4 @@ select
 	count(case when ur.estado = 'P' then 1 else null end) P ,
 	count(case when ur.estado = 'A' then 1 else null end) A 
 from ut_revision ur 
-group by ur.estacion ; 
+group by ur.estacion , ur.fecha ; 

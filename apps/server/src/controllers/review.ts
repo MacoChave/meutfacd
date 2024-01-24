@@ -18,17 +18,21 @@ export const getXlsxReport = async ({ query }: Request, res: Response) => {
 		XLSX.utils.book_append_sheet(wb, ws, bookName);
 		XLSX.writeFile(wb, filePath);
 
+		res.status(200).download(filePath, `${bookName}.xlsx`, (err) => {
+			if (err) throw err;
+		});
+
 		// const fileStream = createReadStream(filePath);
 		// fileStream.pipe(res);
 		// unlinkSync(`${filePath}`);
 
-		res.status(200).sendFile(filePath, {
-			root: './src/storage',
-			headers: {
-				'Content-Type':
-					'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-			},
-		});
+		// res.status(200).sendFile(filePath, {
+		// 	root: './src/storage',
+		// 	headers: {
+		// 		'Content-Type':
+		// 			'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+		// 	},
+		// });
 	} catch (error: any) {
 		errorHttp(res, error);
 	}

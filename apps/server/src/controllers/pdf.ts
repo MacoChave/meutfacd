@@ -122,7 +122,7 @@ export const createReport = async ({ body, user }: Request, res: Response) => {
 		setInfoSignature({
 			doc,
 			fullname: `${docente?.nombre ?? ''} ${docente?.apellidos ?? ''}`,
-			rol: `Docente concejero de ${currentStation}`,
+			rol: `Docente consejero de ${currentStation}`,
 		});
 
 		await setQRCode(doc, idReview);

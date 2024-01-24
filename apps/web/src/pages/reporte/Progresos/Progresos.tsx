@@ -8,7 +8,6 @@ import { Box, Divider, IconButton, TextField } from '@mui/material';
 import dayjs from 'dayjs';
 import React, { useState } from 'react';
 import { Historial } from '../components/Historial';
-import { ESTACION1, ESTACION2, ESTACION3, ESTACIONES } from '@/consts/Vars';
 
 export type ProgresosProps = {
 	// types...
@@ -23,15 +22,13 @@ const Progresos: React.FC<ProgresosProps> = ({}) => {
 	const handleDownload = async () => {
 		const data = await getData({
 			path: `${URL.REVIEW}/xlsx`,
-			params: { year: selectedMonth },
+			params: {
+				date: selectedMonth,
+			},
 			responseType: 'blob',
 		});
-		// DOWNLOAD XLSX FILE
-		downloadFileByBloodPart(
-			data as BlobPart,
-			'Resumen por ciclo lectivo.xlsx',
-			'aplication/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-		);
+
+		downloadFileByBloodPart(data as BlobPart, 'resumen.xlsx');
 	};
 
 	return (
