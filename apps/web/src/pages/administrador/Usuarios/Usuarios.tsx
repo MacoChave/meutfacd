@@ -1,12 +1,14 @@
-import { URL } from '@/consts/Api';
 import { Contenedor, McModal } from '@/components';
-import { ErrorOperacion } from '@/components/ErrorOperacion';
-import { McTable } from '@/components/MyTable';
+import { URL } from '@/consts/Api';
 import { useCustomFetch } from '@/hooks/useFetch';
 import { TUser } from '@/models/Perfil';
-import { useState } from 'react';
-import { DetalleUsuario } from './DetalleUsuario';
 import { deleteData } from '@/services/fetching';
+import { lazy, useState } from 'react';
+const McTable = lazy(() => import('@/components/MyTable/McTable'));
+const ErrorOperacion = lazy(
+	() => import('@/components/ErrorOperacion/ErrorOperacion')
+);
+const DetalleUsuario = lazy(() => import('./DetalleUsuario/DetalleUsuario'));
 
 const Usuarios = () => {
 	const [openModal, setOpenModal] = useState(false);

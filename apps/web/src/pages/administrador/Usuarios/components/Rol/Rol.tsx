@@ -13,9 +13,7 @@ import { TabsProps } from '../../propTypes/tabsProps';
 import { PickerRol } from '../PickerRol';
 
 const Rol: React.FC<TabsProps> = ({ usuario, index, ...other }) => {
-	const [rootRol, setRootRol] = useState(
-		usuario.roles.split(' ')[0].toLowerCase()
-	);
+	const [rootRol, setRootRol] = useState(usuario.roles.toLowerCase());
 	const {
 		data: vRol,
 		isLoading: isLoadvRol,
@@ -39,7 +37,7 @@ const Rol: React.FC<TabsProps> = ({ usuario, index, ...other }) => {
 		body: {
 			table: 'rol',
 			conditions: [
-				{ column: 'nombre', operator: 'LIKE', value: `${rootRol}%` },
+				// { column: 'nombre', operator: 'LIKE', value: `${rootRol}%` },
 			],
 		},
 	});
@@ -50,22 +48,22 @@ const Rol: React.FC<TabsProps> = ({ usuario, index, ...other }) => {
 	});
 
 	const onSubmit: SubmitHandler<TRol> = async (data) => {
-		const diffRol = vRol.filter(
-			(vr: any) => vr.r_nombre.split(' ')[0].toLowerCase() !== rootRol
-		);
-		if (diffRol.length) {
-			return swal(
-				'¡No se puede agregar el permiso!',
-				'El usuario tiene uno o varios roles diferentes al seleccionado',
-				'error'
-			);
-		}
+		// const diffRol = vRol.filter(
+		// 	(vr: any) => vr.r_nombre.split(' ')[0].toLowerCase() !== rootRol
+		// );
+		// if (diffRol.length) {
+		// 	return swal(
+		// 		'¡No se puede agregar el permiso!',
+		// 		'El usuario tiene uno o varios roles diferentes al seleccionado',
+		// 		'error'
+		// 	);
+		// }
 		const result = await postData({
 			path: `${URL.USER_ROL}`,
 			body: { id_usuario: usuario.id_usuario, id_rol: data.id_rol },
 		});
 		if (result) {
-			swal('¡Rol actualizado!', '', 'success');
+			swal('¡Rol agregado!', '', 'success');
 			refetch();
 		}
 	};
@@ -100,11 +98,11 @@ const Rol: React.FC<TabsProps> = ({ usuario, index, ...other }) => {
 					p: 3,
 				}}>
 				<Typography variant='h6'>Editar rol de usuario</Typography>
-				<PickerRol
+				{/* <PickerRol
 					rootRol={rootRol}
 					onChangeRootRol={onChangeRootRol}
 				/>
-				<Typography variant='h6'>Agregar permisos</Typography>
+				<Typography variant='h6'>Agregar permisos</Typography> */}
 				<form onSubmit={handleSubmit(onSubmit)}>
 					<Box
 						sx={{

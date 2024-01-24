@@ -21,14 +21,18 @@ import {
 	Typography,
 } from '@mui/material';
 import { AxiosError } from 'axios';
-import { FC, useEffect, useState } from 'react';
+import { FC, lazy, useEffect, useState } from 'react';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import swal from 'sweetalert';
-import FileChooser from '@/components/controles/FileChooser';
 import { TReview } from '@/models/Review';
-import { TutorInfo } from '../components/TutorInfo';
-import { DetailReview } from '../components/DetailReview';
-import { UploadsReview } from '../components/UploadsReview';
+const TutorInfo = lazy(() => import('../components/TutorInfo/TutorInfo'));
+const DetailReview = lazy(
+	() => import('../components/DetailReview/DetailReview')
+);
+const UploadsReview = lazy(
+	() => import('../components/UploadsReview/UploadsReview')
+);
+const FileChooser = lazy(() => import('@/components/controles/FileChooser'));
 
 export type ThesisCoverProps = {};
 
@@ -198,7 +202,7 @@ const ThesisCover: FC<ThesisCoverProps> = ({}) => {
 	return (
 		<>
 			<Contenedor title='Presentar punto de tesis'>
-				<TutorInfo
+				{/* <TutorInfo
 					tutor={revision?.tutor || 'Sin asignación'}
 					openChat={createChat}
 				/>
@@ -209,8 +213,8 @@ const ThesisCover: FC<ThesisCoverProps> = ({}) => {
 						onUpload={onUpload}
 						disabled={true}
 					/>
-				</UploadsReview>
-				{/* <form onSubmit={handleSubmit(onSubmit)}>
+				</UploadsReview> */}
+				<form onSubmit={handleSubmit(onSubmit)}>
 					<Box sx={style}>
 						<Box>
 							<Typography variant='h6'>
@@ -296,7 +300,7 @@ const ThesisCover: FC<ThesisCoverProps> = ({}) => {
 							</Box>
 						)}
 					</Box>
-				</form> */}
+				</form>
 			</Contenedor>
 			{isUploading && <SpinLoader message='Subiendo punto de tesis' />}
 		</>

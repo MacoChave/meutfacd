@@ -1,0 +1,1 @@
+export { default as Progresos } from './Progresos';

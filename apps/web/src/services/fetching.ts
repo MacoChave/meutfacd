@@ -17,14 +17,17 @@ export async function getData<T>({
 	headers = {
 		'Content-Type': 'application/json',
 	},
+	responseType = 'json',
 }: axiosProps): Promise<T> {
-	const { data } = await axios.get(path, {
+	const response = await axios.get(path, {
 		headers: {
 			...headers,
 		},
 		params,
+		responseType: responseType as any,
 	});
-	return data;
+	console.log({ response });
+	return response.data;
 }
 
 // POST DATA

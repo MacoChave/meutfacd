@@ -1,3 +1,4 @@
+import { McInput } from '@/components';
 import { TLogin } from '@/models/Login';
 import { Box, TextField } from '@mui/material';
 import React from 'react';
@@ -6,10 +7,7 @@ import { Controller, useFormContext } from 'react-hook-form';
 export type SeguridadProps = {};
 
 const Seguridad: React.FC<SeguridadProps> = () => {
-	const {
-		control,
-		formState: { errors },
-	} = useFormContext<TLogin>();
+	const { control } = useFormContext<TLogin>();
 
 	return (
 		<Box
@@ -19,33 +17,17 @@ const Seguridad: React.FC<SeguridadProps> = () => {
 				placeContent: 'center',
 				gap: 2,
 			}}>
-			<Controller
-				control={control}
+			<McInput
+				control={control as any}
 				name='correo'
-				render={({ field }) => (
-					<TextField
-						{...field}
-						label='Correo electrónico'
-						variant='standard'
-						type='email'
-						error={!!errors.correo}
-						helperText={errors.correo?.message || ''}
-					/>
-				)}
+				label='Correo electrónico'
+				type='email'
 			/>
-			<Controller
-				control={control}
+			<McInput
+				control={control as any}
 				name='pass'
-				render={({ field }) => (
-					<TextField
-						{...field}
-						label='Contraseña'
-						variant='standard'
-						type='password'
-						error={!!errors.pass}
-						helperText={errors.pass?.message || ''}
-					/>
-				)}
+				label='Contraseña'
+				type='password'
 			/>
 		</Box>
 	);

@@ -1,4 +1,5 @@
 import { formatDate } from '@/utils/formatHandler';
+import dayjs from 'dayjs';
 import * as yup from 'yup';
 
 export type TPerfilTutor = {
@@ -99,9 +100,8 @@ export const schemaUsuario = yup.object().shape({
 			'Fecha de nacimiento no puede ser en el futuro',
 			(value) => {
 				if (!value) return false;
-				const [day, month, year] = value.split('/');
-				const date = new Date(`${year}-${month}-${day}`);
-				return date <= new Date();
+				let date = dayjs(value);
+				return date.isBefore(dayjs());
 			}
 		)
 		.required('Fecha de nacimiento es requerido'),

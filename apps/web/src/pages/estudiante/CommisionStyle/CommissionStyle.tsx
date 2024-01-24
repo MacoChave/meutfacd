@@ -15,7 +15,7 @@ import { TDraft, draftDefault, draftSchema } from '@/models/Draft';
 import { getData, postData, putData } from '@/services/fetching';
 import { style } from '@/themes/styles';
 import { errorHandler } from '@/utils/errorHandler';
-import { getChipColor, getChipLabel } from '@/utils/formatHandler';
+import { formatDate, getChipColor, getChipLabel } from '@/utils/formatHandler';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Chat, OpenInBrowser } from '@mui/icons-material';
 import {
@@ -59,6 +59,7 @@ const CommissionStyle: FC<CommissionStyleProps> = ({}) => {
 				'tutor',
 				'ruta_tesis',
 				'id_tutor',
+				'sala',
 			],
 			sort: {
 				fecha: 'DESC',
@@ -231,7 +232,7 @@ const CommissionStyle: FC<CommissionStyleProps> = ({}) => {
 							</Typography>
 							<Typography>
 								Docente revisor:{' '}
-								{revision?.tutor || 'Sin asignación'}
+								{revision?.tutor ?? 'Sin asignación'}
 								{revision?.id_tutor && (
 									<IconButton
 										color='info'
@@ -245,6 +246,37 @@ const CommissionStyle: FC<CommissionStyleProps> = ({}) => {
 								{revision?.detalle ??
 									'Aún no hay detalle del previo'}
 							</Typography>
+							<TextField
+								variant='standard'
+								label='Catedrático'
+								InputProps={{
+									disabled: true,
+								}}
+								value={revision?.tutor || ''}
+							/>
+							<TextField
+								variant='standard'
+								label='Fecha de cita'
+								InputProps={{
+									disabled: true,
+								}}
+								value={
+									(revision?.sala &&
+										formatDate({
+											date: new Date(revision?.fecha),
+											withTime: true,
+										})) ||
+									''
+								}
+							/>
+							<TextField
+								variant='standard'
+								label='Sala'
+								InputProps={{
+									disabled: true,
+								}}
+								value={revision?.sala || ''}
+							/>
 						</Box>
 						<Box>
 							<Controller

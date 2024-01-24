@@ -3,7 +3,15 @@ import { APROBADO } from '@/consts/Vars';
 import { useCustomFetch } from '@/hooks/useFetch';
 import { getData } from '@/services/fetching';
 import { formatToInputDate } from '@/utils/formatHandler';
-import { Box, TextField, Toolbar, Typography } from '@mui/material';
+import { Download } from '@mui/icons-material';
+import {
+	Box,
+	Button,
+	IconButton,
+	TextField,
+	Toolbar,
+	Typography,
+} from '@mui/material';
 import { FC, lazy } from 'react';
 import { useParams } from 'react-router-dom';
 import swal from 'sweetalert';
@@ -85,19 +93,26 @@ const VerifiedDocument: FC<VerifiedDocumentProps> = ({}) => {
 						}}
 					/>
 					<TextField
+						label='Estudiante'
+						value={data.nombre}
+						InputProps={{
+							disabled: true,
+						}}
+					/>
+					<TextField
 						label='Título'
 						value={data.titulo}
 						InputProps={{
 							disabled: true,
 						}}
 					/>
+					<Button
+						color='primary'
+						variant='contained'
+						onClick={handlePrint}>
+						Descargar documento
+					</Button>
 				</Box>
-				{/* <IconButton
-					color='primary'
-					onClick={handlePrint}
-					title='Descargar documento'>
-					<Download />
-				</IconButton> */}
 			</Contenedor>
 		</>
 	);

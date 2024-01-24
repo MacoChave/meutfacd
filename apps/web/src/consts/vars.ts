@@ -5,6 +5,8 @@ export const ESTACION3 = 3;
 export const ESTACION4 = 4;
 export const ESTACION5 = 5;
 export const ESTACION6 = 6;
+export const ESTACION7 = 7;
+export const ESTACION8 = 8;
 
 // NOMBRE DE ESTACIONES
 export const ESTACIONES = [
@@ -15,7 +17,9 @@ export const ESTACIONES = [
 	'Comisión y estilo',
 	'Previos internos',
 	'Finalización',
-	'Impresión'
+	'Impresión',
+	'Entrega',
+	'Recoger tesis',
 ];
 
 // ESTADOS DE REVSIONES

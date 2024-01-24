@@ -33,7 +33,7 @@ export const createReport = async ({ body, user }: Request, res: Response) => {
 			nextStation,
 			filename,
 		} = body;
-		
+
 		const [responsible, docente, student] = await Promise.all([
 			sqlSelectOne({
 				table: 'ut_v_usuarios',
@@ -58,23 +58,23 @@ export const createReport = async ({ body, user }: Request, res: Response) => {
 			}),
 		]);
 
-		console.log({ responsible, docente, student })
-		
+		console.log({ responsible, docente, student });
+
 		const localFilename: string = 'src/storage/report.pdf';
 		// const stream: any = writehead(nameEmisor, res);
 		const doc = createDocument();
-		
+
 		let writeStream = createWriteStream(localFilename);
 		doc.pipe(writeStream);
 
 		setLetterHead(doc);
-		
+
 		doc.moveDown(3);
-		
+
 		setCurrentDate(doc);
-		
+
 		doc.font('NotoSans-Bold');
-		
+
 		doc.moveDown(3);
 
 		setDestinyAddress({
@@ -82,27 +82,35 @@ export const createReport = async ({ body, user }: Request, res: Response) => {
 			fullname: `${responsible?.nombre ?? 'Doctor Carlos Ebertito'} ${
 				responsible?.apellidos ?? 'Herrera Recinos'
 			}`,
-			rol: `${responsible?.roles ?? 'Jefe de Unidad de Asesoría de Tesis'}`,
+			rol: `${
+				responsible?.roles ?? 'Jefe de Unidad de Asesoría de Tesis'
+			}`,
 		});
-		
+
 		doc.font('NotoSans');
 		doc.fontSize(12).moveDown(2).text(`Estimado`, {
 			align: 'left',
 			lineGap: 2,
 		});
-		
+
 		// SET CONTENT DICTAMEN
 		setContentDictamen({
 			doc,
 			fullname: `${student?.nombre ?? ''} ${student?.apellidos ?? ''}`,
 			title: title,
-			nextStation: formatStationName(filename === 'Nombramiento' ? 'Nombramiento asesor' : nextStation),
-			station: formatStationName(filename === 'Nombramiento' ? filename : currentStation),
+			nextStation: formatStationName(
+				filename === 'Nombramiento'
+					? 'Nombramiento asesor'
+					: nextStation
+			),
+			station: formatStationName(
+				filename === 'Nombramiento' ? filename : currentStation
+			),
 		});
 
 		doc.moveDown(2);
 		doc.fontSize(12).text(`Atentamente.`, { align: 'left', lineGap: 2 });
-			
+
 		doc.moveDown(2);
 		doc.fontSize(12).text(`"ID Y ENSEÑAD A TODOS"`, {
 			align: 'center',
@@ -114,19 +122,19 @@ export const createReport = async ({ body, user }: Request, res: Response) => {
 		setInfoSignature({
 			doc,
 			fullname: `${docente?.nombre ?? ''} ${docente?.apellidos ?? ''}`,
-			rol: `Revisor ${currentStation}`,
+			rol: `Docente consejero de ${currentStation}`,
 		});
 
 		await setQRCode(doc, idReview);
 
 		setFooter(doc);
-		
+
 		doc.flushPages();
 		doc.end();
-		
+
 		writeStream.on('finish', async () => {
 			const fileContent = readFileSync(localFilename);
-			
+
 			if (DATA_SOURCES.UPLOAD_S3) {
 				const params: PutObjectCommandInput = {
 					Bucket: DATA_SOURCES.AWS_BUCKET_NAME,
@@ -156,13 +164,8 @@ export const createReport = async ({ body, user }: Request, res: Response) => {
 
 export const createPrintReport = async ({ body }: Request, res: Response) => {
 	try {
-		const {
-			idStudent,
-			title,
-			idReview,
-			filename,
-		} = body;
-		
+		const { idStudent, title, idReview, filename } = body;
+
 		const [student] = await Promise.all([
 			sqlSelectOne({
 				table: 'usuario',
@@ -172,59 +175,71 @@ export const createPrintReport = async ({ body }: Request, res: Response) => {
 		]);
 
 		const localFilename: string = 'src/storage/report.pdf';
-		
+
 		const doc = createDocument();
-		
+
 		let writeStream = createWriteStream(localFilename);
 		doc.pipe(writeStream);
 
 		setLetterHead(doc);
-		
+
 		doc.moveDown(3);
 
-		doc.text(`Decanatura de la Facultad de Ciencias Jurídicas y Sociales de la Universidad de San Carlos de Guatemala. Ciudad de Guatemala ${formatDate({ date: new Date(), format: 'report', type: 'date' })}`)
-		
+		doc.text(
+			`Decanatura de la Facultad de Ciencias Jurídicas y Sociales de la Universidad de San Carlos de Guatemala. Ciudad de Guatemala ${formatDate(
+				{ date: new Date(), format: 'report', type: 'date' }
+			)}`
+		);
+
 		doc.moveDown(3);
 
-		doc.text(`Con vista en los dictámenes que anteceden, se autoriza la impresión del trabajo de tesis del estudiante `, {
-			lineGap: 2,
-			continued: true
-		})
+		doc.text(
+			`Con vista en los dictámenes que anteceden, se autoriza la impresión del trabajo de tesis del estudiante `,
+			{
+				lineGap: 2,
+				continued: true,
+			}
+		);
 
-		let fullnameStudent: string = `${student?.nombre ?? ''} ${student?.apellidos ?? ''}`;
+		let fullnameStudent: string = `${student?.nombre ?? ''} ${
+			student?.apellidos ?? ''
+		}`;
 		doc.font('Helvetica-Bold');
 		doc.text(fullnameStudent.toUpperCase(), {
 			lineGap: 2,
-			continued: true
-		})
-		
+			continued: true,
+		});
+
 		doc.font('NotoSans');
 		doc.text(' titulado ', {
 			lineGap: 2,
-			continued: true
-		})
-		
+			continued: true,
+		});
+
 		doc.font('Helvetica-Bold');
 		doc.text(title.toUpperCase(), {
 			lineGap: 2,
-			continued: true
-		})
-		
+			continued: true,
+		});
+
 		doc.font('NotoSans');
-		doc.text(`. Artículos 31, 33 y 34 del Normativo para la Elaboración de Tesis de Licenciaturas en Ciencias Jurídicas y Sociales y del Exámen General Público.`, {
-			lineGap: 2,
-		})
-		
+		doc.text(
+			`. Artículos 31, 33 y 34 del Normativo para la Elaboración de Tesis de Licenciaturas en Ciencias Jurídicas y Sociales y del Exámen General Público.`,
+			{
+				lineGap: 2,
+			}
+		);
+
 		await setQRCode(doc, idReview);
 
 		setFooter(doc);
-		
+
 		doc.flushPages();
 		doc.end();
-		
+
 		writeStream.on('finish', async () => {
 			const fileContent = readFileSync(localFilename);
-			
+
 			if (DATA_SOURCES.UPLOAD_S3) {
 				const params: PutObjectCommandInput = {
 					Bucket: DATA_SOURCES.AWS_BUCKET_NAME,
@@ -250,4 +265,4 @@ export const createPrintReport = async ({ body }: Request, res: Response) => {
 		console.log({ error });
 		errorHttp(res, error);
 	}
-}
+};

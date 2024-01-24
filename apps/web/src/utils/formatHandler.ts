@@ -7,6 +7,17 @@ import {
 	REVISION,
 } from '@/consts/Vars';
 import { TypeWithKey } from '@/models/TypeWithKey';
+import dayjs, { Dayjs } from 'dayjs';
+import timezone from 'dayjs/plugin/timezone';
+import utc from 'dayjs/plugin/utc';
+import localeData from 'dayjs/plugin/localeData';
+import relativeTime from 'dayjs/plugin/relativeTime';
+import { DIVISIONS } from '@/consts/Time';
+
+dayjs.extend(utc);
+dayjs.extend(timezone);
+dayjs.extend(relativeTime);
+dayjs.extend(localeData);
 
 /**
  * Formatea la primera letra de cada palabra a mayúscula
@@ -81,9 +92,30 @@ export const getAlignByDataType = (
 	}
 };
 
+const formatTimeAgo = (date: Date) => {
+	let duration = (date - new Date()) / 1000;
+	const formatter = new Intl.RelativeTimeFormat('es-GT', {
+		style: 'long',
+		numeric: 'auto',
+	});
+
+	for (const { amount, name } of DIVISIONS) {
+		if (Math.abs(duration) < amount) {
+			return formatter.format(Math.round(duration), name as any);
+		}
+		duration /= amount;
+	}
+
+	return new Intl.DateTimeFormat('es-GT', {
+		dateStyle: 'long',
+		timeStyle: 'short',
+	}).format(date);
+};
+
 export const formatByDataType = (cellValue: TypeWithKey<string>): string => {
 	const [key, value] = Object.entries(cellValue)[0];
 	const dataType = getDataType(key);
+	let date: Dayjs;
 
 	switch (dataType) {
 		case 'money':
@@ -94,9 +126,13 @@ export const formatByDataType = (cellValue: TypeWithKey<string>): string => {
 		case 'number':
 			return new Intl.NumberFormat().format(Number(value));
 		case 'date':
-			return new Date(value).toLocaleDateString('es-GT', {
-				dateStyle: 'long',
-			});
+			return formatTimeAgo(new Date(value));
+		case 'time':
+			date = dayjs(value).locale('es').tz('America/Guatemala');
+			return date.format('HH:mm:ss');
+		case 'datetime':
+			date = dayjs(value).locale('es').tz('America/Guatemala');
+			return date.format('DD/MM/YYYY HH:mm:ss');
 		case 'boolean':
 			return value ? 'Si' : 'No';
 		default:

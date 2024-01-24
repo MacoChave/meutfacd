@@ -2,9 +2,11 @@ import { URL } from '@/consts/Api';
 import { TLogup, logupDefault, schemaLogup } from '@/models/Logup';
 import { postData } from '@/services/fetching';
 import { errorHandler } from '@/utils/errorHandler';
+import { formatDate } from '@/utils/formatHandler';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Box, Button, Card, Toolbar, Typography } from '@mui/material';
 import { AxiosError } from 'axios';
+import dayjs from 'dayjs';
 import React, { SyntheticEvent, lazy, useState } from 'react';
 import { FormProvider, SubmitHandler, useForm } from 'react-hook-form';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -33,7 +35,10 @@ const Logup: React.FC<LogupProps> = () => {
 	const [enviando, setEnviando] = useState(false);
 	const { rol } = useParams();
 	const methods = useForm<TLogup>({
-		defaultValues: logupDefault,
+		defaultValues: {
+			...logupDefault,
+			fecha_nac: new Date().toISOString(),
+		},
 		resolver: yupResolver(schemaLogup),
 		mode: 'onBlur',
 	});
@@ -92,7 +97,7 @@ const Logup: React.FC<LogupProps> = () => {
 									display: 'flex',
 									flexDirection: 'column',
 									p: 2,
-									gap: 2,
+									gap: 4,
 								}}>
 								<Typography variant='h4'>Registro</Typography>
 								<Typography variant='body1' color='GrayText'>
@@ -110,7 +115,7 @@ const Logup: React.FC<LogupProps> = () => {
 										flexDirection: 'row',
 										flexWrap: 'wrap',
 									}}>
-									<Typography sx={{ flex: 1 }}>
+									<Typography sx={{ flex: 1, minWidth: 300 }}>
 										Personal
 									</Typography>
 									<Personales />
@@ -121,7 +126,7 @@ const Logup: React.FC<LogupProps> = () => {
 										flexDirection: 'row',
 										flexWrap: 'wrap',
 									}}>
-									<Typography sx={{ flex: 1 }}>
+									<Typography sx={{ flex: 1, minWidth: 300 }}>
 										Contacto
 									</Typography>
 									<Contacto />
@@ -132,7 +137,7 @@ const Logup: React.FC<LogupProps> = () => {
 										flexDirection: 'row',
 										flexWrap: 'wrap',
 									}}>
-									<Typography sx={{ flex: 1 }}>
+									<Typography sx={{ flex: 1, minWidth: 300 }}>
 										Seguridad
 									</Typography>
 									<Seguridad />

@@ -1,5 +1,4 @@
 import Dashboard from '@/components/Layout/Dashboard/Dashboard';
-import { AproveThesis } from '@/pages/administrador/AproveThesis';
 import { lazy } from 'react';
 import { createBrowserRouter } from 'react-router-dom';
 // --------------------
@@ -19,35 +18,33 @@ const VerifiedDocument = lazy(
 // --------------------
 // PAGES WITH SESSIONS
 // --------------------
-const Home = lazy(() => import('../pages/Home/Home'));
-const ProtectedRoute = lazy(() => import('../components/ProtectedRoute'));
+const Home = lazy(() => import('@/pages/Home/Home'));
+const ProtectedRoute = lazy(() => import('@/components/ProtectedRoute'));
 const UserProfile = lazy(
-	() => import('../pages/Sesion/UserProfile/UserProfile')
+	() => import('@/pages/Sesion/UserProfile/UserProfile')
 );
-const Chat = lazy(() => import('../pages/Chat/Chat'));
+const Chat = lazy(() => import('@/pages/Chat/Chat'));
 // --------------------
 // STUDENT PAGES
 // --------------------
 const StudentProgress = lazy(
-	() => import('../pages/estudiante/Progress/Progress')
+	() => import('@/pages/estudiante/Progress/Progress')
 );
 const StudentThesisCover = lazy(
-	() => import('../pages/estudiante/ThesisCover/ThesisCover')
+	() => import('@/pages/estudiante/ThesisCover/ThesisCover')
 );
-const StudentCourseI = lazy(
-	() => import('../pages/estudiante/CourseI/CourseI')
-);
+const StudentCourseI = lazy(() => import('@/pages/estudiante/CourseI/CourseI'));
 const StudentCourseII = lazy(
-	() => import('../pages/estudiante/CourseII/CourseII')
+	() => import('@/pages/estudiante/CourseII/CourseII')
 );
 const StudentThemeChange = lazy(
 	() => import('@/pages/estudiante/TopicChange/TopicChange')
 );
 const StudentCommissionStyle = lazy(
-	() => import('../pages/estudiante/CommisionStyle/CommissionStyle')
+	() => import('@/pages/estudiante/CommisionStyle/CommissionStyle')
 );
 const StudentInternaReviews = lazy(
-	() => import('../pages/estudiante/InternalReviews/InternalReviews')
+	() => import('@/pages/estudiante/InternalReviews/InternalReviews')
 );
 const StudentPrintingRequest = lazy(
 	() => import('@/pages/estudiante/PrintingRequest/PrintingRequest')
@@ -70,6 +67,10 @@ const SndCourseProfessor = lazy(
 const ThesisProfessor = lazy(
 	() => import('@/pages/evaluador/StylesComision/StylesComision')
 );
+const ReviewThesisProfessor = lazy(
+	() => import('@/pages/evaluador/ReviewThesis/ReviewThesis')
+);
+
 // --------------------
 // COORDINATOR PAGES
 // --------------------
@@ -87,23 +88,31 @@ const ThesisResponsible = lazy(
 	() => import('@/pages/encargado/ThesisSup/ThesisSup')
 );
 const ReviewThesisResponsible = lazy(
-	() => import('../pages/encargado/ReviewThesis/ReviewThesis')
+	() => import('@/pages/encargado/ReviewThesis/ReviewThesis')
 );
 // --------------------
-// ANALYTICS PAGES
+// REPORT PAGES
 // --------------------
-const ByEstacion = lazy(() => import('../pages/analitica/ByEstacion'));
-const ByRol = lazy(() => import('../pages/analitica/ByRol'));
-const Resumen = lazy(() => import('../pages/analitica/Resumen'));
+// const ByEstacion = lazy(() => import('@/pages/analitica/ByEstacion'));
+// const ByRol = lazy(() => import('@/pages/analitica/ByRol'));
+const Resumen = lazy(() => import('@/pages/reporte/Resumen/Resumen'));
+const Progresos = lazy(() => import('@/pages/reporte/Progresos/Progresos'));
 // --------------------
 // ADMINISTRATOR PAGES
 // --------------------
 const PagesApp = lazy(() => import('@/pages/administrador/PagesApp/PagesApp'));
-const UsersApp = lazy(() => import('../pages/administrador/Usuarios/Usuarios'));
+const UsersApp = lazy(() => import('@/pages/administrador/Usuarios/Usuarios'));
 const Courses = lazy(() => import('@/pages/administrador/Courses/Courses'));
 const Schedule = lazy(() => import('@/pages/administrador/Schedule/Schedule'));
-const Aplicacion = lazy(() => import('../pages/administrador/Aplicacion'));
-const ProblemsApp = lazy(() => import('../pages/administrador/Problemas'));
+const Aplicacion = lazy(() => import('@/pages/administrador/Aplicacion'));
+const ProblemsApp = lazy(() => import('@/pages/administrador/Problemas'));
+const AproveThesis = lazy(
+	() => import('@/pages/administrador/AproveThesis/AproveThesis')
+);
+const PrintThesis = lazy(
+	() => import('@/pages/administrador/PrintThesis/PrintThesis/PrintThesis')
+);
+const Acceso = lazy(() => import('@/pages/aplicacion/Acceso/Acceso'));
 // --------------------
 // ERROR PAGES
 // --------------------
@@ -142,10 +151,250 @@ export const router = createBrowserRouter(
 			element: <UserRecovery />,
 		},
 		{
+			path: '/administrador',
+			element: (
+				<ProtectedRoute rol='administrador'>
+					<Dashboard />
+				</ProtectedRoute>
+			),
+			children: [
+				{
+					path: 'perfil',
+					element: (
+						<ProtectedRoute rol='administrador'>
+							<UserProfile />
+						</ProtectedRoute>
+					),
+				},
+				{
+					path: 'chat',
+					element: (
+						<ProtectedRoute rol='administrador'>
+							{<Chat />}
+						</ProtectedRoute>
+					),
+				},
+				// {
+				// 	path: 'revisiones-tesis',
+				// 	element: (
+				// 		<ProtectedRoute rol='administrador'>
+				// 			<Aplicacion />
+				// 		</ProtectedRoute>
+				// 	),
+				// },
+				// {
+				// 	path: 'impresion-tesis',
+				// 	element: (
+				// 		<ProtectedRoute rol='administrador'>
+				// 			<ProblemsApp />
+				// 		</ProtectedRoute>
+				// 	),
+				// },
+				{
+					path: 'solicitud-impresion',
+					element: (
+						<ProtectedRoute rol='administrador'>
+							<AproveThesis />
+						</ProtectedRoute>
+					),
+				},
+				{
+					path: 'impresion-tesis',
+					element: (
+						<ProtectedRoute rol='administrador'>
+							<PrintThesis />
+						</ProtectedRoute>
+					),
+				},
+			],
+		},
+		{
+			path: '/aplicacion',
+			element: (
+				<ProtectedRoute rol='administrador'>
+					<Dashboard />
+				</ProtectedRoute>
+			),
+			children: [
+				{
+					path: 'paginas',
+					element: (
+						<ProtectedRoute rol='administrador'>
+							<PagesApp />
+						</ProtectedRoute>
+					),
+				},
+				{
+					path: 'usuarios',
+					element: (
+						<ProtectedRoute rol='administrador'>
+							<UsersApp />
+						</ProtectedRoute>
+					),
+				},
+				{
+					path: 'horarios',
+					element: (
+						<ProtectedRoute rol='administrador'>
+							<Schedule />
+						</ProtectedRoute>
+					),
+				},
+				{
+					path: 'cursos',
+					element: (
+						<ProtectedRoute rol='administrador'>
+							<Courses />
+						</ProtectedRoute>
+					),
+				},
+				{
+					path: 'accesos-rol',
+					element: (
+						<ProtectedRoute rol='administrador'>
+							<Acceso />
+						</ProtectedRoute>
+					),
+				},
+			],
+		},
+		{
+			path: '/docente',
+			element: (
+				<ProtectedRoute rol='profesor'>
+					<Dashboard />
+				</ProtectedRoute>
+			),
+			children: [
+				{
+					path: 'perfil',
+					element: (
+						<ProtectedRoute rol='profesor'>
+							<UserProfile />
+						</ProtectedRoute>
+					),
+				},
+				{
+					path: 'chat',
+					element: (
+						<ProtectedRoute rol='profesor'>
+							{<Chat />}
+						</ProtectedRoute>
+					),
+				},
+				{
+					path: 'punto-tesis',
+					element: (
+						<ProtectedRoute rol='profesor'>
+							{<DraftProfessor />}
+						</ProtectedRoute>
+					),
+				},
+				{
+					path: 'curso-I',
+					element: (
+						<ProtectedRoute rol='profesor'>
+							{<FstCourseProfessor />}
+						</ProtectedRoute>
+					),
+				},
+				{
+					path: 'curso-II',
+					element: (
+						<ProtectedRoute rol='profesor'>
+							{<SndCourseProfessor />}
+						</ProtectedRoute>
+					),
+				},
+				{
+					path: 'comision-y-estilos',
+					element: (
+						<ProtectedRoute rol='profesor'>
+							{<ThesisProfessor />}
+						</ProtectedRoute>
+					),
+				},
+				{
+					path: 'previos-internos',
+					element: (
+						<ProtectedRoute rol='profesor'>
+							{<ReviewThesisProfessor />}
+						</ProtectedRoute>
+					),
+				},
+			],
+		},
+		{
+			path: '/encargado',
+			element: (
+				<ProtectedRoute rol='encargado'>
+					<Dashboard />
+				</ProtectedRoute>
+			),
+			children: [
+				{
+					path: 'perfil',
+					element: (
+						<ProtectedRoute rol='encargado'>
+							<UserProfile />
+						</ProtectedRoute>
+					),
+				},
+				{
+					path: 'chat',
+					element: (
+						<ProtectedRoute rol='encargado'>
+							{<Chat />}
+						</ProtectedRoute>
+					),
+				},
+				{
+					path: 'punto-tesis',
+					element: (
+						<ProtectedRoute rol='encargado'>
+							<DraftResponsible />
+						</ProtectedRoute>
+					),
+				},
+				{
+					path: 'curso-I',
+					element: (
+						<ProtectedRoute rol='encargado'>
+							{<FstCourseResponsible />}
+						</ProtectedRoute>
+					),
+				},
+				{
+					path: 'curso-II',
+					element: (
+						<ProtectedRoute rol='encargado'>
+							{<SndCourseResponsible />}
+						</ProtectedRoute>
+					),
+				},
+				{
+					path: 'comision-y-estilos',
+					element: (
+						<ProtectedRoute rol='encargado'>
+							{<ThesisResponsible />}
+						</ProtectedRoute>
+					),
+				},
+				{
+					path: 'previos-internos',
+					element: (
+						<ProtectedRoute rol='encargado'>
+							{<ReviewThesisResponsible />}
+						</ProtectedRoute>
+					),
+				},
+			],
+		},
+		{
 			path: '/estudiante',
 			element: (
 				<ProtectedRoute rol='estudiante'>
-					{<Dashboard />}
+					<Dashboard />
 				</ProtectedRoute>
 			),
 			children: [
@@ -185,7 +434,7 @@ export const router = createBrowserRouter(
 					),
 				},
 				{
-					path: 'curso-introduccion',
+					path: 'curso-I',
 					element: (
 						<ProtectedRoute rol='estudiante'>
 							{<StudentCourseI />}
@@ -193,7 +442,7 @@ export const router = createBrowserRouter(
 					),
 				},
 				{
-					path: 'curso-elaboracion',
+					path: 'curso-II',
 					element: (
 						<ProtectedRoute rol='estudiante'>
 							{<StudentCourseII />}
@@ -201,7 +450,7 @@ export const router = createBrowserRouter(
 					),
 				},
 				{
-					path: 'dictamen',
+					path: 'cambio-tema',
 					element: (
 						<ProtectedRoute rol='estudiante'>
 							{<StudentThemeChange />}
@@ -209,7 +458,7 @@ export const router = createBrowserRouter(
 					),
 				},
 				{
-					path: 'tesis',
+					path: 'comision-y-estilos',
 					element: (
 						<ProtectedRoute rol='estudiante'>
 							{<StudentCommissionStyle />}
@@ -225,138 +474,44 @@ export const router = createBrowserRouter(
 					),
 				},
 				{
-					path: 'finalizacion',
+					path: 'solicitud-impresion',
 					element: (
 						<ProtectedRoute rol='estudiante'>
 							{<StudentPrintingRequest />}
 						</ProtectedRoute>
 					),
 				},
-			],
-		},
-		{
-			path: '/encargado/',
-			element: (
-				<ProtectedRoute rol='encargado'>{<Dashboard />}</ProtectedRoute>
-			),
-			children: [
 				{
-					path: 'perfil',
+					path: 'entrega-tesis',
 					element: (
-						<ProtectedRoute rol='encargado'>
-							<UserProfile />
-						</ProtectedRoute>
-					),
-				},
-				{
-					path: 'chat',
-					element: (
-						<ProtectedRoute rol='encargado'>
-							{<Chat />}
-						</ProtectedRoute>
-					),
-				},
-				{
-					path: 'punto-tesis',
-					element: (
-						<ProtectedRoute rol='encargado'>
-							<DraftResponsible />
-						</ProtectedRoute>
-					),
-				},
-				{
-					path: 'curso-introduccion',
-					element: (
-						<ProtectedRoute rol='encargado'>
-							{<FstCourseResponsible />}
-						</ProtectedRoute>
-					),
-				},
-				{
-					path: 'tutor-estudiante',
-					element: (
-						<ProtectedRoute rol='encargado'>
-							{<StudentTutor />}
-						</ProtectedRoute>
-					),
-				},
-				{
-					path: 'curso-elaboracion',
-					element: (
-						<ProtectedRoute rol='encargado'>
-							{<SndCourseResponsible />}
-						</ProtectedRoute>
-					),
-				},
-				{
-					path: 'tesis',
-					element: (
-						<ProtectedRoute rol='encargado'>
-							{<ThesisResponsible />}
-						</ProtectedRoute>
-					),
-				},
-				{
-					path: 'previos-internos',
-					element: (
-						<ProtectedRoute rol='encargado'>
-							{<ReviewThesisResponsible />}
+						<ProtectedRoute rol='estudiante'>
+							{<StudentPrintedThesis />}
 						</ProtectedRoute>
 					),
 				},
 			],
 		},
 		{
-			path: '/docente',
+			path: '/reporte',
 			element: (
-				<ProtectedRoute rol='profesor'>{<Dashboard />}</ProtectedRoute>
+				<ProtectedRoute rol='analitica'>
+					<Dashboard />
+				</ProtectedRoute>
 			),
 			children: [
 				{
-					path: 'perfil',
+					path: 'resumen',
 					element: (
-						<ProtectedRoute rol='profesor'>
-							<UserProfile />
+						<ProtectedRoute rol='analitica'>
+							{<Resumen />}
 						</ProtectedRoute>
 					),
 				},
 				{
-					path: 'chat',
+					path: 'progresos',
 					element: (
-						<ProtectedRoute rol='profesor'>
-							{<Chat />}
-						</ProtectedRoute>
-					),
-				},
-				{
-					path: 'punto-tesis',
-					element: (
-						<ProtectedRoute rol='profesor'>
-							{<DraftProfessor />}
-						</ProtectedRoute>
-					),
-				},
-				{
-					path: 'curso-introduccion',
-					element: (
-						<ProtectedRoute rol='profesor'>
-							{<FstCourseProfessor />}
-						</ProtectedRoute>
-					),
-				},
-				{
-					path: 'curso-elaboracion',
-					element: (
-						<ProtectedRoute rol='profesor'>
-							{<SndCourseProfessor />}
-						</ProtectedRoute>
-					),
-				},
-				{
-					path: 'tesis',
-					element: (
-						<ProtectedRoute rol='profesor'>
-							{<ThesisProfessor />}
+						<ProtectedRoute rol='analitica'>
+							{<Progresos />}
 						</ProtectedRoute>
 					),
 				},
@@ -365,136 +520,32 @@ export const router = createBrowserRouter(
 		{
 			path: '/secretaria',
 			element: (
-				<ProtectedRoute rol='analitica'>{<Dashboard />}</ProtectedRoute>
-			),
-			children: [
-				{
-					path: 'perfil',
-					element: (
-						<ProtectedRoute rol='analitica'>
-							<UserProfile />
-						</ProtectedRoute>
-					),
-				},
-				{
-					path: 'chat',
-					element: (
-						<ProtectedRoute rol='analitica'>
-							{<Chat />}
-						</ProtectedRoute>
-					),
-				},
-				{
-					path: 'resumen',
-					element: (
-						<ProtectedRoute rol='analitica'>
-							{<Resumen />}
-						</ProtectedRoute>
-					),
-				},
-				{
-					path: 'por-estacion',
-					element: (
-						<ProtectedRoute rol='analitica'>
-							{<ByEstacion />}
-						</ProtectedRoute>
-					),
-				},
-				{
-					path: 'por-rol',
-					element: (
-						<ProtectedRoute rol='analitica'>
-							{<ByRol />}
-						</ProtectedRoute>
-					),
-				},
-			],
-		},
-		{
-			path: '/administrador',
-			element: (
-				<ProtectedRoute rol='administrador'>
-					{<Dashboard />}
+				<ProtectedRoute rol='analitica'>
+					<Dashboard />
 				</ProtectedRoute>
 			),
 			children: [
 				{
 					path: 'perfil',
 					element: (
-						<ProtectedRoute rol='administrador'>
-							<UserProfile />
-						</ProtectedRoute>
-					),
-				},
-				{
-					path: 'resumen',
-					element: (
 						<ProtectedRoute rol='analitica'>
-							{<Resumen />}
+							<UserProfile />
 						</ProtectedRoute>
 					),
 				},
 				{
 					path: 'chat',
 					element: (
-						<ProtectedRoute rol='administrador'>
+						<ProtectedRoute rol='analitica'>
 							{<Chat />}
 						</ProtectedRoute>
 					),
 				},
 				{
-					path: 'usuarios',
+					path: 'asesor-tesis',
 					element: (
-						<ProtectedRoute rol='administrador'>
-							<UsersApp />
-						</ProtectedRoute>
-					),
-				},
-				{
-					path: 'paginas',
-					element: (
-						<ProtectedRoute rol='administrador'>
-							<PagesApp />
-						</ProtectedRoute>
-					),
-				},
-				{
-					path: 'cursos',
-					element: (
-						<ProtectedRoute rol='administrador'>
-							<Courses />
-						</ProtectedRoute>
-					),
-				},
-				{
-					path: 'horarios',
-					element: (
-						<ProtectedRoute rol='administrador'>
-							<Schedule />
-						</ProtectedRoute>
-					),
-				},
-				{
-					path: 'aplicacion',
-					element: (
-						<ProtectedRoute rol='administrador'>
-							<Aplicacion />
-						</ProtectedRoute>
-					),
-				},
-				{
-					path: 'problemas',
-					element: (
-						<ProtectedRoute rol='administrador'>
-							<ProblemsApp />
-						</ProtectedRoute>
-					),
-				},
-				{
-					path: 'finalizacion',
-					element: (
-						<ProtectedRoute rol='administrador'>
-							<AproveThesis />
+						<ProtectedRoute rol='encargado'>
+							{<StudentTutor />}
 						</ProtectedRoute>
 					),
 				},

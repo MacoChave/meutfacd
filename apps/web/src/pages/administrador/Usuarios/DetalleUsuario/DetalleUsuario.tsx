@@ -1,9 +1,9 @@
 import { TUser } from '@/models/Perfil';
 import { Box, Tab, Tabs, Typography } from '@mui/material';
-import React, { SyntheticEvent, useState } from 'react';
-import { Informacion } from '../components/Informacion';
-import { Logs } from '../components/Logs';
-import { Rol } from '../components/Rol';
+import React, { SyntheticEvent, lazy, useState } from 'react';
+const Informacion = lazy(() => import('../components/Informacion/Informacion'));
+const Permisos = lazy(() => import('../components/Permisos/Permisos'));
+const Rol = lazy(() => import('../components/Rol/Rol'));
 
 export type DetalleUsuarioProps = {
 	registro: TUser;
@@ -37,7 +37,7 @@ const DetalleUsuario: React.FC<DetalleUsuarioProps> = ({ registro }) => {
 					aria-label='basic tabs detalle usuario'>
 					<Tab label='Información' {...allyProps(0)} />
 					<Tab label='Rol' {...allyProps(1)} />
-					<Tab label='Logs' {...allyProps(2)} />
+					<Tab label='Permisos' {...allyProps(2)} />
 				</Tabs>
 			</Box>
 			{value === 0 ? (
@@ -45,7 +45,7 @@ const DetalleUsuario: React.FC<DetalleUsuarioProps> = ({ registro }) => {
 			) : value === 1 ? (
 				<Rol usuario={registro} index={1} />
 			) : (
-				<Logs usuario={registro} index={2} />
+				<Permisos usuario={registro} index={2} />
 			)}
 		</Box>
 	);
