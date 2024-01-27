@@ -3,15 +3,7 @@ import { APROBADO } from '@/consts/Vars';
 import { useCustomFetch } from '@/hooks/useFetch';
 import { getData } from '@/services/fetching';
 import { formatToInputDate } from '@/utils/formatHandler';
-import { Download } from '@mui/icons-material';
-import {
-	Box,
-	Button,
-	IconButton,
-	TextField,
-	Toolbar,
-	Typography,
-} from '@mui/material';
+import { Box, Button, TextField, Toolbar, Typography } from '@mui/material';
 import { FC, lazy } from 'react';
 import { useParams } from 'react-router-dom';
 import swal from 'sweetalert';

@@ -17,7 +17,7 @@ FROM nginx:alpine
 
 ADD ./config/default.conf /etc/nginx/conf.d/default.conf
 
-COPY --from=build /pre/build /var/www/app/
+COPY --from=build /pre/dist /var/www/app/
 
 EXPOSE 80
 
