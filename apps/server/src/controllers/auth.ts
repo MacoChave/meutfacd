@@ -61,14 +61,24 @@ export const verifyEmail = async ({ query }: Request, res: Response) => {
 
 export const recoveryPassword = async ({ body }: Request, res: Response) => {
 	try {
-		const emailData = await sendEmail({
-			to: body.correo,
-			plainText: 'Ingresa al siguiente link para recuperar tu contraseña',
-			subject: 'Recuperar contraseña',
-			content: getBodyFromRecovery({
-				email: body.correo,
-			}),
-		});
+		if (DATA_SOURCES.SEND_EMAIL == 'true') {
+			const emailData = await sendEmail({
+				to: body.correo,
+				plainText:
+					'Ingresa al siguiente link para recuperar tu contraseña',
+				subject: 'Recuperar contraseña',
+				content: getBodyFromRecovery({
+					email: body.correo,
+				}),
+			});
+		} else {
+			console.log(
+				'Ingresa al siguiente link para recuperar tu contraseña'
+			);
+			console.log(
+				`${DATA_SOURCES.URL_PASS_RECOVERY}/${btoa(body.correo)}`
+			);
+		}
 		res.status(200).json({ msg: 'Correo enviado' });
 	} catch (error: any) {
 		errorHttp(res, error);
@@ -137,7 +147,7 @@ export const logupHandler = async ({ body, query }: Request, res: Response) => {
 				type: 'date',
 			}),
 			id_municipio: 1,
-			carnet,
+			carnet: +carnet.toString().replace(' ', ''),
 			cui,
 			rol: rolFinded[0].id_rol,
 		};

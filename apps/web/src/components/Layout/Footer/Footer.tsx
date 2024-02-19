@@ -8,6 +8,9 @@ const Footer: React.FC<FooterProps> = ({}) => {
 		<Box
 			sx={{
 				mx: 'auto',
+				background: 'rgba(255,255,255,0.25)',
+				backdropFilter: 'blur(5px)',
+				width: '100%',
 				p: 1,
 			}}>
 			<Typography

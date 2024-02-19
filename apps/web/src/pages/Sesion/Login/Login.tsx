@@ -54,7 +54,7 @@ const Login: React.FC<LoginProps> = () => {
 		const rol = response.roles ? response.roles.split(' ')[0] : '';
 
 		dispatch(setLogged(response));
-		navigate(`/${rol || 'estudiante'}`.toLowerCase(), {
+		navigate(`/administrador`.toLowerCase(), {
 			replace: true,
 			state: {},
 		});

@@ -22,10 +22,16 @@ import swal from 'sweetalert';
 export type CitaProps = {
 	userProgress: any;
 	estacion?: number;
+	finish?: boolean;
 	onClose: () => void;
 };
 
-const Cita: React.FC<CitaProps> = ({ userProgress, estacion = 6, onClose }) => {
+const Cita: React.FC<CitaProps> = ({
+	userProgress,
+	estacion = 6,
+	finish = false,
+	onClose,
+}) => {
 	const [loading, setLoading] = useState(false);
 	const { control, handleSubmit } = useForm<TCitas>({
 		defaultValues: {
@@ -91,20 +97,41 @@ const Cita: React.FC<CitaProps> = ({ userProgress, estacion = 6, onClose }) => {
 			.finally(() => setLoading(false));
 	};
 
+	const getFolderName = () => {
+		switch (estacion) {
+			case 6:
+				return 'dictamen_prev_internos';
+			case 7:
+				return 'dictamen_impresion';
+			case 8:
+				return 'dictamen_entrega';
+			default:
+				return '';
+		}
+	};
+
+	const getPathname = () => {
+		switch (estacion) {
+			case 6:
+				return 'dictamen';
+			case 7:
+				return 'impresion';
+			default:
+				return 'impresion';
+		}
+	};
+
 	const onPass = async () => {
 		setLoading(true);
 		const dictamen = await postData<any>({
-			path: `${URL.PDF}/${estacion === 6 ? 'dictamen' : 'impresion'}`,
+			path: `${URL.PDF}/${getPathname()}`,
 			body: {
 				idStudent: userProgress.id_usuario,
 				title: userProgress.titulo,
 				idReview: userProgress.id_revision,
 				currentStation: ESTACIONES[estacion - 1].toLowerCase(),
 				nextStation: ESTACIONES[estacion].toLowerCase(),
-				filename:
-					estacion === 6
-						? 'dictamen_prev_internos'
-						: 'dictamen_impresion',
+				filename: getFolderName(),
 			},
 		});
 
@@ -117,15 +144,15 @@ const Cita: React.FC<CitaProps> = ({ userProgress, estacion = 6, onClose }) => {
 				},
 				params: { id_revision: userProgress.id_revision },
 			}),
-			postData<TResult>({
-				path: `${URL.REVIEW}`,
-				body: {
-					id_tesis: userProgress.id_tesis,
-					estacion: estacion + 1,
-					estado: PENDIENTE,
-				},
-				params: {},
-			}),
+			// postData<TResult>({
+			// 	path: `${URL.REVIEW}`,
+			// 	body: {
+			// 		id_tesis: userProgress.id_tesis,
+			// 		estacion: estacion + 1,
+			// 		estado: PENDIENTE,
+			// 	},
+			// 	params: {},
+			// }),
 			postData<TResult>({
 				path: `${URL.NOTIFICATION}`,
 				body: {
@@ -136,7 +163,7 @@ const Cita: React.FC<CitaProps> = ({ userProgress, estacion = 6, onClose }) => {
 				params: {},
 			}),
 		])
-			.then(([putReview, postReview, postNotify]) => {
+			.then(([putReview, postNotify]) => {
 				if (putReview.affectedRows) {
 					swal(
 						'¡Bien hecho!',

@@ -47,7 +47,7 @@ const AproveThesis: React.FC<AproveThesisProps> = ({}) => {
 
 	return (
 		<>
-			<Contenedor title='Impresión de tesis'>
+			<Contenedor title='Solicitud de impresiones'>
 				<McTable
 					headers={{
 						estado: 'Estado',

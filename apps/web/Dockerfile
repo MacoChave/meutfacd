@@ -1,15 +1,24 @@
-FROM node:18-alpine as build 
+FROM node:20 as base 
+ENV PNPM_HOME="/pnpm" 
+ENV PATH="$PNPM_HOME:$PATH" 
+RUN corepack enable 
 
-WORKDIR /app 
-
-COPY package*.json ./
-
-RUN npm ci 
-
+WORKDIR /pre
 COPY . . 
 
-RUN npm run build 
+FROM base AS prod-deps 
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --prod 
 
-EXPOSE 4173 
+FROM base AS build 
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install 
+RUN pnpm run build 
 
-CMD ["npm", "run", "preview"]
+FROM nginx:alpine
+
+ADD ./config/default.conf /etc/nginx/conf.d/default.conf
+
+COPY --from=build /pre/dist /var/www/app/
+
+EXPOSE 80
+
+CMD ["nginx", "-g", "daemon off;"]

@@ -138,7 +138,12 @@ const Form: React.FC<FormProps> = ({ onClose }) => {
 							setValue('id_tutor', professor.id_usuario);
 							setProfessor(professor);
 						}}
-						rol={`%Docente curso ${getValues('id_curso')}%`}
+						ruta='schedule'
+						rol={`Docente`}
+						page='Curso I'
+						status={1}
+						horario={horario.id_horario ?? 0}
+						jornada={jornada.id_jornada ?? 0}
 					/>
 					<Button type='submit' variant='contained'>
 						Guardar

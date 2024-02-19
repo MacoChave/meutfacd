@@ -25,7 +25,7 @@ const Home = (props: any) => {
 	};
 
 	return (
-		<Box sx={{ maxWidth: '100vw' }}>
+		<Box sx={{ maxWidth: '100dvw' }}>
 			<Box sx={{ width: '100%' }}>
 				<img
 					src='https://derecho.cloud/wp-content/uploads/2022/08/Header-Derecho-Cloud.png'

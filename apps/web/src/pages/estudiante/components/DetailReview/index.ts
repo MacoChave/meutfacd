@@ -1,0 +1,1 @@
+export { default as DetailReview } from './DetailReview';

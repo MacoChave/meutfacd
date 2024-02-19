@@ -5,7 +5,7 @@ import { TChat } from '@/models/Chat';
 import { TMessage } from '@/models/Message';
 import store from '@/redux/store';
 import { postData } from '@/services/fetching';
-import { formatDate } from '@/utils/formatHandler';
+import { formatByDataType, formatDate } from '@/utils/formatHandler';
 import { Autorenew, Send } from '@mui/icons-material';
 import {
 	Box,
@@ -107,10 +107,8 @@ const ChatMessages: FC<ChatMessagesProps> = ({ currentChat }) => {
 							}}
 							title={message.nombre}
 							primary={message.texto}
-							secondary={formatDate({
-								date: new Date(message.fecha_envio),
-								withTime: true,
-								onlyMonth: true,
+							secondary={formatByDataType({
+								fecha_envio: message.fecha_envio,
 							})}
 						/>
 					</ListItem>

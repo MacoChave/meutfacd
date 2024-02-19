@@ -5,9 +5,10 @@ import { McTable } from '@/components/MyTable';
 import { PENDIENTE, REVISION } from '@/consts/Vars';
 import { useCustomFetch } from '@/hooks/useFetch';
 import { getData } from '@/services/fetching';
-import { Typography } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import React, { useState } from 'react';
 import { Cita } from './Cita';
+import { AsignReviewTutor } from './components/AsignReviewTutor';
 
 type ProgressType = {
 	estacion: string;
@@ -65,19 +66,27 @@ const ReviewThesisResponsible: React.FC<
 	return (
 		<>
 			<Contenedor title='Previos internos'>
-				<McTable
-					headers={{
-						estado: 'Estado',
-						nombre: 'Estudiante',
-						detalle: 'Detalle',
-						sala: 'Sala',
-						fecha: 'Revisión',
-					}}
-					rows={data}
-					totalCols={{}}
-					onView={openPDF}
-					onEdit={setReview}
-				/>
+				<Box
+					sx={{
+						display: 'flex',
+						flexDirection: { xs: 'column', md: 'row' },
+						gap: 4,
+					}}>
+					<AsignReviewTutor />
+					<McTable
+						headers={{
+							estado: 'Estado',
+							nombre: 'Estudiante',
+							detalle: 'Detalle',
+							sala: 'Sala',
+							fecha: 'Revisión',
+						}}
+						rows={data}
+						totalCols={{}}
+						onView={openPDF}
+						onEdit={setReview}
+					/>
+				</Box>
 			</Contenedor>
 			<McModal title='Gestión de citas' open={open} onClose={onClose}>
 				<Cita userProgress={row} onClose={onClose} estacion={6} />

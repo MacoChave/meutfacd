@@ -21,11 +21,18 @@ import {
 	Typography,
 } from '@mui/material';
 import { AxiosError } from 'axios';
-import { FC, useEffect, useState } from 'react';
+import { FC, lazy, useEffect, useState } from 'react';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import swal from 'sweetalert';
-import FileChooser from '../../../components/controles/FileChooser';
 import { TReview } from '@/models/Review';
+const TutorInfo = lazy(() => import('../components/TutorInfo/TutorInfo'));
+const DetailReview = lazy(
+	() => import('../components/DetailReview/DetailReview')
+);
+const UploadsReview = lazy(
+	() => import('../components/UploadsReview/UploadsReview')
+);
+const FileChooser = lazy(() => import('@/components/controles/FileChooser'));
 
 export type ThesisCoverProps = {};
 
@@ -195,6 +202,18 @@ const ThesisCover: FC<ThesisCoverProps> = ({}) => {
 	return (
 		<>
 			<Contenedor title='Presentar punto de tesis'>
+				{/* <TutorInfo
+					tutor={revision?.tutor || 'Sin asignación'}
+					openChat={createChat}
+				/>
+				<DetailReview review={revision} isEditing={false} />
+				<UploadsReview>
+					<FileChooser
+						title='Punto de tesis'
+						onUpload={onUpload}
+						disabled={true}
+					/>
+				</UploadsReview> */}
 				<form onSubmit={handleSubmit(onSubmit)}>
 					<Box sx={style}>
 						<Box>

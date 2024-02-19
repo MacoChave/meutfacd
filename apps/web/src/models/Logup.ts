@@ -10,7 +10,7 @@ export type TLogup = {
 	carnet: string;
 	cui: string;
 	direccion: string;
-	fecha_nac: Date;
+	fecha_nac: string;
 	estado: string;
 	telefono: string;
 	confpass: string;
@@ -26,7 +26,7 @@ export const logupDefault: TLogup = {
 	carnet: '',
 	cui: '',
 	direccion: '',
-	fecha_nac: new Date(),
+	fecha_nac: '',
 	estado: '',
 	telefono: '',
 	confpass: '',
@@ -46,15 +46,15 @@ export const schemaLogup = yup.object().shape({
 		.string()
 		.required('Correo es requerido')
 		.email('Debe ser un correo válido')
-		.max(100, 'Correo no puede ser mayor a 100 caracteres'),
+		.max(50, 'Correo no puede ser mayor a 100 caracteres'),
 	pass: yup
 		.string()
 		.required('Contraseña es requerida')
-		.max(16, 'Contraseña no puede ser mayor a 100 caracteres'),
+		.max(25, 'Contraseña no puede ser mayor a 25 caracteres'),
 	confpass: yup
 		.string()
 		.required('Confirmar contraseña es requerido')
-		.max(16, 'Confirmar contraseña no puede ser mayor a 100 caracteres')
+		.max(25, 'Confirmar contraseña no puede ser mayor a 25 caracteres')
 		.when('pass', {
 			is: (val: string) => (val && val.length > 0 ? true : false),
 			then: yup
@@ -62,15 +62,21 @@ export const schemaLogup = yup.object().shape({
 				.oneOf([yup.ref('pass')], 'Las contraseñas no coinciden'),
 		}),
 	carnet: yup
-		.number()
+		.string()
 		.required('Carnet es requerido')
-		.positive('Carnet no puede ser negativo')
-		.integer('Carnet debe ser un número entero'),
+		.test('carnt', 'Carnet no es válido', (value: string | undefined) => {
+			if (!value) return false;
+			let carnetTest = /\d{2,4}\s?\d{5}/;
+			return carnetTest.test(value);
+		}),
 	cui: yup
-		.number()
+		.string()
 		.required('DPI es requerido')
-		.max(20, 'DPI no puede ser mayor a 20 caracteres')
-		.integer('DPI debe ser un número entero'),
+		.test('cui', 'DPI no es válido', (value: string | undefined) => {
+			if (!value) return false;
+			let cuiTest = /\d{4}\s?\d{5}\s?\d{4}/;
+			return cuiTest.test(value);
+		}),
 	direccion: yup
 		.string()
 		.required('Dirección es requerido')

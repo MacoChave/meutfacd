@@ -1,10 +1,11 @@
+import './utils/environment';
 import cors from 'cors';
 import express from 'express';
 import fileUpload from 'express-fileupload';
 import { connection } from './config/mysql';
 import { DATA_SOURCES } from './config/vars.config';
 import { router } from './routes';
-import './utils/environment';
+import { AppDataSource } from './config/orm';
 
 const PORT = DATA_SOURCES.API_PORT;
 
@@ -29,18 +30,39 @@ app.use(express.static('storage'));
 // ROUTES
 app.use('/api', router);
 
-app.listen(PORT, () => {
-	console.log('Server is listening on port 👉', PORT);
-});
+const main = async () => {
+	try {
+		checkDBConection();
+		initTypeORM();
+		app.listen(PORT, () => {
+			console.log('Server is listening on port 👉', PORT);
+		});
+	} catch (error) {}
+};
 
-// Database connection
+// MySQL connection
 const checkDBConection = async () => {
 	const conn = await connection();
 	conn.ping()
 		.then(async () => {
 			console.log('Database connected 👌');
 		})
-		.catch((err) => console.log('Error connecting to database 😭', err))
-		.finally(() => conn.end());
+		.catch((err) => {
+			throw new Error('Database connection failed 🤬');
+		})
+		.finally(() => {
+			conn.end();
+		});
 };
-checkDBConection();
+
+// TypeORM connection
+const initTypeORM = async () => {
+	try {
+		await AppDataSource.initialize();
+		console.log('TypeORM connected 👌');
+	} catch (error) {
+		throw new Error('TypeORM connection failed 🤬');
+	}
+};
+
+main();

@@ -1,3 +1,5 @@
+import { McInput } from '@/components';
+import { McAutocomplete } from '@/components/McWithoutForms/McAutocomplete';
 import { GENRES } from '@/consts/Genres';
 import { Autocomplete, Box, TextField } from '@mui/material';
 import React from 'react';
@@ -19,7 +21,19 @@ const Personales: React.FC<PersonalesProps> = () => {
 				placeContent: 'center',
 				gap: 2,
 			}}>
-			<Controller
+			<McInput
+				control={control as any}
+				label='Nombres'
+				name='nombre'
+				type='text'
+			/>
+			<McInput
+				control={control as any}
+				name='apellido'
+				label='Apellidos'
+				type='text'
+			/>
+			{/* <Controller
 				control={control}
 				name='nombre'
 				render={({ field }) => (
@@ -32,8 +46,8 @@ const Personales: React.FC<PersonalesProps> = () => {
 						helperText={errors.nombre?.message?.toString()}
 					/>
 				)}
-			/>
-			<Controller
+			/> */}
+			{/* <Controller
 				control={control}
 				name='apellido'
 				render={({ field }) => (
@@ -46,7 +60,7 @@ const Personales: React.FC<PersonalesProps> = () => {
 						helperText={errors.apellido?.message?.toString()}
 					/>
 				)}
-			/>
+			/> */}
 			<Controller
 				control={control}
 				name='genero'
@@ -68,10 +82,10 @@ const Personales: React.FC<PersonalesProps> = () => {
 							<TextField
 								{...params}
 								label='Género'
-								variant='outlined'
-								sx={{
-									width: { xs: '200px', sm: '300px' },
-								}}
+								variant='standard'
+								// sx={{
+								// 	width: { xs: '200px', sm: '300px' },
+								// }}
 								error={!!errors.genero}
 								helperText={errors.genero?.message?.toString()}
 							/>
@@ -79,7 +93,13 @@ const Personales: React.FC<PersonalesProps> = () => {
 					/>
 				)}
 			/>
-			<Controller
+			<McInput
+				control={control as any}
+				name='fecha_nac'
+				label='Fecha de nacimiento'
+				type='date'
+			/>
+			{/* <Controller
 				control={control}
 				name='fecha_nac'
 				render={({ field }) => (
@@ -93,7 +113,7 @@ const Personales: React.FC<PersonalesProps> = () => {
 						helperText={errors.fecha_nac?.message?.toString()}
 					/>
 				)}
-			/>
+			/> */}
 		</Box>
 	);
 };

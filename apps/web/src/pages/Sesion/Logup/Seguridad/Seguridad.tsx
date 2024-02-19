@@ -1,3 +1,4 @@
+import { McInput } from '@/components';
 import { TLogup } from '@/models/Logup';
 import { VisibilityOff, Visibility } from '@mui/icons-material';
 import { Box, IconButton, InputAdornment, TextField } from '@mui/material';
@@ -22,7 +23,25 @@ const Seguridad: React.FC<SeguridadProps> = () => {
 				placeContent: 'center',
 				gap: 2,
 			}}>
-			<Controller
+			<McInput
+				control={control as any}
+				name='correo'
+				label='Correo electrónico'
+				type='email'
+			/>
+			<McInput
+				control={control as any}
+				name='pass'
+				label='Contraseña'
+				type={'password'}
+			/>
+			<McInput
+				control={control as any}
+				name='confpass'
+				label='Confirmar contraseña'
+				type={'password'}
+			/>
+			{/* <Controller
 				control={control}
 				name='correo'
 				render={({ field }) => (
@@ -35,8 +54,8 @@ const Seguridad: React.FC<SeguridadProps> = () => {
 						helperText={errors.correo?.message || ''}
 					/>
 				)}
-			/>
-			<Controller
+			/> */}
+			{/* <Controller
 				control={control}
 				name='pass'
 				render={({ field }) => (
@@ -75,8 +94,8 @@ const Seguridad: React.FC<SeguridadProps> = () => {
 						}}
 					/>
 				)}
-			/>
-			<Controller
+			/> */}
+			{/* <Controller
 				control={control}
 				name='confpass'
 				render={({ field }) => (
@@ -115,7 +134,7 @@ const Seguridad: React.FC<SeguridadProps> = () => {
 						}}
 					/>
 				)}
-			/>
+			/> */}
 		</Box>
 	);
 };
