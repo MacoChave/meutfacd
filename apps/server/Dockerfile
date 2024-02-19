@@ -15,8 +15,8 @@ RUN pnpm run build
 FROM node:20-alpine
 WORKDIR /app 
 
-ARG TBUILD = development
-RUN EXPORT NODE_ENV=$TBUILD
+ARG TBUILD=development
+ENV NODE_ENV="$TBUILD"
 
 COPY --from=prod-deps /app/node_modules ./node_modules 
 COPY --from=build /app/dist ./
