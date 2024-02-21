@@ -10,6 +10,10 @@ FROM base AS prod-deps
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --prod 
 
 FROM base AS build 
+
+ARG TURL=http://localhost:5000
+ENV VITE_API_URL="$TURL"
+
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install 
 RUN pnpm run build 
 
