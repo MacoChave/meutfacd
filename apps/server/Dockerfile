@@ -14,8 +14,12 @@ RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install
 RUN pnpm run build 
 
 FROM node:20-alpine
+WORKDIR /app 
 
-COPY --from=prod-deps /app/node_modules /app/node_modules 
-COPY --from=build /app/dist /app/dist 
+ARG TBUILD=development
+ENV NODE_ENV="$TBUILD"
+
+COPY --from=prod-deps /app/node_modules ./node_modules 
+COPY --from=build /app/dist ./
 EXPOSE 8000
-CMD [ "pnpm", "start" ] 
+CMD [ "node", "src/app.js" ] 

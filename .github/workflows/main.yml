@@ -23,14 +23,17 @@ jobs:
             - name: Get image tag name
               run: echo "TAG_NAME=$(if [ $GITHUB_REF == 'refs/heads/main' ]; then echo 'prod'; elif [ $GITHUB_REF == 'refs/heads/develop' ]; then echo 'dev'; else echo 'test'; fi)" >> $GITHUB_ENV
 
+            - name: Get type build 
+              run: echo "TBUILD=$(if [ $GITHUB_REF == 'refs/heads/main' ]; then echo 'production'; elif [ $GITHUB_REF == 'refs/heads/develop' ]; then echo 'development'; else echo 'test'; fi )" >> $GITHUB_ENV
+
             - name: Build the meut-api Docker image
               run: |
-                  docker build -t ghcr.io/macochave/meut-api:${{ env.TAG_NAME }} -f apps/server/Dockerfile .  
+                  docker build -t ghcr.io/macochave/meut-api:${{ env.TAG_NAME }} --build-arg TBUILD=${{ env.TBUILD }} -f apps/server/Dockerfile ./apps/server/  
                   docker push ghcr.io/macochave/meut-api:${{ env.TAG_NAME }}
 
             - name: Build the meut-web Docker image
               run: |
-                  docker build -t ghcr.io/macochave/meut-web:${{ env.TAG_NAME }} -f apps/web/Dockerfile .  
+                  docker build -t ghcr.io/macochave/meut-web:${{ env.TAG_NAME }} --build-arg TBUILD=${{ env.TBUILD }} -f apps/web/Dockerfile ./apps/web/
                   docker push ghcr.io/macochave/meut-web:${{ env.TAG_NAME }}
 
     # deploy:
