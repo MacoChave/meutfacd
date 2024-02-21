@@ -23,8 +23,11 @@ jobs:
             - name: Get image tag name
               run: echo "TAG_NAME=$(if [ $GITHUB_REF == 'refs/heads/main' ]; then echo 'prod'; elif [ $GITHUB_REF == 'refs/heads/develop' ]; then echo 'dev'; else echo 'test'; fi)" >> $GITHUB_ENV
 
-            - name: Get type build 
+            - name: Get type build
               run: echo "TBUILD=$(if [ $GITHUB_REF == 'refs/heads/main' ]; then echo 'production'; elif [ $GITHUB_REF == 'refs/heads/develop' ]; then echo 'development'; else echo 'test'; fi )" >> $GITHUB_ENV
+
+            - name: Get url api
+              run: echo "API_URL=$(if [ $GITHUB_REF == 'refs/heads/main' ]; then echo 'https://meut-api.herokuapp.com'; elif [ $GITHUB_REF == 'refs/heads/develop' ]; then echo 'https://meut-api-dev.herokuapp.com'; else echo 'https://meut-api-test.herokuapp.com'; fi)" >> $GITHUB_ENV
 
             - name: Build the meut-api Docker image
               run: |
@@ -33,7 +36,7 @@ jobs:
 
             - name: Build the meut-web Docker image
               run: |
-                  docker build -t ghcr.io/macochave/meut-web:${{ env.TAG_NAME }} --build-arg TBUILD=${{ env.TBUILD }} -f apps/web/Dockerfile ./apps/web/
+                  docker build -t ghcr.io/macochave/meut-web:${{ env.TAG_NAME }} --build-arg TURL=${{ env.API_URL }} -f apps/web/Dockerfile ./apps/web/
                   docker push ghcr.io/macochave/meut-web:${{ env.TAG_NAME }}
 
     # deploy:
