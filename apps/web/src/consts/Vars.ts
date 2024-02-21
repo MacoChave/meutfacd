@@ -7,6 +7,7 @@ export const ESTACION5 = 5;
 export const ESTACION6 = 6;
 export const ESTACION7 = 7;
 export const ESTACION8 = 8;
+export const ESTACION9 = 9;
 
 // NOMBRE DE ESTACIONES
 export const ESTACIONES = [
