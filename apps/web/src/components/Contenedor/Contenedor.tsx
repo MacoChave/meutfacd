@@ -18,7 +18,6 @@ const Contenedor: React.FC<ContenedorProps> = ({ title, children }) => {
 				mx: 'auto',
 				display: 'flex',
 				flexDirection: 'column',
-				// width: { xs: '90%', md: '85%' },
 				overflowX: 'scroll',
 			}}>
 			<Typography variant='h4' component='h2' textAlign='center'>

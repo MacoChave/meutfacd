@@ -1,9 +1,7 @@
 import webpCourseAssign from '@/assets/webp/CourseAssignment.webp';
 import webpDocAuth from '@/assets/webp/DocsAuth.webp';
 import webpThesisPrintAuth from '@/assets/webp/ThesisPrintAuth.webp';
-import jpgCourseAssign from '@/assets/jpg/CourseAssignment.jpeg';
-import jpgDocAuth from '@/assets/jpg/DocsAuth.jpeg';
-import jpgThesisPrintAuth from '@/assets/jpg/ThesisPrintAuth.jpeg';
+import imgHeader from '@/assets/webp/Header-Derecho-Cloud.webp';
 import { Footer } from '@/components/Layout/Footer';
 import { Box, Typography } from '@mui/material';
 import { lazy } from 'react';
@@ -27,16 +25,19 @@ const Home = (props: any) => {
 	return (
 		<Box sx={{ maxWidth: '100dvw' }}>
 			<Box sx={{ width: '100%' }}>
-				<img
-					src='https://derecho.cloud/wp-content/uploads/2022/08/Header-Derecho-Cloud.png'
-					alt='Portada Derecho'
-					style={{
-						width: '100%',
-						height: 'auto',
-						objectFit: 'cover',
-					}}
-					loading='lazy'
-				/>
+				<picture>
+					<source srcSet={imgHeader} type='image/webp' />
+					<img
+						style={{
+							width: '100%',
+							height: 'auto',
+							objectFit: 'cover',
+						}}
+						src={imgHeader}
+						alt='Derecho header'
+						loading='lazy'
+					/>
+				</picture>
 			</Box>
 			<Box sx={{ textAlign: 'right' }}>
 				<SesionMenu
