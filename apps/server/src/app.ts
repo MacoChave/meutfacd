@@ -34,10 +34,12 @@ const main = async () => {
 	try {
 		checkDBConection();
 		initTypeORM();
-		app.listen(PORT, () => {
-			console.log('Server is listening on port 👉', PORT);
-		});
-	} catch (error) {}
+	} catch (error) {
+		console.log(error);
+	}
+	app.listen(PORT, () => {
+		console.log('Server is listening on port 👉', PORT);
+	});
 };
 
 // MySQL connection
