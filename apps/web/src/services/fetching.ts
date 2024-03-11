@@ -1,5 +1,5 @@
+import api from '@/api/server';
 import { TypeWithKey } from '@/models/TypeWithKey';
-import axios from 'axios';
 
 type axiosProps = {
 	path: string;
@@ -19,7 +19,7 @@ export async function getData<T>({
 	},
 	responseType = 'json',
 }: axiosProps): Promise<T> {
-	const response = await axios.get(path, {
+	const response = await api.get<T>(path, {
 		headers: {
 			...headers,
 		},
@@ -40,14 +40,15 @@ export async function postData<T>({
 	},
 	responseType = 'json',
 }: axiosProps): Promise<T> {
-	const { data } = await axios.post(path, body, {
+	const response = await api.post<T>(path, body, {
 		responseType: responseType as any,
 		headers: {
 			...headers,
 		},
 		params,
 	});
-	return data;
+	console.log({ response });
+	return response.data;
 }
 
 // PUT DATA
@@ -59,13 +60,13 @@ export async function putData<T>({
 		'Content-Type': 'application/json',
 	},
 }: axiosProps): Promise<T> {
-	const { data } = await axios.put(path, body, {
+	const response = await api.put<T>(path, body, {
 		headers: {
 			...headers,
 		},
 		params,
 	});
-	return data;
+	return response.data;
 }
 
 // DELETE DATA
@@ -76,13 +77,13 @@ export async function deleteData<T>({
 		'Content-Type': 'application/json',
 	},
 }: axiosProps): Promise<T> {
-	const { data } = await axios.delete(path, {
+	const response = await api.delete<T>(path, {
 		headers: {
 			...headers,
 		},
 		params,
 	});
-	return data;
+	return response.data;
 }
 
 // GENERIC DATA
@@ -95,7 +96,7 @@ export async function genericData<T>({
 		'Content-Type': 'application/json',
 	},
 }: axiosProps): Promise<T> {
-	const { data } = await axios({
+	const response = await api<T>({
 		method,
 		url: path,
 		data: body,
@@ -104,5 +105,5 @@ export async function genericData<T>({
 		},
 		params,
 	});
-	return data;
+	return response.data;
 }

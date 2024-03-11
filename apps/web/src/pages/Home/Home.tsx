@@ -6,6 +6,7 @@ import { Footer } from '@/components/Layout/Footer';
 import { Box, Typography } from '@mui/material';
 import { lazy } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useFetch } from '@/hooks/useFetch';
 const InfoEstacion = lazy(
 	() => import('./components/InfoEstacion/InfoEstacion')
 );
@@ -13,6 +14,9 @@ const SesionMenu = lazy(() => import('./components/SesionMenu/SesionMenu'));
 
 const Home = (props: any) => {
 	const navigate = useNavigate();
+	const {} = useFetch({
+		url: 'api/ping',
+	});
 
 	const handleLogin = (rol: string) => {
 		navigate(`/login/${rol}`);

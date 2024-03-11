@@ -22,7 +22,7 @@ const onRequest = (config: AxiosRequestConfig): any => {
 	// const dispatch = useDispatch();
 	const { method } = config;
 
-	config.baseURL = API_V1;
+	// config.baseURL = API_V1;
 	config.headers = {
 		...config.headers,
 		Authorization: `Bearer ${auth ? auth.token : ''}`,
