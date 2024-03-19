@@ -31,12 +31,12 @@ jobs:
 
             - name: Build the meut-api Docker image
               run: |
-                  docker build -t ghcr.io/macochave/meut-api:${{ env.TAG_NAME }} --build-arg TBUILD=${{ env.TBUILD }} -f apps/server/Dockerfile ./apps/server/  
+                  docker build --no-cache -t ghcr.io/macochave/meut-api:${{ env.TAG_NAME }} --build-arg TBUILD=${{ env.TBUILD }} -f apps/server/Dockerfile ./apps/server/  
                   docker push ghcr.io/macochave/meut-api:${{ env.TAG_NAME }}
 
             - name: Build the meut-web Docker image
               run: |
-                  docker build -t ghcr.io/macochave/meut-web:${{ env.TAG_NAME }} --build-arg TURL=${{ env.API_URL }} -f apps/web/Dockerfile ./apps/web/
+                  docker build --no-cache -t ghcr.io/macochave/meut-web:${{ env.TAG_NAME }} --build-arg TURL=${{ env.API_URL }} -f apps/web/Dockerfile ./apps/web/
                   docker push ghcr.io/macochave/meut-web:${{ env.TAG_NAME }}
 
     # deploy:
