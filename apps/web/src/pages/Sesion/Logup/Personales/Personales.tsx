@@ -1,6 +1,6 @@
 import { McInput } from '@/components';
 import { McAutocomplete } from '@/components/McWithoutForms/McAutocomplete';
-import { GENRES } from '@/consts/Genres';
+import { GENRES } from '@/consts/genres';
 import { Autocomplete, Box, TextField } from '@mui/material';
 import React from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
