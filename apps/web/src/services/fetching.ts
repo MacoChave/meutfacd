@@ -1,5 +1,6 @@
 import api from '@/api/server';
 import { TypeWithKey } from '@/models/TypeWithKey';
+import { setBearerToken } from '@/utils/bearer';
 
 type axiosProps = {
 	path: string;
@@ -19,6 +20,7 @@ export async function getData<T>({
 	},
 	responseType = 'json',
 }: axiosProps): Promise<T> {
+	setBearerToken();
 	const response = await api.get<T>(path, {
 		headers: {
 			...headers,
@@ -40,6 +42,7 @@ export async function postData<T>({
 	},
 	responseType = 'json',
 }: axiosProps): Promise<T> {
+	setBearerToken();
 	const response = await api.post<T>(path, body, {
 		responseType: responseType as any,
 		headers: {
@@ -60,6 +63,7 @@ export async function putData<T>({
 		'Content-Type': 'application/json',
 	},
 }: axiosProps): Promise<T> {
+	setBearerToken();
 	const response = await api.put<T>(path, body, {
 		headers: {
 			...headers,
@@ -77,6 +81,7 @@ export async function deleteData<T>({
 		'Content-Type': 'application/json',
 	},
 }: axiosProps): Promise<T> {
+	setBearerToken();
 	const response = await api.delete<T>(path, {
 		headers: {
 			...headers,
@@ -96,6 +101,7 @@ export async function genericData<T>({
 		'Content-Type': 'application/json',
 	},
 }: axiosProps): Promise<T> {
+	setBearerToken();
 	const response = await api<T>({
 		method,
 		url: path,

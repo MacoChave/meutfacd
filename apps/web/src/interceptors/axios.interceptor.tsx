@@ -1,7 +1,4 @@
-import { API_V1 } from '@/consts/Api';
-import { TControl } from '@/models/Control';
 import { setLogout } from '@/redux/states';
-import store from '@/redux/store';
 import { getValidatorError } from '@/utils/getValidatorError';
 import axios, {
 	AxiosError,
@@ -18,15 +15,7 @@ const logOnDev = (message: Object) => {
 };
 
 const onRequest = (config: AxiosRequestConfig): any => {
-	const { auth }: TControl = store.getState().control;
-	// const dispatch = useDispatch();
 	const { method } = config;
-
-	// config.baseURL = API_V1;
-	config.headers = {
-		...config.headers,
-		Authorization: `Bearer ${auth ? auth.token : ''}`,
-	};
 
 	// logOnDev({ method: method?.toUpperCase(), url, Request });
 
@@ -37,7 +26,6 @@ const onRequest = (config: AxiosRequestConfig): any => {
 };
 
 const onResponse = (response: AxiosResponse): AxiosResponse => {
-	// const dispatch = useDispatch();
 	const { method, url } = response.config;
 	const { status, data } = response;
 
