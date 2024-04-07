@@ -12,7 +12,8 @@ const Footer: React.FC<FooterProps> = ({}) => {
 				backdropFilter: 'blur(5px)',
 				width: '100%',
 				p: 2,
-				color: 'white',
+				color: 'black',
+				textShadow: '0 0 4px white',
 			}}>
 			<Typography
 				sx={{

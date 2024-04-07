@@ -1,6 +1,6 @@
 import { McAutocomplete } from '@/components/McWithForms/McAutocomplete';
 import { McInput } from '@/components/McWithForms/McInput';
-import { GENRES } from '@/consts/Genres';
+import { GENRES } from '@/consts/genres';
 import { TUser } from '@/models/Perfil';
 import { Box, TextField } from '@mui/material';
 import React from 'react';

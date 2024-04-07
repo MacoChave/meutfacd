@@ -125,6 +125,7 @@ export const createReport = async ({ body, user }: Request, res: Response) => {
 			rol: `Docente consejero de ${currentStation}`,
 		});
 
+		doc.moveUp(4);
 		await setQRCode(doc, idReview);
 
 		setFooter(doc);

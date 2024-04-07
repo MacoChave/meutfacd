@@ -1,15 +1,18 @@
+import api from '@/api/server';
+import { setBearerToken } from '@/utils/bearer';
 import { QueryFunctionContext, useQuery } from '@tanstack/react-query';
-import axios from 'axios';
 
 const fetchData = async ({ queryKey }: QueryFunctionContext) => {
-	const { data } = await axios.get(queryKey[1] as string, {
+	setBearerToken();
+	const { data } = await api.get(queryKey[1] as string, {
 		params: queryKey[2] as Object,
 	});
 	return data;
 };
 
 const fetchCustomData = async ({ queryKey }: QueryFunctionContext) => {
-	const { data } = await axios({
+	setBearerToken();
+	const { data } = await api({
 		url: queryKey[1] as string,
 		method: queryKey[2] as string,
 		data: queryKey[3] as Object,
@@ -19,7 +22,8 @@ const fetchCustomData = async ({ queryKey }: QueryFunctionContext) => {
 };
 
 const fetchDataPaginado = async ({ queryKey }: QueryFunctionContext) => {
-	const { data } = await axios.get(queryKey[1] as string, {
+	setBearerToken();
+	const { data } = await api.get(queryKey[1] as string, {
 		params: {
 			page: queryKey[3] as number,
 			limit: queryKey[4] as number,

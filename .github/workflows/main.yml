@@ -1,60 +1,77 @@
 name: devops
 
 on:
-    push:
-        branches: ['main', 'develop']
-    pull_request:
-        branches: ['main', 'develop']
+  push:
+    branches: ["main", "develop"]
+  pull_request:
+    branches: ["main", "develop"]
 
 jobs:
-    docker-images:
-        runs-on: ubuntu-latest
-        steps:
-            - name: Checkout the code
-              uses: actions/checkout@v2
+  docker-images:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout the code
+        uses: actions/checkout@v2
 
-            - name: Login to GitHub Container
-              uses: docker/login-action@v1
-              with:
-                  registry: ghcr.io
-                  username: ${{ github.actor }}
-                  password: ${{ secrets.CD_TOKEN }}
+      - name: Login to GitHub Container
+        uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.CD_TOKEN }}
 
-            - name: Get image tag name
-              run: echo "TAG_NAME=$(if [ $GITHUB_REF == 'refs/heads/main' ]; then echo 'prod'; elif [ $GITHUB_REF == 'refs/heads/develop' ]; then echo 'dev'; else echo 'test'; fi)" >> $GITHUB_ENV
+      - name: Get image tag name
+        run: echo "TAG_NAME=$(if [ $GITHUB_REF == 'refs/heads/main' ]; then echo 'prod'; elif [ $GITHUB_REF == 'refs/heads/develop' ]; then echo 'dev'; else echo 'test'; fi)" >> $GITHUB_ENV
 
-            - name: Get type build
-              run: echo "TBUILD=$(if [ $GITHUB_REF == 'refs/heads/main' ]; then echo 'production'; elif [ $GITHUB_REF == 'refs/heads/develop' ]; then echo 'development'; else echo 'test'; fi )" >> $GITHUB_ENV
+      - name: Get type build
+        run: echo "TBUILD=$(if [ $GITHUB_REF == 'refs/heads/main' ]; then echo 'production'; elif [ $GITHUB_REF == 'refs/heads/develop' ]; then echo 'development'; else echo 'test'; fi )" >> $GITHUB_ENV
 
-            - name: Get url api
-              run: echo "API_URL=$(if [ $GITHUB_REF == 'refs/heads/main' ]; then echo 'https://meut-api.herokuapp.com'; elif [ $GITHUB_REF == 'refs/heads/develop' ]; then echo 'https://meut-api-dev.herokuapp.com'; else echo 'https://meut-api-test.herokuapp.com'; fi)" >> $GITHUB_ENV
+      - name: Get url api
+        run: echo "API_URL=$(if [ $GITHUB_REF == 'refs/heads/main' ]; then echo 'https://derecho.cloud'; elif [ $GITHUB_REF == 'refs/heads/develop' ]; then echo 'https://dev.derecho.cloud'; else echo 'https://test.derecho.cloud'; fi)" >> $GITHUB_ENV
 
-            - name: Build the meut-api Docker image
-              run: |
-                  docker build -t ghcr.io/macochave/meut-api:${{ env.TAG_NAME }} --build-arg TBUILD=${{ env.TBUILD }} -f apps/server/Dockerfile ./apps/server/  
-                  docker push ghcr.io/macochave/meut-api:${{ env.TAG_NAME }}
+      - name: Build the meut-api Docker image
+        run: |
+          docker build --no-cache -t ghcr.io/macochave/meut-api:${{ env.TAG_NAME }} --build-arg TBUILD=${{ env.TBUILD }} -f apps/server/Dockerfile ./apps/server/
+          docker push ghcr.io/macochave/meut-api:${{ env.TAG_NAME }}
 
-            - name: Build the meut-web Docker image
-              run: |
-                  docker build -t ghcr.io/macochave/meut-web:${{ env.TAG_NAME }} --build-arg TURL=${{ env.API_URL }} -f apps/web/Dockerfile ./apps/web/
-                  docker push ghcr.io/macochave/meut-web:${{ env.TAG_NAME }}
+      - name: Build the meut-web Docker image
+        run: |
+          docker build --no-cache -t ghcr.io/macochave/meut-web:${{ env.TAG_NAME }} --build-arg TURL=${{ env.API_URL }} -f apps/web/Dockerfile ./apps/web/
+          docker push ghcr.io/macochave/meut-web:${{ env.TAG_NAME }}
 
-    # deploy:
-    #   needs: docker-images
-    #   runs-on: ubuntu-latest
-    #   steps:
-    #     - name: Install sshpass
-    #       run: sudo apt-get install -y sshpass
+  # deploy:
+  #   # needs: docker-images
+  #   name: Deploy to EC2
+  #   runs-on: ubuntu-latest
 
-    #     - name: SSH into Server
-    #       run: |
-    #         sshpass -p ${{secrets.AUTH_PASS}} ssh -o StrictHostKeyChecking=no ${{secrets.AUTH_SERVER}} << EOF
-    #           cd /root/unidad-tesis/
-    #           docker login ghcr.io -u macochave -p ${{secrets.CD_TOKEN}}
-    #           docker pull ghcr.io/macochave/meut-api:prod
-    #           docker pull ghcr.io/macochave/meut-web:prod
-    #           docker run -d \
-    #             --name meut-api \
-    #             -p 5000:5000 \
-    #             ghcr.io/macochave/meut-api:prod
-    #         EOF
+  #   steps:
+  #     - uses: actions/checkout@v2
+  #     - name: Build & Deploy
+  #       env:
+  #         PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
+  #         SSH_HOST: ${{ secrets.SSH_HOST }}
+  #         USERNAME: ${{ secrets.USERNAME }}
+  #       run: |
+  #         echo "$PRIVATE_KEY" > private_key.pem && chmod 600 private_key.pem
+  #         ssh -o StrictHostKeyChecking=no -i private_key.pem ${USERNAME}@${SSH_HOST} << EOF
+
+  #           # Now we have got the access of EC2 and we will pull images from GitHub Container Registry
+  #           docker login ghcr.io -u macochave -p ${{ secrets.CD_TOKEN }}
+  #           docker pull ghcr.io/macochave/meut-api:${{ env.TAG_NAME }}
+  #           docker pull ghcr.io/macochave/meut-web:${{ env.TAG_NAME }}
+
+  # - name: Install sshpass
+  #   run: sudo apt-get install -y sshpass
+
+  # - name: SSH into Server
+  #   run: |
+  #     sshpass -p ${{secrets.AUTH_PASS}} ssh -o StrictHostKeyChecking=no ${{secrets.AUTH_SERVER}} << EOF
+  #       cd /root/unidad-tesis/
+  #       docker login ghcr.io -u macochave -p ${{secrets.CD_TOKEN}}
+  #       docker pull ghcr.io/macochave/meut-api:prod
+  #       docker pull ghcr.io/macochave/meut-web:prod
+  #       docker run -d \
+  #         --name meut-api \
+  #         -p 5000:5000 \
+  #         ghcr.io/macochave/meut-api:prod
+  #     EOF

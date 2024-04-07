@@ -19,7 +19,7 @@ app.use(cors());
 app.use(
 	fileUpload({
 		useTempFiles: true,
-		tempFileDir: '/storage',
+		tempFileDir: './storage',
 		limits: { fileSize: 10 * 1024 * 1024 },
 		// debug: true,
 		createParentPath: true,
@@ -34,10 +34,12 @@ const main = async () => {
 	try {
 		checkDBConection();
 		initTypeORM();
-		app.listen(PORT, () => {
-			console.log('Server is listening on port 👉', PORT);
-		});
-	} catch (error) {}
+	} catch (error) {
+		console.log(error);
+	}
+	app.listen(PORT, () => {
+		console.log('Server is listening on port 👉', PORT);
+	});
 };
 
 // MySQL connection

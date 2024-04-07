@@ -4,7 +4,7 @@ import { getStorage, setStorage } from '@/utils/storage';
 import { createSlice } from '@reduxjs/toolkit';
 
 export const controlSlice = createSlice({
-	name: 'control',
+	name: 'meut',
 	initialState: getStorage(STORAGE_TYPES.CONTROL)
 		? getStorage(STORAGE_TYPES.CONTROL)
 		: controlDefault,
