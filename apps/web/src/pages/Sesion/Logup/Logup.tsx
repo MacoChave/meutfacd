@@ -1,12 +1,11 @@
+import derechoLogo from '@/assets/svg/logo_derecho_primaycolor.svg';
 import { URL } from '@/consts/Api';
 import { TLogup, logupDefault, schemaLogup } from '@/models/Logup';
 import { postData } from '@/services/fetching';
 import { errorHandler } from '@/utils/errorHandler';
-import { formatDate } from '@/utils/formatHandler';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Box, Button, Card, Toolbar, Typography } from '@mui/material';
 import { AxiosError } from 'axios';
-import dayjs from 'dayjs';
 import React, { SyntheticEvent, lazy, useState } from 'react';
 import { FormProvider, SubmitHandler, useForm } from 'react-hook-form';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -99,6 +98,31 @@ const Logup: React.FC<LogupProps> = () => {
 									p: 2,
 									gap: 4,
 								}}>
+								<Box
+									pb={2}
+									width={'100%'}
+									textAlign={'center'}
+									display={'flex'}
+									justifyContent={'center'}
+									alignItems={'center'}>
+									<img
+										src={derechoLogo}
+										style={{
+											height: '3rem',
+											marginRight: '1em',
+										}}
+										alt='Facultad de Ciencias Jurídicas y Sociales'
+										loading='lazy'
+									/>
+									<Box pl={2} textAlign={'left'}>
+										<Typography variant='h4'>
+											SIDER
+										</Typography>
+										<Typography variant='body2'>
+											Sistema Informático de Derecho
+										</Typography>
+									</Box>
+								</Box>
 								<Typography variant='h4'>Registro</Typography>
 								<Typography variant='body1' color='GrayText'>
 									¿Ya tienes una cuenta?{' '}

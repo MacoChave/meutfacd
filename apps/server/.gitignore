@@ -143,7 +143,6 @@ dist
 
 # Archivos pdf
 *.pdf
-storage/*.pdf
-storage/*.xlsx
+*.xlsx
 
 #0 End of https://www.toptal.com/developers/gitignore/api/node

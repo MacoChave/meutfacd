@@ -1,3 +1,4 @@
+import derechoLogo from '@/assets/webp/derecho-logo.webp';
 import { URL } from '@/consts/Api';
 import { TAuthState } from '@/models/Control';
 import { TLogin, schemaLogin } from '@/models/Login';
@@ -90,12 +91,12 @@ const Login: React.FC<LoginProps> = () => {
 					display: 'flex',
 					flexDirection: 'column',
 					gap: 2,
-					height: '96vh',
+					height: '100dh',
 					justifyContent: 'space-between',
 					overflow: 'hidden',
 				}}>
 				<ToolbarWithoutSesion />
-				<Box sx={{ overflowY: 'scroll' }}>
+				<Box>
 					<Toolbar />
 					<FormProvider {...methods}>
 						<Box
@@ -110,7 +111,32 @@ const Login: React.FC<LoginProps> = () => {
 									width: { xs: '90%', md: '50%', lg: '30%' },
 									gap: 3,
 								}}>
-								<Typography variant='h4' component={'h2'}>
+								<Box
+									pb={2}
+									width={'100%'}
+									textAlign={'center'}
+									display={'flex'}
+									justifyContent={'center'}
+									alignItems={'center'}>
+									<img
+										src={derechoLogo}
+										style={{
+											height: '4rem',
+											// marginRight: '1em',
+										}}
+										alt='Facultad de Ciencias Jurídicas y Sociales'
+										loading='lazy'
+									/>
+									<Box pl={2} textAlign={'left'}>
+										<Typography variant='h4'>
+											SIDER
+										</Typography>
+										<Typography variant='body2'>
+											Sistema Informático de Derecho
+										</Typography>
+									</Box>
+								</Box>
+								<Typography variant='h5' component={'h2'}>
 									Iniciar sesión
 								</Typography>
 								<Typography variant='body1' color='GrayText'>
