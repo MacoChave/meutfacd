@@ -21,7 +21,7 @@ ENV NODE_ENV="$TBUILD"
 
 COPY --from=prod-deps /app/node_modules ./node_modules 
 COPY --from=build /app/dist ./
-COPY --from=base /app/src/storage ./dist/storage
+COPY --from=base /app/src/storage ./src/storage
 
 EXPOSE 8000
 CMD [ "node", "src/app.js" ] 

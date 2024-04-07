@@ -14,7 +14,7 @@ services:
     #     volumes:
     #         - db:/var/lib/mysql
     api:
-        image: macochave/meut-api:local
+        image: ghcr.io/macochave/meut-api:dev
         container_name: api
         # restart: always
         volumes:
@@ -30,7 +30,7 @@ services:
         #     - db
     web:
         stdin_open: true
-        image: macochave/meut-web:local
+        image: ghcr.io/macochave/meut-web:dev
         container_name: web
         # restart: always
         volumes:
