@@ -1,4 +1,3 @@
-import derechoLogo from '@/assets/webp/derecho-logo.webp';
 import { URL } from '@/consts/Api';
 import { TAuthState } from '@/models/Control';
 import { TLogin, schemaLogin } from '@/models/Login';
@@ -12,6 +11,9 @@ import { FormProvider, SubmitHandler, useForm } from 'react-hook-form';
 import { useDispatch } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 import swal from 'sweetalert';
+const SiderLogotipo = lazy(
+	() => import('@/components/SiderLogotipo/SiderLogotipo')
+);
 const Footer = lazy(() => import('@/components/Layout/Footer/Footer'));
 const Seguridad = lazy(
 	() => import('@/pages/Sesion/Login/Seguridad/Seguridad')
@@ -111,31 +113,7 @@ const Login: React.FC<LoginProps> = () => {
 									width: { xs: '90%', md: '50%', lg: '30%' },
 									gap: 3,
 								}}>
-								<Box
-									pb={2}
-									width={'100%'}
-									textAlign={'center'}
-									display={'flex'}
-									justifyContent={'center'}
-									alignItems={'center'}>
-									<img
-										src={derechoLogo}
-										style={{
-											height: '4rem',
-											// marginRight: '1em',
-										}}
-										alt='Facultad de Ciencias Jurídicas y Sociales'
-										loading='lazy'
-									/>
-									<Box pl={2} textAlign={'left'}>
-										<Typography variant='h4'>
-											SIDER
-										</Typography>
-										<Typography variant='body2'>
-											Sistema Informático de Derecho
-										</Typography>
-									</Box>
-								</Box>
+								<SiderLogotipo variant='light' />
 								<Typography variant='h5' component={'h2'}>
 									Iniciar sesión
 								</Typography>

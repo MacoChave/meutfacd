@@ -10,6 +10,9 @@ import React, { SyntheticEvent, lazy, useState } from 'react';
 import { FormProvider, SubmitHandler, useForm } from 'react-hook-form';
 import { useNavigate, useParams } from 'react-router-dom';
 import swal from 'sweetalert';
+const SiderLogotipo = lazy(
+	() => import('@/components/SiderLogotipo/SiderLogotipo')
+);
 const Footer = lazy(() => import('@/components/Layout/Footer/Footer'));
 const SpinLoader = lazy(
 	() => import('@/components/Loader/SpinLoader/SpinLoader')
@@ -98,31 +101,7 @@ const Logup: React.FC<LogupProps> = () => {
 									p: 2,
 									gap: 4,
 								}}>
-								<Box
-									pb={2}
-									width={'100%'}
-									textAlign={'center'}
-									display={'flex'}
-									justifyContent={'center'}
-									alignItems={'center'}>
-									<img
-										src={derechoLogo}
-										style={{
-											height: '3rem',
-											marginRight: '1em',
-										}}
-										alt='Facultad de Ciencias Jurídicas y Sociales'
-										loading='lazy'
-									/>
-									<Box pl={2} textAlign={'left'}>
-										<Typography variant='h4'>
-											SIDER
-										</Typography>
-										<Typography variant='body2'>
-											Sistema Informático de Derecho
-										</Typography>
-									</Box>
-								</Box>
+								<SiderLogotipo variant='light' />
 								<Typography variant='h4'>Registro</Typography>
 								<Typography variant='body1' color='GrayText'>
 									¿Ya tienes una cuenta?{' '}

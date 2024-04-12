@@ -10,9 +10,12 @@ import {
 	Toolbar,
 	Typography,
 } from '@mui/material';
-import { FC } from 'react';
+import { FC, lazy } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import derechoLogo from '@/assets/svg/logo_derecho_white.svg';
+const SiderLogotipo = lazy(
+	() => import('@/components/SiderLogotipo/SiderLogotipo')
+);
 
 const drawerWidth = 200;
 
@@ -45,28 +48,12 @@ const Sidebar: FC<SidebarProps> = ({ menuArray, open, setOpen }) => {
 				flexShrink: 0,
 				'& .MuiDrawer-paper': {
 					boxSizing: 'border-box',
-					width: drawerWidth,
+					// width: drawerWidth,
 				},
 			}}>
 			<Toolbar />
 			<Divider />
-			<Box p={2} textAlign={'center'}>
-				<img
-					src={derechoLogo}
-					style={{
-						height: '3rem',
-						marginRight: '1em',
-					}}
-					alt='Facultad de Ciencias Jurídicas y Sociales'
-					loading='lazy'
-				/>
-				<Box textAlign={'center'}>
-					<Typography variant='h4'>SIDER</Typography>
-					<Typography variant='body2'>
-						Sistema Informático de Derecho
-					</Typography>
-				</Box>
-			</Box>
+			<SiderLogotipo variant='dark' />
 			{Object.entries(menuArray).map(
 				([key, value]: any, index: number) => (
 					<List
