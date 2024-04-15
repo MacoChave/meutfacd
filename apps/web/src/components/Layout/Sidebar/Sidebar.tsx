@@ -1,6 +1,5 @@
 import { TPageApp } from '@/models/PageApp';
 import {
-	Box,
 	Divider,
 	Drawer,
 	List,
@@ -8,11 +7,9 @@ import {
 	ListItemText,
 	ListSubheader,
 	Toolbar,
-	Typography,
 } from '@mui/material';
 import { FC, lazy } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import derechoLogo from '@/assets/svg/logo_derecho_white.svg';
 const SiderLogotipo = lazy(
 	() => import('@/components/SiderLogotipo/SiderLogotipo')
 );
@@ -53,7 +50,7 @@ const Sidebar: FC<SidebarProps> = ({ menuArray, open, setOpen }) => {
 			}}>
 			<Toolbar />
 			<Divider />
-			<SiderLogotipo variant='dark' />
+			<SiderLogotipo variant='dark' orientation='vertical' />
 			{Object.entries(menuArray).map(
 				([key, value]: any, index: number) => (
 					<List

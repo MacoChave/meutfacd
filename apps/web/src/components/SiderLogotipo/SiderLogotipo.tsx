@@ -1,14 +1,33 @@
 'use client';
-import logo_light from '@/assets/svg/logo_sider_light.svg';
-import logo_dark from '@/assets/svg/logo_sider_dark.svg';
+import sider_horizontal_light from '@/assets/webp/SIDER_light_horizontal.webp';
+import sider_horizontal_dark from '@/assets/webp/SIDER_dark_horizontal.webp';
+import sider_vertical_light from '@/assets/webp/SIDER_light_vertical.webp';
+import sider_vertical_dark from '@/assets/webp/SIDER_dark_vertical.webp';
 import { Box } from '@mui/material';
 import React from 'react';
 
 export type SiderLogotipoProps = {
-	variant: 'light' | 'dark';
+	variant?: 'light' | 'dark';
+	orientation?: 'vertical' | 'horizontal';
 };
 
-const SiderLogotipo: React.FC<SiderLogotipoProps> = ({ variant = 'light' }) => {
+function getLogo(variant: string, orientation: string) {
+	if (variant === 'light') {
+		if (orientation === 'vertical') {
+			return sider_vertical_light;
+		}
+		return sider_horizontal_light;
+	}
+	if (orientation === 'vertical') {
+		return sider_vertical_dark;
+	}
+	return sider_horizontal_dark;
+}
+
+const SiderLogotipo: React.FC<SiderLogotipoProps> = ({
+	variant = 'light',
+	orientation = 'horizontal',
+}) => {
 	return (
 		<Box
 			sx={{
@@ -20,7 +39,7 @@ const SiderLogotipo: React.FC<SiderLogotipoProps> = ({ variant = 'light' }) => {
 				alignItems: 'center',
 			}}>
 			<img
-				src={variant === 'light' ? logo_light : logo_dark}
+				src={getLogo(variant, orientation)}
 				alt='Facultad de Ciencias Jurídicas y Sociales'
 				loading='lazy'
 				style={{ height: '8rem' }}
