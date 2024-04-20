@@ -303,6 +303,32 @@ begin
 end;
 
 -- -------------------------------------------------
+-- NEW USER ROL
+-- -------------------------------------------------
+CREATE trigger if not exists ut_tr_new_userrol 
+AFTER INSERT ON usuario_rol 
+FOR EACH ROW 
+begin
+	declare pagina_id int;
+	declare done int default false;
+	declare pageCursor cursor for select up.id_pagina from ut_pagina up ;
+	declare continue handler for not found set done = true;
+
+	open pageCursor;
+	read_loop: loop
+		fetch pageCursor into pagina_id;
+		if done then 
+			leave read_loop;
+		end if;
+		
+		insert into ut_permiso 
+		(id_usuario, id_rol, id_pagina, permiso) 
+		values (new.id_usuario, new.id_rol, pagina_id, 0);
+	end loop;
+	close pageCursor;
+end;
+
+-- -------------------------------------------------
 -- UPDATE TESIS
 -- -------------------------------------------------
 -- create trigger if not exists ut_tr_update_tesis 
