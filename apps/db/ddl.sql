@@ -56,7 +56,7 @@ create table if not exists usuario (
 	pass varchar(200) not null,
 	direccion varchar(200) not null,
 	fecha_nac date not null,
-	estado char(1) not null, -- [A]ACTIVO | [I]INACTIVO
+	estado char(1) not null default 'I', -- [A]ACTIVO | [I]INACTIVO
 	fecha_creacion datetime not null default now(),
 	id_municipio integer unsigned not null,
 	doc_cui varchar(75) null,
