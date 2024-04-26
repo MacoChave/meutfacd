@@ -102,7 +102,23 @@ const createItem = (res: Response) => {
 	}
 };
 
+const bulkInsert = (req: Request, res: Response) => {
+	try {
+		res.status(200).json({ msg: 'OK' });
+	} catch (error: any) {
+		errorHttp(res, error as any);
+	}
+};
+
 const updateItem = (res: Response) => {
+	try {
+		res.status(200).json({ msg: 'OK' });
+	} catch (error: any) {
+		errorHttp(res, error as any);
+	}
+};
+
+const bulkUpdate = (req: Request, res: Response) => {
 	try {
 		res.status(200).json({ msg: 'OK' });
 	} catch (error: any) {
@@ -118,4 +134,12 @@ const deleteItem = (res: Response) => {
 	}
 };
 
-export { createItem, deleteItem, getItem, getItems, updateItem };
+export {
+	getItem,
+	getItems,
+	createItem,
+	updateItem,
+	deleteItem,
+	bulkUpdate,
+	bulkInsert,
+};

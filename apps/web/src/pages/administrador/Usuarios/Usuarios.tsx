@@ -3,6 +3,7 @@ import { URL } from '@/consts/Api';
 import { useCustomFetch } from '@/hooks/useFetch';
 import { TUser } from '@/models/Perfil';
 import { deleteData } from '@/services/fetching';
+import { Box, Button, Typography } from '@mui/material';
 import { lazy, useState } from 'react';
 const McTable = lazy(() => import('@/components/MyTable/McTable'));
 const ErrorOperacion = lazy(
@@ -18,6 +19,14 @@ const Usuarios = () => {
 		method: 'post',
 		body: { table: 'ut_v_usuarios', sort: { id_usuario: 'asc' } },
 	});
+
+	const bulkStudentGranted = () => {
+		console.log('Actualizar permisos a estudiantes');
+	};
+
+	const bulkInsert = () => {
+		console.log('Bulk insert');
+	};
 
 	const onEdit = (registro: object) => {
 		setUsuario(registro as TUser);
@@ -49,6 +58,25 @@ const Usuarios = () => {
 	return (
 		<>
 			<Contenedor title='Gestión de usuarios'>
+				<Box
+					sx={{
+						display: 'flex',
+						flexDirection: 'row',
+						justifyContent: 'left',
+						alignItems: 'center',
+						gap: 2,
+						mb: 2,
+					}}>
+					<Typography variant='h6'>
+						Actualizar permisos a estudiantes
+					</Typography>
+					<Button
+						variant='contained'
+						color='primary'
+						onClick={bulkStudentGranted}>
+						Actualizar
+					</Button>
+				</Box>
 				<McTable
 					headers={{
 						nombre: 'Nombre',

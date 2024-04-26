@@ -703,6 +703,82 @@ begin
 		and up4.id_jornada = p_period  ; 
 end;
 
+-- -------------------------------------------------
+-- BULK USER INSERT
+-- -------------------------------------------------
+create procedure ut_sp_bulk_user_insert() 
+begin
+	-- INSERT TEMP_USER INTO USER TABLE
+	insert into usuario (
+		nombre, apellidos, correo, genero, 
+		pass, direccion, fecha_nac, id_municipio, 
+		carnet, cui
+	)
+	select 
+		tu.nombre, tu.apellidos, tu.correo, 
+		SUBSTRING(tu.genero, 1, 1) genero,
+		'', tu.direccion, 
+		STR_TO_DATE(tu.fecha_nac, '%d/%m/%Y') fecha_nac,
+		1, tu.carnet, tu.cui
+	from
+		temp_user tu;
+	
+	-- INSERT TEMP_USER INTO TESIS TABLE
+	insert into ut_tesis (
+		titulo, ruta_perfil, 
+		fecha_creacion, fecha_modificacion, 
+		id_estudiante
+	)
+	select 
+		'', '', 
+		now(), now(), 
+		u.id_usuario
+	from
+		temp_user tu
+	inner join usuario u 
+		on tu.correo = u.correo;
+	
+	-- INSERT TEMP_USER INTO PRE REVISION TABLE
+	insert into ut_revision (
+		fecha, estado, ruta_dictamen, 
+		id_tesis, estacion 
+	)
+	select 
+		now(), 'A', evidencia, 
+		ut.id_tesis, 
+		case 
+			when tu.curso = 'Curso I' then 1
+			when tu.curso = 'Curso II' then 3
+			else 1
+		end
+	from
+		temp_user tu
+	inner join usuario u
+		on tu.correo = u.correo
+	inner join ut_tesis ut
+		on u.id_usuario = ut.id_estudiante;
+
+	-- INSERT TEMP_USER INTO REVISION TABLE
+	insert into ut_revision (
+		fecha, estado, 
+		id_tesis, estacion 
+	)
+	select 
+		now(), 'V', 
+		ut.id_tesis, 
+		case 
+			when tu.curso = 'Curso I' then 2
+			when tu.curso = 'Curso II' then 4
+			else 1
+		end
+	from
+		temp_user tu
+	inner join usuario u
+		on tu.correo = u.correo
+	inner join ut_tesis ut
+		on u.id_usuario = ut.id_estudiante;
+end;
+
 -- 
 -- -------------------------------------------------
 -- FUNCIONES
