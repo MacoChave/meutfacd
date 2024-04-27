@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import { sqlDelete, sqlSelect, sqlUpdate } from '../db/consultas';
 import { errorHttp } from '../utils/error.handle';
 import { formatDate, newDate } from '../utils/formats';
+import { encryptPassword } from '../utils/token';
 
 const obtenerItem = async ({ params }: Request, res: Response) => {
 	try {
@@ -63,6 +64,17 @@ const actualizarItem = async (
 				query: { id_usuario: user.primaryKey },
 			}),
 		]);
+
+		if (body.pass && body.pass.length > 0) {
+			let passHash = await encryptPassword(body.pass);
+			results.push(
+				await sqlUpdate({
+					table: 'usuario',
+					datos: { pass: passHash },
+					query: { id_usuario: user.primaryKey },
+				})
+			);
+		}
 		res.json(results);
 	} catch (error: any) {
 		errorHttp(res, error);

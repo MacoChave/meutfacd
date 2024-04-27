@@ -709,7 +709,7 @@ end;
 create procedure ut_sp_bulk_user_insert() 
 begin
 	-- INSERT TEMP_USER INTO USER TABLE
-	insert into usuario (
+	insert ignore into usuario (
 		nombre, apellidos, correo, genero, 
 		pass, direccion, fecha_nac, id_municipio, 
 		carnet, cui
@@ -717,8 +717,7 @@ begin
 	select 
 		tu.nombre, tu.apellidos, tu.correo, 
 		SUBSTRING(tu.genero, 1, 1) genero,
-		'', tu.direccion, 
-		STR_TO_DATE(tu.fecha_nac, '%d/%m/%Y') fecha_nac,
+		'', COALESCE(tu.direccion, 'Guatemala Ciudad'), tu.fecha_nac,
 		1, tu.carnet, tu.cui
 	from
 		temp_user tu;
@@ -777,6 +776,62 @@ begin
 		on tu.correo = u.correo
 	inner join ut_tesis ut
 		on u.id_usuario = ut.id_estudiante;
+end;
+
+
+-- -------------------------------------------------
+-- UPDATE PROFILE USER
+-- -------------------------------------------------
+create procedure ut_sp_update_profile_user(
+	in p_id_usuario int, 
+	in p_nombre varchar(50), 
+	in p_apellidos varchar(75), 
+	in p_genero char(1), 
+	in p_correo varchar(100), 
+	in p_direccion varchar(200), 
+	in p_fecha_nac date, 
+	in p_carnet int unsigned, 
+	in p_cui varchar(20), 
+	in p_id_horario int unsigned, 
+	in p_id_jornada int unsigned, 
+	in p_pass varchar(200),
+	out error_code int, 
+	out error_message varchar(255)
+)
+this_proc:begin
+	set error_code = 0;
+	set error_message = '';
+
+	if p_id_usuario = 0 then 
+		set error_code = -1;
+		set error_message = 'No se ha especificado el usuario';
+		leave this_proc;
+	end if;
+
+	if p_pass is not null then 
+		update usuario 
+		set 
+			pass = p_pass
+		where id_usuario = p_id_usuario ;
+	end if;
+	
+	update usuario 
+	set 
+		nombre = p_nombre, 
+		apellidos = p_apellidos, 
+		genero = p_genero, 
+		correo = p_correo, 
+		direccion = p_direccion, 
+		fecha_nac = p_fecha_nac, 
+		carnet = p_carnet, 
+		cui = p_cui
+	where id_usuario = p_id_usuario ; 
+	
+	update ut_perfil 
+	set 
+		id_horario = p_id_horario, 
+		id_jornada = p_id_jornada
+	where id_usuario = p_id_usuario ; 
 end;
 
 -- 
