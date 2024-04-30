@@ -32,6 +32,11 @@ const Historial: React.FC<HistorialProps> = ({ station, date }) => {
 					operator: '<=',
 					value: dayjs(date).endOf('month').format('YYYY-MM-DD'),
 				},
+				{
+					column: 'estacion',
+					operator: '=',
+					value: station,
+				},
 			],
 			condInclusives: true,
 		},

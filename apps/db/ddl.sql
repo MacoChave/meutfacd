@@ -778,6 +778,38 @@ begin
 		on u.id_usuario = ut.id_estudiante;
 end;
 
+-- -------------------------------------------------
+-- BULK PERMISSIONS TO BULK NEW USERS
+-- -------------------------------------------------
+create procedure ut_sp_bulk_permissions_to_new_users(
+	in p_access int
+)
+begin
+	declare v_id_pagina int;
+	declare done int default false;
+	declare pageCursor cursor for 
+		select 
+			up.id_pagina , 1 permiso 
+		from ut_pagina up  
+		where up.id_padre = 5;
+	declare continue handler for not found set done = true;
+
+	open pageCursor;
+	read_loop: loop
+		fetch pageCursor into v_id_pagina;
+		if done then 
+			leave read_loop;
+		end if;
+		
+		insert into ut_permiso 
+		(id_usuario, id_rol, id_pagina, permiso) 
+		select 
+			u.id_usuario, p_rol, v_id_pagina, 0
+		from 
+			usuario u ;
+	end loop;
+	close pageCursor;
+end;
 
 -- -------------------------------------------------
 -- UPDATE PROFILE USER

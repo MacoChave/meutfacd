@@ -4,10 +4,17 @@ import { URL } from '@/consts/Api';
 import { getData } from '@/services/fetching';
 import { downloadFileByBloodPart } from '@/utils/fileManagment';
 import { Download } from '@mui/icons-material';
-import { Box, Divider, IconButton, TextField } from '@mui/material';
+import {
+	Autocomplete,
+	Box,
+	Divider,
+	IconButton,
+	TextField,
+} from '@mui/material';
 import dayjs from 'dayjs';
 import React, { useState } from 'react';
 import { Historial } from '../components/Historial';
+import { ESTACIONES } from '@/consts/Vars';
 
 export type ProgresosProps = {
 	// types...
@@ -17,7 +24,7 @@ const Progresos: React.FC<ProgresosProps> = ({}) => {
 	const [selectedMonth, setSelectedMonth] = useState(
 		dayjs(new Date()).format('YYYY-MM')
 	);
-	const [selectedStation, setSelectedStation] = useState(undefined);
+	const [selectedStation, setSelectedStation] = useState('');
 
 	const handleDownload = async () => {
 		const data = await getData({
@@ -61,6 +68,26 @@ const Progresos: React.FC<ProgresosProps> = ({}) => {
 								}}
 							/>
 						</Box>
+						<Box>
+							<Autocomplete
+								sx={{ width: 200 }}
+								options={ESTACIONES}
+								getOptionLabel={(option) => option}
+								value={selectedStation}
+								onChange={(event, newValue) => {
+									setSelectedStation(newValue ?? '');
+								}}
+								renderInput={(params) => (
+									<TextField
+										{...params}
+										label='Estación'
+										InputLabelProps={{
+											shrink: true,
+										}}
+									/>
+								)}
+							/>
+						</Box>
 						<Box sx={{ flex: 1 }} />
 						<Box>
 							<IconButton
@@ -74,7 +101,10 @@ const Progresos: React.FC<ProgresosProps> = ({}) => {
 					</Box>
 					<Divider />
 					<Box>
-						<Historial date={selectedMonth} />
+						<Historial
+							date={selectedMonth}
+							station={ESTACIONES.indexOf(selectedStation) + 1}
+						/>
 					</Box>
 				</Box>
 			</Contenedor>
