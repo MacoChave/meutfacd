@@ -467,7 +467,7 @@ begin
 	from ut_perfil up 
 	where up.id_usuario = v_estudiante;
 
-	if new.estado = 'A' and v_horario is null then 
+	if new.estado = 'A' and v_horario is null and old.id_tutor is not null then 
 		insert into ut_notificacion 
 		(mensaje, id_receptor, id_emisor)
 		values ('Selecciona un horario para ser asignado al siguiente curso', v_estudiante, old.id_tutor);
@@ -708,6 +708,10 @@ end;
 -- -------------------------------------------------
 create procedure ut_sp_bulk_user_insert() 
 begin
+	-- ETL
+	delete from temp_user 
+	where curso is null;
+
 	-- INSERT TEMP_USER INTO USER TABLE
 	insert ignore into usuario (
 		nombre, apellidos, correo, genero, 
@@ -720,7 +724,8 @@ begin
 		'', COALESCE(tu.direccion, 'Guatemala Ciudad'), tu.fecha_nac,
 		1, tu.carnet, tu.cui
 	from
-		temp_user tu;
+		temp_user tu
+	where tu.curso is not null;
 	
 	-- INSERT TEMP_USER INTO TESIS TABLE
 	insert into ut_tesis (
@@ -728,54 +733,73 @@ begin
 		fecha_creacion, fecha_modificacion, 
 		id_estudiante
 	)
-	select 
+	select distinct
 		'', '', 
 		now(), now(), 
 		u.id_usuario
 	from
 		temp_user tu
 	inner join usuario u 
-		on tu.correo = u.correo;
+		on tu.correo = u.correo
+	where tu.curso is not null;
 	
-	-- INSERT TEMP_USER INTO PRE REVISION TABLE
+	-- INSERT OR UPDATE REVISION TABLE ON 1ST STATION
+	update ut_revision ur 
+	inner join (
+		select distinct 
+			evidencia, 
+			ut.id_tesis 
+		from temp_user tu 
+		inner join usuario u 
+			on tu.correo = u.correo 
+		inner join ut_tesis ut 
+			on u.id_usuario = ut.id_estudiante 
+		where tu.curso like 'Curso I'
+	) urt 
+		on ur.id_tesis = urt.id_tesis 
+		and ur.estacion = 1
+	set 
+		ur.fecha = now(), 
+		ur.ruta_dictamen = urt.evidencia, 
+		ur.estado = 'A';
+	
+	-- INSERT REVISION TABLE ON PRE STATION
 	insert into ut_revision (
 		fecha, estado, ruta_dictamen, 
 		id_tesis, estacion 
 	)
-	select 
+	select distinct 
 		now(), 'A', evidencia, 
-		ut.id_tesis, 
-		case 
-			when tu.curso = 'Curso I' then 1
-			when tu.curso = 'Curso II' then 3
-			else 1
-		end
+		ut.id_tesis,
+		2 
 	from
 		temp_user tu
 	inner join usuario u
 		on tu.correo = u.correo
 	inner join ut_tesis ut
-		on u.id_usuario = ut.id_estudiante;
-
+		on u.id_usuario = ut.id_estudiante
+	where tu.curso like 'CURSO II';
+	
 	-- INSERT TEMP_USER INTO REVISION TABLE
 	insert into ut_revision (
 		fecha, estado, 
 		id_tesis, estacion 
 	)
-	select 
-		now(), 'V', 
+	select distinct 
+		now(), 'E', 
 		ut.id_tesis, 
 		case 
-			when tu.curso = 'Curso I' then 2
-			when tu.curso = 'Curso II' then 4
-			else 1
+			when tu.curso like 'Curso I' then 2
+			when tu.curso like 'Curso II' then 3
+			else 0
 		end
 	from
 		temp_user tu
 	inner join usuario u
 		on tu.correo = u.correo
 	inner join ut_tesis ut
-		on u.id_usuario = ut.id_estudiante;
+		on u.id_usuario = ut.id_estudiante
+	where tu.curso is not null;
 end;
 
 -- -------------------------------------------------

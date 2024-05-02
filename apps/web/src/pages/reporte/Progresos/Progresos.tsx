@@ -24,7 +24,7 @@ const Progresos: React.FC<ProgresosProps> = ({}) => {
 	const [selectedMonth, setSelectedMonth] = useState(
 		dayjs(new Date()).format('YYYY-MM')
 	);
-	const [selectedStation, setSelectedStation] = useState('');
+	const [selectedStation, setSelectedStation] = useState(ESTACIONES[0]);
 
 	const handleDownload = async () => {
 		const data = await getData({
@@ -75,7 +75,9 @@ const Progresos: React.FC<ProgresosProps> = ({}) => {
 								getOptionLabel={(option) => option}
 								value={selectedStation}
 								onChange={(event, newValue) => {
-									setSelectedStation(newValue ?? '');
+									setSelectedStation(
+										newValue ?? selectedStation
+									);
 								}}
 								renderInput={(params) => (
 									<TextField
