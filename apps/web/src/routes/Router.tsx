@@ -551,8 +551,8 @@ export const router = createBrowserRouter(
 				},
 			],
 		},
-	]
-	// {
-	// 	basename: '/unidad-tesis',
-	// }
+	],
+	{
+		basename: '/unidad-tesis',
+	}
 );

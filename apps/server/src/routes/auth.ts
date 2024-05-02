@@ -16,6 +16,6 @@ router.post('/logup', logupHandler);
 router.put('/verified-email', verifyEmail);
 router.post('/recovery', recoveryPassword);
 router.put('/recovery', changePassword);
-router.get('/profile', requireAuth, requireAuth, profileHandler);
+router.get('/profile', requireAuth, profileHandler);
 
 export { router };

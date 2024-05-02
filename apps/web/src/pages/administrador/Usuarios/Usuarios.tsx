@@ -3,6 +3,7 @@ import { URL } from '@/consts/Api';
 import { useCustomFetch } from '@/hooks/useFetch';
 import { TUser } from '@/models/Perfil';
 import { deleteData } from '@/services/fetching';
+import { Box, Button, Typography } from '@mui/material';
 import { lazy, useState } from 'react';
 const McTable = lazy(() => import('@/components/MyTable/McTable'));
 const ErrorOperacion = lazy(
@@ -49,6 +50,15 @@ const Usuarios = () => {
 	return (
 		<>
 			<Contenedor title='Gestión de usuarios'>
+				<Box
+					sx={{
+						display: 'flex',
+						flexDirection: 'row',
+						justifyContent: 'left',
+						alignItems: 'center',
+						gap: 2,
+						mb: 2,
+					}}></Box>
 				<McTable
 					headers={{
 						nombre: 'Nombre',

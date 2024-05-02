@@ -3,7 +3,7 @@ import { DotsLoaders } from '@/components/Loader/DotsLoaders';
 import { useFetch } from '@/hooks/useFetch';
 import { Box, Toolbar, Typography } from '@mui/material';
 import { FC, lazy, useState } from 'react';
-import imgBackground from '@/assets/webp/TESIS-2024.webp';
+import imgBackground from '@/assets/webp/SIDER_light_vertical.webp';
 const ToolbarWithSesion = lazy(
 	() => import('../ToolbarWithSession/ToolbarWithSession')
 );
@@ -37,8 +37,8 @@ const Dashboard: FC<DashboardProps> = ({}) => {
 				justifyContent: 'space-between',
 				overflow: 'hidden',
 				backgroundImage: `url(${imgBackground})`,
-				backgroundPosition: 'bottom',
-				backgroundSize: 'cover',
+				backgroundSize: '50rem',
+				backgroundPosition: 'center',
 				backgroundRepeat: 'no-repeat',
 			}}
 			width={open ? 'calc(100% - 200px)' : '100%'}

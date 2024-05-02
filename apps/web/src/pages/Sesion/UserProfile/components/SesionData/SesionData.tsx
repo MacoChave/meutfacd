@@ -3,6 +3,7 @@ import { DataProps } from '../../propTypes/DataProps';
 import { Controller, useFormContext } from 'react-hook-form';
 import { TUser } from '@/models/Perfil';
 import { Box, TextField } from '@mui/material';
+import { McInput } from '@/components';
 
 const SesionData: React.FC<DataProps> = ({ editing }) => {
 	const {
@@ -33,7 +34,21 @@ const SesionData: React.FC<DataProps> = ({ editing }) => {
 					/>
 				)}
 			/>
-			<Controller
+			<McInput
+				control={control as any}
+				name='pass'
+				label='Contraseña nueva'
+				type='password'
+				disabled={!editing}
+			/>
+			<McInput
+				control={control as any}
+				name='passConfirm'
+				label='Confirmar contraseña nueva'
+				type='password'
+				disabled={!editing}
+			/>
+			{/* <Controller
 				control={control}
 				name='pass'
 				render={({ field }) => (
@@ -70,7 +85,7 @@ const SesionData: React.FC<DataProps> = ({ editing }) => {
 						helperText={errors.passConfirm?.message}
 					/>
 				)}
-			/>
+			/> */}
 		</Box>
 	);
 };

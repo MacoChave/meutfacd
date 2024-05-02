@@ -44,8 +44,8 @@ export const theme = createTheme({
 		MuiCard: {
 			styleOverrides: {
 				root: {
-					backgroundColor: 'rgba(255, 255, 255, 0.50)',
-					backdropFilter: 'blur(5px)',
+					backgroundColor: 'rgba(255, 255, 255, 0.75)',
+					backdropFilter: 'blur(6px)',
 				},
 			},
 		},

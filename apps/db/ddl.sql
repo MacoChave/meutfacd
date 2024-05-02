@@ -467,7 +467,7 @@ begin
 	from ut_perfil up 
 	where up.id_usuario = v_estudiante;
 
-	if new.estado = 'A' and v_horario is null then 
+	if new.estado = 'A' and v_horario is null and old.id_tutor is not null then 
 		insert into ut_notificacion 
 		(mensaje, id_receptor, id_emisor)
 		values ('Selecciona un horario para ser asignado al siguiente curso', v_estudiante, old.id_tutor);
@@ -701,6 +701,193 @@ begin
 		and up.permiso = 1
 		and up4.id_horario = p_schedule 
 		and up4.id_jornada = p_period  ; 
+end;
+
+-- -------------------------------------------------
+-- BULK USER INSERT
+-- -------------------------------------------------
+create procedure ut_sp_bulk_user_insert() 
+begin
+	-- ETL
+	delete from temp_user 
+	where curso is null;
+
+	-- INSERT TEMP_USER INTO USER TABLE
+	insert ignore into usuario (
+		nombre, apellidos, correo, genero, 
+		pass, direccion, fecha_nac, id_municipio, 
+		carnet, cui
+	)
+	select 
+		tu.nombre, tu.apellidos, tu.correo, 
+		SUBSTRING(tu.genero, 1, 1) genero,
+		'', COALESCE(tu.direccion, 'Guatemala Ciudad'), tu.fecha_nac,
+		1, tu.carnet, tu.cui
+	from
+		temp_user tu
+	where tu.curso is not null;
+	
+	-- INSERT TEMP_USER INTO TESIS TABLE
+	insert into ut_tesis (
+		titulo, ruta_perfil, 
+		fecha_creacion, fecha_modificacion, 
+		id_estudiante
+	)
+	select distinct
+		'', '', 
+		now(), now(), 
+		u.id_usuario
+	from
+		temp_user tu
+	inner join usuario u 
+		on tu.correo = u.correo
+	where tu.curso is not null;
+	
+	-- INSERT OR UPDATE REVISION TABLE ON 1ST STATION
+	update ut_revision ur 
+	inner join (
+		select distinct 
+			evidencia, 
+			ut.id_tesis 
+		from temp_user tu 
+		inner join usuario u 
+			on tu.correo = u.correo 
+		inner join ut_tesis ut 
+			on u.id_usuario = ut.id_estudiante 
+		where tu.curso like 'Curso I'
+	) urt 
+		on ur.id_tesis = urt.id_tesis 
+		and ur.estacion = 1
+	set 
+		ur.fecha = now(), 
+		ur.ruta_dictamen = urt.evidencia, 
+		ur.estado = 'A';
+	
+	-- INSERT REVISION TABLE ON PRE STATION
+	insert into ut_revision (
+		fecha, estado, ruta_dictamen, 
+		id_tesis, estacion 
+	)
+	select distinct 
+		now(), 'A', evidencia, 
+		ut.id_tesis,
+		2 
+	from
+		temp_user tu
+	inner join usuario u
+		on tu.correo = u.correo
+	inner join ut_tesis ut
+		on u.id_usuario = ut.id_estudiante
+	where tu.curso like 'CURSO II';
+	
+	-- INSERT TEMP_USER INTO REVISION TABLE
+	insert into ut_revision (
+		fecha, estado, 
+		id_tesis, estacion 
+	)
+	select distinct 
+		now(), 'E', 
+		ut.id_tesis, 
+		case 
+			when tu.curso like 'Curso I' then 2
+			when tu.curso like 'Curso II' then 3
+			else 0
+		end
+	from
+		temp_user tu
+	inner join usuario u
+		on tu.correo = u.correo
+	inner join ut_tesis ut
+		on u.id_usuario = ut.id_estudiante
+	where tu.curso is not null;
+end;
+
+-- -------------------------------------------------
+-- BULK PERMISSIONS TO BULK NEW USERS
+-- -------------------------------------------------
+create procedure ut_sp_bulk_permissions_to_new_users(
+	in p_access int
+)
+begin
+	declare v_id_pagina int;
+	declare done int default false;
+	declare pageCursor cursor for 
+		select 
+			up.id_pagina , 1 permiso 
+		from ut_pagina up  
+		where up.id_padre = 5;
+	declare continue handler for not found set done = true;
+
+	open pageCursor;
+	read_loop: loop
+		fetch pageCursor into v_id_pagina;
+		if done then 
+			leave read_loop;
+		end if;
+		
+		insert into ut_permiso 
+		(id_usuario, id_rol, id_pagina, permiso) 
+		select 
+			u.id_usuario, p_rol, v_id_pagina, 0
+		from 
+			usuario u ;
+	end loop;
+	close pageCursor;
+end;
+
+-- -------------------------------------------------
+-- UPDATE PROFILE USER
+-- -------------------------------------------------
+create procedure ut_sp_update_profile_user(
+	in p_id_usuario int, 
+	in p_nombre varchar(50), 
+	in p_apellidos varchar(75), 
+	in p_genero char(1), 
+	in p_correo varchar(100), 
+	in p_direccion varchar(200), 
+	in p_fecha_nac date, 
+	in p_carnet int unsigned, 
+	in p_cui varchar(20), 
+	in p_id_horario int unsigned, 
+	in p_id_jornada int unsigned, 
+	in p_pass varchar(200),
+	out error_code int, 
+	out error_message varchar(255)
+)
+this_proc:begin
+	set error_code = 0;
+	set error_message = '';
+
+	if p_id_usuario = 0 then 
+		set error_code = -1;
+		set error_message = 'No se ha especificado el usuario';
+		leave this_proc;
+	end if;
+
+	if p_pass is not null then 
+		update usuario 
+		set 
+			pass = p_pass
+		where id_usuario = p_id_usuario ;
+	end if;
+	
+	update usuario 
+	set 
+		nombre = p_nombre, 
+		apellidos = p_apellidos, 
+		genero = p_genero, 
+		correo = p_correo, 
+		direccion = p_direccion, 
+		fecha_nac = p_fecha_nac, 
+		carnet = p_carnet, 
+		cui = p_cui
+	where id_usuario = p_id_usuario ; 
+	
+	update ut_perfil 
+	set 
+		id_horario = p_id_horario, 
+		id_jornada = p_id_jornada
+	where id_usuario = p_id_usuario ; 
 end;
 
 -- 

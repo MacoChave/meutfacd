@@ -33,16 +33,14 @@ const SiderLogotipo: React.FC<SiderLogotipoProps> = ({
 			sx={{
 				pb: 2,
 				width: '100%',
-				textAlign: 'center',
 				display: 'flex',
-				justifyContent: 'center',
-				alignItems: 'center',
+				placeContent: 'center',
 			}}>
 			<img
 				src={getLogo(variant, orientation)}
 				alt='Facultad de Ciencias Jurídicas y Sociales'
 				loading='lazy'
-				style={{ height: '8rem' }}
+				style={{ height: '10rem' }}
 			/>
 		</Box>
 	);
