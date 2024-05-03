@@ -88,7 +88,7 @@ const getFile = async ({ query }: Request, res: Response) => {
 			throw new Error('Nombre de archivo requerido');
 		}
 
-		let baseUrl = name?.includes('https')
+		let baseUrl = `${name}`?.includes('http')
 			? ''
 			: `https://${DATA_SOURCES.AWS_BUCKET_NAME}.s3.amazonaws.com/`;
 
