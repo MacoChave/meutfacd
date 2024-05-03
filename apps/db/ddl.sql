@@ -706,12 +706,10 @@ end;
 -- -------------------------------------------------
 -- BULK USER INSERT
 -- -------------------------------------------------
-create procedure ut_sp_bulk_user_insert() 
+create procedure ut_sp_bulk_user_insert(
+    in p_user_type INT
+) 
 begin
-	-- ETL
-	delete from temp_user 
-	where curso is null;
-
 	-- INSERT TEMP_USER INTO USER TABLE
 	insert ignore into usuario (
 		nombre, apellidos, correo, genero, 
@@ -726,7 +724,19 @@ begin
 	from
 		temp_user tu
 	where tu.curso is not null;
-	
+
+    IF p_user_type = 1 THEN
+        call ut_sp_bulk_student_insert();
+    ELSE 
+        call ut_sp_bulk_teacher_insert();
+    END IF;
+end;
+
+-- -------------------------------------------------
+-- COMPLETE BULK NEW STUDENT USER
+-- -------------------------------------------------
+CREATE PROCEDURE ut_sp_bulk_student_insert() 
+BEGIN
 	-- INSERT TEMP_USER INTO TESIS TABLE
 	insert into ut_tesis (
 		titulo, ruta_perfil, 
@@ -800,7 +810,23 @@ begin
 	inner join ut_tesis ut
 		on u.id_usuario = ut.id_estudiante
 	where tu.curso is not null;
-end;
+END;
+
+-- -------------------------------------------------
+-- COMPLETE BULK NEW TEACHER USERS
+-- -------------------------------------------------
+CREATE PROCEDURE ut_sp_bulk_teacher_insert()
+BEGIN
+	update ut_perfil up 
+	inner join (
+		select u.id_usuario, tu.curso 
+		from usuario u 
+		join temp_user tu 
+			on u.correo = tu.correo
+	) utu 
+		on up.id_usuario = utu.id_usuario 
+	set up.ocupacion = utu.curso ; 
+END;
 
 -- -------------------------------------------------
 -- BULK PERMISSIONS TO BULK NEW USERS
