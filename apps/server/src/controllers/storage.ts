@@ -84,8 +84,16 @@ const uploadDictamen = async ({ files, user }: Request, res: Response) => {
 const getFile = async ({ query }: Request, res: Response) => {
 	try {
 		const { name } = query;
+		if (!name) {
+			throw new Error('Nombre de archivo requerido');
+		}
+
+		let baseUrl = name?.includes('https')
+			? ''
+			: `https://${DATA_SOURCES.AWS_BUCKET_NAME}.s3.amazonaws.com/`;
+
 		res.status(200).json({
-			url: `https://${DATA_SOURCES.AWS_BUCKET_NAME}.s3.amazonaws.com/${name}`,
+			url: `${baseUrl}${name}`,
 		});
 	} catch (error: any) {
 		errorHttp(res, error);
