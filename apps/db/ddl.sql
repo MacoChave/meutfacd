@@ -819,7 +819,7 @@ CREATE PROCEDURE ut_sp_bulk_teacher_insert()
 BEGIN
 	update ut_perfil up 
 	inner join (
-		select u.id_usuario, tu.curso 
+		select distinct u.id_usuario, tu.curso 
 		from usuario u 
 		join temp_user tu 
 			on u.correo = tu.correo

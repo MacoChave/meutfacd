@@ -32,7 +32,7 @@ const McInput: React.FC<McInputProps> = ({
 				return (
 					<TextField
 						{...field}
-						sx={{ width: '100%', minWidth: { xs: '300px' } }}
+						sx={{ width: '100%' }}
 						variant='standard'
 						label={label}
 						value={
