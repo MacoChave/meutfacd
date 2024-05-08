@@ -1030,7 +1030,8 @@ select
 	uct.id_jornada , 
 	uj.nombre n_jornada , 
 	uct.id_horario , 
-	uh.hora_inicio 
+	uh.hora_inicio , 
+    concat(uct.salon, ' - ', u.apellidos, ', ', u.nombre) AS label
 from ut_curso_tutor uct 
 inner join ut_curso uc 
 	on uct.id_curso = uc.id_curso 
