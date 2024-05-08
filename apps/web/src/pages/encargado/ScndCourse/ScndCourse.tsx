@@ -164,7 +164,7 @@ const ScndCourse: React.FC<ScndCourseProps> = ({}) => {
 						}}>
 						<Box>
 							<Typography variant='h6' component={'h3'}>
-								Estudiantes disponibles
+								{unAssignment.length} estudiantes disponibles
 							</Typography>
 							<List>
 								{unAssignment.map((value) => {
@@ -196,7 +196,7 @@ const ScndCourse: React.FC<ScndCourseProps> = ({}) => {
 						</Box>
 						<Box>
 							<Typography variant='h6' component={'h3'}>
-								Estudiantes asignados
+								{assignment.length} estudiantes asignados
 							</Typography>
 							<List>
 								{assignment.map((value) => {

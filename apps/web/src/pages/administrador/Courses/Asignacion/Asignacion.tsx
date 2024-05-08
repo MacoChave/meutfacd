@@ -19,7 +19,7 @@ const Asignacion: React.FC<AsignacionProps> = ({}) => {
 			table: 'ut_v_cursotutor',
 			sort: {
 				fecha: 'desc',
-				// id_curso: 'asc',
+				id_curso: 'asc',
 				id_jornada: 'asc',
 				id_horario: 'asc',
 			},

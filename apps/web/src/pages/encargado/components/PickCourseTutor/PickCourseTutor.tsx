@@ -25,7 +25,7 @@ const PickCourseTutor: React.FC<PickCourseTutorProps> = ({
 		url: `${URL.GENERIC}/all`,
 		method: 'post',
 		body: {
-			table: 'ut_curso_tutor',
+			table: 'ut_v_cursotutor',
 		},
 		params: {
 			id_curso: course,
@@ -39,7 +39,7 @@ const PickCourseTutor: React.FC<PickCourseTutorProps> = ({
 	return (
 		<McAutocomplete
 			label='Curso'
-			colLabel='salon'
+			colLabel='label'
 			value={courseTutor}
 			options={data}
 			isLoading={isLoading}

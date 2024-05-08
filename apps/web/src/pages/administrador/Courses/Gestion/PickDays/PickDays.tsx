@@ -14,15 +14,24 @@ export type PickDaysProps = {
 	readOnly?: boolean;
 };
 
-const PickDays: React.FC<PickDaysProps> = ({ days, readOnly = false, setDays }) => {
+const PickDays: React.FC<PickDaysProps> = ({
+	days,
+	readOnly = false,
+	setDays,
+}) => {
 	return (
 		<>
-			<Typography variant='body1'>Días a impartir</Typography>
 			<Box
 				sx={{
 					m: 'auto',
 				}}>
+				<Typography variant='body1'>Días a impartir</Typography>
 				<ToggleButtonGroup
+					sx={{
+						display: 'flex',
+						justifyContent: 'center',
+						flexWrap: 'wrap',
+					}}
 					value={days}
 					color='primary'
 					onChange={(event, newDays) => {
