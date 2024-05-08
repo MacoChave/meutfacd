@@ -1024,6 +1024,7 @@ select
 	uct.fecha , 
 	uct.salon ,
 	uct.id_tutor , 
+	uct.dias , 
 	concat(u.nombre, ' ', u.apellidos) docente , 
 	uct.id_curso , 
 	uc.nombre n_curso , 

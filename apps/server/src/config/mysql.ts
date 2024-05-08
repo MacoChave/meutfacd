@@ -8,6 +8,8 @@ export const connection = async (asArray: boolean = false) => {
 		password: DATA_SOURCES.DB_PASS,
 		database: DATA_SOURCES.DB_NAME,
 		port: DATA_SOURCES.DB_PORT,
+		connectionLimit: DATA_SOURCES.DB_CONN_LIMIT,
+		connectTimeout: 10000,
 		rowsAsArray: asArray,
 	});
 };

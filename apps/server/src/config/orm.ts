@@ -14,4 +14,5 @@ export const AppDataSource = new DataSource({
 	timezone: 'America/Guatemala',
 	entities: [Rol, Pagina],
 	logging: true,
+	connectTimeout: 10000,
 });

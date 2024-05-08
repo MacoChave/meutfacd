@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { errorHttp } from '../utils/error.handle';
-import { sqlDelete, sqlInsert, sqlSelect } from '../db/consultas';
+import { sqlDelete, sqlInsert, sqlSelect, sqlUpdate } from '../db/consultas';
 
 export const getItem = ({ body, query }: Request, res: Response) => {
 	try {
@@ -35,9 +35,15 @@ export const postItem = async ({ body, query }: Request, res: Response) => {
 	}
 };
 
-export const putItem = ({ body, query }: Request, res: Response) => {
+export const putItem = async ({ body, query }: Request, res: Response) => {
 	try {
-		res.status(200).json({ message: 'OK' });
+		console.log(body, query);
+		const result = await sqlUpdate({
+			table: 'ut_curso_tutor',
+			datos: body,
+			query,
+		});
+		res.status(200).json(result);
 	} catch (error) {
 		errorHttp(res, error as any);
 	}

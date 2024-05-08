@@ -6,12 +6,19 @@ import { TResult } from '@/models/Fetching';
 import { deleteData } from '@/services/fetching';
 import { Refresh } from '@mui/icons-material';
 import { Box, IconButton, Typography } from '@mui/material';
-import React from 'react';
+import React, { useState } from 'react';
 import swal from 'sweetalert';
+import { McModal } from '@/components';
+import { Form } from '../Gestion/Form';
+import { courseTutorDefault, TCourseTutor } from '@/models/CourseTutor';
 
 export type AsignacionProps = Record<string, never>;
 
 const Asignacion: React.FC<AsignacionProps> = ({}) => {
+	const [open, setOpen] = useState(false);
+	const [preloadData, setPreloadData] = useState<TCourseTutor>(
+		courseTutorDefault as TCourseTutor
+	);
 	const { data, isLoading, isError, refetch } = useCustomFetch({
 		url: `${URL.COURSE_TUTOR}/all`,
 		method: 'post',
@@ -26,7 +33,11 @@ const Asignacion: React.FC<AsignacionProps> = ({}) => {
 		},
 	});
 
-	const handleSelect = (item: any) => {};
+	const handleSelect = (item: any) => {
+		setOpen(true);
+		console.log(item);
+		setPreloadData(item);
+	};
 
 	const handleDelete = async (item: any) => {
 		const result: TResult = await deleteData({
@@ -39,6 +50,11 @@ const Asignacion: React.FC<AsignacionProps> = ({}) => {
 		} else {
 			swal('Error', 'No se ha podido eliminar el registro', 'error');
 		}
+	};
+
+	const onClose = () => {
+		setOpen(false);
+		setPreloadData(courseTutorDefault as TCourseTutor);
 	};
 
 	if (isLoading) return <DotsLoaders />;
@@ -65,6 +81,9 @@ const Asignacion: React.FC<AsignacionProps> = ({}) => {
 				onEdit={handleSelect}
 				onDelete={handleDelete}
 			/>
+			<McModal title='Editar asignación' open={open} onClose={onClose}>
+				<Form preloadData={preloadData} onClose={() => {}} />
+			</McModal>
 		</Box>
 	);
 };

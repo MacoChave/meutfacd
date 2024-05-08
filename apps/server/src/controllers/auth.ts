@@ -71,6 +71,11 @@ export const recoveryPassword = async ({ body }: Request, res: Response) => {
 					email: body.correo,
 				}),
 			});
+			logger({
+				dirname: __dirname,
+				proc: 'recoveryPassword',
+				message: emailData,
+			});
 		} else {
 			console.log(
 				'Ingresa al siguiente link para recuperar tu contraseña'
