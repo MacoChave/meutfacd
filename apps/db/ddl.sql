@@ -62,7 +62,8 @@ create table if not exists usuario (
 	doc_cui varchar(75) null,
 	carnet integer unsigned unique null,
 	cui varchar(20) unique null,
-	constraint fk_usuario_municipio foreign key (id_municipio) references municipio(id_municipio)
+	constraint fk_usuario_municipio foreign key (id_municipio) references municipio(id_municipio),
+	constraint uk_usuario_correo unique key correo
 );
 
 create table if not exists rol (

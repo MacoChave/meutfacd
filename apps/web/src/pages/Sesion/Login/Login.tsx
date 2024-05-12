@@ -1,11 +1,13 @@
 import { URL } from '@/consts/Api';
 import { TAuthState } from '@/models/Control';
+import { TResponse } from '@/models/Fetching';
 import { TLogin, schemaLogin } from '@/models/Login';
 import { setLogged } from '@/redux/states';
 import store from '@/redux/store';
 import { postData } from '@/services/fetching';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Box, Button, Card, Toolbar, Typography } from '@mui/material';
+import { AxiosError } from 'axios';
 import React, { SyntheticEvent, lazy } from 'react';
 import { FormProvider, SubmitHandler, useForm } from 'react-hook-form';
 import { useDispatch } from 'react-redux';
@@ -65,15 +67,22 @@ const Login: React.FC<LoginProps> = () => {
 
 	const handleRecovery = async (e: SyntheticEvent) => {
 		e.preventDefault();
-		const response = await postData<any>({
-			path: URL.AUTH.RECOVERY,
-			body: { correo: methods.getValues('correo') },
-		});
-		if (response?.msg) {
+		try {
+			const response: TResponse = await postData<TResponse>({
+				path: URL.AUTH.RECOVERY,
+				body: { correo: methods.getValues('correo') },
+			});
 			swal({
 				title: '¡Bien hecho!',
-				text: 'Revisa tu correo electrónico para recuperar tu contraseña',
+				text: response.message,
 				icon: 'success',
+			});
+		} catch (error: any) {
+			console.log(error);
+			swal({
+				title: '¡Ha ocurrido un error!',
+				text: error.response?.data.message,
+				icon: 'error',
 			});
 		}
 	};

@@ -120,6 +120,8 @@ export const sqlEjecutar = async ({ sql, values = [] }: sqlEjectType) => {
 	const conn = await connection();
 	const [results, fields] = await conn.query(sql, values || []);
 
+	conn.end();
+
 	return results;
 };
 

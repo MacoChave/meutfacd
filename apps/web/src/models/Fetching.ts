@@ -8,6 +8,12 @@ export type TResult = {
 	warningStatus: number;
 };
 
+export type TResponse = {
+	code: number;
+	message: string;
+	error: string;
+};
+
 type TCondition = {
 	column: string;
 	operator:

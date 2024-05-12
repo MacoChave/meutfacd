@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import { sqlEjecutar, sqlSelectOne, sqlUpdate } from '../db/consultas';
 import { TSignIn } from '../models/signIn';
-import { errorHttp } from '../utils/error.handle';
+import { errorHttp, successHttp } from '../utils/error.handle';
 import { comparePassword, encryptPassword, generarToken } from '../utils/token';
 import {
 	getBodyFromRecovery,
@@ -61,6 +61,7 @@ export const verifyEmail = async ({ query }: Request, res: Response) => {
 
 export const recoveryPassword = async ({ body }: Request, res: Response) => {
 	try {
+		if (!body.correo) throw new Error('Correo no especificado');
 		if (DATA_SOURCES.SEND_EMAIL == 'true') {
 			const emailData = await sendEmail({
 				to: body.correo,
@@ -84,7 +85,11 @@ export const recoveryPassword = async ({ body }: Request, res: Response) => {
 				`${DATA_SOURCES.URL_PASS_RECOVERY}/${btoa(body.correo)}`
 			);
 		}
-		res.status(200).json({ msg: 'Correo enviado' });
+		successHttp(
+			res,
+			200,
+			'Revisa tu correo electrónico para recuperar tu contraseña'
+		);
 	} catch (error: any) {
 		errorHttp(res, error);
 	}
