@@ -1,6 +1,12 @@
 import { Request, Response } from 'express';
 import { errorHttp } from '../utils/error.handle';
-import { sqlDelete, sqlInsert, sqlSelect, sqlUpdate } from '../db/consultas';
+import {
+	sqlDelete,
+	sqlEjecutar,
+	sqlInsert,
+	sqlSelect,
+	sqlUpdate,
+} from '../db/consultas';
 
 export const getItem = ({ body, query }: Request, res: Response) => {
 	try {
@@ -38,11 +44,17 @@ export const postItem = async ({ body, query }: Request, res: Response) => {
 export const putItem = async ({ body, query }: Request, res: Response) => {
 	try {
 		console.log(body, query);
-		const result = await sqlUpdate({
-			table: 'ut_curso_tutor',
-			datos: body,
-			query,
+		const result = await sqlEjecutar({
+			sql: `UPDATE ut_curso_tutor
+				SET salon = ?, dias = JSON_ARRAY(?), fecha = ?
+				WHERE id_curso_tutor = ?`,
+			values: [body.salon, body.dias, body.fecha, query.id_curso_tutor],
 		});
+		// const result = await sqlUpdate({
+		// 	table: 'ut_curso_tutor',
+		// 	datos: body,
+		// 	query,
+		// });
 		res.status(200).json(result);
 	} catch (error) {
 		errorHttp(res, error as any);

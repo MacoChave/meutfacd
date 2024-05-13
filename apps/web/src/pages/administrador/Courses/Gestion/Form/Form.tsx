@@ -1,6 +1,7 @@
-import { URL } from '@/consts/Api';
+import { DotsLoaders } from '@/components/Loader/DotsLoaders';
 import { McAutocomplete } from '@/components/McWithForms/McAutocomplete';
 import { McInput } from '@/components/McWithForms/McInput';
+import { URL } from '@/consts/Api';
 import { useCustomFetch } from '@/hooks/useFetch';
 import { TCourse } from '@/models/Course';
 import {
@@ -8,9 +9,9 @@ import {
 	courseTutorDefault,
 	courseTutorSchema,
 } from '@/models/CourseTutor';
+import { TResult } from '@/models/Fetching';
 import { TUser } from '@/models/Perfil';
 import { TPeriod } from '@/models/Period';
-import { TResult } from '@/models/Fetching';
 import { TSchedule } from '@/models/Schedule';
 import { PickEvaluador } from '@/pages/encargado/components/PickEvaluador';
 import { PickHorario } from '@/pages/encargado/components/PickHorario';
@@ -18,11 +19,11 @@ import { PickJornada } from '@/pages/encargado/components/PickJornada';
 import { postData, putData } from '@/services/fetching';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Box, Button, Typography } from '@mui/material';
+import dayjs from 'dayjs';
 import React, { useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import swal from 'sweetalert';
 import { PickDays } from '../PickDays';
-import { DotsLoaders } from '@/components/Loader/DotsLoaders';
 
 export type FormProps = {
 	onClose: () => void;
@@ -55,6 +56,7 @@ const Form: React.FC<FormProps> = ({
 
 	const onSubmit: SubmitHandler<TCourseTutor> = async (data) => {
 		if (!!!preloadData.id_curso_tutor) {
+			console.log('Crear sección de curso');
 			const result: TResult = await postData({
 				path: URL.COURSE_TUTOR,
 				body: {
@@ -82,12 +84,13 @@ const Form: React.FC<FormProps> = ({
 				onClose();
 			}
 		} else {
+			console.log('Actualizar sección de curso');
 			const result: TResult = await putData({
 				path: URL.COURSE_TUTOR,
 				body: {
 					salon: data['salon'],
-					dias: JSON.stringify(data['dias']),
-					fecha: data['fecha'],
+					dias: `${data['dias'].join(',') ?? ''}`,
+					fecha: dayjs(data['fecha']).format('YYYY-MM-DD'),
 				},
 				params: {
 					id_curso_tutor: preloadData.id_curso_tutor,
