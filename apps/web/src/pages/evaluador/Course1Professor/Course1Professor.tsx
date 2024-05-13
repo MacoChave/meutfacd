@@ -1,7 +1,7 @@
-import { URL } from '@/consts/Api';
 import { Contenedor } from '@/components';
 import { DotsLoaders } from '@/components/Loader/DotsLoaders';
 import { McTable } from '@/components/MyTable';
+import { URL } from '@/consts/Api';
 import {
 	APROBADO,
 	ESPERA,
@@ -13,20 +13,42 @@ import { useCustomFetch } from '@/hooks/useFetch';
 import { TResult } from '@/models/Fetching';
 import { postData, putData } from '@/services/fetching';
 import { formatStationName } from '@/utils/formatHandler';
-import { Typography } from '@mui/material';
+import { Box, IconButton, TextField, Typography } from '@mui/material';
 import React, { useState } from 'react';
 import swal from 'sweetalert';
+import { PickSeccionCourse } from '../components/PickSeccionCourse';
+import { Update } from '@mui/icons-material';
+import { set } from 'react-hook-form';
 
 export type Course1ProfessorProps = Record<string, never>;
 
 const Course1Professor: React.FC<Course1ProfessorProps> = ({}) => {
 	const [loading, setLoading] = useState(false);
+	const [section, setSection] = useState({} as any);
+	const [newSection, setNewSection] = useState('');
 	const { data, isLoading, isError, refetch } = useCustomFetch({
 		url: `${URL.REVIEW}/professor`,
 		method: 'get',
 		body: {},
-		params: { estado: REVISION, estacion: 2 },
+		params: { estado: REVISION, estacion: 2, salon: section.salon },
 	});
+
+	const updateSection = () => {
+		try {
+			let result: any = putData<TResult>({
+				path: `${URL.COURSE_TUTOR}/salon`,
+				body: { salon: newSection },
+				params: { id_curso_tutor: section.id_curso_tutor },
+			});
+			swal('Éxito', 'Se actualizó el salón', 'success');
+		} catch (error: any) {
+			swal('Error', 'No se pudo actualizar el salón', 'error');
+		} finally {
+			refetch();
+			setNewSection('');
+			setSection({} as any);
+		}
+	};
 
 	const onPass = async (item: any) => {
 		setLoading(true);
@@ -124,6 +146,34 @@ const Course1Professor: React.FC<Course1ProfessorProps> = ({}) => {
 	return (
 		<>
 			<Contenedor title='Curso I'>
+				<Box
+					sx={{
+						display: 'flex',
+						justifyContent: 'space-between',
+						alignItems: 'center',
+						width: '100%',
+						marginBottom: 2,
+					}}>
+					<PickSeccionCourse
+						course={1}
+						section={section}
+						setSection={setSection}
+					/>
+					<TextField
+						label='Nuevo salón'
+						value={newSection}
+						onChange={(e) => setNewSection(e.target.value)}
+						InputProps={{
+							endAdornment: (
+								<IconButton
+									aria-label='update'
+									onClick={() => updateSection()}>
+									<Update />
+								</IconButton>
+							),
+						}}
+					/>
+				</Box>
 				<McTable
 					headers={{
 						nombre: 'Estudiante',

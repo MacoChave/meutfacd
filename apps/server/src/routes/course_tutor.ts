@@ -6,6 +6,7 @@ import {
 	getItems,
 	postItem,
 	putItem,
+	updateSalon,
 } from '../controllers/course_tutor';
 
 const router = Router();
@@ -13,6 +14,7 @@ const router = Router();
 router.get('', requireAuth, getItem);
 router.post('/all', requireAuth, getItems);
 router.post('', requireAuth, postItem);
+router.put('/salon', requireAuth, updateSalon);
 router.put('', requireAuth, putItem);
 router.delete('', requireAuth, deleteItem);
 

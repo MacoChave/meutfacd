@@ -50,11 +50,22 @@ export const putItem = async ({ body, query }: Request, res: Response) => {
 				WHERE id_curso_tutor = ?`,
 			values: [body.salon, body.dias, body.fecha, query.id_curso_tutor],
 		});
-		// const result = await sqlUpdate({
-		// 	table: 'ut_curso_tutor',
-		// 	datos: body,
-		// 	query,
-		// });
+		res.status(200).json(result);
+	} catch (error) {
+		errorHttp(res, error as any);
+	}
+};
+
+export const updateSalon = async (
+	{ user, body, query }: Request,
+	res: Response
+) => {
+	try {
+		const result = await sqlUpdate({
+			table: 'ut_curso_tutor',
+			datos: { salon: body.salon },
+			query: { id_curso_tutor: query.id_curso_tutor },
+		});
 		res.status(200).json(result);
 	} catch (error) {
 		errorHttp(res, error as any);

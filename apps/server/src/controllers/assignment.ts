@@ -71,10 +71,27 @@ export const getItems = async (
 	}
 };
 
+export const getDetails = async (
+	{ user, body, params }: Request,
+	res: Response
+) => {
+	try {
+		const results = await sqlSelect({
+			table: 'ut_curso_tutor',
+			columns: ['salon', 'id_curso_tutor'],
+			conditions: body.conditions,
+			query: { id_tutor: user.primaryKey },
+		});
+		res.status(200).json(results);
+	} catch (error: any) {
+		errorHttp(res, error);
+	}
+};
+
 export const postItem = async ({ body }: Request, res: Response) => {
 	try {
 		const results = await sqlInsert({
-			table: 'ut_asignacion',
+			table: 'ut_curso_tutor',
 			datos: body,
 		});
 		res.status(200).json(results);
@@ -89,7 +106,7 @@ export const putItem = async (
 ) => {
 	try {
 		const results = await sqlUpdate({
-			table: 'ut_asignacion',
+			table: 'ut_curso_tutor',
 			query,
 			datos: body,
 		});

@@ -61,7 +61,6 @@ export const getItemsByCurrentProf = async (
 			table: 'ut_v_revision',
 			query: { id_tutor: user.primaryKey, ...query },
 		});
-		console.log({ results });
 		res.status(200).json(results);
 	} catch (error: any) {
 		errorHttp(res, error);
