@@ -15,6 +15,14 @@ export const getXlsxReport = async (
 		const data = await sqlSelect({
 			table: 'ut_v_revision',
 			...body,
+			columns: [
+				'tutor',
+				'carnet',
+				'nombre',
+				'correo',
+				'salon',
+				'fecha_curso',
+			],
 			query,
 		});
 
