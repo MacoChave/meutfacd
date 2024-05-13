@@ -4,6 +4,7 @@ import { URL } from '@/consts/Api';
 import { APROBADO } from '@/consts/Vars';
 import { useCustomFetch } from '@/hooks/useFetch';
 import { TResult } from '@/models/Fetching';
+import { TUser } from '@/models/Perfil';
 import { TProgress } from '@/models/Progress';
 import { getData, postData, putData } from '@/services/fetching';
 import { Skeleton, Typography } from '@mui/material';
@@ -13,11 +14,18 @@ import React from 'react';
 import swal from 'sweetalert';
 
 export type HistorialProps = {
-	station?: number;
 	date?: string;
+	station?: number;
+	state?: string;
+	tutor?: TUser;
 };
 
-const Historial: React.FC<HistorialProps> = ({ station, date }) => {
+const Historial: React.FC<HistorialProps> = ({
+	date,
+	station,
+	state,
+	tutor,
+}) => {
 	const { data, isLoading, isError } = useCustomFetch({
 		url: `${URL.GENERIC}/all`,
 		method: 'post',
@@ -38,6 +46,16 @@ const Historial: React.FC<HistorialProps> = ({ station, date }) => {
 					column: 'estacion',
 					operator: '=',
 					value: station,
+				},
+				{
+					column: 'estado',
+					operator: '=',
+					value: state,
+				},
+				{
+					column: 'id_tutor',
+					operator: '=',
+					value: tutor?.id_usuario ?? 0,
 				},
 			],
 			condInclusives: true,

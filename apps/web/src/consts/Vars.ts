@@ -23,6 +23,15 @@ export const ESTACIONES = [
 	'Recoger tesis',
 ];
 
+export const STATES = [
+	{ value: 'N', label: 'Pendiente' },
+	{ value: 'E', label: 'Espera' },
+	{ value: 'V', label: 'Revisión' },
+	{ value: 'R', label: 'Rechazado' },
+	{ value: 'P', label: 'Previa' },
+	{ value: 'A', label: 'Aprobado' },
+];
+
 // ESTADOS DE REVSIONES
 export const PENDIENTE = 'N';
 export const ESPERA = 'E';
