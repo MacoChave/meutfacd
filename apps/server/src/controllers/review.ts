@@ -5,12 +5,17 @@ import { errorHttp } from '../utils/error.handle';
 import { formatDate } from '../utils/formats';
 import { createReadStream, unlinkSync } from 'fs';
 
-export const getXlsxReport = async ({ query }: Request, res: Response) => {
+export const getXlsxReport = async (
+	{ body, query }: Request,
+	res: Response
+) => {
 	try {
 		const bookName: string = 'StudentReview';
 		const filePath: string = 'src/storage/StudentReview.xlsx';
 		const data = await sqlSelect({
 			table: 'ut_v_revision',
+			...body,
+			query,
 		});
 
 		const ws = XLSX.utils.json_to_sheet(data as any);

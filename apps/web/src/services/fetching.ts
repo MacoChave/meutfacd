@@ -28,7 +28,7 @@ export async function getData<T>({
 		params,
 		responseType: responseType as any,
 	});
-	console.log({ response });
+	// console.log({ response });
 	return response.data;
 }
 
@@ -50,7 +50,7 @@ export async function postData<T>({
 		},
 		params,
 	});
-	console.log({ response });
+	// console.log({ response });
 	return response.data;
 }
 

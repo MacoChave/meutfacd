@@ -1,3 +1,4 @@
+import { McInput } from '@/components';
 import { URL } from '@/consts/Api';
 import { TResult } from '@/models/Fetching';
 import { TRecovery, recoveryDefault, schemaRecovery } from '@/models/Recuperar';
@@ -82,7 +83,19 @@ const UserRecovery: React.FC<UserRecoveryProps> = ({}) => {
 							<Typography variant='h4'>
 								Recuperar contraseña
 							</Typography>
-							<Controller
+							<McInput
+								control={control as any}
+								name='pass'
+								label='Contraseña'
+								type='password'
+							/>
+							<McInput
+								control={control as any}
+								name='confpass'
+								label='Confirmar contraseña'
+								type='password'
+							/>
+							{/* <Controller
 								control={control}
 								name='pass'
 								render={({ field }) => (
@@ -111,7 +124,7 @@ const UserRecovery: React.FC<UserRecoveryProps> = ({}) => {
 										}
 									/>
 								)}
-							/>
+							/> */}
 							<Button type='submit' variant='contained'>
 								Recuperar contraseña
 							</Button>

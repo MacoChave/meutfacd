@@ -48,26 +48,39 @@ const Login: React.FC<LoginProps> = () => {
 	});
 
 	const onSubmit: SubmitHandler<TLogin> = async (body) => {
-		const response = await postData<TAuthState>({
-			path: URL.AUTH.LOGIN,
-			body,
-		});
-		console.table(response);
+		try {
+			const response = await postData<TAuthState>({
+				path: URL.AUTH.LOGIN,
+				body,
+			});
 
-		if (response.token === undefined) return;
+			if (response.token === undefined)
+				throw new Error('Token no definido');
 
-		const rol = response.roles ? response.roles.split(' ')[0] : '';
+			const rol = response.roles ? response.roles.split(' ')[0] : '';
 
-		dispatch(setLogged(response));
-		navigate(`/administrador`.toLowerCase(), {
-			replace: true,
-			state: {},
-		});
+			dispatch(setLogged(response));
+			navigate(`/administrador`.toLowerCase(), {
+				replace: true,
+				state: {},
+			});
+		} catch (error: any) {
+			swal({
+				title: '¡Ha ocurrido un error!',
+				text: error.response?.data.message,
+				icon: 'error',
+			});
+		}
 	};
 
 	const handleRecovery = async (e: SyntheticEvent) => {
 		e.preventDefault();
 		try {
+			if (!methods.getValues('correo'))
+				throw new Error(
+					'Escribe tu correo electrónico para recuperar tu contraseña'
+				);
+
 			const response: TResponse = await postData<TResponse>({
 				path: URL.AUTH.RECOVERY,
 				body: { correo: methods.getValues('correo') },
@@ -78,10 +91,9 @@ const Login: React.FC<LoginProps> = () => {
 				icon: 'success',
 			});
 		} catch (error: any) {
-			console.log(error);
 			swal({
 				title: '¡Ha ocurrido un error!',
-				text: error.response?.data.message,
+				text: error.message ?? error.response?.data.message,
 				icon: 'error',
 			});
 		}
