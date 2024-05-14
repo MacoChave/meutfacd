@@ -83,14 +83,14 @@ const getSortClause = (sort: Object) => {
 };
 
 const getSetClause = (datos: Object) => {
-	const values: any[] = [];
-	const str: string = Object.entries(datos)
-		.map(([key, value]) => {
-			values.push(value);
-			return `${key} = ?`;
-		})
-		.join(', ');
-	return [str, values];
+	// const values: any[] = [];
+	// const str: string = Object.entries(datos)
+	// 	.map(([key, value]) => {
+	// 		values.push(value);
+	// 		return `${key} = ?`;
+	// 	})
+	// 	.join(', ');
+	// return [str, values];
 };
 const getConditionsWhere = (
 	conditions: conditionsType[],
@@ -278,22 +278,24 @@ export const sqlInsertMany = async ({ table, datos }: sqlInsertManyType) => {
 };
 
 export const sqlUpdate = async ({ table, datos, query }: sqlUpdateType) => {
-	const [strSet, valsSet] = getSetClause(datos);
+	// const [strSet, valsSet] = getSetClause(datos);
+	const keys = Object.keys(datos);
+	const values = Object.values(datos);
 
 	const [strWhere, valsWhere] = getWhereClause(query);
 
 	let sql: string = `UPDATE ${table}
-	SET ${strSet}
+	SET ${keys.map((key) => `${key} = ?`).join(', ')}
 	WHERE ${strWhere}`;
 
 	logger({
 		dirname: __dirname,
 		proc: 'sqlUpdate',
-		message: JSON.stringify({ sql, values: [...valsSet, ...valsWhere] }),
+		message: JSON.stringify({ sql, values: [...values, ...valsWhere] }),
 	});
 
 	const conn = await connection();
-	const [results, fields] = await conn.query(sql, [...valsSet, ...valsWhere]);
+	const [results, fields] = await conn.query(sql, [...values, ...valsWhere]);
 	conn.end();
 	return results;
 };

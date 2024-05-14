@@ -43,14 +43,27 @@ export const postItem = async ({ body, query }: Request, res: Response) => {
 
 export const putItem = async ({ body, query }: Request, res: Response) => {
 	try {
-		console.log(body, query);
-		const result = await sqlEjecutar({
-			sql: `UPDATE ut_curso_tutor
-				SET salon = ?, dias = JSON_ARRAY(?), fecha = ?
-				WHERE id_curso_tutor = ?`,
-			values: [body.salon, body.dias, body.fecha, query.id_curso_tutor],
+		// const daysJSON: string = `("${body.dias.replace(',', '","')}")`;
+		let daysJSON = JSON.parse(body.dias);
+		console.log({ daysJSON });
+
+		const result2 = await sqlUpdate({
+			table: 'ut_curso_tutor',
+			datos: {
+				salon: body.salon,
+				dias: JSON.stringify(daysJSON),
+				fecha: body.fecha,
+			},
+			query: { id_curso_tutor: query.id_curso_tutor },
 		});
-		res.status(200).json(result);
+
+		// const result = await sqlEjecutar({
+		// 	sql: `UPDATE ut_curso_tutor
+		// 	SET salon = ?, dias = JSON_ARRAY(?), fecha = ?
+		// 	WHERE id_curso_tutor = ?`,
+		// 	values: [body.salon, daysJSON, body.fecha, query.id_curso_tutor],
+		// });
+		res.status(200).json(result2);
 	} catch (error) {
 		errorHttp(res, error as any);
 	}
