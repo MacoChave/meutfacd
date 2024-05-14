@@ -89,7 +89,7 @@ const Form: React.FC<FormProps> = ({
 				path: URL.COURSE_TUTOR,
 				body: {
 					salon: data['salon'],
-					dias: `${data['dias'].join(',') ?? ''}`,
+					dias: JSON.stringify(data['dias']),
 					fecha: dayjs(data['fecha']).format('YYYY-MM-DD'),
 				},
 				params: {
