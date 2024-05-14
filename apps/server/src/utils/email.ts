@@ -106,6 +106,7 @@ ${body}
         <!-- FOOTER -->
         <div style="background:#1a237e; padding: 25px;">
             <div style="padding: 1rem; color: #fff;">
+                <a href="https://siderusac.com/unidad-tesis" style="color: #fff; text-decoration: none;">Unidad de tesis</a>
                 <p style="margin: 0; font-size: small; font-weight: 500;">Unidad de Tesis</p>
                 <p style="margin: 0; font-size: small; font-weight: 500;">Facultad de Ciencias Jurídicas y Sociales</p>
                 <p style="margin: 0; font-size: small; font-weight: 500;">Universidad de San Carlos de Guatemala</p>

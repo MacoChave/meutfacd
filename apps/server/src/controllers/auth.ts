@@ -95,6 +95,50 @@ export const recoveryPassword = async ({ body }: Request, res: Response) => {
 	}
 };
 
+export const setRandomPassowrd = async ({ query }: Request, res: Response) => {
+	try {
+		const { email } = query;
+		if (!email) throw new Error('Correo no especificado');
+
+		const user = await sqlSelectOne({
+			table: 'usuario',
+			columns: ['correo'],
+			query: { correo: email },
+		});
+
+		if (!user) throw new Error('No se encontró el usuario con ese correo');
+
+		const pass = Math.random().toString(36).slice(-8);
+		const hash = await encryptPassword(pass);
+
+		const result = await sqlUpdate({
+			table: 'usuario',
+			datos: { pass: hash },
+			query: { correo: email },
+		});
+
+		if (DATA_SOURCES.SEND_EMAIL == 'true') {
+			const emailData = await sendEmail({
+				to: `${email}`,
+				plainText: `Para el correo: ${email} tu contraseña es: ${pass}`,
+				subject: 'Nueva contraseña',
+				content: `Para el correo: ${email} tu contraseña es: ${pass}`,
+			});
+			logger({
+				dirname: __dirname,
+				proc: 'setRandomPassowrd',
+				message: emailData,
+			});
+		} else {
+			console.log(`${email}: ${pass}`);
+		}
+
+		successHttp(res, 200, JSON.stringify({ ...result, pass }));
+	} catch (error: any) {
+		errorHttp(res, error);
+	}
+};
+
 export const changePassword = async (
 	{ query, body }: Request,
 	res: Response
