@@ -1,7 +1,7 @@
 import { BaseEntity, Column, Entity, PrimaryColumn } from 'typeorm';
 
 @Entity('ut_permiso')
-export class Permiso extends BaseEntity {
+export class Permission extends BaseEntity {
 	@PrimaryColumn()
 	id_usuario: number;
 	@PrimaryColumn()

@@ -1,7 +1,7 @@
 import { BaseEntity, Column, Entity, PrimaryColumn } from 'typeorm';
 
 @Entity('ut_acceso_rol')
-export class AccesoRol extends BaseEntity {
+export class RolAccess extends BaseEntity {
 	@PrimaryColumn()
 	id_rol: number;
 	@PrimaryColumn()

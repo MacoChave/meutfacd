@@ -8,6 +8,9 @@ import { encryptPassword } from '../utils/token';
 import { existsSync, mkdirSync, unlinkSync } from 'fs';
 import { readFile, utils } from 'xlsx';
 import { AppDataSource } from '../config/orm';
+import { Municipality } from '../entities/Municipality';
+import { createConnection } from 'typeorm';
+import { Department } from '../entities/Department';
 
 const getItem = async ({ params }: Request, res: Response) => {
 	try {
@@ -32,11 +35,18 @@ const getItems = async (req: Request, res: Response) => {
 	}
 };
 
-const getPaginatedItems = ({ body, query }: Request, res: Response) => {
+const getPaginatedItems = async ({ body, query }: Request, res: Response) => {
 	try {
-		successHttp(res, 200, 'Obtener usuarios paginados');
+		let conn = await AppDataSource.initialize();
+		let result = await conn.getRepository(Department).find({
+			relations: ['municipios'],
+			cache: true,
+		});
+		successHttp(res, 200, result);
 	} catch (error: any) {
 		errorHttp(res, error);
+	} finally {
+		AppDataSource.close();
 	}
 };
 

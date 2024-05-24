@@ -8,7 +8,7 @@ import {
 import { Rol } from './Rol';
 
 @Entity('ut_pagina')
-export class Pagina extends BaseEntity {
+export class Page extends BaseEntity {
 	@PrimaryGeneratedColumn()
 	id_pagina: number;
 	@Column()

@@ -7,7 +7,7 @@ import {
 	PrimaryColumn,
 	PrimaryGeneratedColumn,
 } from 'typeorm';
-import { Pagina } from './Pagina';
+import { Page } from './Page';
 
 @Entity('rol')
 export class Rol extends BaseEntity {
@@ -17,11 +17,11 @@ export class Rol extends BaseEntity {
 	nombre: string;
 	@Column()
 	descripcion: string;
-	@ManyToMany(() => Pagina)
+	@ManyToMany(() => Page)
 	@JoinTable({
 		name: 'ut_acceso_rol',
 		joinColumns: [{ name: 'id_rol' }],
 		inverseJoinColumns: [{ name: 'id_pagina' }],
 	})
-	paginas: Pagina[];
+	paginas: Page[];
 }
