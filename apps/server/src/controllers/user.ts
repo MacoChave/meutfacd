@@ -1,10 +1,15 @@
 import { Request, Response } from 'express';
+import fileUpload from 'express-fileupload';
+import path from 'path';
 import { sqlDelete, sqlSelect, sqlUpdate } from '../db/consultas';
-import { errorHttp } from '../utils/error.handle';
+import { errorHttp, successHttp } from '../utils/error.handle';
 import { formatDate, newDate } from '../utils/formats';
 import { encryptPassword } from '../utils/token';
+import { existsSync, mkdirSync, unlinkSync } from 'fs';
+import { readFile, utils } from 'xlsx';
+import { AppDataSource } from '../config/orm';
 
-const obtenerItem = async ({ params }: Request, res: Response) => {
+const getItem = async ({ params }: Request, res: Response) => {
 	try {
 		const { carnet } = params;
 		res.json({ message: 'Obtener usuario', carnet });
@@ -13,7 +18,7 @@ const obtenerItem = async ({ params }: Request, res: Response) => {
 	}
 };
 
-const obtenerItems = async (req: Request, res: Response) => {
+const getItems = async (req: Request, res: Response) => {
 	try {
 		const results = await sqlSelect({
 			table: 'ut_v_usuarios',
@@ -27,14 +32,47 @@ const obtenerItems = async (req: Request, res: Response) => {
 	}
 };
 
-const crearItem = (req: Request, res: Response) => {
+const getPaginatedItems = ({ body, query }: Request, res: Response) => {
+	try {
+		successHttp(res, 200, 'Obtener usuarios paginados');
+	} catch (error: any) {
+		errorHttp(res, error);
+	}
+};
+
+const bulkInsert = async (req: Request, res: Response) => {
+	try {
+		if (!req.files || !req.files.file)
+			throw new Error('No se envió un archivo');
+
+		const file = req.files.file as fileUpload.UploadedFile;
+		const filePath = path.join(__dirname, '../storage', file.name);
+
+		if (!existsSync(path.join(__dirname, '../storage'))) {
+			mkdirSync(path.join(__dirname, '../storage'));
+		}
+
+		await file.mv(filePath);
+
+		const workbook = readFile(filePath);
+		const sheet = workbook.Sheets[workbook.SheetNames[0]];
+		const data = utils.sheet_to_json(sheet);
+
+		console.log(`Insertar ${data.length} datos`);
+
+		unlinkSync(filePath);
+
+		res.json({ message: 'Bulk insert' });
+	} catch (error: any) {
+		errorHttp(res, error);
+	}
+};
+
+const createItem = (req: Request, res: Response) => {
 	res.json({ message: 'Crear usuario' });
 };
 
-const actualizarItem = async (
-	{ body, query, user }: Request,
-	res: Response
-) => {
+const updateItem = async ({ body, query, user }: Request, res: Response) => {
 	try {
 		const results = await Promise.all([
 			sqlUpdate({
@@ -81,7 +119,7 @@ const actualizarItem = async (
 	}
 };
 
-const eliminarItem = async ({ query }: Request, res: Response) => {
+const deleteItem = async ({ query }: Request, res: Response) => {
 	try {
 		const result = await sqlDelete({
 			table: 'usuario',
@@ -93,4 +131,12 @@ const eliminarItem = async ({ query }: Request, res: Response) => {
 	}
 };
 
-export { actualizarItem, crearItem, eliminarItem, obtenerItem, obtenerItems };
+export {
+	updateItem,
+	bulkInsert,
+	createItem,
+	deleteItem,
+	getItem,
+	getItems,
+	getPaginatedItems,
+};

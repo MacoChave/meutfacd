@@ -246,7 +246,8 @@ create table if not exists ut_tesis (
 	constraint fk_tesis_estudiante foreign key (id_estudiante) 
 		references usuario(id_usuario) 
 		on delete restrict 
-		on update cascade
+		on update cascade, 
+	constraint uk_tesis_estudiante unique key id_estudiante
 );
 
 create table if not exists ut_revision (

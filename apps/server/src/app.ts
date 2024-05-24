@@ -19,7 +19,7 @@ app.use(cors());
 app.use(
 	fileUpload({
 		useTempFiles: true,
-		tempFileDir: './storage',
+		tempFileDir: './temps',
 		limits: { fileSize: 10 * 1024 * 1024 },
 		// debug: true,
 		createParentPath: true,
@@ -54,6 +54,7 @@ const checkDBConection = async () => {
 		})
 		.finally(() => {
 			conn.end();
+			console.log('Database connection closed');
 		});
 };
 
@@ -64,6 +65,9 @@ const initTypeORM = async () => {
 		console.log('TypeORM connected 👌');
 	} catch (error) {
 		throw new Error('TypeORM connection failed 🤬');
+	} finally {
+		AppDataSource.close();
+		console.log('TypeORM connection closed');
 	}
 };
 

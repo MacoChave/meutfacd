@@ -2,15 +2,15 @@ import { Response } from 'express';
 import { JsonWebTokenError, Jwt } from 'jsonwebtoken';
 import { QueryError } from 'mysql2';
 
-const responseJson = (code: number, message: string) => {
+const responseJson = (code: number, message: any) => {
 	return {
 		code,
-		message,
-		error: message,
+		message: code === 200 ? message : 'Error',
+		error: code !== 200 ? message : '',
 	};
 };
 
-const successHttp = (res: Response, code: number = 200, message: string) => {
+const successHttp = (res: Response, code: number = 200, message: any) => {
 	res.status(code).json(responseJson(code, message));
 };
 

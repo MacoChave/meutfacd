@@ -1,19 +1,23 @@
 import { Router } from 'express';
 import {
-	actualizarItem,
-	crearItem,
-	eliminarItem,
-	obtenerItem,
-	obtenerItems,
+	updateItem,
+	bulkInsert,
+	createItem,
+	deleteItem,
+	getItem,
+	getItems,
+	getPaginatedItems,
 } from '../controllers/user';
 import { requireAuth } from '../middlewares/requireAuth';
 
 const router = Router();
 
-router.get('/', requireAuth, obtenerItem);
-router.get('/all', requireAuth, obtenerItems);
-router.post('/', requireAuth, crearItem);
-router.put('/', requireAuth, actualizarItem);
-router.delete('/', requireAuth, eliminarItem);
+router.get('/', requireAuth, getItem);
+router.get('/all', requireAuth, getItems);
+router.post('/paginated', requireAuth, getPaginatedItems);
+router.post('/bulk', bulkInsert);
+router.post('/', requireAuth, createItem);
+router.put('/', requireAuth, updateItem);
+router.delete('/', requireAuth, deleteItem);
 
 export { router };
