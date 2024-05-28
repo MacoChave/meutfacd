@@ -1,4 +1,4 @@
-export const API_V1 =
+export const BASE_URL =
 	import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000';
 
 export const URL = {
@@ -33,4 +33,8 @@ export const URL = {
 	USER_ROL: '/api/v1/user_rol',
 	USER: '/api/v1/user',
 	ACCESS: '/api/v1/access',
+};
+
+export const URL_V2 = {
+	USER: '/api/v2/user',
 };

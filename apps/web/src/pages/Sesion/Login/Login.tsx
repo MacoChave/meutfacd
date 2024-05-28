@@ -7,7 +7,6 @@ import store from '@/redux/store';
 import { postData } from '@/services/fetching';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Box, Button, Card, Toolbar, Typography } from '@mui/material';
-import { AxiosError } from 'axios';
 import React, { SyntheticEvent, lazy } from 'react';
 import { FormProvider, SubmitHandler, useForm } from 'react-hook-form';
 import { useDispatch } from 'react-redux';
@@ -81,7 +80,7 @@ const Login: React.FC<LoginProps> = () => {
 					'Escribe tu correo electrónico para recuperar tu contraseña'
 				);
 
-			const response: TResponse = await postData<TResponse>({
+			const response: TResponse<any> = await postData<TResponse<any>>({
 				path: URL.AUTH.RECOVERY,
 				body: { correo: methods.getValues('correo') },
 			});

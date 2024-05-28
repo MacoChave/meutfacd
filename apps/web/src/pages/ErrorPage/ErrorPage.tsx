@@ -8,6 +8,7 @@ export type ErrorPageProps = {
 
 const ErrorPage: React.FC<ErrorPageProps> = ({ codigo, mensaje }) => {
 	const handleClick = () => {
+		if (codigo === 404) window.location.replace('/');
 		window.history.back();
 	};
 

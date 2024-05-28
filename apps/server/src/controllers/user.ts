@@ -48,6 +48,7 @@ const getItems = async (req: Request, res: Response) => {
 
 const getAllUser = async ({ query }: Request, res: Response) => {
 	try {
+		console.log('🛫 getAllUser init');
 		verifyOrm();
 
 		let take = query.take ?? 10;
@@ -69,9 +70,9 @@ const getAllUser = async ({ query }: Request, res: Response) => {
 
 		let next = +skip + +take;
 
+		// successHttp(res, 200, result);
 		successHttp(res, 200, {
 			data: result,
-			total,
 			next: next < total ? next : null,
 		});
 	} catch (error: any) {

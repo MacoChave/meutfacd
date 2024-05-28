@@ -6,9 +6,8 @@ import {
 	ManyToMany,
 	PrimaryGeneratedColumn,
 } from 'typeorm';
-import { Page } from './Page';
-import { UserRol } from './UserRol';
 import { User } from './User';
+import { Page } from './Page';
 
 @Entity('rol')
 export class Rol extends BaseEntity {
@@ -24,11 +23,11 @@ export class Rol extends BaseEntity {
 	@ManyToMany(() => User, (user: User) => user.roles)
 	users: User[];
 
-	// @ManyToMany(() => Page)
-	// @JoinTable({
-	// 	name: 'ut_acceso_rol',
-	// 	joinColumns: [{ name: 'id_rol' }],
-	// 	inverseJoinColumns: [{ name: 'id_pagina' }],
-	// })
-	// paginas: Page[];
+	@ManyToMany(() => Page)
+	@JoinTable({
+		name: 'ut_acceso_rol',
+		joinColumns: [{ name: 'id_rol' }],
+		inverseJoinColumns: [{ name: 'id_pagina' }],
+	})
+	paginas: Page[];
 }

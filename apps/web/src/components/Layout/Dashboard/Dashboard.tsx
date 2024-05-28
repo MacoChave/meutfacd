@@ -4,6 +4,7 @@ import { useFetch } from '@/hooks/useFetch';
 import { Box, Toolbar, Typography } from '@mui/material';
 import { FC, lazy, useState } from 'react';
 import imgBackground from '@/assets/webp/SIDER_light_vertical.webp';
+import { ErrorPage } from '@/pages/ErrorPage';
 const ToolbarWithSesion = lazy(
 	() => import('../ToolbarWithSession/ToolbarWithSession')
 );
@@ -24,7 +25,12 @@ const Dashboard: FC<DashboardProps> = ({}) => {
 	};
 
 	if (isLoading) return <DotsLoaders />;
-	if (isError) return <Typography>Error</Typography>;
+	if (isError)
+		return (
+			<ErrorPage
+				codigo={401}
+				mensaje='No tiene permisos para acceder a esta página o su sesión ha expirado'></ErrorPage>
+		);
 
 	return (
 		<Box

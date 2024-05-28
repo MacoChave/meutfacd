@@ -1,6 +1,11 @@
 import api from '@/api/server';
+import { TPagination, TResponse } from '@/models/Fetching';
 import { setBearerToken } from '@/utils/bearer';
-import { QueryFunctionContext, useQuery } from '@tanstack/react-query';
+import {
+	QueryFunctionContext,
+	useInfiniteQuery,
+	useQuery,
+} from '@tanstack/react-query';
 
 const fetchData = async ({ queryKey }: QueryFunctionContext) => {
 	setBearerToken();
@@ -21,31 +26,16 @@ const fetchCustomData = async ({ queryKey }: QueryFunctionContext) => {
 	return data;
 };
 
-const fetchDataPaginado = async ({ queryKey }: QueryFunctionContext) => {
-	setBearerToken();
-	const { data } = await api.get(queryKey[1] as string, {
-		params: {
-			page: queryKey[3] as number,
-			limit: queryKey[4] as number,
-			search: queryKey[5] as string,
-			sort: queryKey[6] as string,
-			order: queryKey[7] as string,
-		},
-		headers: {
-			authorization: `Bearer ${queryKey[2]}`,
-		},
-	});
-	return data;
-};
-
 export const useFetch = ({
+	name = 'data',
 	url,
 	params = {},
 }: {
+	name?: string;
 	url: string;
 	params?: Object;
 }) => {
-	return useQuery(['data', url, params], fetchData, {});
+	return useQuery([name, url, params], fetchData, {});
 };
 
 export const useCustomFetch = ({
@@ -62,25 +52,41 @@ export const useCustomFetch = ({
 	return useQuery(['data', url, method, body, params], fetchCustomData);
 };
 
-export const useFetchPaginado = ({
+const fetchInfinite = async ({
+	queryKey,
+	pageParam = 0,
+}: QueryFunctionContext) => {
+	setBearerToken();
+	const { data } = await api.get(queryKey[1] as string, {
+		params: {
+			take: queryKey[2] as number,
+			skip: pageParam ?? (queryKey[3] as number),
+			q: queryKey[4] as string,
+		},
+	});
+	return data;
+};
+
+export const useInfiniteFetch = ({
+	name = 'data',
 	url,
-	token,
-	page,
-	limit,
-	sort,
-	order,
-	search,
+	take,
+	skip,
+	q,
 }: {
+	name?: string;
 	url: string;
-	token: string;
-	page: number;
-	limit: number;
-	sort: string;
-	order: string;
-	search: string;
+	take: number;
+	skip: number;
+	q: string;
 }) => {
-	return useQuery(
-		['data', url, token, page, limit, sort, order, search],
-		fetchDataPaginado
+	return useInfiniteQuery<TResponse<TPagination>>(
+		[name, url, take, skip, q],
+		fetchInfinite,
+		{
+			getNextPageParam: (lastPage, allPages) => {
+				return lastPage?.message?.nextCursor + 1 ?? null;
+			},
+		}
 	);
 };

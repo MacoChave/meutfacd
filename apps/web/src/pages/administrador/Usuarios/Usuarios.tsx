@@ -1,9 +1,10 @@
-import { Contenedor, McModal } from '@/components';
-import { URL } from '@/consts/Api';
-import { useCustomFetch } from '@/hooks/useFetch';
+import { Contenedor, DotsLoaders, McModal } from '@/components';
+import { URL, URL_V2 } from '@/consts/Api';
+import { useCustomFetch, useFetch, useInfiniteFetch } from '@/hooks/useFetch';
 import { TUser } from '@/models/Perfil';
 import { deleteData } from '@/services/fetching';
 import { Box, Button, Typography } from '@mui/material';
+import { useQuery } from '@tanstack/react-query';
 import { lazy, useState } from 'react';
 const McTable = lazy(() => import('@/components/MyTable/McTable'));
 const ErrorOperacion = lazy(
@@ -14,11 +15,14 @@ const DetalleUsuario = lazy(() => import('./DetalleUsuario/DetalleUsuario'));
 const Usuarios = () => {
 	const [openModal, setOpenModal] = useState(false);
 	const [usuario, setUsuario] = useState<TUser>({} as TUser);
-	const { data, isSuccess, error, refetch } = useCustomFetch({
-		url: `${URL.GENERIC}/all`,
-		method: 'post',
-		body: { table: 'ut_v_usuarios', sort: { id_usuario: 'asc' } },
-	});
+	const { data, isLoading, error, refetch, fetchNextPage, hasNextPage } =
+		useInfiniteFetch({
+			name: 'users',
+			url: `${URL_V2.USER}/all`,
+			take: 10,
+			skip: 0,
+			q: '',
+		});
 
 	const onEdit = (registro: object) => {
 		setUsuario(registro as TUser);
@@ -38,7 +42,7 @@ const Usuarios = () => {
 		refetch();
 	};
 
-	if (!isSuccess) return <div>Cargando usuarios...</div>;
+	if (isLoading) return <DotsLoaders />;
 	if (error)
 		return (
 			<ErrorOperacion
@@ -62,14 +66,16 @@ const Usuarios = () => {
 				<McTable
 					headers={{
 						nombre: 'Nombre',
+						apellidos: 'Apellidos',
 						correo: 'Correo',
-						roles: 'Rol',
+						carnet: 'Carnet',
 					}}
 					rows={
-						data.map((d: TUser) => ({
-							...d,
-							roles: d.roles ? d.roles.split(' ')[0] : 'Sin rol',
-						})) || []
+						data?.pages[0].message.data ?? []
+						// data.data.map((d: TUser) => ({
+						// 	...d,
+						// 	roles: d.roles ? d.roles.split(' ')[0] : 'Sin rol',
+						// })) || []
 					}
 					totalCols={{}}
 					onEdit={onEdit}
