@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { requireAuth } from '../middlewares/requireAuth';
+import { requireAuth } from '../../middlewares/requireAuth';
 import {
 	bulkInsert,
 	bulkUpdate,
@@ -8,7 +8,7 @@ import {
 	getItem,
 	getItems,
 	updateItem,
-} from '../controllers/permission';
+} from '../../controllers/permission';
 
 const router = Router();
 

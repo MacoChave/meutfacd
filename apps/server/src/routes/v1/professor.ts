@@ -1,6 +1,6 @@
 import { Router } from 'express';
-import { requireAuth } from '../middlewares/requireAuth';
-import { getBySchedule, getItems } from '../controllers/professor';
+import { requireAuth } from '../../middlewares/requireAuth';
+import { getBySchedule, getItems } from '../../controllers/professor';
 
 const router = Router();
 

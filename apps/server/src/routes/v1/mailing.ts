@@ -1,6 +1,6 @@
 import { Router } from 'express';
-import { requireAuth } from '../middlewares/requireAuth';
-import { sendInfoEmail } from '../controllers/mailing';
+import { requireAuth } from '../../middlewares/requireAuth';
+import { sendInfoEmail } from '../../controllers/mailing';
 
 const router = Router();
 

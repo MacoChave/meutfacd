@@ -1,21 +1,32 @@
 import { Request, Response } from 'express';
 import fileUpload from 'express-fileupload';
+import { existsSync, mkdirSync, unlinkSync } from 'fs';
 import path from 'path';
+import { readFile, utils } from 'xlsx';
+import AppDataSource from '../config/orm';
 import { sqlDelete, sqlSelect, sqlUpdate } from '../db/consultas';
-import { errorHttp, successHttp } from '../utils/error.handle';
+import { User } from '../entities/User';
+import { errorHttp, successHttp, verifyOrm } from '../utils/error.handle';
 import { formatDate, newDate } from '../utils/formats';
 import { encryptPassword } from '../utils/token';
-import { existsSync, mkdirSync, unlinkSync } from 'fs';
-import { readFile, utils } from 'xlsx';
-import { AppDataSource } from '../config/orm';
-import { Municipality } from '../entities/Municipality';
-import { createConnection } from 'typeorm';
-import { Department } from '../entities/Department';
+import { Like } from 'typeorm';
 
 const getItem = async ({ params }: Request, res: Response) => {
 	try {
-		const { carnet } = params;
-		res.json({ message: 'Obtener usuario', carnet });
+		verifyOrm();
+
+		let id = params.id ?? 0;
+
+		let userRepo = AppDataSource.getRepository(User);
+		let user = await userRepo.findOne({
+			relations: [
+				'id_municipio',
+				'id_municipio.id_departamento',
+				'roles',
+			],
+			where: { id_usuario: +id },
+		});
+		successHttp(res, 200, user);
 	} catch (error: any) {
 		errorHttp(res, error);
 	}
@@ -35,18 +46,36 @@ const getItems = async (req: Request, res: Response) => {
 	}
 };
 
-const getPaginatedItems = async ({ body, query }: Request, res: Response) => {
+const getAllUser = async ({ query }: Request, res: Response) => {
 	try {
-		let conn = await AppDataSource.initialize();
-		let result = await conn.getRepository(Department).find({
-			relations: ['municipios'],
-			cache: true,
+		verifyOrm();
+
+		let take = query.take ?? 10;
+		let skip = query.skip ?? 0;
+		let q = query?.q ?? '';
+
+		let userRepo = AppDataSource.getRepository(User);
+		let [result, total] = await userRepo.findAndCount({
+			relations: [],
+			where: [
+				{ nombre: Like(`%${q}%`) },
+				{ apellidos: Like(`%${q}%`) },
+				{ correo: Like(`%${q}%`) },
+			],
+			order: { carnet: 'ASC' },
+			take: +take,
+			skip: +skip,
 		});
-		successHttp(res, 200, result);
+
+		let next = +skip + +take;
+
+		successHttp(res, 200, {
+			data: result,
+			total,
+			next: next < total ? next : null,
+		});
 	} catch (error: any) {
 		errorHttp(res, error);
-	} finally {
-		AppDataSource.close();
 	}
 };
 
@@ -78,7 +107,7 @@ const bulkInsert = async (req: Request, res: Response) => {
 	}
 };
 
-const createItem = (req: Request, res: Response) => {
+const createItem = ({ body }: Request, res: Response) => {
 	res.json({ message: 'Crear usuario' });
 };
 
@@ -142,11 +171,11 @@ const deleteItem = async ({ query }: Request, res: Response) => {
 };
 
 export {
-	updateItem,
 	bulkInsert,
 	createItem,
 	deleteItem,
 	getItem,
 	getItems,
-	getPaginatedItems,
+	getAllUser,
+	updateItem,
 };

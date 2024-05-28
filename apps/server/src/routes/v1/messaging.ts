@@ -1,12 +1,12 @@
 import { Router } from 'express';
-import { requireAuth } from '../middlewares/requireAuth';
 import {
 	deleteItem,
 	getItem,
 	getItems,
 	postItem,
 	putItem,
-} from '../controllers/course';
+} from '../../controllers/messaging';
+import { requireAuth } from '../../middlewares/requireAuth';
 
 const router = Router();
 

@@ -1,6 +1,12 @@
 import { Response } from 'express';
 import { JsonWebTokenError, Jwt } from 'jsonwebtoken';
 import { QueryError } from 'mysql2';
+import AppDataSource from '../config/orm';
+
+const verifyOrm = () => {
+	if (!AppDataSource.isConnected)
+		throw new Error('No hay conexión a la base de datos');
+};
 
 const responseJson = (code: number, message: any) => {
 	return {
@@ -58,4 +64,4 @@ const errorHttp = (
 	}
 };
 
-export { successHttp, errorHttp };
+export { successHttp, errorHttp, verifyOrm };

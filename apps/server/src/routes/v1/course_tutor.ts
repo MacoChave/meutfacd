@@ -1,18 +1,20 @@
 import { Router } from 'express';
+import { requireAuth } from '../../middlewares/requireAuth';
 import {
 	deleteItem,
 	getItem,
 	getItems,
 	postItem,
 	putItem,
-} from '../controllers/messaging';
-import { requireAuth } from '../middlewares/requireAuth';
+	updateSalon,
+} from '../../controllers/course_tutor';
 
 const router = Router();
 
 router.get('', requireAuth, getItem);
-router.get('/all', requireAuth, getItems);
+router.post('/all', requireAuth, getItems);
 router.post('', requireAuth, postItem);
+router.put('/salon', requireAuth, updateSalon);
 router.put('', requireAuth, putItem);
 router.delete('', requireAuth, deleteItem);
 

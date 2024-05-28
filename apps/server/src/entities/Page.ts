@@ -11,16 +11,22 @@ import { Rol } from './Rol';
 export class Page extends BaseEntity {
 	@PrimaryGeneratedColumn()
 	id_pagina: number;
+
 	@Column()
 	nombre: string;
+
 	@Column()
 	descripcion: string;
+
 	@Column()
 	ruta: string;
+
 	@Column()
 	id_padre: number;
+
 	@Column()
 	indice: number;
-	@ManyToMany(() => Rol, (rol) => rol.paginas)
-	roles: Rol[];
+
+	// @ManyToMany(() => Rol, (rol) => rol.paginas)
+	// roles: Rol[];
 }

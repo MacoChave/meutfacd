@@ -4,8 +4,9 @@ import express from 'express';
 import fileUpload from 'express-fileupload';
 import { connection } from './config/mysql';
 import { DATA_SOURCES } from './config/vars.config';
-import { router } from './routes';
-import { AppDataSource } from './config/orm';
+import { router as routesV1 } from './routes/v1';
+import { router as routesV2 } from './routes/v2';
+import AppDataSource from './config/orm';
 
 const PORT = DATA_SOURCES.API_PORT;
 
@@ -28,7 +29,8 @@ app.use(
 app.use(express.static('storage'));
 
 // ROUTES
-app.use('/api', router);
+app.use('/api/v1', routesV1);
+app.use('/api/v2', routesV2);
 
 const main = async () => {
 	try {
@@ -66,8 +68,8 @@ const initTypeORM = async () => {
 	} catch (error) {
 		throw new Error('TypeORM connection failed 🤬');
 	} finally {
-		AppDataSource.close();
-		console.log('TypeORM connection closed');
+		// AppDataSource.close();
+		// console.log('TypeORM connection closed');
 	}
 };
 

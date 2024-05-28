@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { requireAuth } from '../middlewares/requireAuth';
+import { requireAuth } from '../../middlewares/requireAuth';
 import {
 	assignReview,
 	deleteItem,
@@ -9,7 +9,7 @@ import {
 	getXlsxReport,
 	postItem,
 	putItem,
-} from '../controllers/review';
+} from '../../controllers/review';
 
 const router = Router();
 

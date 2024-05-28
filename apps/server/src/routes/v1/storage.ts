@@ -4,8 +4,8 @@ import {
 	uploadDictamen,
 	uploadDraft,
 	uploadTesis,
-} from '../controllers/storage';
-import { requireAuth } from '../middlewares/requireAuth';
+} from '../../controllers/storage';
+import { requireAuth } from '../../middlewares/requireAuth';
 
 const router = Router();
 

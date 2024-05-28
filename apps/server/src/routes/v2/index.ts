@@ -12,7 +12,7 @@ readdirSync(PATH_ROUTER).filter((file) => {
 	const cleanedName = cleanFilename(file);
 	if (cleanedName !== 'index') {
 		import(`./${cleanedName}`).then((module) => {
-			console.log(`Cargando ruta 👉  /${cleanedName}`);
+			console.log(`Cargando ruta 👉  /v2/${cleanedName}`);
 			router.use(`/${cleanedName}`, module.router);
 		});
 	}
@@ -20,7 +20,7 @@ readdirSync(PATH_ROUTER).filter((file) => {
 
 router.get('/', (req, res) => {
 	res.json({
-		message: 'MEUT API - v1.0.0',
+		message: 'MEUT API - v2',
 		rutas: readdirSync(PATH_ROUTER).map((file) => {
 			return `/${cleanFilename(file)}`;
 		}),

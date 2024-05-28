@@ -7,8 +7,8 @@ import {
 	recoveryPassword,
 	setRandomPassowrd,
 	verifyEmail,
-} from '../controllers/auth';
-import { requireAuth } from '../middlewares/requireAuth';
+} from '../../controllers/auth';
+import { requireAuth } from '../../middlewares/requireAuth';
 
 const router = Router();
 

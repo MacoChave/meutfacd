@@ -1,6 +1,6 @@
 import { Router } from 'express';
-import { requireAuth } from '../middlewares/requireAuth';
-import { createPrintReport, createReport } from '../controllers/pdf';
+import { requireAuth } from '../../middlewares/requireAuth';
+import { createPrintReport, createReport } from '../../controllers/pdf';
 
 const router = Router();
 

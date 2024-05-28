@@ -1,6 +1,8 @@
 import { Request, Response } from 'express';
-import { errorHttp } from '../utils/error.handle';
+import { errorHttp, successHttp } from '../utils/error.handle';
 import { sqlDelete, sqlInsert, sqlSelect, sqlUpdate } from '../db/consultas';
+import AppDataSource from '../config/orm';
+import { UserRol } from '../entities/UserRol';
 
 export const getItem = ({ query, body, user }: Request, res: Response) => {
 	res.status(200).json({ message: 'OK' });
@@ -15,11 +17,25 @@ export const getItems = async (
 	res: Response
 ) => {
 	try {
-		const results = await sqlSelect({
-			table: 'ut_v_rol',
-			query: { id_usuario: user.primaryKey },
+		let take = query.take ?? 10;
+		let skip = query.skip ?? 0;
+		let q = query?.q ?? '';
+
+		let userRolRepo = AppDataSource.getRepository(UserRol);
+		let [result, total] = await userRolRepo.findAndCount({
+			where: [],
+			order: { id_usuario: 'ASC' },
+			take: +take,
+			skip: +skip,
 		});
-		res.status(200).json(results);
+
+		let next = +skip + +take;
+
+		successHttp(res, 200, {
+			data: result,
+			total,
+			next: next < total ? next : null,
+		});
 	} catch (error: any) {
 		errorHttp(res, error);
 	}

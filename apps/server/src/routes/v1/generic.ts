@@ -5,8 +5,8 @@ import {
 	getItem,
 	getItems,
 	putItem,
-} from '../controllers/generic';
-import { requireAuth } from '../middlewares/requireAuth';
+} from '../../controllers/generic';
+import { requireAuth } from '../../middlewares/requireAuth';
 
 const router = Router();
 

@@ -5,8 +5,8 @@ import {
 	eliminarItem,
 	obtenerItem,
 	obtenerItems,
-} from '../controllers/rol';
-import { requireAuth } from '../middlewares/requireAuth';
+} from '../../controllers/rol';
+import { requireAuth } from '../../middlewares/requireAuth';
 
 const router = Router();
 
