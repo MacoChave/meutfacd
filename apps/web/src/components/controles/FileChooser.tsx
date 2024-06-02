@@ -4,12 +4,14 @@ import { ChangeEvent, DragEvent, useState } from 'react';
 interface fileChooserProps {
 	title?: string;
 	disabled?: boolean;
+	accept?: string[];
 	onUpload: (file: File) => void;
 }
 
 const FileChooser: React.FC<fileChooserProps> = ({
 	title = 'Arrastra tu archivo',
 	disabled = false,
+	accept = ['application/pdf'],
 	onUpload,
 }) => {
 	const [active, setActive] = useState(false);
@@ -95,7 +97,7 @@ const FileChooser: React.FC<fileChooserProps> = ({
 					id='file'
 					type='file'
 					name='file'
-					accept='application/pdf'
+					accept={accept.join(',')}
 					onChange={onChange}
 				/>
 			</Box>

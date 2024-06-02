@@ -85,7 +85,7 @@ export const useInfiniteFetch = ({
 		fetchInfinite,
 		{
 			getNextPageParam: (lastPage, allPages) => {
-				return lastPage?.message?.nextCursor + 1 ?? null;
+				return lastPage?.message?.nextCursor;
 			},
 		}
 	);

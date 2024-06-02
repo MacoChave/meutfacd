@@ -37,4 +37,5 @@ export const URL = {
 
 export const URL_V2 = {
 	USER: '/api/v2/user',
+	ROL: '/api/v2/rol',
 };

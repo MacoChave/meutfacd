@@ -1,4 +1,6 @@
 import Dashboard from '@/components/Layout/Dashboard/Dashboard';
+import { NewUser } from '@/pages/administrador/Usuarios/NewUser';
+import { OneUser } from '@/pages/administrador/Usuarios/OneUser';
 import { lazy } from 'react';
 import { createBrowserRouter } from 'react-router-dom';
 // --------------------
@@ -229,6 +231,14 @@ export const router = createBrowserRouter(
 					element: (
 						<ProtectedRoute rol='administrador'>
 							<UsersApp />
+						</ProtectedRoute>
+					),
+				},
+				{
+					path: 'usuarios/detail',
+					element: (
+						<ProtectedRoute rol='administrador'>
+							<OneUser />
 						</ProtectedRoute>
 					),
 				},

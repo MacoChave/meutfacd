@@ -1,55 +1,35 @@
-import { Contenedor, DotsLoaders, McModal } from '@/components';
-import { URL, URL_V2 } from '@/consts/Api';
-import { useCustomFetch, useFetch, useInfiniteFetch } from '@/hooks/useFetch';
+import { Contenedor, McModal } from '@/components';
+import { URL_V2 } from '@/consts/Api';
+import { TResponse } from '@/models/Fetching';
 import { TUser } from '@/models/Perfil';
 import { deleteData } from '@/services/fetching';
-import { Box, Button, Typography } from '@mui/material';
-import { useQuery } from '@tanstack/react-query';
+import { Add, Clear, Search, Upload } from '@mui/icons-material';
+import { Box, IconButton, TextField } from '@mui/material';
 import { lazy, useState } from 'react';
-const McTable = lazy(() => import('@/components/MyTable/McTable'));
-const ErrorOperacion = lazy(
-	() => import('@/components/ErrorOperacion/ErrorOperacion')
-);
-const DetalleUsuario = lazy(() => import('./DetalleUsuario/DetalleUsuario'));
+import { useNavigate } from 'react-router-dom';
+const FetchUsers = lazy(() => import('./components/FetchUsers/FetchUsers'));
+const NewUser = lazy(() => import('./NewUser/NewUser'));
 
 const Usuarios = () => {
+	const [filter, setFilter] = useState('');
 	const [openModal, setOpenModal] = useState(false);
-	const [usuario, setUsuario] = useState<TUser>({} as TUser);
-	const { data, isLoading, error, refetch, fetchNextPage, hasNextPage } =
-		useInfiniteFetch({
-			name: 'users',
-			url: `${URL_V2.USER}/all`,
-			take: 10,
-			skip: 0,
-			q: '',
-		});
+	const navigate = useNavigate();
 
 	const onEdit = (registro: object) => {
-		setUsuario(registro as TUser);
-		setOpenModal(true);
+		const usuario: TUser = registro as TUser;
+		navigate('detail', { state: { usuario } });
 	};
 
 	const onDelete = async (registro: any) => {
-		const response = await deleteData({
-			path: `${URL.USER}`,
+		const response: TResponse<any> = await deleteData({
+			path: `${URL_V2.USER}`,
 			params: { id_usuario: registro['id_usuario'] },
 		});
-		refetch();
 	};
 
 	const onClose = () => {
 		setOpenModal(false);
-		refetch();
 	};
-
-	if (isLoading) return <DotsLoaders />;
-	if (error)
-		return (
-			<ErrorOperacion
-				error={error}
-				mensaje='No se pudo recuperar los usuarios'
-			/>
-		);
 
 	return (
 		<>
@@ -63,31 +43,60 @@ const Usuarios = () => {
 						gap: 2,
 						mb: 2,
 					}}></Box>
-				<McTable
-					headers={{
-						nombre: 'Nombre',
-						apellidos: 'Apellidos',
-						correo: 'Correo',
-						carnet: 'Carnet',
-					}}
-					rows={
-						data?.pages[0].message.data ?? []
-						// data.data.map((d: TUser) => ({
-						// 	...d,
-						// 	roles: d.roles ? d.roles.split(' ')[0] : 'Sin rol',
-						// })) || []
-					}
-					totalCols={{}}
+				<Box
+					sx={{
+						display: 'flex',
+						flexDirection: 'row',
+						justifyContent: 'flex-start',
+						alignItems: 'baseline',
+						gap: 2,
+					}}>
+					<TextField
+						sx={{ flex: 1 }}
+						label='Filtrar por nombre, apellido o correo electrónico'
+						variant='standard'
+						value={filter}
+						onChange={(e) => setFilter(e.target.value)}
+						InputProps={{
+							startAdornment: <Search color='primary' />,
+							endAdornment: (
+								<IconButton onClick={() => setFilter('')}>
+									<Clear />
+								</IconButton>
+							),
+						}}
+					/>
+					{/* <IconButton
+						onClick={() => {
+							setOpenModal(true);
+						}}
+						color='primary'
+						aria-label='Carga masiva de usuarios'
+						title='Carga masiva de usuarios'>
+						<Upload />
+					</IconButton> */}
+					<IconButton
+						onClick={() => {
+							setOpenModal(true);
+						}}
+						color='primary'
+						aria-label='Agregar usuario'
+						title='Agregar usuario/s'>
+						<Add />
+					</IconButton>
+				</Box>
+				<FetchUsers
+					filter={filter}
 					onEdit={onEdit}
 					onDelete={onDelete}
 				/>
 			</Contenedor>
 			{openModal && (
 				<McModal
-					title='Detalle del usuario'
+					title='Crear uno o varios usuarios'
 					open={openModal}
 					onClose={onClose}>
-					<DetalleUsuario registro={usuario} />
+					<NewUser />
 				</McModal>
 			)}
 		</>

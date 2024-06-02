@@ -48,7 +48,6 @@ const getItems = async (req: Request, res: Response) => {
 
 const getAllUser = async ({ query }: Request, res: Response) => {
 	try {
-		console.log('🛫 getAllUser init');
 		verifyOrm();
 
 		let take = query.take ?? 10;
@@ -73,7 +72,7 @@ const getAllUser = async ({ query }: Request, res: Response) => {
 		// successHttp(res, 200, result);
 		successHttp(res, 200, {
 			data: result,
-			next: next < total ? next : null,
+			nextCursor: next < total ? next : undefined,
 		});
 	} catch (error: any) {
 		errorHttp(res, error);
@@ -109,6 +108,10 @@ const bulkInsert = async (req: Request, res: Response) => {
 };
 
 const createItem = ({ body }: Request, res: Response) => {
+	// TODO: Generar la contraseña
+	// TODO: Ejecutar ut_sp_crear_usuario
+	// TODO: Enviar correo de confirmación
+	console.log({ body });
 	res.json({ message: 'Crear usuario' });
 };
 
