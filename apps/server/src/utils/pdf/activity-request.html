@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="es" translate="no" xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml"
+    xmlns:o="urn:schemas-microsoft-com:office:office">
+
+<head>
+    <!--[if !mso]> -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <!--<![endif] -->
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <!-- GOOGLE FONTS -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500&amp;display=swap" rel="stylesheet"
+        type="text/css" />
+    <style type="text/css">
+        @import url(https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500&amp;display=swap);
+
+        .main {
+            background-color: #f3f3f5;
+            font-family: 'Poppins', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+        }
+
+        .container {
+            background-color: #f3f3f5;
+            display: grid;
+            grid-template-rows: repeat(1fr, 2fr, 1fr);
+            min-height: calc(100vh - 10rem);
+            width: min(70vw, 600px);
+            margin: 4rem auto;
+        }
+
+        .container__header {
+            position: relative;
+            background-color: #c62828;
+            border-radius: 8px 8px 0 0;
+            padding: 2rem;
+        }
+
+        .container__header::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('https://siderusac.com/assets/SIDER_dark_vertical-4a2bcaf4.webp') no-repeat center center;
+            background-size: contain;
+            opacity: 0.5;
+        }
+
+        .container__body {
+            background-color: #ffffff;
+            border-radius: 0 0 8px 8px;
+            padding: 2rem;
+        }
+
+        .container__info {
+            background-color: #d5d5d5;
+            padding: 2rem;
+        }
+
+        .container__footer {
+            background-color: #1a237e;
+            padding: 2rem;
+            color: #FFFFFF;
+            margin: 0;
+            font-size: small;
+            font-weight: 500;
+        }
+
+        .title {
+            color: #ffffff;
+            font-size: xx-large;
+            font-weight: 500;
+        }
+
+        .info {
+            color: #000000AA;
+            font-size: x-small;
+            font-weight: 500;
+        }
+
+        .button__primary {
+            background-color: #1a237e;
+            color: #ffffff;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            text-decoration: none;
+            font-size: small;
+            font-weight: 500;
+        }
+
+        .button__secondary {
+            background-color: #c62828;
+            color: #ffffff;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            text-decoration: none;
+            font-size: small;
+            font-weight: 500;
+        }
+
+        .copyright {
+            font-size: x-small;
+            font-weight: 300;
+            text-align: center;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                width: 90vw;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <main class="main">
+        <div class="container">
+            <!-- HEADER -->
+            <div class="container__header">
+                <p class="title">Unidad de tesis</p>
+            </div>
+
+            <!-- BODY -->
+            <div class="container__body">
+                <p>Hola, {{name}}</p>
+                <p>
+                    El usuario <strong>$emisor</strong> ha realizado cambios en la etapa de {{etapa}} de tu proceso de
+                    tesis.
+                </p>
+                <p>
+                    Puedes revisar los cambios en tu perfil de la Unidad de tesis.
+                </p>
+                <p>
+                    <a class="button__primary" href="https://siderusac.com/unidad-tesis">Revisar</a>
+                </p>
+            </div>
+
+            <!-- INFO -->
+            <div class="container__info">
+                <p class="info">Si no has solicitado este registro o no eres el destinatario previsto, por
+                    favor ignora este mensaje.</p>
+            </div>
+            <!-- FOOTER -->
+            <div class="container__footer">
+                <a class="button__secondary" href="https://siderusac.com/unidad-tesis">Unidad de
+                    tesis</a>
+                <p class="copyright">Administración 2021-2025 Decano Henry Arriaga</p>
+            </div>
+        </div>
+    </main>
+</body>
+
+</html>

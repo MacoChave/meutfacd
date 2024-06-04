@@ -140,7 +140,7 @@ export const sendEmail = async ({
 		to: to,
 		subject: subject,
 		text: plainText,
-		html: getHTML({ body: content }),
+		html: content,
 	});
 
 	return info;
