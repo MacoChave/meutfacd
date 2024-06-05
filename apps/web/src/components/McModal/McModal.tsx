@@ -23,13 +23,14 @@ const McModal: React.FC<McModalProps> = ({
 					top: '50%',
 					left: '50%',
 					transform: 'translate(-50%, -50%)',
-					// height: '80vh',
+					maxHeight: '90vh',
 					width: { xs: '90vw', sm: '80vw', md: '60vw' },
 					bgcolor: 'background.paper',
 					border: '2px solid #000',
 					boxShadow: 24,
 					p: 4,
-					overflowY: 'auto',
+					overflowY: 'scroll',
+					overflowX: 'hidden',
 				}}>
 				<IconButton
 					sx={{ position: 'absolute', top: 0, right: 0 }}

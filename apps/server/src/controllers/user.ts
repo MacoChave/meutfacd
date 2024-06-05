@@ -1,15 +1,19 @@
 import { Request, Response } from 'express';
 import fileUpload from 'express-fileupload';
-import { existsSync, mkdirSync, unlinkSync } from 'fs';
+import { existsSync, mkdirSync, readFileSync, unlinkSync } from 'fs';
 import path from 'path';
 import { readFile, utils } from 'xlsx';
 import AppDataSource from '../config/orm';
-import { sqlDelete, sqlSelect, sqlUpdate } from '../db/consultas';
+import { sqlDelete, sqlEjecutar, sqlSelect, sqlUpdate } from '../db/consultas';
 import { User } from '../entities/User';
 import { errorHttp, successHttp, verifyOrm } from '../utils/error.handle';
 import { formatDate, newDate } from '../utils/formats';
 import { encryptPassword } from '../utils/token';
-import { Like } from 'typeorm';
+import { DataSource, Like } from 'typeorm';
+import { DATA_SOURCES } from '../config/vars.config';
+import { sendEmail } from '../utils/email';
+import { logger } from '../utils/logger';
+import { getRandomPassword } from '../utils/password';
 
 const getItem = async ({ params }: Request, res: Response) => {
 	try {
@@ -107,12 +111,80 @@ const bulkInsert = async (req: Request, res: Response) => {
 	}
 };
 
-const createItem = ({ body }: Request, res: Response) => {
-	// TODO: Generar la contraseña
-	// TODO: Ejecutar ut_sp_crear_usuario
-	// TODO: Enviar correo de confirmación
-	console.log({ body });
-	res.json({ message: 'Crear usuario' });
+const createItem = async ({ body }: Request, res: Response) => {
+	try {
+		// TODO: Generar la contraseña
+		let pass = getRandomPassword();
+		let passHash = await encryptPassword(pass);
+
+		console.log({ pass, passHash })
+
+		const newUser = {
+			nombre: body.nombre,
+			apellidos: body.apellidos,
+			genero: body.genero,
+			correo: body.correo,
+			pass: passHash,
+			direccion: body.direccion,
+			fecha_nac: formatDate({
+				date: newDate(body.fecha_nac, 'es'),
+				format: 'mysql',
+				type: 'date',
+			}),
+			id_municipio: 1,
+			carnet: body.carnet,
+			cui: body.cui,
+			rol: body.id_rol,
+		};
+
+		const keys: string[] = Object.keys(newUser).map((key) => '?');
+		keys.push(...['@error_code', '@error_message']);
+		const values = Object.values(newUser).map((value) => value);
+
+		// TODO: Ejecutar ut_sp_crear_usuario
+		await sqlEjecutar({
+			sql: `call ut_sp_crear_usuario(${keys.join(',')})`,
+			values,
+		});
+
+		const [errorInfo]: any = await sqlEjecutar({
+			sql: `select @error_code, @error_message`,
+		});
+
+		const { error_code, error_message } = errorInfo;
+
+		console.log({ error_code, error_message });
+
+		if (error_code && error_code !== 0) {
+			throw new Error(error_message);
+		}
+
+		let html = readFileSync(
+			`${__dirname}/../utils/pdf/confirm-email.html`,
+			'utf-8'
+		);
+
+		html = html.replace('{{nombre}}', body.nombre);
+		html = html.replace('{{url}}', DATA_SOURCES.URL_EMAIL_VERIFIED);
+
+		if (DATA_SOURCES.SEND_EMAIL == 'true') {
+			const result = await sendEmail({
+				to: body.correo,
+				plainText: 'Correo de la unidad de tesis',
+				subject: 'Verificación de correo electrónico',
+				content: html,
+			});
+			logger({
+				dirname: __dirname,
+				proc: 'logupHandler',
+				message: result,
+			});
+		}
+
+		successHttp(res, 200, { pass });
+	} catch (error: any) {
+		errorHttp(res, error);
+	}
 };
 
 const updateItem = async ({ body, query, user }: Request, res: Response) => {

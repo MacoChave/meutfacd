@@ -35,6 +35,7 @@ const NewUser: React.FC<NewUserProps> = ({}) => {
 					display: 'flex',
 					flexDirection: 'row',
 					justifyContent: 'space-between',
+					flexWrap: 'wrap',
 					gap: 2,
 					pt: 2,
 				}}>
@@ -49,7 +50,7 @@ const NewUser: React.FC<NewUserProps> = ({}) => {
 				<FormUser
 					id_rol={curRol.id_rol}
 					style={{
-						flex: 1,
+						flex: 2,
 					}}
 				/>
 			</Box>

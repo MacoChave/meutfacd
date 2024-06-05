@@ -66,15 +66,6 @@ const Usuarios = () => {
 							),
 						}}
 					/>
-					{/* <IconButton
-						onClick={() => {
-							setOpenModal(true);
-						}}
-						color='primary'
-						aria-label='Carga masiva de usuarios'
-						title='Carga masiva de usuarios'>
-						<Upload />
-					</IconButton> */}
 					<IconButton
 						onClick={() => {
 							setOpenModal(true);

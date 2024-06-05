@@ -54,8 +54,8 @@ const FormUser: React.FC<FormUserProps> = ({ id_rol, style }) => {
 		<Box
 			component={'form'}
 			sx={{
-				display: 'flex',
-				flexDirection: 'column',
+				display: 'grid',
+				gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' },
 				gap: 2,
 				...style,
 			}}
