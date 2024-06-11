@@ -12,7 +12,7 @@ export class Period extends BaseEntity {
 	@PrimaryGeneratedColumn()
 	id_jornada: number;
 
-	@Column()
+	@Column({ type: 'varchar', length: 45 })
 	nombre: string;
 
 	@OneToMany(() => Schedule, (schedule: Schedule) => schedule.id_jornada)

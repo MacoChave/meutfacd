@@ -11,8 +11,8 @@ import {
 
 const router = Router();
 
-router.get('', requireAuth, getItem);
-router.post('/all', requireAuth, getItems);
+router.get('/all', requireAuth, getItems);
+router.get('/:id', requireAuth, getItem);
 router.post('', requireAuth, postItem);
 router.put('/salon', requireAuth, updateSalon);
 router.put('', requireAuth, putItem);

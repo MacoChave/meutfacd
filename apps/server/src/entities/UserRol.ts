@@ -1,4 +1,10 @@
-import { BaseEntity, Entity, ManyToOne, PrimaryColumn } from 'typeorm';
+import {
+	BaseEntity,
+	Entity,
+	JoinColumn,
+	ManyToOne,
+	PrimaryColumn,
+} from 'typeorm';
 import { User } from './User';
 import { Rol } from './Rol';
 
@@ -11,8 +17,10 @@ export class UserRol extends BaseEntity {
 	id_rol: number;
 
 	@ManyToOne(() => User, (user: User) => user.roles)
+	@JoinColumn({ name: 'id_usuario' })
 	user: User;
 
 	@ManyToOne(() => Rol, (rol: Rol) => rol.users)
+	@JoinColumn({ name: 'id_rol' })
 	rol: Rol;
 }

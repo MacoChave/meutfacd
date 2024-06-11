@@ -10,8 +10,8 @@ import {
 
 const router = Router();
 
-router.post('/one', requireAuth, getItem);
-router.post('/all', requireAuth, getItems);
+router.get('/all', requireAuth, getItems);
+router.get('/:id', requireAuth, getItem);
 router.post('', requireAuth, createItem);
 router.put('', requireAuth, updateItem);
 router.delete('', requireAuth, deleteItem);

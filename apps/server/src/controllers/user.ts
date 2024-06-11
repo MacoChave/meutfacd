@@ -2,23 +2,21 @@ import { Request, Response } from 'express';
 import fileUpload from 'express-fileupload';
 import { existsSync, mkdirSync, readFileSync, unlinkSync } from 'fs';
 import path from 'path';
+import { Like } from 'typeorm';
 import { readFile, utils } from 'xlsx';
 import AppDataSource from '../config/orm';
+import { DATA_SOURCES } from '../config/vars.config';
 import { sqlDelete, sqlEjecutar, sqlSelect, sqlUpdate } from '../db/consultas';
 import { User } from '../entities/User';
+import { sendEmail } from '../utils/email';
 import { errorHttp, successHttp, verifyOrm } from '../utils/error.handle';
 import { formatDate, newDate } from '../utils/formats';
-import { encryptPassword } from '../utils/token';
-import { DataSource, Like } from 'typeorm';
-import { DATA_SOURCES } from '../config/vars.config';
-import { sendEmail } from '../utils/email';
 import { logger } from '../utils/logger';
 import { getRandomPassword } from '../utils/password';
+import { encryptPassword } from '../utils/token';
 
 const getItem = async ({ params }: Request, res: Response) => {
 	try {
-		verifyOrm();
-
 		let id = params.id ?? 0;
 
 		let userRepo = AppDataSource.getRepository(User);
@@ -27,6 +25,9 @@ const getItem = async ({ params }: Request, res: Response) => {
 				'id_municipio',
 				'id_municipio.id_departamento',
 				'roles',
+				'profile',
+				'profile.schedule',
+				'profile.schedule.period',
 			],
 			where: { id_usuario: +id },
 		});
@@ -36,7 +37,7 @@ const getItem = async ({ params }: Request, res: Response) => {
 	}
 };
 
-const getItems = async (req: Request, res: Response) => {
+const getItems = async ({ body, query }: Request, res: Response) => {
 	try {
 		const results = await sqlSelect({
 			table: 'ut_v_usuarios',
@@ -117,7 +118,7 @@ const createItem = async ({ body }: Request, res: Response) => {
 		let pass = getRandomPassword();
 		let passHash = await encryptPassword(pass);
 
-		console.log({ pass, passHash })
+		console.log({ pass, passHash });
 
 		const newUser = {
 			nombre: body.nombre,
@@ -250,8 +251,8 @@ export {
 	bulkInsert,
 	createItem,
 	deleteItem,
+	getAllUser,
 	getItem,
 	getItems,
-	getAllUser,
 	updateItem,
 };

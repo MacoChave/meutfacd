@@ -1,32 +1,50 @@
 import { Request, Response } from 'express';
-import { errorHttp } from '../utils/error.handle';
-import {
-	sqlDelete,
-	sqlEjecutar,
-	sqlInsert,
-	sqlSelect,
-	sqlUpdate,
-} from '../db/consultas';
+import AppDataSource from '../config/orm';
+import { sqlDelete, sqlInsert, sqlSelect, sqlUpdate } from '../db/consultas';
+import { Schedule } from '../entities/Schedule';
+import { errorHttp, successHttp } from '../utils/error.handle';
 
-export const getItem = async ({ body, query }: Request, res: Response) => {
+export const getItem = async ({ params }: Request, res: Response) => {
 	try {
-		const result = await sqlSelect({
-			table: 'ut_horario',
-			query,
-			...body,
+		let { period, schedule } = params;
+
+		let scheduleRepo = AppDataSource.getRepository(Schedule);
+		let result = await scheduleRepo.findOne({
+			relations: ['id_jornada'],
+			where: {
+				id_jornada: +period,
+				id_horario: +schedule,
+			},
 		});
-		return res.status(200).json(result);
+		successHttp(res, 200, result);
 	} catch (error) {
 		errorHttp(res, error as any);
 	}
 };
 
-export const getItems = async ({ body, query }: Request, res: Response) => {
+export const getItems = async ({ query }: Request, res: Response) => {
 	try {
-		const result = await sqlEjecutar({
-			sql: `SELECT h.*, j.nombre jornada FROM ut_horario h JOIN ut_jornada j ON h.id_jornada = j.id_jornada`,
+		let take = query.take ?? 10;
+		let skip = query.skip ?? 0;
+		let q = query?.q ?? '';
+
+		let scheduleRepo = AppDataSource.getRepository(Schedule);
+		let [result, total] = await scheduleRepo.findAndCount({
+			relations: [],
+			where: [],
+			order: {
+				hora_inicio: 'ASC',
+			},
+			take: +take,
+			skip: +skip,
 		});
-		return res.status(200).json(result);
+
+		let next = +skip + +take;
+
+		successHttp(res, 200, {
+			data: result,
+			nextCursor: next < total ? next : undefined,
+		});
 	} catch (error) {
 		errorHttp(res, error as any);
 	}

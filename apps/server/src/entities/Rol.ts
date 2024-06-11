@@ -4,10 +4,12 @@ import {
 	Entity,
 	JoinTable,
 	ManyToMany,
+	OneToMany,
 	PrimaryGeneratedColumn,
 } from 'typeorm';
 import { User } from './User';
 import { Page } from './Page';
+import { UserRol } from './UserRol';
 
 @Entity('rol')
 export class Rol extends BaseEntity {
@@ -22,6 +24,9 @@ export class Rol extends BaseEntity {
 
 	@ManyToMany(() => User, (user: User) => user.roles)
 	users: User[];
+
+	@OneToMany(() => UserRol, (userRol: UserRol) => userRol.rol)
+	userRoles: UserRol[];
 
 	@ManyToMany(() => Page)
 	@JoinTable({

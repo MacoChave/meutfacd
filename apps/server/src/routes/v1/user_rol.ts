@@ -10,6 +10,7 @@ import {
 
 const router = Router();
 
+router.get('/user/:user/rol/:rol', requireAuth, () => {});
 router.post('/one', requireAuth, getItem);
 router.get('/all', requireAuth, getItems);
 router.post('/', requireAuth, postItem);

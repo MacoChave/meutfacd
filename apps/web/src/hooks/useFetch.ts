@@ -9,10 +9,30 @@ import {
 
 const fetchData = async ({ queryKey }: QueryFunctionContext) => {
 	setBearerToken();
+	let queryParams = '';
+	if (queryKey[3] !== undefined) {
+		queryParams = `?${Object.entries(queryKey[2] as Object)
+			.map(([key, value]) => `${key}=${value}`)
+			.join('&')}`;
+	}
 	const { data } = await api.get(queryKey[1] as string, {
 		params: queryKey[2] as Object,
 	});
 	return data;
+};
+
+export const useFetch = ({
+	name = 'data',
+	url,
+	params = {},
+	query = undefined,
+}: {
+	name?: string;
+	url: string;
+	params?: Object;
+	query?: Object;
+}) => {
+	return useQuery([name, url, params, query], fetchData, {});
 };
 
 const fetchCustomData = async ({ queryKey }: QueryFunctionContext) => {
@@ -24,18 +44,6 @@ const fetchCustomData = async ({ queryKey }: QueryFunctionContext) => {
 		params: queryKey[4] as Object,
 	});
 	return data;
-};
-
-export const useFetch = ({
-	name = 'data',
-	url,
-	params = {},
-}: {
-	name?: string;
-	url: string;
-	params?: Object;
-}) => {
-	return useQuery([name, url, params], fetchData, {});
 };
 
 export const useCustomFetch = ({

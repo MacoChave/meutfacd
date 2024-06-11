@@ -1,10 +1,4 @@
-import {
-	Column,
-	Entity,
-	JoinColumn,
-	OneToMany,
-	PrimaryGeneratedColumn,
-} from 'typeorm';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { Municipality } from './Municipality';
 
 @Entity('departamento')
