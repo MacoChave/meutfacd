@@ -11,6 +11,8 @@ import {
 import { DATA_SOURCES } from '../config/vars.config';
 import { logger } from '../utils/logger';
 import { formatDate } from '../utils/formats';
+import { userAuth } from '../services/user.services';
+import { Usuario } from '../entities/Usuario';
 
 const signIn = async ({ user, password }: TSignIn) => {
 	try {
@@ -255,30 +257,41 @@ export const logupHandler = async ({ body, query }: Request, res: Response) => {
 
 export const loginHandler = async ({ body }: Request, res: Response) => {
 	try {
-		const userData: TSignIn = {
-			user: body.correo,
-			password: body.pass,
-		};
+		if (!body.correo) throw new Error('Correo no especificado');
+		if (!body.pass) throw new Error('Contraseña no especificada');
 
-		// CONSULTA SIN MICROSERVICIO AUT
-		const result = await signIn(userData);
+		let user: Usuario = await userAuth(body);
 
-		// CONSULTA A MICROSERVICIO AUTH
-		// const response = await axios.post(
-		// 	`${DATA_SOURCES.AUTH_HOST}:${DATA_SOURCES.AUTH_PORT}/login`,
-		// 	userData,
-		// 	{
-		// 		headers: {
-		// 			'Content-Type': 'application/json',
-		// 		},
-		// 	}
-		// );
-		// logger({
-		// 	dirname: __dirname,
-		// 	proc: 'loginHandler',
-		// 	message: response.data,
-		// });
-		res.status(200).json(result);
+		const token = generarToken({
+			primaryKey: user.id_usuario,
+			carnet: user.carnet,
+		});
+
+		successHttp(res, 200, { token, name: user.nombre, roles: user.roles });
+		// const userData: TSignIn = {
+		// 	user: body.correo,
+		// 	password: body.pass,
+		// };
+
+		// // CONSULTA SIN MICROSERVICIO AUT
+		// const result = await signIn(userData);
+
+		// // CONSULTA A MICROSERVICIO AUTH
+		// // const response = await axios.post(
+		// // 	`${DATA_SOURCES.AUTH_HOST}:${DATA_SOURCES.AUTH_PORT}/login`,
+		// // 	userData,
+		// // 	{
+		// // 		headers: {
+		// // 			'Content-Type': 'application/json',
+		// // 		},
+		// // 	}
+		// // );
+		// // logger({
+		// // 	dirname: __dirname,
+		// // 	proc: 'loginHandler',
+		// // 	message: response.data,
+		// // });
+		// res.status(200).json(result);
 	} catch (error: any) {
 		errorHttp(res, error);
 	}

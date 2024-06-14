@@ -1,8 +1,6 @@
 import { Request, Response } from 'express';
-import { errorHttp, successHttp } from '../utils/error.handle';
 import { sqlDelete, sqlInsert, sqlSelect, sqlUpdate } from '../db/consultas';
-import AppDataSource from '../config/orm';
-import { UserRol } from '../entities/UserRol';
+import { errorHttp } from '../utils/error.handle';
 
 export const getItem = ({ query, params }: Request, res: Response) => {
 	try {
@@ -14,24 +12,28 @@ export const getItem = ({ query, params }: Request, res: Response) => {
 
 export const getItems = async ({ query, params }: Request, res: Response) => {
 	try {
-		let take = query.take ?? 10;
-		let skip = query.skip ?? 0;
-		let q = query?.q ?? '';
+		// let take = query.take ?? 10;
+		// let skip = query.skip ?? 0;
+		// let q = query?.q ?? '';
 
-		let userRolRepo = AppDataSource.getRepository(UserRol);
-		let [result, total] = await userRolRepo.findAndCount({
-			relations: ['user', 'rol'],
-			where: [],
-			order: {},
-			take: +take,
-			skip: +skip,
-		});
+		// let userRolRepo = AppDataSource.getRepository(UserRol);
+		// let [result, total] = await userRolRepo.findAndCount({
+		// 	relations: ['user', 'rol'],
+		// 	where: [],
+		// 	order: {},
+		// 	take: +take,
+		// 	skip: +skip,
+		// });
 
-		let next = +skip + +take;
+		// let next = +skip + +take;
 
-		successHttp(res, 200, {
-			data: result,
-			next: next < total ? next : undefined,
+		// successHttp(res, 200, {
+		// 	data: result,
+		// 	next: next < total ? next : undefined,
+		// });
+		const response = await sqlSelect({
+			...query,
+			table: 'usuario_rol',
 		});
 	} catch (error: any) {
 		errorHttp(res, error);

@@ -52,7 +52,7 @@ const checkDBConection = async () => {
 			console.log('Database connected 👌');
 		})
 		.catch((err) => {
-			throw new Error('Database connection failed 🤬');
+			throw new Error(`Database connection failed 🤬 ${err}`);
 		})
 		.finally(() => {
 			conn.end();
@@ -66,7 +66,7 @@ const initTypeORM = async () => {
 		await AppDataSource.initialize();
 		console.log('TypeORM connected 👌');
 	} catch (error) {
-		throw new Error('TypeORM connection failed 🤬');
+		throw new Error(`TypeORM error connection 🤬: ${error}`);
 	} finally {
 		// AppDataSource.close();
 		// console.log('TypeORM connection closed');

@@ -7,7 +7,7 @@ import { readFile, utils } from 'xlsx';
 import AppDataSource from '../config/orm';
 import { DATA_SOURCES } from '../config/vars.config';
 import { sqlDelete, sqlEjecutar, sqlSelect, sqlUpdate } from '../db/consultas';
-import { User } from '../entities/User';
+import { User } from '../entities/Usuario';
 import { sendEmail } from '../utils/email';
 import { errorHttp, successHttp, verifyOrm } from '../utils/error.handle';
 import { formatDate, newDate } from '../utils/formats';
@@ -17,21 +17,22 @@ import { encryptPassword } from '../utils/token';
 
 const getItem = async ({ params }: Request, res: Response) => {
 	try {
-		let id = params.id ?? 0;
+		// let id = params.id ?? 0;
 
-		let userRepo = AppDataSource.getRepository(User);
-		let user = await userRepo.findOne({
-			relations: [
-				'id_municipio',
-				'id_municipio.id_departamento',
-				'roles',
-				'profile',
-				'profile.schedule',
-				'profile.schedule.period',
-			],
-			where: { id_usuario: +id },
-		});
-		successHttp(res, 200, user);
+		// let userRepo = AppDataSource.getRepository(User);
+		// let user = await userRepo.findOne({
+		// 	relations: [
+		// 		'id_municipio',
+		// 		'id_municipio.id_departamento',
+		// 		'roles',
+		// 		'profile',
+		// 		'profile.schedule',
+		// 		'profile.schedule.period',
+		// 	],
+		// 	where: { id_usuario: +id },
+		// });
+		// successHttp(res, 200, user);
+		successHttp(res, 200, {});
 	} catch (error: any) {
 		errorHttp(res, error);
 	}
@@ -53,31 +54,35 @@ const getItems = async ({ body, query }: Request, res: Response) => {
 
 const getAllUser = async ({ query }: Request, res: Response) => {
 	try {
-		verifyOrm();
+		// verifyOrm();
 
-		let take = query.take ?? 10;
-		let skip = query.skip ?? 0;
-		let q = query?.q ?? '';
+		// let take = query.take ?? 10;
+		// let skip = query.skip ?? 0;
+		// let q = query?.q ?? '';
 
-		let userRepo = AppDataSource.getRepository(User);
-		let [result, total] = await userRepo.findAndCount({
-			relations: [],
-			where: [
-				{ nombre: Like(`%${q}%`) },
-				{ apellidos: Like(`%${q}%`) },
-				{ correo: Like(`%${q}%`) },
-			],
-			order: { carnet: 'ASC' },
-			take: +take,
-			skip: +skip,
-		});
+		// let userRepo = AppDataSource.getRepository(User);
+		// let [result, total] = await userRepo.findAndCount({
+		// 	relations: [],
+		// 	where: [
+		// 		{ nombre: Like(`%${q}%`) },
+		// 		{ apellidos: Like(`%${q}%`) },
+		// 		{ correo: Like(`%${q}%`) },
+		// 	],
+		// 	order: { carnet: 'ASC' },
+		// 	take: +take,
+		// 	skip: +skip,
+		// });
 
-		let next = +skip + +take;
+		// let next = +skip + +take;
 
-		// successHttp(res, 200, result);
-		successHttp(res, 200, {
-			data: result,
-			nextCursor: next < total ? next : undefined,
+		// // successHttp(res, 200, result);
+		// successHttp(res, 200, {
+		// 	data: result,
+		// 	nextCursor: next < total ? next : undefined,
+		// });
+		const response = await sqlSelect({
+			...query,
+			table: 'ut_v_usuarios',
 		});
 	} catch (error: any) {
 		errorHttp(res, error);

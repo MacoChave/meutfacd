@@ -13,12 +13,16 @@ const obtenerItem = (req: Request, res: Response) => {
 
 const obtenerItems = async ({ query, user }: Request, res: Response) => {
 	try {
-		verifyOrm();
+		// verifyOrm();
 
-		let rolRepo = AppDataSource.getRepository(Rol);
-		let result = await rolRepo.find();
+		// let rolRepo = AppDataSource.getRepository(Rol);
+		// let result = await rolRepo.find();
 
-		successHttp(res, 200, result);
+		// successHttp(res, 200, result);
+		const response = await sqlSelect({
+			...query,
+			table: 'ut_rol',
+		});
 	} catch (error: any) {
 		errorHttp(res, error);
 	}

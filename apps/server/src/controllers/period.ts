@@ -1,27 +1,20 @@
 import { Request, Response } from 'express';
+import { sqlDelete, sqlInsert, sqlUpdate } from '../db/consultas';
 import { errorHttp, successHttp } from '../utils/error.handle';
-import {
-	sqlDelete,
-	sqlInsert,
-	sqlSelect,
-	sqlSelectOne,
-	sqlUpdate,
-} from '../db/consultas';
-import AppDataSource from '../config/orm';
-import { Period } from '../entities/Period';
 
 export const getItem = async ({ params }: Request, res: Response) => {
 	try {
-		let id = params.id ?? 0;
+		// let id = params.id ?? 0;
 
-		let periodRepo = AppDataSource.getRepository(Period);
-		let result = await periodRepo.findOne({
-			relations: ['schedules'],
-			where: {
-				id_jornada: +id,
-			},
-		});
-		successHttp(res, 200, result);
+		// let periodRepo = AppDataSource.getRepository(Period);
+		// let result = await periodRepo.findOne({
+		// 	relations: ['schedules'],
+		// 	where: {
+		// 		id_jornada: +id,
+		// 	},
+		// });
+		// successHttp(res, 200, result);
+		successHttp(res, 200, {});
 	} catch (error) {
 		errorHttp(res, error as any);
 	}
@@ -29,23 +22,24 @@ export const getItem = async ({ params }: Request, res: Response) => {
 
 export const getItems = async ({ query }: Request, res: Response) => {
 	try {
-		let take = query.take ?? 10;
-		let skip = query.skip ?? 0;
+		// let take = query.take ?? 10;
+		// let skip = query.skip ?? 0;
 
-		let periodRepo = AppDataSource.getRepository(Period);
-		let [result, total] = await periodRepo.findAndCount({
-			relations: [],
-			where: [],
-			take: +take,
-			skip: +skip,
-		});
+		// let periodRepo = AppDataSource.getRepository(Period);
+		// let [result, total] = await periodRepo.findAndCount({
+		// 	relations: [],
+		// 	where: [],
+		// 	take: +take,
+		// 	skip: +skip,
+		// });
 
-		let next = +skip + +take;
+		// let next = +skip + +take;
 
-		successHttp(res, 200, {
-			data: result,
-			nextCursor: next < total ? next : undefined,
-		});
+		// successHttp(res, 200, {
+		// 	data: result,
+		// 	nextCursor: next < total ? next : undefined,
+		// });
+		successHttp(res, 200, {});
 	} catch (error) {
 		errorHttp(res, error as any);
 	}

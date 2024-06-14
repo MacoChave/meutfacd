@@ -6,17 +6,17 @@ import { errorHttp, successHttp, verifyOrm } from '../utils/error.handle';
 
 export const getItem = async ({ params }: Request, res: Response) => {
 	try {
-		verifyOrm();
+		// verifyOrm();
 
-		let { id } = params;
+		// let { id } = params;
 
-		let courseTutorRepo = AppDataSource.getRepository(CourseTutor);
-		let result = await courseTutorRepo.findOne({
-			relations: ['tutor', 'course', 'schedule', 'schedule.period'],
-			where: { id_curso_tutor: +id },
-		});
+		// let courseTutorRepo = AppDataSource.getRepository(CourseTutor);
+		// let result = await courseTutorRepo.findOne({
+		// 	relations: ['tutor', 'course', 'schedule', 'schedule.period'],
+		// 	where: { id_curso_tutor: +id },
+		// });
 
-		successHttp(res, 200, result);
+		successHttp(res, 200, {});
 	} catch (error) {
 		errorHttp(res, error as any);
 	}
@@ -24,27 +24,28 @@ export const getItem = async ({ params }: Request, res: Response) => {
 
 export const getItems = async ({ query }: Request, res: Response) => {
 	try {
-		let take = query.take ?? 10;
-		let skip = query.skip ?? 0;
-		let q = query?.q ?? undefined;
+		// let take = query.take ?? 10;
+		// let skip = query.skip ?? 0;
+		// let q = query?.q ?? undefined;
 
-		let courseTutorRepo = AppDataSource.getRepository(CourseTutor);
-		let [result, total] = await courseTutorRepo.findAndCount({
-			relations: ['tutor', 'course', 'schedule', 'schedule.period'],
-			where: [],
-			order: {
-				fecha: 'DESC',
-				id_curso: 'ASC',
-			},
-			take: +take,
-			skip: +skip,
-		});
+		// let courseTutorRepo = AppDataSource.getRepository(CourseTutor);
+		// let [result, total] = await courseTutorRepo.findAndCount({
+		// 	relations: ['tutor', 'course', 'schedule', 'schedule.period'],
+		// 	where: [],
+		// 	order: {
+		// 		fecha: 'DESC',
+		// 		id_curso: 'ASC',
+		// 	},
+		// 	take: +take,
+		// 	skip: +skip,
+		// });
 
-		let next = +skip + +take;
-		successHttp(res, 200, {
-			data: result,
-			next: next < total ? next : undefined,
-		});
+		// let next = +skip + +take;
+		// successHttp(res, 200, {
+		// 	data: result,
+		// 	next: next < total ? next : undefined,
+		// });
+		successHttp(res, 200, {});
 	} catch (error) {
 		errorHttp(res, error as any);
 	}
