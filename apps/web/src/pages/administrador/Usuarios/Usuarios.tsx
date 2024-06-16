@@ -3,7 +3,7 @@ import { URL_V2 } from '@/consts/Api';
 import { TResponse } from '@/models/Fetching';
 import { TUser } from '@/models/Perfil';
 import { deleteData } from '@/services/fetching';
-import { Add, Clear, Search, Upload } from '@mui/icons-material';
+import { Add, Clear, Search } from '@mui/icons-material';
 import { Box, IconButton, TextField } from '@mui/material';
 import { lazy, useState } from 'react';
 import { useNavigate } from 'react-router-dom';

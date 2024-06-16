@@ -10,7 +10,7 @@ import { FormProvider, SubmitHandler, useForm } from 'react-hook-form';
 import { useLocation } from 'react-router-dom';
 import { DetalleUsuario } from '../DetalleUsuario';
 import { useFetch } from '@/hooks/useFetch';
-import { URL_V2 } from '@/consts/Api';
+import { URL, URL_V2 } from '@/consts/Api';
 
 export type OneUserProps = {
 	// types...
@@ -21,7 +21,7 @@ const OneUser: React.FC<OneUserProps> = ({}) => {
 	const { usuario } = location.state;
 
 	const { data, error, isLoading, isError } = useFetch({
-		url: `${URL_V2.USER}/${usuario.id_usuario || 0}`,
+		url: `${URL.USER}/${usuario.id_usuario || 0}`,
 		name: 'user',
 	});
 
@@ -29,13 +29,13 @@ const OneUser: React.FC<OneUserProps> = ({}) => {
 
 	if (isError)
 		<ErrorOperacion
-			error={error}
+			error={data.error}
 			mensaje='Hubo un error al obtener los datos del usuario'
 		/>;
 
 	return (
 		<Contenedor title='Detalle de usuario'>
-			<DetalleUsuario registro={usuario} />
+			<DetalleUsuario registro={data.message} />
 		</Contenedor>
 	);
 };

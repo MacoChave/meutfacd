@@ -11,8 +11,9 @@ const verifyOrm = () => {
 const responseJson = (code: number, message: any) => {
 	return {
 		code,
-		message: code === 200 ? message : 'Error',
-		error: code !== 200 ? message : '',
+		message:
+			code == 200 ? message : 'Ocurrió un error. Ver propiedad error',
+		error: code != 200 ? message : '',
 	};
 };
 

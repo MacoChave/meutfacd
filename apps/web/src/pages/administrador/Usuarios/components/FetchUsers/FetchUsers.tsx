@@ -1,6 +1,6 @@
 'use client';
 import { DotsLoaders, McTable } from '@/components';
-import { URL_V2 } from '@/consts/Api';
+import { URL } from '@/consts/Api';
 import { useInfiniteFetch } from '@/hooks/useFetch';
 import { Button, Typography } from '@mui/material';
 import React from 'react';
@@ -19,7 +19,7 @@ const FetchUsers: React.FC<FetchUsersProps> = ({
 	const { data, isLoading, error, fetchNextPage, hasNextPage } =
 		useInfiniteFetch({
 			name: 'users',
-			url: `${URL_V2.USER}/all`,
+			url: `${URL.USER}/all`,
 			take: 10,
 			skip: 0,
 			q: filter,

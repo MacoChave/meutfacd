@@ -1,6 +1,10 @@
 import {
 	APROBADO,
+	CORREO_DESACTIVADO,
+	CORREO_NO_VERIFICADO,
+	CORREO_VERIFICADO,
 	ESPERA,
+	INACTIVO,
 	PENDIENTE,
 	PREVIA,
 	RECHAZADO,
@@ -44,6 +48,12 @@ export const getChipLabel = (code: string) => {
 			return 'Previo';
 		case APROBADO:
 			return 'Aprobado';
+		case CORREO_VERIFICADO:
+			return 'Verificado';
+		case CORREO_NO_VERIFICADO:
+			return 'No verificado';
+		case CORREO_DESACTIVADO:
+			return 'Desactivado';
 		default:
 			return 'Sin datos';
 	}
@@ -63,6 +73,12 @@ export const getChipColor = (code: string) => {
 			return 'info';
 		case APROBADO:
 			return 'success';
+		case CORREO_VERIFICADO:
+			return 'success';
+		case CORREO_NO_VERIFICADO:
+			return 'warning';
+		case CORREO_DESACTIVADO:
+			return 'default';
 		default:
 			return 'default';
 	}

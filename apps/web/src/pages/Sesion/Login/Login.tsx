@@ -7,6 +7,7 @@ import store from '@/redux/store';
 import { postData } from '@/services/fetching';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Box, Button, Card, Toolbar, Typography } from '@mui/material';
+import { AxiosError } from 'axios';
 import React, { SyntheticEvent, lazy } from 'react';
 import { FormProvider, SubmitHandler, useForm } from 'react-hook-form';
 import { useDispatch } from 'react-redux';
@@ -48,17 +49,17 @@ const Login: React.FC<LoginProps> = () => {
 
 	const onSubmit: SubmitHandler<TLogin> = async (body) => {
 		try {
-			const response = await postData<TAuthState>({
+			const response: TResponse<TAuthState> = await postData<
+				TResponse<TAuthState>
+			>({
 				path: URL.AUTH.LOGIN,
 				body,
 			});
 
-			if (response.token === undefined)
-				throw new Error('Token no definido');
+			if (response.code !== 200)
+				throw new Error(response.error ?? response.message);
 
-			const rol = response.roles ? response.roles.split(' ')[0] : '';
-
-			dispatch(setLogged(response));
+			dispatch(setLogged(response.message));
 			navigate(`/administrador`.toLowerCase(), {
 				replace: true,
 				state: {},
@@ -66,7 +67,7 @@ const Login: React.FC<LoginProps> = () => {
 		} catch (error: any) {
 			swal({
 				title: '¡Ha ocurrido un error!',
-				text: error.response?.data.message,
+				text: error.response.data.error ?? error.message,
 				icon: 'error',
 			});
 		}

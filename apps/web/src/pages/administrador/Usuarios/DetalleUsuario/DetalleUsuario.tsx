@@ -1,4 +1,4 @@
-import { TUser } from '@/models/Perfil';
+import { TUsuario } from '@/interfaces/usuario';
 import { Box, Tab, Tabs, Typography } from '@mui/material';
 import React, { SyntheticEvent, lazy, useState } from 'react';
 const Informacion = lazy(() => import('../components/Informacion/Informacion'));
@@ -6,7 +6,7 @@ const Permisos = lazy(() => import('../components/Permisos/Permisos'));
 const Rol = lazy(() => import('../components/Rol/Rol'));
 
 export type DetalleUsuarioProps = {
-	registro: TUser;
+	registro: TUsuario;
 };
 
 const allyProps = (index: any) => {

@@ -51,7 +51,7 @@ export const verifyEmail = async ({ query }: Request, res: Response) => {
 	try {
 		const response = await sqlUpdate({
 			table: 'usuario',
-			datos: { estado: 'A' },
+			datos: { estado: 'C' },
 			query: { correo: atob(query.email as string) },
 		});
 
