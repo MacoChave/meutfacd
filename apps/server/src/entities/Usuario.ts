@@ -50,8 +50,8 @@ export class Usuario {
 	@Column({ length: 20, nullable: true })
 	cui: string;
 
-	@Column({ length: 20, unique: true, nullable: true })
-	carnet: string;
+	@Column({ unique: true, nullable: true })
+	carnet: number;
 
 	@Column({ type: 'date', default: () => 'CURRENT_TIMESTAMP' })
 	fecha_creacion: Date;

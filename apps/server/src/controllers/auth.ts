@@ -6,12 +6,12 @@ import { comparePassword, encryptPassword, generarToken } from '../utils/token';
 import {
 	getBodyFromRecovery,
 	getBodyFromVerification,
-	sendEmail,
+	emailSender,
 } from '../utils/email';
 import { DATA_SOURCES } from '../config/vars.config';
 import { logger } from '../utils/logger';
 import { formatDate } from '../utils/formats';
-import { userAuth } from '../services/user.services';
+import { userAuth } from '../services/usuario.service';
 import { Usuario } from '../entities/Usuario';
 
 const signIn = async ({ user, password }: TSignIn) => {
@@ -65,7 +65,7 @@ export const recoveryPassword = async ({ body }: Request, res: Response) => {
 	try {
 		if (!body.correo) throw new Error('Correo no especificado');
 		if (DATA_SOURCES.SEND_EMAIL == 'true') {
-			const emailData = await sendEmail({
+			const emailData = await emailSender({
 				to: body.correo,
 				plainText:
 					'Ingresa al siguiente link para recuperar tu contraseña',
@@ -120,7 +120,7 @@ export const setRandomPassowrd = async ({ query }: Request, res: Response) => {
 		});
 
 		if (DATA_SOURCES.SEND_EMAIL == 'true') {
-			const emailData = await sendEmail({
+			const emailData = await emailSender({
 				to: `${email}`,
 				plainText: `Para el correo: ${email} tu contraseña es: ${pass}`,
 				subject: 'Nueva contraseña',
@@ -233,7 +233,7 @@ export const logupHandler = async ({ body, query }: Request, res: Response) => {
 
 		// SEND EMAIL VERIFICATION TO USER
 		if (DATA_SOURCES.SEND_EMAIL == 'true') {
-			const emailData = await sendEmail({
+			const emailData = await emailSender({
 				to: correo,
 				plainText: 'Por favor, verifica tu correo electrónico',
 				subject: 'Verificación de correo electrónico',
@@ -268,30 +268,6 @@ export const loginHandler = async ({ body }: Request, res: Response) => {
 		});
 
 		successHttp(res, 200, { token, name: user.nombre, roles: user.roles });
-		// const userData: TSignIn = {
-		// 	user: body.correo,
-		// 	password: body.pass,
-		// };
-
-		// // CONSULTA SIN MICROSERVICIO AUT
-		// const result = await signIn(userData);
-
-		// // CONSULTA A MICROSERVICIO AUTH
-		// // const response = await axios.post(
-		// // 	`${DATA_SOURCES.AUTH_HOST}:${DATA_SOURCES.AUTH_PORT}/login`,
-		// // 	userData,
-		// // 	{
-		// // 		headers: {
-		// // 			'Content-Type': 'application/json',
-		// // 		},
-		// // 	}
-		// // );
-		// // logger({
-		// // 	dirname: __dirname,
-		// // 	proc: 'loginHandler',
-		// // 	message: response.data,
-		// // });
-		// res.status(200).json(result);
 	} catch (error: any) {
 		errorHttp(res, error);
 	}

@@ -3,6 +3,7 @@ import {
 	bulkInsert,
 	createItem,
 	deleteItem,
+	getAllUser,
 	getItem,
 	getItems,
 	updateItem,
@@ -11,8 +12,8 @@ import { requireAuth } from '../../middlewares/requireAuth';
 
 const router = Router();
 
-router.get('/', requireAuth, getItem);
-router.get('/all', requireAuth, getItems);
+router.get('/all', requireAuth, getAllUser);
+router.get('/:id', requireAuth, getItem);
 router.post('/bulk', bulkInsert);
 router.post('/', requireAuth, createItem);
 router.put('/', requireAuth, updateItem);

@@ -1,12 +1,13 @@
-import { RowDataPacket } from 'mysql2/promise';
+import { MunicipioModel } from './municipio.model';
 
-export default interface User extends RowDataPacket {
-	id_usuario: number;
+export default interface UsuarioModel {
+	id_usuario?: number;
 	nombre: string;
 	apellidos: string;
 	genero: string;
 	correo: string;
 	pass: string;
+	telefono: string;
 	direccion: string;
 	fecha_nac: string;
 	estado: string;
@@ -15,4 +16,5 @@ export default interface User extends RowDataPacket {
 	doc_cui?: string;
 	carnet?: number;
 	cui?: string;
+	municipios?: MunicipioModel[];
 }

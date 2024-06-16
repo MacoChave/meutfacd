@@ -1,4 +1,4 @@
-import nodemailer from 'nodemailer';
+import nodemailer, { SentMessageInfo } from 'nodemailer';
 import { DATA_SOURCES } from '../config/vars.config';
 import {
 	TEmailFromActivity,
@@ -119,12 +119,12 @@ ${body}
 </html>`;
 };
 
-export const sendEmail = async ({
+export const emailSender = async ({
 	to,
 	subject,
 	plainText,
 	content,
-}: TSendEmail) => {
+}: TSendEmail): Promise<SentMessageInfo> => {
 	let transporter = nodemailer.createTransport({
 		host: DATA_SOURCES.SMTP_HOST,
 		port: DATA_SOURCES.SMTP_PORT,
@@ -135,7 +135,7 @@ export const sendEmail = async ({
 		},
 	});
 
-	let info = await transporter.sendMail({
+	let info: SentMessageInfo = await transporter.sendMail({
 		from: DATA_SOURCES.SMTP_USERNAME,
 		to: to,
 		subject: subject,

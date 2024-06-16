@@ -1,11 +1,11 @@
 import { Request, Response } from 'express';
 import { errorHttp, successHttp } from '../utils/error.handle';
-import { getBodyFromActivity, sendEmail } from '../utils/email';
+import { getBodyFromActivity, emailSender } from '../utils/email';
 import { readFileSync } from 'fs';
 
 export const sendInfoEmail = async ({ body, user }: Request, res: Response) => {
 	try {
-		await sendEmail({
+		await emailSender({
 			to: body.tutor,
 			plainText: body.description,
 			subject: body.subject,
@@ -48,7 +48,7 @@ export const sendTemplate = async ({ body, user }: Request, res: Response) => {
 
 		console.log(html);
 
-		const result = await sendEmail({
+		const result = await emailSender({
 			to: receiver as string,
 			plainText: 'Correo de la unidad de tesis',
 			subject: subject as string,

@@ -1,38 +1,23 @@
 import { Request, Response } from 'express';
 import fileUpload from 'express-fileupload';
-import { existsSync, mkdirSync, readFileSync, unlinkSync } from 'fs';
+import { existsSync, mkdirSync, unlinkSync } from 'fs';
 import path from 'path';
-import { Like } from 'typeorm';
 import { readFile, utils } from 'xlsx';
-import AppDataSource from '../config/orm';
 import { DATA_SOURCES } from '../config/vars.config';
-import { sqlDelete, sqlEjecutar, sqlSelect, sqlUpdate } from '../db/consultas';
-import { User } from '../entities/Usuario';
-import { sendEmail } from '../utils/email';
-import { errorHttp, successHttp, verifyOrm } from '../utils/error.handle';
+import { sqlDelete, sqlSelect, sqlUpdate } from '../db/consultas';
+import { IGetAll } from '../interfaces/parameters';
+import { IReturnEmail } from '../interfaces/returns';
+import { sendEmail } from '../services/email.service';
+import { allUser, createUser, getOne } from '../services/usuario.service';
+import { errorHttp, successHttp } from '../utils/error.handle';
 import { formatDate, newDate } from '../utils/formats';
-import { logger } from '../utils/logger';
 import { getRandomPassword } from '../utils/password';
 import { encryptPassword } from '../utils/token';
 
 const getItem = async ({ params }: Request, res: Response) => {
 	try {
-		// let id = params.id ?? 0;
-
-		// let userRepo = AppDataSource.getRepository(User);
-		// let user = await userRepo.findOne({
-		// 	relations: [
-		// 		'id_municipio',
-		// 		'id_municipio.id_departamento',
-		// 		'roles',
-		// 		'profile',
-		// 		'profile.schedule',
-		// 		'profile.schedule.period',
-		// 	],
-		// 	where: { id_usuario: +id },
-		// });
-		// successHttp(res, 200, user);
-		successHttp(res, 200, {});
+		const user = await getOne(Number(params.id ?? '0'));
+		successHttp(res, 200, user);
 	} catch (error: any) {
 		errorHttp(res, error);
 	}
@@ -54,36 +39,9 @@ const getItems = async ({ body, query }: Request, res: Response) => {
 
 const getAllUser = async ({ query }: Request, res: Response) => {
 	try {
-		// verifyOrm();
-
-		// let take = query.take ?? 10;
-		// let skip = query.skip ?? 0;
-		// let q = query?.q ?? '';
-
-		// let userRepo = AppDataSource.getRepository(User);
-		// let [result, total] = await userRepo.findAndCount({
-		// 	relations: [],
-		// 	where: [
-		// 		{ nombre: Like(`%${q}%`) },
-		// 		{ apellidos: Like(`%${q}%`) },
-		// 		{ correo: Like(`%${q}%`) },
-		// 	],
-		// 	order: { carnet: 'ASC' },
-		// 	take: +take,
-		// 	skip: +skip,
-		// });
-
-		// let next = +skip + +take;
-
-		// // successHttp(res, 200, result);
-		// successHttp(res, 200, {
-		// 	data: result,
-		// 	nextCursor: next < total ? next : undefined,
-		// });
-		const response = await sqlSelect({
-			...query,
-			table: 'ut_v_usuarios',
-		});
+		let params: IGetAll = query;
+		let user = await allUser(params);
+		successHttp(res, 200, user);
 	} catch (error: any) {
 		errorHttp(res, error);
 	}
@@ -123,71 +81,21 @@ const createItem = async ({ body }: Request, res: Response) => {
 		let pass = getRandomPassword();
 		let passHash = await encryptPassword(pass);
 
-		console.log({ pass, passHash });
+		console.table({ ...body, pass });
 
-		const newUser = {
-			nombre: body.nombre,
-			apellidos: body.apellidos,
-			genero: body.genero,
-			correo: body.correo,
-			pass: passHash,
-			direccion: body.direccion,
-			fecha_nac: formatDate({
-				date: newDate(body.fecha_nac, 'es'),
-				format: 'mysql',
-				type: 'date',
-			}),
-			id_municipio: 1,
-			carnet: body.carnet,
-			cui: body.cui,
-			rol: body.id_rol,
-		};
+		const result: string = await createUser({ ...body, pass: passHash });
 
-		const keys: string[] = Object.keys(newUser).map((key) => '?');
-		keys.push(...['@error_code', '@error_message']);
-		const values = Object.values(newUser).map((value) => value);
-
-		// TODO: Ejecutar ut_sp_crear_usuario
-		await sqlEjecutar({
-			sql: `call ut_sp_crear_usuario(${keys.join(',')})`,
-			values,
+		const sended: IReturnEmail = await sendEmail({
+			to: body.correo,
+			subject: 'Se ha creado su cuenta en la unidad de tesis',
+			template: 'confirm-email.html',
+			replaceValues: {
+				name: pass,
+				url: DATA_SOURCES.URL_EMAIL_VERIFIED,
+			},
 		});
 
-		const [errorInfo]: any = await sqlEjecutar({
-			sql: `select @error_code, @error_message`,
-		});
-
-		const { error_code, error_message } = errorInfo;
-
-		console.log({ error_code, error_message });
-
-		if (error_code && error_code !== 0) {
-			throw new Error(error_message);
-		}
-
-		let html = readFileSync(
-			`${__dirname}/../utils/pdf/confirm-email.html`,
-			'utf-8'
-		);
-
-		html = html.replace('{{nombre}}', body.nombre);
-		html = html.replace('{{url}}', DATA_SOURCES.URL_EMAIL_VERIFIED);
-
-		if (DATA_SOURCES.SEND_EMAIL == 'true') {
-			const result = await sendEmail({
-				to: body.correo,
-				plainText: 'Correo de la unidad de tesis',
-				subject: 'Verificación de correo electrónico',
-				content: html,
-			});
-			logger({
-				dirname: __dirname,
-				proc: 'logupHandler',
-				message: result,
-			});
-		}
-
-		successHttp(res, 200, { pass });
+		successHttp(res, 200, { result, sended });
 	} catch (error: any) {
 		errorHttp(res, error);
 	}

@@ -8,7 +8,7 @@ import {
 } from '../db/consultas';
 import { errorHttp } from '../utils/error.handle';
 import { DATA_SOURCES } from '../config/vars.config';
-import { getBodyFromActivity, sendEmail } from '../utils/email';
+import { getBodyFromActivity, emailSender } from '../utils/email';
 
 export const getItem = async ({ query, user }: Request, res: Response) => {
 	try {
@@ -48,7 +48,7 @@ export const postItem = async ({ body, user }: Request, res: Response) => {
 		}
 
 		if (DATA_SOURCES.SEND_EMAIL == 'true') {
-			await sendEmail({
+			await emailSender({
 				to: receiver.correo,
 				plainText: 'Por favor, revisa tus notificaciones en la app',
 				subject: 'Nueva notificación en el sistema',
