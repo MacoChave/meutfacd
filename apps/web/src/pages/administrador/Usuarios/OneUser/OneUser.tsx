@@ -1,16 +1,10 @@
 'use client';
 import { Contenedor, DotsLoaders, ErrorOperacion } from '@/components';
-import { TUser } from '@/models/Perfil';
-import { schemaUsuario } from '@/models/TUser';
-import { PersonalData } from '@/pages/Sesion/UserProfile/components/PersonalData';
-import { yupResolver } from '@hookform/resolvers/yup';
-import { Box, TextField } from '@mui/material';
-import React, { Suspense } from 'react';
-import { FormProvider, SubmitHandler, useForm } from 'react-hook-form';
-import { useLocation } from 'react-router-dom';
-import { DetalleUsuario } from '../DetalleUsuario';
+import { URL } from '@/consts/Api';
 import { useFetch } from '@/hooks/useFetch';
-import { URL, URL_V2 } from '@/consts/Api';
+import React, { lazy } from 'react';
+import { useLocation } from 'react-router-dom';
+const DetalleUsuario = lazy(() => import('../DetalleUsuario/DetalleUsuario'));
 
 export type OneUserProps = {
 	// types...
@@ -20,18 +14,27 @@ const OneUser: React.FC<OneUserProps> = ({}) => {
 	const location = useLocation();
 	const { usuario } = location.state;
 
+	console.log({ usuario });
+
 	const { data, error, isLoading, isError } = useFetch({
 		url: `${URL.USER}/${usuario.id_usuario || 0}`,
 		name: 'user',
 	});
 
-	if (isLoading) <DotsLoaders />;
+	console.log({ data, error });
 
-	if (isError)
-		<ErrorOperacion
-			error={data.error}
-			mensaje='Hubo un error al obtener los datos del usuario'
-		/>;
+	if (isLoading) {
+		return <DotsLoaders />;
+	}
+
+	if (isError) {
+		return (
+			<ErrorOperacion
+				error={data.error}
+				mensaje='Hubo un error al obtener los datos del usuario'
+			/>
+		);
+	}
 
 	return (
 		<Contenedor title='Detalle de usuario'>

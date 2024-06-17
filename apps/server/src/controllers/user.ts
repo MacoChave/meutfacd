@@ -8,7 +8,7 @@ import { sqlDelete, sqlSelect, sqlUpdate } from '../db/consultas';
 import { IGetAll } from '../interfaces/parameters';
 import { IReturnEmail } from '../interfaces/returns';
 import { sendEmail } from '../services/email.service';
-import { allUser, createUser, getOne } from '../services/usuario.service';
+import { allUser, createUser, oneUsuario } from '../services/usuario.service';
 import { errorHttp, successHttp } from '../utils/error.handle';
 import { formatDate, newDate } from '../utils/formats';
 import { getRandomPassword } from '../utils/password';
@@ -16,7 +16,7 @@ import { encryptPassword } from '../utils/token';
 
 const getItem = async ({ params }: Request, res: Response) => {
 	try {
-		const user = await getOne(Number(params.id ?? '0'));
+		const user = await oneUsuario(Number(params.id ?? '0'));
 		successHttp(res, 200, user);
 	} catch (error: any) {
 		errorHttp(res, error);
@@ -83,14 +83,20 @@ const createItem = async ({ body }: Request, res: Response) => {
 
 		console.table({ ...body, pass });
 
-		const result: string = await createUser({ ...body, pass: passHash });
+		const result: string = await createUser({
+			...body,
+			pass: passHash,
+			id_municipio: 1,
+		});
 
 		const sended: IReturnEmail = await sendEmail({
 			to: body.correo,
 			subject: 'Se ha creado su cuenta en la unidad de tesis',
-			template: 'confirm-email.html',
+			template: 'account-created.html',
 			replaceValues: {
-				name: pass,
+				name: body.nombre,
+				email: body.correo,
+				password: pass,
 				url: DATA_SOURCES.URL_EMAIL_VERIFIED,
 			},
 		});

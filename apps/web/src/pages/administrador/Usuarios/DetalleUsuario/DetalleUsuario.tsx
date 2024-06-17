@@ -27,7 +27,7 @@ const DetalleUsuario: React.FC<DetalleUsuarioProps> = ({ registro }) => {
 		<Box>
 			<Box sx={{ display: 'flex' }}>
 				<Typography sx={{ flex: 1 }}>
-					{registro.correo || 'usuario@compania.com'}
+					{registro?.correo ?? 'usuario@compania.com'}
 				</Typography>
 			</Box>
 			<Box>

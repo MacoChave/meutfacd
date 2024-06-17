@@ -1,6 +1,7 @@
 'use client';
 import { McAutocomplete, McInput } from '@/components';
-import { URL_V2 } from '@/consts/Api';
+import { URL, URL_V2 } from '@/consts/Api';
+import { TResponse, TResult } from '@/models/Fetching';
 import { schemaUsuario, TUser } from '@/models/TUser';
 import { postData } from '@/services/fetching';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -39,14 +40,14 @@ const FormUser: React.FC<FormUserProps> = ({ id_rol, style }) => {
 
 			body = { ...body, id_rol: id_rol };
 
-			const result = await postData({
-				path: URL_V2.USER,
+			const result: TResponse<any> = await postData({
+				path: URL.USER,
 				body,
 			});
 
-			console.log({ result });
+			swal('Éxito', 'Usuario creado correctamente', 'success');
 		} catch (error: any) {
-			swal('Error', error.message, 'error');
+			swal('Error', error.response.data.error, 'error');
 		}
 	};
 

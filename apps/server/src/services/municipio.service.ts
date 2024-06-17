@@ -4,7 +4,7 @@ import { Municipio } from '../entities/Municipio';
 import { IGetAll } from '../interfaces/parameters';
 import { IQueryAll } from '../interfaces/returns';
 
-export const createOrUpdateOne = async (
+export const createOrUpdateMunicipio = async (
 	municipio: Municipio
 ): Promise<Municipio> => {
 	try {
@@ -16,7 +16,7 @@ export const createOrUpdateOne = async (
 	}
 };
 
-export const createAll = async (
+export const bulkCreateMunicipio = async (
 	municipios: Municipio[]
 ): Promise<Municipio[]> => {
 	try {
@@ -28,7 +28,7 @@ export const createAll = async (
 	}
 };
 
-export const getAll = async ({
+export const allMunicipio = async ({
 	skip = 0,
 	take = 10,
 	q,
@@ -52,7 +52,7 @@ export const getAll = async ({
 	}
 };
 
-export const getOne = async (
+export const oneMunicipio = async (
 	id_municipio: number
 ): Promise<Municipio | null> => {
 	try {
@@ -67,7 +67,9 @@ export const getOne = async (
 	}
 };
 
-export const deleteOne = async (id_municipio: number): Promise<boolean> => {
+export const deleteMunicipio = async (
+	id_municipio: number
+): Promise<boolean> => {
 	try {
 		let municipioRepo = AppDataSource.getRepository(Municipio);
 		let municipio: Municipio | null = await municipioRepo.findOneOrFail({

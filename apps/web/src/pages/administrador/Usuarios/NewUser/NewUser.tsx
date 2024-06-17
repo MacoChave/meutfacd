@@ -1,6 +1,6 @@
 'use client';
 import { McAutocomplete } from '@/components/McWithoutForms/McAutocomplete';
-import { URL_V2 } from '@/consts/Api';
+import { URL, URL_V2 } from '@/consts/Api';
 import { useFetch } from '@/hooks/useFetch';
 import React, { useState } from 'react';
 import { FormUser } from '../FormUser';
@@ -15,7 +15,7 @@ export type NewUserProps = {
 const NewUser: React.FC<NewUserProps> = ({}) => {
 	const [curRol, setCurRol] = useState<TRol>({} as TRol);
 	const { data, isLoading, isError } = useFetch({
-		url: `${URL_V2.ROL}/all`,
+		url: `${URL.ROL}/all`,
 		params: {},
 	});
 
@@ -23,7 +23,7 @@ const NewUser: React.FC<NewUserProps> = ({}) => {
 		<>
 			<McAutocomplete
 				label='Rol'
-				options={data?.message ?? []}
+				options={data?.message?.data ?? []}
 				colLabel='nombre'
 				value={curRol}
 				setValue={setCurRol}
@@ -39,14 +39,15 @@ const NewUser: React.FC<NewUserProps> = ({}) => {
 					gap: 2,
 					pt: 2,
 				}}>
-				<UploadCSV
+				{/* TODO: FUNCTIONALITY NOT IMPLEMENTED YET */}
+				{/* <UploadCSV
 					id_rol={curRol.id_rol}
 					style={{
 						flex: 1,
 						justifySelf: 'start',
 						alignSelf: 'start',
 					}}
-				/>
+				/> */}
 				<FormUser
 					id_rol={curRol.id_rol}
 					style={{

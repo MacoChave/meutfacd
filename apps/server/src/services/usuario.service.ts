@@ -101,7 +101,9 @@ export const allUser = async ({
 	}
 };
 
-export const getOne = async (id_usuario: number): Promise<Usuario | null> => {
+export const oneUsuario = async (
+	id_usuario: number
+): Promise<Usuario | null> => {
 	try {
 		let userRepo = AppDataSource.getRepository(Usuario);
 		let user: Usuario | null = await userRepo.findOne({
@@ -115,7 +117,7 @@ export const getOne = async (id_usuario: number): Promise<Usuario | null> => {
 	}
 };
 
-export const deleteOne = async (id_usuario: number) => {
+export const deleteUsuario = async (id_usuario: number) => {
 	try {
 		let userRepo = AppDataSource.getRepository(Usuario);
 		let user = await userRepo.findOneOrFail({

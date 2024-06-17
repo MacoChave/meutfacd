@@ -27,7 +27,7 @@ const McAutocomplete: React.FC<McAutocompleteProps> = ({
 	return (
 		<Autocomplete
 			sx={{ width: 'inherit', minWidth: 200 }}
-			value={value}
+			value={value[colLabel]}
 			onChange={(event, newValue) => {
 				setValue(newValue || {});
 			}}

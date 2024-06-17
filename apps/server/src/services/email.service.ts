@@ -13,14 +13,21 @@ export const sendEmail = async ({
 	replaceValues,
 }: ISendEmail): Promise<IReturnEmail> => {
 	try {
-		let html = readFileSync(
+		let bodyHTML = readFileSync(
 			`${__dirname}/../utils/pdf/${template}`,
 			'utf-8'
 		);
 
 		for (let key in replaceValues) {
-			html = html.replace(`{{${key}}}`, replaceValues[key]);
+			bodyHTML = bodyHTML.replace(`{{${key}}}`, replaceValues[key]);
 		}
+
+		let templateHTML = readFileSync(
+			`${__dirname}/../utils/pdf/template.html`,
+			'utf-8'
+		);
+
+		let html = templateHTML.replace('{{body}}', bodyHTML);
 
 		if (DATA_SOURCES.SEND_EMAIL == 'true') {
 			const result: SentMessageInfo = await emailSender({

@@ -3,6 +3,8 @@ import { errorHttp, successHttp, verifyOrm } from '../utils/error.handle';
 import { sqlSelect } from '../db/consultas';
 import AppDataSource from '../config/orm';
 import { Rol } from '../entities/Rol';
+import { IGetAll } from '../interfaces/parameters';
+import { allRoles } from '../services/rol.service';
 
 const obtenerItem = (req: Request, res: Response) => {
 	try {
@@ -13,16 +15,9 @@ const obtenerItem = (req: Request, res: Response) => {
 
 const obtenerItems = async ({ query, user }: Request, res: Response) => {
 	try {
-		// verifyOrm();
-
-		// let rolRepo = AppDataSource.getRepository(Rol);
-		// let result = await rolRepo.find();
-
-		// successHttp(res, 200, result);
-		const response = await sqlSelect({
-			...query,
-			table: 'ut_rol',
-		});
+		let params: IGetAll = query;
+		let rol = await allRoles(params);
+		successHttp(res, 200, rol);
 	} catch (error: any) {
 		errorHttp(res, error);
 	}

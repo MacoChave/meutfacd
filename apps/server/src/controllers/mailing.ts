@@ -1,21 +1,25 @@
 import { Request, Response } from 'express';
+import { IReturnEmail } from '../interfaces/returns';
+import { sendEmail } from '../services/email.service';
 import { errorHttp, successHttp } from '../utils/error.handle';
-import { getBodyFromActivity, emailSender } from '../utils/email';
-import { readFileSync } from 'fs';
 
 export const sendInfoEmail = async ({ body, user }: Request, res: Response) => {
 	try {
-		await emailSender({
+		const sender: IReturnEmail = await sendEmail({
 			to: body.tutor,
-			plainText: body.description,
 			subject: body.subject,
-			content: getBodyFromActivity({
-				username: body.username,
-				description: body.description,
+			template: 'activity-request.html',
+			replaceValues: {
+				name: body.username,
+				date: new Date().toLocaleDateString(),
 				title: body.title,
-				action: 'comentado',
-			}),
+				description: body.description,
+			},
 		});
+
+		if (sender.accepted.length == 0)
+			throw new Error('No se pudo enviar el correo');
+
 		res.status(200).json({
 			msg: 'Correo enviado',
 		});
@@ -37,23 +41,13 @@ export const sendTemplate = async ({ body, user }: Request, res: Response) => {
 
 		console.log(data);
 
-		let html = readFileSync(
-			`${__dirname}/../utils/pdf/${action}.html`,
-			'utf-8'
-		);
-
-		Object.entries(data).forEach(([key, value]) => {
-			html = html.replace(new RegExp(`{{${key}}}`, 'g'), value as string);
+		const result: IReturnEmail = await sendEmail({
+			to: receiver,
+			subject,
+			template: `${action}.html`,
+			replaceValues: data,
 		});
 
-		console.log(html);
-
-		const result = await emailSender({
-			to: receiver as string,
-			plainText: 'Correo de la unidad de tesis',
-			subject: subject as string,
-			content: html,
-		});
 		successHttp(res, 200, result);
 	} catch (error: any) {
 		errorHttp(res, error);

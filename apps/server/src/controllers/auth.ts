@@ -1,18 +1,14 @@
 import { Request, Response } from 'express';
-import { sqlEjecutar, sqlSelectOne, sqlUpdate } from '../db/consultas';
-import { TSignIn } from '../models/signIn';
-import { errorHttp, successHttp } from '../utils/error.handle';
-import { comparePassword, encryptPassword, generarToken } from '../utils/token';
-import {
-	getBodyFromRecovery,
-	getBodyFromVerification,
-	emailSender,
-} from '../utils/email';
 import { DATA_SOURCES } from '../config/vars.config';
-import { logger } from '../utils/logger';
-import { formatDate } from '../utils/formats';
-import { userAuth } from '../services/usuario.service';
+import { sqlEjecutar, sqlSelectOne, sqlUpdate } from '../db/consultas';
 import { Usuario } from '../entities/Usuario';
+import { IReturnEmail } from '../interfaces/returns';
+import { TSignIn } from '../models/signIn';
+import { sendEmail } from '../services/email.service';
+import { userAuth } from '../services/usuario.service';
+import { errorHttp, successHttp } from '../utils/error.handle';
+import { formatDate } from '../utils/formats';
+import { comparePassword, encryptPassword, generarToken } from '../utils/token';
 
 const signIn = async ({ user, password }: TSignIn) => {
 	try {
@@ -64,29 +60,18 @@ export const verifyEmail = async ({ query }: Request, res: Response) => {
 export const recoveryPassword = async ({ body }: Request, res: Response) => {
 	try {
 		if (!body.correo) throw new Error('Correo no especificado');
-		if (DATA_SOURCES.SEND_EMAIL == 'true') {
-			const emailData = await emailSender({
-				to: body.correo,
-				plainText:
-					'Ingresa al siguiente link para recuperar tu contraseña',
-				subject: 'Recuperar contraseña',
-				content: getBodyFromRecovery({
-					email: body.correo,
-				}),
-			});
-			logger({
-				dirname: __dirname,
-				proc: 'recoveryPassword',
-				message: emailData,
-			});
-		} else {
-			console.log(
-				'Ingresa al siguiente link para recuperar tu contraseña'
-			);
-			console.log(
-				`${DATA_SOURCES.URL_PASS_RECOVERY}/${btoa(body.correo)}`
-			);
-		}
+
+		const sended: IReturnEmail = await sendEmail({
+			to: body.correo,
+			subject: 'Recuperar contraseña',
+			template: 'recovery-password.html',
+			replaceValues: {
+				email: Buffer.from(body.correo, 'base64').toString('utf-8'),
+			},
+		});
+
+		if (sended.rejected.length) throw new Error('Correo no enviado');
+
 		successHttp(
 			res,
 			200,
@@ -104,7 +89,7 @@ export const setRandomPassowrd = async ({ query }: Request, res: Response) => {
 
 		const user = await sqlSelectOne({
 			table: 'usuario',
-			columns: ['correo'],
+			columns: ['nombre', 'correo'],
 			query: { correo: email },
 		});
 
@@ -119,21 +104,16 @@ export const setRandomPassowrd = async ({ query }: Request, res: Response) => {
 			query: { correo: email },
 		});
 
-		if (DATA_SOURCES.SEND_EMAIL == 'true') {
-			const emailData = await emailSender({
-				to: `${email}`,
-				plainText: `Para el correo: ${email} tu contraseña es: ${pass}`,
-				subject: 'Nueva contraseña',
-				content: `Para el correo: ${email} tu contraseña es: ${pass}`,
-			});
-			logger({
-				dirname: __dirname,
-				proc: 'setRandomPassowrd',
-				message: emailData,
-			});
-		} else {
-			console.log(`${email}: ${pass}`);
-		}
+		const sended: IReturnEmail = await sendEmail({
+			to: user.correo,
+			subject: 'Nueva contraseña',
+			template: 'pass-regenerated.html',
+			replaceValues: {
+				name: user.nombre,
+				email: user.correo,
+				password: pass,
+			},
+		});
 
 		successHttp(res, 200, JSON.stringify({ ...result, pass }));
 	} catch (error: any) {
@@ -232,22 +212,18 @@ export const logupHandler = async ({ body, query }: Request, res: Response) => {
 		}
 
 		// SEND EMAIL VERIFICATION TO USER
-		if (DATA_SOURCES.SEND_EMAIL == 'true') {
-			const emailData = await emailSender({
-				to: correo,
-				plainText: 'Por favor, verifica tu correo electrónico',
-				subject: 'Verificación de correo electrónico',
-				content: getBodyFromVerification({
-					username: nombre,
-					email: correo,
-				}),
-			});
-			logger({
-				dirname: __dirname,
-				proc: 'logupHandler',
-				message: emailData,
-			});
-		}
+		const sended: IReturnEmail = await sendEmail({
+			to: correo,
+			subject: 'Verificación de correo electrónico',
+			template: 'confirm-email.html',
+			replaceValues: {
+				username: nombre,
+				email: correo,
+				url: DATA_SOURCES.URL_EMAIL_VERIFIED,
+			},
+		});
+
+		if (sended.rejected.length) throw new Error('Correo no enviado');
 
 		res.status(200).json({ msg: 'Usuario creado' });
 	} catch (error: any) {
