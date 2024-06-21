@@ -5,15 +5,16 @@ import { TResult } from '@/models/Fetching';
 import { postData } from '@/services/fetching';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Box, Button } from '@mui/material';
-import React from 'react';
+import React, { Dispatch } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import swal from 'sweetalert';
 
 export type FormPeriodProps = {
 	onClose: () => void;
+	setReload: Dispatch<React.SetStateAction<boolean>>;
 };
 
-const FormPeriod: React.FC<FormPeriodProps> = ({ onClose }) => {
+const FormPeriod: React.FC<FormPeriodProps> = ({ onClose, setReload }) => {
 	const {
 		control,
 		formState: { errors },
@@ -35,6 +36,7 @@ const FormPeriod: React.FC<FormPeriodProps> = ({ onClose }) => {
 			return;
 		}
 		swal('Éxito', 'Se creó la jornada', 'success');
+		setReload(true);
 		reset();
 		onClose();
 	};

@@ -1,20 +1,24 @@
-import { URL } from '@/consts/Api';
 import { DotsLoaders } from '@/components/Loader/DotsLoaders';
 import { McTable } from '@/components/MyTable';
-import { useCustomFetch } from '@/hooks/useFetch';
-import { TResult } from '@/models/Fetching';
+import { URL } from '@/consts/Api';
+import { useFetch } from '@/hooks/useFetch';
+import { TResponse, TResult } from '@/models/Fetching';
 import { deleteData } from '@/services/fetching';
 import { Box, Typography } from '@mui/material';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import swal from 'sweetalert';
 import { FormSchedule } from '../FormSchedule';
+import { TSchedule } from '@/models/Schedule';
 
-export type ScheduleDataProps = {};
+export type ScheduleDataProps = {
+	reload: boolean;
+	setReload: React.Dispatch<React.SetStateAction<boolean>>;
+};
 
-const ScheduleData: React.FC<ScheduleDataProps> = ({}) => {
-	const { data, isLoading, isError, refetch } = useCustomFetch({
+const ScheduleData: React.FC<ScheduleDataProps> = ({ reload, setReload }) => {
+	const [editingItem, setEditingItem] = useState<TSchedule | null>(null);
+	const { data, isLoading, isError, refetch } = useFetch({
 		url: `${URL.SCHEDULE}/all`,
-		method: 'post',
 	});
 
 	const onClose = () => {
@@ -34,25 +38,49 @@ const ScheduleData: React.FC<ScheduleDataProps> = ({}) => {
 	};
 
 	const onEdit = (item: any) => {
-		console.log('Edit schedule item', item);
+		setEditingItem(
+			data.message.data.find(
+				(value: TSchedule) => value.id_horario === item.id_horario
+			)
+		);
 	};
+
+	useEffect(() => {
+		if (reload) refetch();
+	}, [reload]);
 
 	if (isLoading) return <DotsLoaders />;
 	if (isError) return <Typography>No se pudo cargar las jornadas</Typography>;
 
 	return (
 		<Box>
-			<FormSchedule onClose={onClose} />
+			<FormSchedule
+				schedule={editingItem}
+				setSchedule={setEditingItem}
+				onClose={onClose}
+				setReload={setReload}
+			/>
 			<McTable
 				headers={{
 					jornada: 'Jornada',
 					hora_inicio: 'Inicio',
 					hora_final: 'Final',
 				}}
-				rows={data}
+				rows={
+					(data?.message?.data as Array<TSchedule>).flatMap(
+						(value: TSchedule) => {
+							return {
+								jornada: value.jornada?.nombre ?? '',
+								id_horario: value.id_horario,
+								hora_inicio: value.hora_inicio.slice(0, 5),
+								hora_final: value.hora_final.slice(0, 5),
+							};
+						}
+					) ?? []
+				}
 				totalCols={{}}
 				onDelete={onDelete}
-				// onEdit={onEdit}
+				onEdit={onEdit}
 			/>
 		</Box>
 	);

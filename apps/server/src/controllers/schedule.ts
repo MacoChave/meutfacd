@@ -1,6 +1,8 @@
 import { Request, Response } from 'express';
 import { sqlDelete, sqlInsert, sqlSelect, sqlUpdate } from '../db/consultas';
 import { errorHttp, successHttp } from '../utils/error.handle';
+import AppDataSource from '../config/orm';
+import { UTHorario } from '../entities/Horario';
 
 export const getItem = async ({ params }: Request, res: Response) => {
 	try {
@@ -23,30 +25,22 @@ export const getItem = async ({ params }: Request, res: Response) => {
 
 export const getItems = async ({ query }: Request, res: Response) => {
 	try {
-		// let take = query.take ?? 10;
-		// let skip = query.skip ?? 0;
-		// let q = query?.q ?? '';
+		let take = query.take ?? 10;
+		let skip = query.skip ?? 0;
+		let q = query?.q ?? '';
 
-		// let scheduleRepo = AppDataSource.getRepository(Schedule);
-		// let [result, total] = await scheduleRepo.findAndCount({
-		// 	relations: [],
-		// 	where: [],
-		// 	order: {
-		// 		hora_inicio: 'ASC',
-		// 	},
-		// 	take: +take,
-		// 	skip: +skip,
-		// });
+		let horarioRepo = AppDataSource.getRepository(UTHorario);
+		let [result, total] = await horarioRepo.findAndCount({
+			relations: ['jornada'],
+			take: +take,
+			skip: +skip,
+		});
 
-		// let next = +skip + +take;
+		let next = +skip + +take;
 
-		// successHttp(res, 200, {
-		// 	data: result,
-		// 	nextCursor: next < total ? next : undefined,
-		// });
-		const response = await sqlSelect({
-			...query,
-			table: 'ut_horario',
+		successHttp(res, 200, {
+			data: result,
+			nextCursor: next < total ? next : undefined,
 		});
 	} catch (error) {
 		errorHttp(res, error as any);
