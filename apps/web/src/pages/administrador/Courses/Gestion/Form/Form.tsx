@@ -9,7 +9,7 @@ import {
 	courseTutorDefault,
 	courseTutorSchema,
 } from '@/models/CourseTutor';
-import { TResult } from '@/models/Fetching';
+import { TResponse, TResult } from '@/models/Fetching';
 import { TUser } from '@/models/Perfil';
 import { TPeriod } from '@/models/Period';
 import { TSchedule } from '@/models/Schedule';
@@ -36,14 +36,33 @@ const Form: React.FC<FormProps> = ({
 }) => {
 	const [jornada, setJornada] = useState({} as TPeriod);
 	const [horario, setHorario] = useState({} as TSchedule);
-	const [professor, setProfessor] = useState({} as TUser);
+	const [professor, setProfessor] = useState(
+		(preloadData?.tutor ?? {}) as TUser
+	);
 	const [days, setDays] = React.useState<string[]>(preloadData.dias ?? []);
 
-	const { control, reset, setValue, getValues, handleSubmit } = useForm({
-		defaultValues: preloadData,
+	const {
+		control,
+		formState: { errors },
+		reset,
+		setValue,
+		getValues,
+		handleSubmit,
+	} = useForm<TCourseTutor>({
+		defaultValues: {
+			id_curso_tutor: preloadData?.id_curso_tutor ?? 0,
+			salon: preloadData.salon,
+			fecha: dayjs(preloadData.fecha).format('YYYY-MM-DD'),
+			id_curso: preloadData.curso?.id_curso ?? 0,
+			id_tutor: preloadData.tutor?.id_usuario ?? 0,
+			id_horario: preloadData.id_horario,
+			id_jornada: preloadData.id_jornada,
+		},
 		mode: 'onBlur',
 		resolver: yupResolver(courseTutorSchema),
 	});
+
+	console.log(errors);
 
 	const { data, isLoading, isError } = useCustomFetch({
 		url: `${URL.GENERIC}/all`,
@@ -82,6 +101,8 @@ const Form: React.FC<FormProps> = ({
 					'success'
 				);
 				onClose();
+			} else {
+				swal('¡Error!', `${result.warningStatus}`, 'error');
 			}
 		} else {
 			console.log('Actualizar sección de curso');
@@ -109,6 +130,8 @@ const Form: React.FC<FormProps> = ({
 					'success'
 				);
 				onClose();
+			} else {
+				swal('¡Error!', `${result.warningStatus}`, 'error');
 			}
 		}
 	};

@@ -8,7 +8,11 @@ import { sqlDelete, sqlSelect, sqlUpdate } from '../db/consultas';
 import { IGetAll } from '../interfaces/parameters';
 import { IReturnEmail } from '../interfaces/returns';
 import { sendEmail } from '../services/email.service';
-import { allUser, createUser, oneUsuario } from '../services/usuario.service';
+import {
+	getAllUser,
+	createUser,
+	getOneUsuario,
+} from '../services/usuario.service';
 import { errorHttp, successHttp } from '../utils/error.handle';
 import { formatDate, newDate } from '../utils/formats';
 import { getRandomPassword } from '../utils/password';
@@ -16,7 +20,7 @@ import { encryptPassword } from '../utils/token';
 
 const getItem = async ({ params }: Request, res: Response) => {
 	try {
-		const user = await oneUsuario(Number(params.id ?? '0'));
+		const user = await getOneUsuario(Number(params.id ?? '0'));
 		successHttp(res, 200, user);
 	} catch (error: any) {
 		errorHttp(res, error);
@@ -37,10 +41,10 @@ const getItems = async ({ body, query }: Request, res: Response) => {
 	}
 };
 
-const getAllUser = async ({ query }: Request, res: Response) => {
+const getUsers = async ({ query }: Request, res: Response) => {
 	try {
 		let params: IGetAll = query;
-		let user = await allUser(params);
+		let user = await getAllUser(params);
 		successHttp(res, 200, user);
 	} catch (error: any) {
 		errorHttp(res, error);
@@ -81,7 +85,7 @@ const createItem = async ({ body }: Request, res: Response) => {
 		let pass = getRandomPassword();
 		let passHash = await encryptPassword(pass);
 
-		console.table({ ...body, pass });
+		console.table({ ...body, pass, id_municipio: 1 });
 
 		const result: string = await createUser({
 			...body,
@@ -171,6 +175,7 @@ export {
 	createItem,
 	deleteItem,
 	getAllUser,
+	getUsers,
 	getItem,
 	getItems,
 	updateItem,

@@ -29,8 +29,8 @@ export const userAuth = async ({ correo, pass }: UsuarioModel) => {
 
 export const createUser = async (usuario: ISPCreateUser): Promise<string> => {
 	try {
-		await AppDataSource.query(
-			`CALL ut_sp_crear_usuario(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, @error_code, @error_message);`,
+		let resultQuery = await AppDataSource.query(
+			`CALL ut_sp_crear_usuario(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);`,
 			[
 				usuario.nombre,
 				usuario.apellidos,
@@ -42,21 +42,17 @@ export const createUser = async (usuario: ISPCreateUser): Promise<string> => {
 				usuario.id_municipio,
 				+usuario.carnet,
 				usuario.cui,
-				usuario.rol,
+				+usuario.id_rol,
 			]
 		);
 
-		const [result] = await AppDataSource.query(
-			`SELECT 
-			@error_code AS error_code, 
-			@error_message AS error_message;`
-		);
+		console.log(resultQuery);
 
-		console.log({ result });
+		const message = resultQuery[0][0].message;
 
-		const { error_code, error_message } = result;
+		console.log(message);
 
-		if (error_code != 0) throw new Error(error_message);
+		if (message !== '') throw new Error(message);
 
 		return 'Usuario creado correctamente';
 	} catch (error: any) {
@@ -64,7 +60,7 @@ export const createUser = async (usuario: ISPCreateUser): Promise<string> => {
 	}
 };
 
-export const allUser = async ({
+export const getAllUser = async ({
 	skip = 0,
 	take = 10,
 	q,
@@ -86,8 +82,8 @@ export const allUser = async ({
 		let userRepo = AppDataSource.getRepository(Usuario);
 		let [users, count] = await userRepo.findAndCount({
 			where: filters,
-			take: take,
-			skip: skip,
+			take: +take,
+			skip: +skip,
 		});
 
 		let next = skip + take;
@@ -101,7 +97,7 @@ export const allUser = async ({
 	}
 };
 
-export const oneUsuario = async (
+export const getOneUsuario = async (
 	id_usuario: number
 ): Promise<Usuario | null> => {
 	try {

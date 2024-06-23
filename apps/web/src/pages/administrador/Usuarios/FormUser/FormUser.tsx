@@ -14,9 +14,10 @@ import swal from 'sweetalert';
 export type FormUserProps = {
 	id_rol: number;
 	style?: CSSProperties;
+	onClose: () => void;
 };
 
-const FormUser: React.FC<FormUserProps> = ({ id_rol, style }) => {
+const FormUser: React.FC<FormUserProps> = ({ id_rol, style, onClose }) => {
 	const { control, formState, watch, handleSubmit } = useForm<TUser>({
 		defaultValues: {
 			nombre: '',
@@ -44,6 +45,8 @@ const FormUser: React.FC<FormUserProps> = ({ id_rol, style }) => {
 				path: URL.USER,
 				body,
 			});
+
+			onClose();
 
 			swal('Éxito', 'Usuario creado correctamente', 'success');
 		} catch (error: any) {

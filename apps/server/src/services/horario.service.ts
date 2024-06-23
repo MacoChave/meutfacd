@@ -3,7 +3,7 @@ import { UTHorario } from '../entities/Horario';
 import { IGetAll } from '../interfaces/parameters';
 import { IQueryAll } from '../interfaces/returns';
 
-export const createOrUpdateOne = async (
+export const createOrUpdateHorario = async (
 	horario: UTHorario
 ): Promise<UTHorario> => {
 	try {
@@ -15,7 +15,7 @@ export const createOrUpdateOne = async (
 	}
 };
 
-export const createAll = async (
+export const createAllHorario = async (
 	horarios: UTHorario[]
 ): Promise<UTHorario[]> => {
 	try {
@@ -27,7 +27,7 @@ export const createAll = async (
 	}
 };
 
-export const getAll = async ({
+export const getAllHorario = async ({
 	skip = 0,
 	take = 10,
 	q,
@@ -51,21 +51,24 @@ export const getAll = async ({
 	}
 };
 
-export const getOne = async (id_horario: number): Promise<UTHorario | null> => {
+export const getOneHorario = async (
+	id_horario: number,
+	id_jornada: number
+): Promise<UTHorario | null> => {
 	try {
 		let horarioRepo = AppDataSource.getRepository(UTHorario);
-		let horario: UTHorario | null = await horarioRepo.findOne({
-			where: { id_horario },
+		return horarioRepo.findOne({
+			where: { id_horario, id_jornada },
 			relations: ['jornada'],
 		});
-
-		return horario;
 	} catch (error: any) {
 		throw new Error(error.message);
 	}
 };
 
-export const deleteOne = async (id_horario: number): Promise<boolean> => {
+export const deleteOneHorario = async (
+	id_horario: number
+): Promise<boolean> => {
 	try {
 		let horarioRepo = AppDataSource.getRepository(UTHorario);
 		let horario: UTHorario | null = await horarioRepo.findOneOrFail({

@@ -5,12 +5,14 @@ import {
 	JoinTable,
 	ManyToMany,
 	ManyToOne,
+	OneToMany,
 	OneToOne,
 	PrimaryGeneratedColumn,
 } from 'typeorm';
 import { Municipio } from './Municipio';
 import { UTPerfil } from './Perfil';
 import { Rol } from './Rol';
+import { UTCursoTutor } from './CursoTutor';
 
 @Entity('usuario')
 export class Usuario {
@@ -70,6 +72,12 @@ export class Usuario {
 		inverseJoinColumns: [{ name: 'id_rol' }],
 	})
 	roles: Rol[];
+
+	@OneToMany(
+		() => UTCursoTutor,
+		(cursoTutor: UTCursoTutor) => cursoTutor.tutor
+	)
+	cursosTutor: UTCursoTutor[];
 }
 
 // import {

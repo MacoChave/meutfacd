@@ -1,37 +1,34 @@
-import { URL } from '@/consts/Api';
 import { DotsLoaders } from '@/components/Loader/DotsLoaders';
+import { McModal } from '@/components/McModal';
 import { McTable } from '@/components/MyTable';
-import { useCustomFetch } from '@/hooks/useFetch';
+import { URL } from '@/consts/Api';
+import { useFetch, useInfiniteFetch } from '@/hooks/useFetch';
+import { courseTutorDefault, TCourseTutor } from '@/models/CourseTutor';
 import { TResult } from '@/models/Fetching';
 import { deleteData } from '@/services/fetching';
-import { Refresh } from '@mui/icons-material';
-import { Box, IconButton, Typography } from '@mui/material';
-import React, { useState } from 'react';
+import { Refresh, Search } from '@mui/icons-material';
+import { Box, IconButton, TextField, Typography } from '@mui/material';
+import React, { lazy, useState } from 'react';
 import swal from 'sweetalert';
-import { McModal } from '@/components';
 import { Form } from '../Gestion/Form';
-import { courseTutorDefault, TCourseTutor } from '@/models/CourseTutor';
 
-export type AsignacionProps = Record<string, never>;
+export type AsignacionProps = {
+	filter: string;
+};
 
-const Asignacion: React.FC<AsignacionProps> = ({}) => {
+const Asignacion: React.FC<AsignacionProps> = ({ filter }) => {
 	const [open, setOpen] = useState(false);
 	const [preloadData, setPreloadData] = useState<TCourseTutor>(
 		courseTutorDefault as TCourseTutor
 	);
-	const { data, isLoading, isError, refetch } = useCustomFetch({
-		url: `${URL.COURSE_TUTOR}/all`,
-		method: 'post',
-		body: {
-			table: 'ut_v_cursotutor',
-			sort: {
-				fecha: 'desc',
-				id_curso: 'asc',
-				id_jornada: 'asc',
-				id_horario: 'asc',
-			},
-		},
-	});
+	const { data, isLoading, error, fetchNextPage, refetch, hasNextPage } =
+		useInfiniteFetch({
+			name: 'courseTutor',
+			url: `${URL.COURSE_TUTOR}/all`,
+			take: 10,
+			skip: 0,
+			q: filter,
+		});
 
 	const handleSelect = (item: any) => {
 		setOpen(true);
@@ -41,7 +38,7 @@ const Asignacion: React.FC<AsignacionProps> = ({}) => {
 
 	const handleDelete = async (item: any) => {
 		const result: TResult = await deleteData({
-			path: URL.COURSE_TUTOR,
+			path: `${URL.COURSE_TUTOR}`,
 			params: { id_curso_tutor: item.id_curso_tutor },
 		});
 		if (result.affectedRows > 0) {
@@ -58,7 +55,7 @@ const Asignacion: React.FC<AsignacionProps> = ({}) => {
 	};
 
 	if (isLoading) return <DotsLoaders />;
-	if (isError) return <Typography>Error</Typography>;
+	if (error) return <Typography>{error as string}</Typography>;
 
 	return (
 		<Box>
@@ -70,13 +67,11 @@ const Asignacion: React.FC<AsignacionProps> = ({}) => {
 			</Typography>
 			<McTable
 				headers={{
-					n_curso: 'Curso',
+					fecha: 'Fecha',
 					salon: 'Salón',
-					n_jornada: 'Jornada',
-					hora_inicio: 'Inicio',
-					docente: 'Docente',
+					'tutor.nombre': 'Tutor',
 				}}
-				rows={data}
+				rows={data?.pages.flatMap((page) => page.message.data) ?? []}
 				totalCols={{}}
 				onEdit={handleSelect}
 				onDelete={handleDelete}

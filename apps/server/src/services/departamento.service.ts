@@ -39,6 +39,7 @@ export const getAll = async ({
 			where: q ? [{ nombre: Like(`%${q}$`) }] : [],
 			take: take,
 			skip: skip,
+			order: { nombre: 'ASC' },
 		});
 
 		let next = skip + take;

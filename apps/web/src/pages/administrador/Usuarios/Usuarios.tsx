@@ -87,7 +87,7 @@ const Usuarios = () => {
 					title='Crear uno o varios usuarios'
 					open={openModal}
 					onClose={onClose}>
-					<NewUser />
+					<NewUser onClose={onClose} />
 				</McModal>
 			)}
 		</>

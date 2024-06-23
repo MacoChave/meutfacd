@@ -22,5 +22,5 @@ export interface ISPCreateUser {
 	id_municipio: number;
 	carnet: number;
 	cui: string;
-	rol: number;
+	id_rol: number;
 }

@@ -19,7 +19,7 @@ const FetchUsers: React.FC<FetchUsersProps> = ({
 	const { data, isLoading, error, fetchNextPage, hasNextPage } =
 		useInfiniteFetch({
 			name: 'users',
-			url: `${URL.USER}/all`,
+			url: `${URL.USER}/allORM`,
 			take: 10,
 			skip: 0,
 			q: filter,

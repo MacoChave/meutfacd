@@ -9,10 +9,10 @@ import { UploadCSV } from '../UploadCSV';
 import { TRol } from '@/models/Rol';
 
 export type NewUserProps = {
-	// types...
+	onClose: () => void;
 };
 
-const NewUser: React.FC<NewUserProps> = ({}) => {
+const NewUser: React.FC<NewUserProps> = ({ onClose }) => {
 	const [curRol, setCurRol] = useState<TRol>({} as TRol);
 	const { data, isLoading, isError } = useFetch({
 		url: `${URL.ROL}/all`,
@@ -53,6 +53,7 @@ const NewUser: React.FC<NewUserProps> = ({}) => {
 					style={{
 						flex: 2,
 					}}
+					onClose={onClose}
 				/>
 			</Box>
 		</>
