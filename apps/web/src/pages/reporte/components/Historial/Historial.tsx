@@ -13,6 +13,46 @@ import dayjs from 'dayjs';
 import React from 'react';
 import swal from 'sweetalert';
 
+const getCond = (props: HistorialProps) => {
+	const { date, station, state, tutor } = props;
+
+	let cond = [];
+	if (station) {
+		cond.push({
+			column: 'estacion',
+			operator: '=',
+			value: station,
+		});
+	}
+	if (state) {
+		cond.push({
+			column: 'estado',
+			operator: '=',
+			value: state,
+		});
+	}
+	if (tutor?.id_usuario) {
+		cond.push({
+			column: 'id_tutor',
+			operator: '=',
+			value: tutor.id_usuario,
+		});
+	}
+	return [
+		{
+			column: 'fecha',
+			operator: '>=',
+			value: dayjs(date).startOf('month').format('YYYY-MM-DD'),
+		},
+		{
+			column: 'fecha',
+			operator: '<=',
+			value: dayjs(date).endOf('month').format('YYYY-MM-DD'),
+		},
+		...cond,
+	];
+};
+
 export type HistorialProps = {
 	date?: string;
 	station?: number;
@@ -31,33 +71,7 @@ const Historial: React.FC<HistorialProps> = ({
 		method: 'post',
 		body: {
 			table: 'ut_v_revision',
-			conditions: [
-				{
-					column: 'fecha',
-					operator: '>=',
-					value: dayjs(date).startOf('month').format('YYYY-MM-DD'),
-				},
-				{
-					column: 'fecha',
-					operator: '<=',
-					value: dayjs(date).endOf('month').format('YYYY-MM-DD'),
-				},
-				{
-					column: 'estacion',
-					operator: '=',
-					value: station,
-				},
-				{
-					column: 'estado',
-					operator: '=',
-					value: state,
-				},
-				{
-					column: 'id_tutor',
-					operator: '=',
-					value: tutor?.id_usuario ?? 0,
-				},
-			],
+			conditions: getCond({ date, station, state, tutor }),
 			condInclusives: true,
 		},
 		params: {},
