@@ -1,4 +1,6 @@
 import * as yup from 'yup';
+import { TUser } from './TUser';
+import { TCourse } from './Course';
 
 export type TCourseTutor = {
 	id_curso_tutor: number;
@@ -9,6 +11,8 @@ export type TCourseTutor = {
 	id_tutor: number;
 	id_horario: number;
 	id_jornada: number;
+	tutor?: TUser;
+	curso?: TCourse;
 };
 
 export const courseTutorDefault: TCourseTutor = {
@@ -40,12 +44,20 @@ export const courseTutorSchema = yup.object().shape({
 		.number()
 		.positive('Docente de curso es requerido')
 		.required('Docente de curso es requerido'),
-	id_horario: yup
-		.number()
-		.positive('Horario es requerido')
-		.required('Horario es requerido'),
-	id_jornada: yup
-		.number()
-		.positive('Jornada es requerido')
-		.required('Jornada es requerido'),
+	id_horario: yup.number().when('id_curso_tutor', {
+		is: (val: number) => val === 0,
+		then: yup
+			.number()
+			.positive('Horario es requerido')
+			.required('Horario es requerido'),
+		otherwise: yup.number(),
+	}),
+	id_jornada: yup.number().when('id_curso_tutor', {
+		is: (val: number) => val === 0,
+		then: yup
+			.number()
+			.positive('Jornada es requerida')
+			.required('Jornada es requerida'),
+		otherwise: yup.number(),
+	}),
 });

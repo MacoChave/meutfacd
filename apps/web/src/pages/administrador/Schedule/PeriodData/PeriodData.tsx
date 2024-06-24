@@ -1,20 +1,22 @@
-import { URL } from '@/consts/Api';
 import { DotsLoaders } from '@/components/Loader/DotsLoaders';
 import { McTable } from '@/components/MyTable';
-import { useCustomFetch } from '@/hooks/useFetch';
-import { Box, Typography } from '@mui/material';
-import React from 'react';
-import { FormPeriod } from '../FormPeriod';
+import { URL } from '@/consts/Api';
+import { useFetch } from '@/hooks/useFetch';
 import { TResult } from '@/models/Fetching';
 import { deleteData } from '@/services/fetching';
+import { Box, Typography } from '@mui/material';
+import React, { useEffect } from 'react';
 import swal from 'sweetalert';
+import { FormPeriod } from '../FormPeriod';
 
-export type PeriodDataProps = {};
+export type PeriodDataProps = {
+	reload: boolean;
+	setReload: React.Dispatch<React.SetStateAction<boolean>>;
+};
 
-const PeriodData: React.FC<PeriodDataProps> = ({}) => {
-	const { data, isLoading, isError, refetch } = useCustomFetch({
+const PeriodData: React.FC<PeriodDataProps> = ({ reload, setReload }) => {
+	const { data, isLoading, isError, refetch } = useFetch({
 		url: `${URL.PERIOD}/all`,
-		method: 'post',
 	});
 
 	const onClose = () => {
@@ -37,17 +39,21 @@ const PeriodData: React.FC<PeriodDataProps> = ({}) => {
 		console.log('Edit period item', item);
 	};
 
+	useEffect(() => {
+		if (reload) refetch();
+	}, [reload]);
+
 	if (isLoading) return <DotsLoaders />;
 	if (isError) return <Typography>No se pudo cargar los horarios</Typography>;
 
 	return (
 		<Box>
-			<FormPeriod onClose={onClose} />
+			<FormPeriod setReload={setReload} onClose={onClose} />
 			<McTable
 				headers={{
 					nombre: 'Jornada',
 				}}
-				rows={data}
+				rows={data?.message?.data ?? []}
 				totalCols={{}}
 				onDelete={onDelete}
 				// onEdit={onEdit}

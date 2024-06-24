@@ -17,6 +17,7 @@ import { Historial } from '../components/Historial';
 import { ESTACIONES, STATES } from '@/consts/Vars';
 import { PickEvaluador } from '@/pages/encargado/components/PickEvaluador';
 import { TUser } from '@/models/Perfil';
+import { TypeWithKey } from '@/models/TypeWithKey';
 
 export type ProgresosProps = {
 	// types...
@@ -26,11 +27,33 @@ const Progresos: React.FC<ProgresosProps> = ({}) => {
 	const [selectedMonth, setSelectedMonth] = useState(
 		dayjs(new Date()).format('YYYY-MM')
 	);
-	const [stationFilter, setStationFilter] = useState(ESTACIONES[0]);
-	const [stateFilter, setStateFilter] = useState(STATES[0]);
+	const [stationFilter, setStationFilter] = useState<string>();
+	const [stateFilter, setStateFilter] = useState<TypeWithKey<string>>();
 	const [tutorFilter, setTutorFilter] = useState<TUser>({} as TUser);
 
 	const handleDownload = async () => {
+		let cond = [];
+		if (stationFilter) {
+			cond.push({
+				column: 'estacion',
+				operator: '=',
+				value: ESTACIONES.indexOf(stationFilter) + 1,
+			});
+		}
+		if (stateFilter) {
+			cond.push({
+				column: 'estado',
+				operator: '=',
+				value: (stateFilter as any).value,
+			});
+		}
+		if (tutorFilter.id_usuario) {
+			cond.push({
+				column: 'id_tutor',
+				operator: '=',
+				value: tutorFilter.id_usuario,
+			});
+		}
 		const data = await postData({
 			path: `${URL.REVIEW}/xlsx`,
 			body: {
@@ -49,21 +72,7 @@ const Progresos: React.FC<ProgresosProps> = ({}) => {
 							.endOf('month')
 							.format('YYYY-MM-DD'),
 					},
-					{
-						column: 'estacion',
-						operator: '=',
-						value: ESTACIONES.indexOf(stationFilter) + 1,
-					},
-					{
-						column: 'estado',
-						operator: '=',
-						value: stateFilter.value,
-					},
-					{
-						column: 'id_tutor',
-						operator: '=',
-						value: tutorFilter.id_usuario ?? 0,
-					},
+					...cond,
 				],
 				condInclusives: true,
 			},
@@ -175,8 +184,12 @@ const Progresos: React.FC<ProgresosProps> = ({}) => {
 					<Box>
 						<Historial
 							date={selectedMonth}
-							station={ESTACIONES.indexOf(stationFilter) + 1}
-							state={stateFilter.value}
+							station={
+								stationFilter
+									? ESTACIONES.indexOf(stationFilter) + 1
+									: undefined
+							}
+							state={stateFilter ? stateFilter.value : undefined}
 							tutor={tutorFilter}
 						/>
 					</Box>

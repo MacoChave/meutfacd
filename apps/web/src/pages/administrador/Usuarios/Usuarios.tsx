@@ -1,51 +1,35 @@
 import { Contenedor, McModal } from '@/components';
-import { URL } from '@/consts/Api';
-import { useCustomFetch } from '@/hooks/useFetch';
+import { URL_V2 } from '@/consts/Api';
+import { TResponse } from '@/models/Fetching';
 import { TUser } from '@/models/Perfil';
 import { deleteData } from '@/services/fetching';
-import { Box, Button, Typography } from '@mui/material';
+import { Add, Clear, Search } from '@mui/icons-material';
+import { Box, IconButton, TextField } from '@mui/material';
 import { lazy, useState } from 'react';
-const McTable = lazy(() => import('@/components/MyTable/McTable'));
-const ErrorOperacion = lazy(
-	() => import('@/components/ErrorOperacion/ErrorOperacion')
-);
-const DetalleUsuario = lazy(() => import('./DetalleUsuario/DetalleUsuario'));
+import { useNavigate } from 'react-router-dom';
+const FetchUsers = lazy(() => import('./components/FetchUsers/FetchUsers'));
+const NewUser = lazy(() => import('./NewUser/NewUser'));
 
 const Usuarios = () => {
+	const [filter, setFilter] = useState('');
 	const [openModal, setOpenModal] = useState(false);
-	const [usuario, setUsuario] = useState<TUser>({} as TUser);
-	const { data, isSuccess, error, refetch } = useCustomFetch({
-		url: `${URL.GENERIC}/all`,
-		method: 'post',
-		body: { table: 'ut_v_usuarios', sort: { id_usuario: 'asc' } },
-	});
+	const navigate = useNavigate();
 
 	const onEdit = (registro: object) => {
-		setUsuario(registro as TUser);
-		setOpenModal(true);
+		const usuario: TUser = registro as TUser;
+		navigate('detail', { state: { usuario } });
 	};
 
 	const onDelete = async (registro: any) => {
-		const response = await deleteData({
-			path: `${URL.USER}`,
+		const response: TResponse<any> = await deleteData({
+			path: `${URL_V2.USER}`,
 			params: { id_usuario: registro['id_usuario'] },
 		});
-		refetch();
 	};
 
 	const onClose = () => {
 		setOpenModal(false);
-		refetch();
 	};
-
-	if (!isSuccess) return <div>Cargando usuarios...</div>;
-	if (error)
-		return (
-			<ErrorOperacion
-				error={error}
-				mensaje='No se pudo recuperar los usuarios'
-			/>
-		);
 
 	return (
 		<>
@@ -59,29 +43,51 @@ const Usuarios = () => {
 						gap: 2,
 						mb: 2,
 					}}></Box>
-				<McTable
-					headers={{
-						nombre: 'Nombre',
-						correo: 'Correo',
-						roles: 'Rol',
-					}}
-					rows={
-						data.map((d: TUser) => ({
-							...d,
-							roles: d.roles ? d.roles.split(' ')[0] : 'Sin rol',
-						})) || []
-					}
-					totalCols={{}}
+				<Box
+					sx={{
+						display: 'flex',
+						flexDirection: 'row',
+						justifyContent: 'flex-start',
+						alignItems: 'baseline',
+						gap: 2,
+					}}>
+					<TextField
+						sx={{ flex: 1 }}
+						label='Filtrar por nombre, apellido o correo electrónico'
+						variant='standard'
+						value={filter}
+						onChange={(e) => setFilter(e.target.value)}
+						InputProps={{
+							startAdornment: <Search color='primary' />,
+							endAdornment: (
+								<IconButton onClick={() => setFilter('')}>
+									<Clear />
+								</IconButton>
+							),
+						}}
+					/>
+					<IconButton
+						onClick={() => {
+							setOpenModal(true);
+						}}
+						color='primary'
+						aria-label='Agregar usuario'
+						title='Agregar usuario/s'>
+						<Add />
+					</IconButton>
+				</Box>
+				<FetchUsers
+					filter={filter}
 					onEdit={onEdit}
 					onDelete={onDelete}
 				/>
 			</Contenedor>
 			{openModal && (
 				<McModal
-					title='Detalle del usuario'
+					title='Crear uno o varios usuarios'
 					open={openModal}
 					onClose={onClose}>
-					<DetalleUsuario registro={usuario} />
+					<NewUser onClose={onClose} />
 				</McModal>
 			)}
 		</>

@@ -8,9 +8,14 @@ export type TResult = {
 	warningStatus: number;
 };
 
-export type TResponse = {
+export type TPagination = {
+	data: any[];
+	nextCursor?: number;
+};
+
+export type TResponse<T> = {
 	code: number;
-	message: string;
+	message: T;
 	error: string;
 };
 

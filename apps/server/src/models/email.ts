@@ -19,7 +19,7 @@ export type TEmailHTML = {
 };
 
 export type TSendEmail = {
-	to: string;
+	to: string | string[];
 	subject: string;
 	plainText: string;
 	content: string;

@@ -1,32 +1,47 @@
 import { Request, Response } from 'express';
-import { errorHttp } from '../utils/error.handle';
-import {
-	sqlDelete,
-	sqlEjecutar,
-	sqlInsert,
-	sqlSelect,
-	sqlUpdate,
-} from '../db/consultas';
+import { sqlDelete, sqlInsert, sqlSelect, sqlUpdate } from '../db/consultas';
+import { errorHttp, successHttp } from '../utils/error.handle';
+import AppDataSource from '../config/orm';
+import { UTHorario } from '../entities/Horario';
 
-export const getItem = async ({ body, query }: Request, res: Response) => {
+export const getItem = async ({ params }: Request, res: Response) => {
 	try {
-		const result = await sqlSelect({
-			table: 'ut_horario',
-			query,
-			...body,
-		});
-		return res.status(200).json(result);
+		// let { period, schedule } = params;
+
+		// let scheduleRepo = AppDataSource.getRepository(Schedule);
+		// let result = await scheduleRepo.findOne({
+		// 	relations: ['id_jornada'],
+		// 	where: {
+		// 		id_jornada: +period,
+		// 		id_horario: +schedule,
+		// 	},
+		// });
+		// successHttp(res, 200, result);
+		successHttp(res, 200, {});
 	} catch (error) {
 		errorHttp(res, error as any);
 	}
 };
 
-export const getItems = async ({ body, query }: Request, res: Response) => {
+export const getItems = async ({ query }: Request, res: Response) => {
 	try {
-		const result = await sqlEjecutar({
-			sql: `SELECT h.*, j.nombre jornada FROM ut_horario h JOIN ut_jornada j ON h.id_jornada = j.id_jornada`,
+		let take = query.take ?? 10;
+		let skip = query.skip ?? 0;
+		let q = query?.q ?? '';
+
+		let horarioRepo = AppDataSource.getRepository(UTHorario);
+		let [result, total] = await horarioRepo.findAndCount({
+			relations: ['jornada'],
+			take: +take,
+			skip: +skip,
 		});
-		return res.status(200).json(result);
+
+		let next = +skip + +take;
+
+		successHttp(res, 200, {
+			data: result,
+			nextCursor: next < total ? next : undefined,
+		});
 	} catch (error) {
 		errorHttp(res, error as any);
 	}

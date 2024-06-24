@@ -7,7 +7,7 @@ create database if not exists dev_meutdb
 character set utf8mb4 
 collate utf8mb4_0900_ai_ci;
 
-use dev_meutdb;
+use dev_meut;
 
 -- 
 -- -------------------------------------------------
@@ -55,15 +55,16 @@ create table if not exists usuario (
 	correo varchar(100) not null,
 	pass varchar(200) not null,
 	direccion varchar(200) not null,
+	telefono varchar(11) null,
 	fecha_nac date not null,
-	estado char(1) not null default 'I', -- [A]ACTIVO | [I]INACTIVO
+	estado char(1) not null default 'U', -- [C] VERIFIED | [U] UNVERIFIED | [D] DEACTIVATE
 	fecha_creacion datetime not null default now(),
 	id_municipio integer unsigned not null,
 	doc_cui varchar(75) null,
 	carnet integer unsigned unique null,
 	cui varchar(20) unique null,
 	constraint fk_usuario_municipio foreign key (id_municipio) references municipio(id_municipio),
-	constraint uk_usuario_correo unique key correo
+	constraint uk_usuario_correo unique (correo)
 );
 
 create table if not exists rol (
@@ -71,7 +72,7 @@ create table if not exists rol (
 	nombre varchar(45) not null,
 	descripcion varchar(255) not null
 );
--- 
+ 
 create table if not exists usuario_rol (
 	id_usuario integer unsigned,
 	id_rol integer unsigned,
@@ -483,7 +484,7 @@ end;
 -- -- -------------------------------------------------
 -- CREAR USUARIO
 -- ----------------------------------------------------
-create procedure if not exists ut_sp_crear_usuario (
+create procedure ut_sp_crear_usuario (
 	in p_nombre varchar(50),
 	in p_apellido varchar(75),
 	in p_genero char(1),
@@ -494,46 +495,63 @@ create procedure if not exists ut_sp_crear_usuario (
 	in p_municipio int unsigned,
 	in p_carnet int unsigned,
 	in p_cui varchar(20),
-	in p_rol int unsigned,
-	out error_code int, 
-	out error_message varchar(255)
+	in p_rol int unsigned
 )
-this_proc:begin
-	declare v_count_user int ; 
-	declare v_new_user int unsigned ; 
+begin
+	declare v_id_usuario int; 
+	declare v_existe_correo int; 
+	declare v_error int default 0;
 
-	set error_code = 0;
-	set error_message = '';
-	
-	select count(*) into v_count_user
-	from usuario u 
-	where u.correo = p_correo ; 
-	
-	if v_count_user > 0 then 
-		set error_code = -1;
-		set error_message = 'El correo ya está registrado';
-		leave this_proc;
-	end if; 
+	declare exit handler for sqlexception 
+	begin
+		set v_error = 1;
+		rollback;
+		select 
+			'Ha ocurrido un error. Operación no completada' as message
+	end;
 
-	insert ignore into usuario 
-		(nombre, apellidos, genero, correo, 
-		pass, direccion, fecha_nac, id_municipio, 
-		carnet, cui)
-	values 
-		(p_nombre, p_apellido, p_genero, p_correo, 
-		p_pass, p_direccion, p_fecha_nac, p_municipio, 
-		p_carnet, p_cui) ; 
-	
-	set v_new_user = last_insert_id() ; 
-	
-	if v_new_user = 0 then 
-		set error_code = -1;
-		set error_message = 'No se pudo crear el usuario';
-		leave this_proc;
-	end if; 
+	START TRANSACTION;
 
-	insert ignore into usuario_rol (id_usuario, id_rol)
-	values (v_new_user, p_rol) ; 
+	select count(*) into v_existe_correo 
+	from usuario 
+	where correo = p_correo; 
+
+	if v_existe_correo > 0 then 
+		set v_error = 1;
+		rollback;
+		select 'El correo proporcionado ya está en uso' as message;
+    else 
+		insert into usuario 
+			(nombre, apellidos, genero, correo, 
+			pass, direccion, fecha_nac, id_municipio, 
+			carnet, cui)
+		values 
+			(p_nombre, p_apellido, p_genero, p_correo, 
+			p_pass, p_direccion, p_fecha_nac, p_municipio, 
+			p_carnet, p_cui); 
+		
+		if row_count() = 0 then
+			set v_error = 1;
+			rollback;
+			select 'Error al insertar en la tabla usuario.' as message;
+		else 
+			set v_id_usuario = last_insert_id() ; 
+			
+			insert into usuario_rol (id_usuario, id_rol)
+			values (v_id_usuario, p_rol);
+			
+			if row_count() = 0 then
+				set v_error = 1;
+				rollback;
+				select 'Error al insertar en la tabla usuario_rol' as message;
+		    end if;
+	    end if;
+    end if;
+
+	if v_error = 0 then 
+		commit;
+		select '' as message;
+	end if;
 end ; 
 
 -- -------------------------------------------------
@@ -915,6 +933,59 @@ this_proc:begin
 		id_horario = p_id_horario, 
 		id_jornada = p_id_jornada
 	where id_usuario = p_id_usuario ; 
+end;
+
+-- -------------------------------------------------
+-- ACTUALIZAR HORARIO DE USUARIOS
+-- -------------------------------------------------
+create procedure ut_sp_bulk_update_profile (
+	in p_id_rol int, 
+	in p_id_horario int, 
+	in p_id_jornada int
+)
+begin
+	declare exit handler for sqlexception 
+	begin 
+		rollback;
+		select 
+			'Ha ocurrido un error. Operación no completada' as message;
+	end;
+
+	start transaction;
+	
+	update ut_perfil up 
+	set 
+		id_horario = p_id_horario, 
+		id_jornada = p_id_jornada
+	where up.id_usuario in (
+		select 
+			ur.id_usuario 
+		from usuario_rol ur 
+		where ur.id_rol = p_id_rol
+	);
+
+	commit;
+end;
+
+-- -------------------------------------------------
+-- ACTUALIZAR PERMISOS DE USUARIOS
+-- -------------------------------------------------
+create procedure ut_sp_bulk_update_permissions ( 
+	in p_id_rol int, 
+	in p_id_pagina int, 
+	in p_permiso tinyint
+)
+begin
+	declare exit handler for sqlexception 
+	begin 
+		rollback;
+		select 
+			'Ha ocurrido un error. Operación no completada' as message;
+	end;
+
+	start transaction;
+
+	commit;
 end;
 
 -- 

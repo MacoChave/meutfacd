@@ -1,16 +1,23 @@
 import { Response } from 'express';
 import { JsonWebTokenError, Jwt } from 'jsonwebtoken';
 import { QueryError } from 'mysql2';
+import AppDataSource from '../config/orm';
 
-const responseJson = (code: number, message: string) => {
+const verifyOrm = () => {
+	if (!AppDataSource.isConnected)
+		throw new Error('No hay conexión a la base de datos');
+};
+
+const responseJson = (code: number, message: any) => {
 	return {
 		code,
-		message,
-		error: message,
+		message:
+			code == 200 ? message : 'Ocurrió un error. Ver propiedad error',
+		error: code != 200 ? message : '',
 	};
 };
 
-const successHttp = (res: Response, code: number = 200, message: string) => {
+const successHttp = (res: Response, code: number = 200, message: any) => {
 	res.status(code).json(responseJson(code, message));
 };
 
@@ -58,4 +65,4 @@ const errorHttp = (
 	}
 };
 
-export { successHttp, errorHttp };
+export { successHttp, errorHttp, verifyOrm };

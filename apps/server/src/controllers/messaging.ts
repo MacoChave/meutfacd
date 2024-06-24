@@ -6,9 +6,9 @@ import {
 	sqlSelectOne,
 	sqlUpdate,
 } from '../db/consultas';
+import { IReturnEmail } from '../interfaces/returns';
+import { sendEmail } from '../services/email.service';
 import { errorHttp } from '../utils/error.handle';
-import { DATA_SOURCES } from '../config/vars.config';
-import { getBodyFromActivity, sendEmail } from '../utils/email';
 
 export const getItem = async ({ query, user }: Request, res: Response) => {
 	try {
@@ -47,19 +47,17 @@ export const postItem = async ({ body, user }: Request, res: Response) => {
 			throw new Error('El usuario receptor no existe');
 		}
 
-		if (DATA_SOURCES.SEND_EMAIL == 'true') {
-			await sendEmail({
-				to: receiver.correo,
-				plainText: 'Por favor, revisa tus notificaciones en la app',
-				subject: 'Nueva notificación en el sistema',
-				content: getBodyFromActivity({
-					username: receiver?.nombre ?? '',
-					action: 'creado',
-					description: 'Se ha creado una nueva notificación para ti',
-					title: 'Nueva notificación',
-				}),
-			});
-		}
+		const sended: IReturnEmail = await sendEmail({
+			to: receiver.correo,
+			subject: 'Nueva notificación en el sistema',
+			template: 'activity-request.html',
+			replaceValues: {
+				name: receiver?.nombre ?? 'usuario',
+				date: new Date().toLocaleDateString(),
+				title: 'Nueva notificación',
+				description: 'Se ha creado una nueva notificación para ti',
+			},
+		});
 
 		const response = await sqlInsert({
 			table: 'ut_notificacion',

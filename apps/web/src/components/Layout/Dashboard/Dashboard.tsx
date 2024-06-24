@@ -2,8 +2,9 @@ import { URL } from '@/consts/Api';
 import { DotsLoaders } from '@/components/Loader/DotsLoaders';
 import { useFetch } from '@/hooks/useFetch';
 import { Box, Toolbar, Typography } from '@mui/material';
-import { FC, lazy, useState } from 'react';
+import { FC, lazy, useEffect, useState } from 'react';
 import imgBackground from '@/assets/webp/SIDER_light_vertical.webp';
+import { ErrorPage } from '@/pages/ErrorPage';
 const ToolbarWithSesion = lazy(
 	() => import('../ToolbarWithSession/ToolbarWithSession')
 );
@@ -18,13 +19,26 @@ const Dashboard: FC<DashboardProps> = ({}) => {
 		url: `${URL.PERMISSION}`,
 	});
 	const [open, setOpen] = useState(false);
+	const [hasSesion, setHasSesion] = useState(false);
 
 	const handleToogleMenu = () => {
 		setOpen(!open);
 	};
 
+	useEffect(() => {
+		const sesion = localStorage.getItem('sesion');
+		if (sesion) {
+			setHasSesion(true);
+		}
+	}, [hasSesion]);
+
 	if (isLoading) return <DotsLoaders />;
-	if (isError) return <Typography>Error</Typography>;
+	if (isError)
+		return (
+			<ErrorPage
+				codigo={hasSesion ? 401 : 404}
+				mensaje='No tiene permisos para acceder a esta página o su sesión ha expirado'></ErrorPage>
+		);
 
 	return (
 		<Box

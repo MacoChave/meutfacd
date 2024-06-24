@@ -39,3 +39,7 @@ export const REVISION = 'V';
 export const RECHAZADO = 'R';
 export const PREVIA = 'P';
 export const APROBADO = 'A';
+export const INACTIVO = 'I';
+export const CORREO_VERIFICADO = 'C';
+export const CORREO_NO_VERIFICADO = 'U';
+export const CORREO_DESACTIVADO = 'D';

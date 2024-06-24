@@ -8,7 +8,7 @@ export type ErrorOperacionProps = {
 
 const ErrorOperacion: React.FC<ErrorOperacionProps> = ({ mensaje, error }) => {
 	console.error('> Error operacional', error);
-	return <div>mensaje</div>;
+	return <div>Error en la operación</div>;
 };
 
 export default ErrorOperacion;

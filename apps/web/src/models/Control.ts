@@ -1,3 +1,9 @@
+export type TRoles = {
+	id_rol: number;
+	nombre: string;
+	description: string;
+};
+
 export type TPermisos = {
 	codigo: number;
 	nombre: number;
@@ -8,7 +14,7 @@ export type TPermisos = {
 export type TAuthState = {
 	token: string;
 	name: string;
-	roles: string;
+	roles: TRoles;
 	paginas: TPermisos[];
 };
 
@@ -22,7 +28,7 @@ export const controlDefault: TControl = {
 	auth: {
 		token: '',
 		name: '',
-		roles: '',
+		roles: {} as TRoles,
 		paginas: [],
 	},
 };

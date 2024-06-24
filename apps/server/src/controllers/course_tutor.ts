@@ -1,41 +1,55 @@
 import { Request, Response } from 'express';
-import { errorHttp } from '../utils/error.handle';
+import { sqlDelete, sqlUpdate } from '../db/consultas';
+import { getOneCurso } from '../services/curso.service';
 import {
-	sqlDelete,
-	sqlEjecutar,
-	sqlInsert,
-	sqlSelect,
-	sqlUpdate,
-} from '../db/consultas';
+	createOrUpdateCursoTutor,
+	getAllCursoTutor,
+} from '../services/curso_tutor.service';
+import { errorHttp, successHttp } from '../utils/error.handle';
+import { UTCursoTutor } from '../entities/CursoTutor';
+import { getOneUsuario } from '../services/usuario.service';
+import { UTCurso } from '../entities/Curso';
+import { Usuario } from '../entities/Usuario';
+import { getOneHorario } from '../services/horario.service';
+import { UTHorario } from '../entities/Horario';
 
-export const getItem = ({ body, query }: Request, res: Response) => {
+export const postItem = async ({ body }: Request, res: Response) => {
 	try {
-		res.status(200).json({ message: 'OK' });
+		// console.table(body);
+		let data = new UTCursoTutor();
+
+		data.salon = body.salon;
+		data.dias = JSON.parse(body.dias);
+		data.fecha = new Date(body.fecha);
+		data.curso = (await getOneCurso(body.id_curso)) as UTCurso;
+		data.tutor = (await getOneUsuario(body.id_tutor)) as Usuario;
+		data.horario = (await getOneHorario(
+			body.id_horario,
+			body.id_jornada
+		)) as UTHorario;
+		data.id_horario = body.id_horario;
+		data.id_jornada = body.id_jornada;
+
+		const cursoTutor = await createOrUpdateCursoTutor(data);
+		successHttp(res, 200, cursoTutor);
 	} catch (error) {
 		errorHttp(res, error as any);
 	}
 };
 
-export const getItems = async ({ body, query }: Request, res: Response) => {
+export const getItems = async ({ query }: Request, res: Response) => {
 	try {
-		const result = await sqlSelect({
-			...body,
-			query,
-		});
-		res.status(200).json(result);
+		const cursoTutor = await getAllCursoTutor(query);
+		successHttp(res, 200, cursoTutor);
 	} catch (error) {
 		errorHttp(res, error as any);
 	}
 };
 
-export const postItem = async ({ body, query }: Request, res: Response) => {
+export const getItem = async ({ params }: Request, res: Response) => {
 	try {
-		let datos = Object.assign({}, body);
-		const result = await sqlInsert({
-			table: 'ut_curso_tutor',
-			datos,
-		});
-		res.status(200).json(result);
+		const cursoTutor = await getOneCurso(Number(params.id));
+		successHttp(res, 200, cursoTutor);
 	} catch (error) {
 		errorHttp(res, error as any);
 	}

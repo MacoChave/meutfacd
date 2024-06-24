@@ -1,7 +1,7 @@
-import { URL } from '@/consts/Api';
 import { McAutocomplete } from '@/components/McWithForms/McAutocomplete';
 import { Option } from '@/components/McWithForms/McAutocomplete/McAutocomplete';
 import { McTable } from '@/components/MyTable';
+import { URL } from '@/consts/Api';
 import { useCustomFetch } from '@/hooks/useFetch';
 import { TRol, defaultRol } from '@/models/Rol';
 import { deleteData, postData } from '@/services/fetching';
@@ -10,10 +10,11 @@ import React, { useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import swal from 'sweetalert';
 import { TabsProps } from '../../propTypes/tabsProps';
-import { PickerRol } from '../PickerRol';
 
 const Rol: React.FC<TabsProps> = ({ usuario, index, ...other }) => {
-	const [rootRol, setRootRol] = useState(usuario.roles.toLowerCase());
+	const [rootRol, setRootRol] = useState(
+		usuario.roles.flat(1).join(',').toLowerCase()
+	);
 	const {
 		data: vRol,
 		isLoading: isLoadvRol,

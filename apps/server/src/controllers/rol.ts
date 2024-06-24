@@ -1,6 +1,10 @@
 import { Request, Response } from 'express';
-import { errorHttp } from '../utils/error.handle';
+import { errorHttp, successHttp, verifyOrm } from '../utils/error.handle';
 import { sqlSelect } from '../db/consultas';
+import AppDataSource from '../config/orm';
+import { Rol } from '../entities/Rol';
+import { IGetAll } from '../interfaces/parameters';
+import { allRoles } from '../services/rol.service';
 
 const obtenerItem = (req: Request, res: Response) => {
 	try {
@@ -11,10 +15,9 @@ const obtenerItem = (req: Request, res: Response) => {
 
 const obtenerItems = async ({ query, user }: Request, res: Response) => {
 	try {
-		const results = await sqlSelect({
-			table: 'ut_v_rol',
-		});
-		res.status(200).json(results);
+		let params: IGetAll = query;
+		let rol = await allRoles(params);
+		successHttp(res, 200, rol);
 	} catch (error: any) {
 		errorHttp(res, error);
 	}

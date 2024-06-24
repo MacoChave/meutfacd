@@ -61,6 +61,11 @@ export const getValue = (key: string, cellValue: any): React.ReactNode => {
 	}
 };
 
+const getNestedValue = (obj: any, path: string): any => {
+	return path.split('.').reduce((acc, key) => acc && acc[key], obj);
+	// return path.split('.').reduce((acc, key) => acc[key], obj);
+};
+
 const McBody: React.FC<McBodyProps> = ({
 	headers,
 	rows,
@@ -75,13 +80,17 @@ const McBody: React.FC<McBodyProps> = ({
 		<TableBody>
 			{rows.map((row, index) => (
 				<TableRow key={`row-${index}`}>
-					{Object.keys(headers).map((key) => (
-						<TableCell
-							key={`cell-${key}${index}`}
-							align={getAlignByDataType(key)}>
-							{getValue(key, row[key as keyof typeof row])}
-						</TableCell>
-					))}
+					{Object.keys(headers).map((key) => {
+						const cellValue = getNestedValue(row, key);
+						return (
+							<TableCell
+								key={`cell-${key}${index}`}
+								align={getAlignByDataType(key)}>
+								{getValue(key, cellValue)}
+								{/* {getValue(key, row[key as keyof typeof row])} */}
+							</TableCell>
+						);
+					})}
 					<TableCell>
 						{onEdit && (
 							<IconButton

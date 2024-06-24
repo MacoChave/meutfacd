@@ -1,34 +1,45 @@
 import { Request, Response } from 'express';
-import { errorHttp } from '../utils/error.handle';
-import {
-	sqlDelete,
-	sqlInsert,
-	sqlSelect,
-	sqlSelectOne,
-	sqlUpdate,
-} from '../db/consultas';
+import { sqlDelete, sqlInsert, sqlUpdate } from '../db/consultas';
+import { errorHttp, successHttp } from '../utils/error.handle';
+import AppDataSource from '../config/orm';
+import { UTJornada } from '../entities/Jornada';
+import { Like } from 'typeorm';
 
-export const getItem = async ({ body, query }: Request, res: Response) => {
+export const getItem = async ({ params }: Request, res: Response) => {
 	try {
-		const result = await sqlSelectOne({
-			table: 'ut_jornada',
-			query,
-			...body,
-		});
-		return res.status(200).json(result);
+		// let id = params.id ?? 0;
+
+		// let periodRepo = AppDataSource.getRepository(Period);
+		// let result = await periodRepo.findOne({
+		// 	relations: ['schedules'],
+		// 	where: {
+		// 		id_jornada: +id,
+		// 	},
+		// });
+		// successHttp(res, 200, result);
+		successHttp(res, 200, {});
 	} catch (error) {
 		errorHttp(res, error as any);
 	}
 };
 
-export const getItems = async ({ body, query }: Request, res: Response) => {
+export const getItems = async ({ query }: Request, res: Response) => {
 	try {
-		const result = await sqlSelect({
-			table: 'ut_jornada',
-			query,
-			...body,
+		let take = query.take ?? 10;
+		let skip = query.skip ?? 0;
+		let q = query?.q ?? '';
+
+		let jornadaRepo = AppDataSource.getRepository(UTJornada);
+		let [result, total] = await jornadaRepo.findAndCount({
+			take: +take,
+			skip: +skip,
 		});
-		return res.status(200).json(result);
+
+		let next = +skip + +take;
+		successHttp(res, 200, {
+			data: result,
+			nextCursor: next < total ? next : undefined,
+		});
 	} catch (error) {
 		errorHttp(res, error as any);
 	}

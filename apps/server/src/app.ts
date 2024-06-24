@@ -4,8 +4,9 @@ import express from 'express';
 import fileUpload from 'express-fileupload';
 import { connection } from './config/mysql';
 import { DATA_SOURCES } from './config/vars.config';
-import { router } from './routes';
-import { AppDataSource } from './config/orm';
+import { router as routesV1 } from './routes/v1';
+import { router as routesV2 } from './routes/v2';
+import AppDataSource from './config/orm';
 
 const PORT = DATA_SOURCES.API_PORT;
 
@@ -19,7 +20,7 @@ app.use(cors());
 app.use(
 	fileUpload({
 		useTempFiles: true,
-		tempFileDir: './storage',
+		tempFileDir: './temps',
 		limits: { fileSize: 10 * 1024 * 1024 },
 		// debug: true,
 		createParentPath: true,
@@ -28,7 +29,8 @@ app.use(
 app.use(express.static('storage'));
 
 // ROUTES
-app.use('/api', router);
+app.use('/api/v1', routesV1);
+app.use('/api/v2', routesV2);
 
 const main = async () => {
 	try {
@@ -50,10 +52,11 @@ const checkDBConection = async () => {
 			console.log('Database connected 👌');
 		})
 		.catch((err) => {
-			throw new Error('Database connection failed 🤬');
+			throw new Error(`Database connection failed 🤬 ${err}`);
 		})
 		.finally(() => {
 			conn.end();
+			console.log('Database connection closed');
 		});
 };
 
@@ -63,7 +66,10 @@ const initTypeORM = async () => {
 		await AppDataSource.initialize();
 		console.log('TypeORM connected 👌');
 	} catch (error) {
-		throw new Error('TypeORM connection failed 🤬');
+		throw new Error(`TypeORM error connection 🤬: ${error}`);
+	} finally {
+		// AppDataSource.close();
+		// console.log('TypeORM connection closed');
 	}
 };
 

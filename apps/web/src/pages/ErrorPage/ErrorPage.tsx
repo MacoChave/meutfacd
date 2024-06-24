@@ -1,5 +1,6 @@
 import { Box, Button, Typography } from '@mui/material';
-import React, { lazy } from 'react';
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
 
 export type ErrorPageProps = {
 	codigo: number;
@@ -7,8 +8,10 @@ export type ErrorPageProps = {
 };
 
 const ErrorPage: React.FC<ErrorPageProps> = ({ codigo, mensaje }) => {
+	const navigate = useNavigate();
 	const handleClick = () => {
-		window.history.back();
+		if (codigo === 404) navigate('/', { replace: true });
+		else navigate(-1);
 	};
 
 	return (
