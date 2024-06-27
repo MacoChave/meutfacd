@@ -9,7 +9,7 @@ const AppDataSource = new DataSource({
 	username: DATA_SOURCES.DB_USER,
 	password: DATA_SOURCES.DB_PASS,
 	database: DATA_SOURCES.DB_NAME,
-	entities: [__dirname + '/../entities/*.ts'],
+	entities: [__dirname + '/../entities/*.ts', __dirname + '/../entities/*.js'],
 	timezone: 'America/Guatemala',
 	logging: true,
 	connectTimeout: 10000,
