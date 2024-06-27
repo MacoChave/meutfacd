@@ -27,7 +27,7 @@ jobs:
         run: echo "TBUILD=$(if [ $GITHUB_REF == 'refs/heads/main' ]; then echo 'production'; elif [ $GITHUB_REF == 'refs/heads/develop' ]; then echo 'development'; else echo 'test'; fi )" >> $GITHUB_ENV
 
       - name: Get url api
-        run: echo "API_URL=$(if [ $GITHUB_REF == 'refs/heads/main' ]; then echo 'https://siderusac.com/unidad-tesis'; elif [ $GITHUB_REF == 'refs/heads/develop' ]; then echo 'https://siderusac.com/develop/unidad-tesis'; else echo 'https://siderusac.com/test/unidad-tesis'; fi)" >> $GITHUB_ENV
+        run: echo "API_URL=$(if [ $GITHUB_REF == 'refs/heads/main' ]; then echo 'https://derecho.cloud'; elif [ $GITHUB_REF == 'refs/heads/develop' ]; then echo 'https://dev.derecho.cloud'; else echo 'https://test.derecho.cloud'; fi)" >> $GITHUB_ENV
 
       - name: Build the meut-api Docker image
         run: |
