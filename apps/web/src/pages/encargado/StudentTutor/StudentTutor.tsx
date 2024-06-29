@@ -39,7 +39,7 @@ const StudentTutor: React.FC<StudentTutorProps> = ({}) => {
 	const onPass = async (item: any) => {
 		setLoading(true);
 		const dictamen = await postData<any>({
-			path: `${URL.PDF}/dictamen`,
+			path: `${URL.PDF}/support`,
 			body: {
 				idStudent: item.id_usuario,
 				title: item.titulo,
