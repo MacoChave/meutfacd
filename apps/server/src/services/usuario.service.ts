@@ -86,11 +86,11 @@ export const getAllUser = async ({
 			skip: +skip,
 		});
 
-		let next = skip + take;
+		let next = +skip + +take;
 
 		return {
 			data: users,
-			next: next < count ? next : undefined,
+			next: +next < +count ? +next : undefined,
 		};
 	} catch (error: any) {
 		throw new Error(error.message);
@@ -103,7 +103,14 @@ export const getOneUsuario = async (
 	try {
 		let userRepo = AppDataSource.getRepository(Usuario);
 		let user: Usuario | null = await userRepo.findOne({
-			relations: ['municipio', 'perfil', 'roles'],
+			relations: [
+				'municipio',
+				'perfil',
+				'roles',
+				'cursosTutor',
+				'notificacionesEnviadas',
+				'notificacionesRecibidas',
+			],
 			where: [{ id_usuario }],
 		});
 

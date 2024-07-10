@@ -10,7 +10,7 @@ export type TResult = {
 
 export type TPagination = {
 	data: any[];
-	nextCursor?: number;
+	next?: number;
 };
 
 export type TResponse<T> = {
