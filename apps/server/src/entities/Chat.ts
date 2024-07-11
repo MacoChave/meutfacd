@@ -1,26 +1,27 @@
-// import {
-// 	BaseEntity,
-// 	Column,
-// 	Entity,
-// 	OneToMany,
-// 	PrimaryGeneratedColumn,
-// } from 'typeorm';
-// import { Message } from './Message';
+import {
+	Column,
+	CreateDateColumn,
+	Entity,
+	OneToMany,
+	PrimaryGeneratedColumn,
+	UpdateDateColumn,
+} from 'typeorm';
+import { UTMessage } from './Message';
 
-// @Entity('ut_chat')
-// export class Chat extends BaseEntity {
-// 	@PrimaryGeneratedColumn()
-// 	id_chat: number;
+@Entity('ut_chat')
+export class UTChat {
+	@PrimaryGeneratedColumn()
+	id_chat: number;
 
-// 	@Column({ type: 'json' })
-// 	miembros: string;
+	@Column({ type: 'json' })
+	miembros: number[];
 
-// 	@Column({ type: 'date' })
-// 	fecha_creacion: string;
+	@CreateDateColumn()
+	fecha_creacion: Date;
 
-// 	@Column({ type: 'date' })
-// 	fecha_modificacion: string;
+	@UpdateDateColumn()
+	fecha_modificacion: Date;
 
-// 	@OneToMany(() => Message, (message: Message) => message.id_chat)
-// 	messages: Message[];
-// }
+	@OneToMany(() => UTMessage, (message: UTMessage) => message.chat)
+	messages: UTMessage[];
+}
