@@ -1,34 +1,33 @@
-// import {
-// 	BaseEntity,
-// 	Column,
-// 	Entity,
-// 	JoinColumn,
-// 	ManyToOne,
-// 	PrimaryGeneratedColumn,
-// } from 'typeorm';
-// import { Chat } from './Chat';
+import {
+	Column,
+	CreateDateColumn,
+	Entity,
+	JoinColumn,
+	ManyToOne,
+	PrimaryGeneratedColumn,
+} from 'typeorm';
+import { UTChat } from './Chat';
+import { Usuario } from './Usuario';
 
-// @Entity('ut_message')
-// export class Message extends BaseEntity {
-// 	@PrimaryGeneratedColumn()
-// 	id_message: number;
+@Entity('ut_message')
+export class UTMessage {
+	@PrimaryGeneratedColumn()
+	id_message: number;
 
-// 	@Column()
-// 	id_chat: number;
+	@ManyToOne(() => UTChat, (chat) => chat.messages)
+	@JoinColumn({ name: 'id_chat' })
+	chat: UTChat;
 
-// 	@Column()
-// 	autor: string;
+	@ManyToOne(() => Usuario, (usuario) => usuario.messages)
+	@JoinColumn({ name: 'autor' })
+	autor: Usuario;
 
-// 	@Column()
-// 	texto: string;
+	@Column({ length: 255 })
+	texto: string;
 
-// 	@Column({ default: 'E' })
-// 	estado: string;
+	@Column({ type: 'char', length: 1, default: 'E' })
+	estado: string;
 
-// 	@Column()
-// 	fecha_envio: string;
-
-// 	@ManyToOne(() => Chat, (chat: Chat) => chat.messages)
-// 	@JoinColumn({ name: 'id_chat' })
-// 	chat: Chat;
-// }
+	@CreateDateColumn()
+	fecha_envio: Date;
+}
