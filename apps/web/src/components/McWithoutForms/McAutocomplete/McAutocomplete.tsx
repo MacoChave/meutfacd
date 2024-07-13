@@ -33,7 +33,7 @@ const McAutocomplete: React.FC<McAutocompleteProps> = ({
 			}}
 			options={options}
 			getOptionLabel={(option) =>
-				Object.keys(option).length > 0 ? option[colLabel] : ''
+				typeof option === 'object' ? option[colLabel] : option
 			}
 			renderInput={(params) => (
 				<TextField {...params} label={label} variant='standard' />

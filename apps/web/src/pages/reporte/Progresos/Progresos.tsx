@@ -165,8 +165,8 @@ const Progresos: React.FC<ProgresosProps> = ({}) => {
 								rol='Docente'
 								page={stationFilter}
 								status={1}
-								horario={2}
-								jornada={3}
+								horario={-1}
+								jornada={-1}
 							/>
 						</Box>
 						<Box sx={{ flex: 1 }} />

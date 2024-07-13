@@ -7,12 +7,14 @@ import React, { useState } from 'react';
 export type PickSeccionCourseProps = {
 	course: number;
 	section: string;
+	label?: string;
 	setSection: (section: string) => void;
 };
 
 const PickSeccionCourse: React.FC<PickSeccionCourseProps> = ({
 	course,
 	section,
+	label = 'Salón',
 	setSection,
 }) => {
 	// const [selectedSeccion, setSelectedSeccion] = useState({} as any);
@@ -32,7 +34,7 @@ const PickSeccionCourse: React.FC<PickSeccionCourseProps> = ({
 			<McAutocomplete
 				value={section}
 				options={data}
-				label='Salón'
+				label={label}
 				colLabel='salon'
 				isLoading={isLoading}
 				isError={isError}

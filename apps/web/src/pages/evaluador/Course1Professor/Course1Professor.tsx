@@ -157,10 +157,11 @@ const Course1Professor: React.FC<Course1ProfessorProps> = ({}) => {
 					<PickSeccionCourse
 						course={1}
 						section={section}
+						label='Salón actual'
 						setSection={setSection}
 					/>
 					<TextField
-						label='Nuevo salón'
+						label='Actualizar salón actual'
 						value={newSection}
 						onChange={(e) => setNewSection(e.target.value)}
 						InputProps={{

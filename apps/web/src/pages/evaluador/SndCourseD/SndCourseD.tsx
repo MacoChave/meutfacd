@@ -176,10 +176,11 @@ const SndCourseD: React.FC<SndCourseDProps> = ({}) => {
 					<PickSeccionCourse
 						course={2}
 						section={section}
+						label='Salón actual'
 						setSection={setSection}
 					/>
 					<TextField
-						label='Nuevo salón'
+						label='Actualizar salón actual'
 						value={newSection}
 						onChange={(e) => setNewSection(e.target.value)}
 						InputProps={{

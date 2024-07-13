@@ -3,6 +3,8 @@ import { DATA_SOURCES } from '../config/vars.config';
 import { errorHttp } from '../utils/error.handle';
 import { logger } from '../utils/logger';
 import { getExtFile, uploadFile } from '../utils/upload';
+import { Usuario } from '../entities/Usuario';
+import { getOneUsuario } from '../services/usuario.service';
 
 const uploadStudentFile = async (
 	{ files, body, user }: Request,
@@ -17,12 +19,19 @@ const uploadStudentFile = async (
 			);
 		}
 
-		await uploadFile(
+		let curUser: Usuario | null = await getOneUsuario(user.primaryKey);
+
+		if (!curUser) {
+			throw new Error('Usuario no encontrado');
+		}
+
+		let result = await uploadFile(
 			files.file.tempFilePath,
 			files.file.name,
-			user.carnet.toString(),
+			curUser.carnet.toString(),
 			body.filename
 		);
+
 		res.status(200).json({
 			name: `${user.carnet}/${body.filename}.${getExtFile(
 				files.file.name
@@ -43,14 +52,20 @@ const uploadTesis = async ({ files, user }: Request, res: Response) => {
 			);
 		}
 
+		let curUser: Usuario | null = await getOneUsuario(user.primaryKey);
+
+		if (!curUser) {
+			throw new Error('Usuario no encontrado');
+		}
+
 		await uploadFile(
 			files.thesis.tempFilePath,
 			files.thesis.name,
-			user.carnet.toString(),
+			curUser.carnet.toString(),
 			'thesis'
 		);
 		res.status(200).json({
-			name: `${user.carnet}/thesis.${getExtFile(files.thesis.name)}`,
+			name: `${curUser.carnet}/thesis.${getExtFile(files.thesis.name)}`,
 		});
 	} catch (error: any) {
 		errorHttp(res, error);
