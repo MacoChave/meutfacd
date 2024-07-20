@@ -9,12 +9,14 @@ import {
 	OneToOne,
 	PrimaryGeneratedColumn,
 } from 'typeorm';
-import { Municipio } from './Municipio';
-import { UTPerfil } from './Perfil';
-import { Rol } from './Rol';
 import { UTCursoTutor } from './CursoTutor';
 import { UTMessage } from './Message';
+import { Municipio } from './Municipio';
 import { UTNotificacion } from './Notificacion';
+import { UTPerfil } from './Perfil';
+import { Rol } from './Rol';
+import { UTRevision } from './Revision';
+import { UTTesis } from './Tesis';
 
 @Entity('usuario')
 export class Usuario {
@@ -95,4 +97,16 @@ export class Usuario {
 		(notificacion: UTNotificacion) => notificacion.receptor
 	)
 	notificacionesRecibidas: UTNotificacion[];
+
+	@OneToMany(
+		() => UTCursoTutor,
+		(cursoTutor: UTCursoTutor) => cursoTutor.tutor
+	)
+	cursoTutores: UTCursoTutor[];
+
+	@OneToMany(() => UTRevision, (revision: UTRevision) => revision.tutor)
+	revisions: UTRevision[];
+
+	@OneToMany(() => UTTesis, (tesis: UTTesis) => tesis.estudiante)
+	tesis: UTTesis[];
 }

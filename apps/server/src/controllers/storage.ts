@@ -4,7 +4,7 @@ import { errorHttp } from '../utils/error.handle';
 import { logger } from '../utils/logger';
 import { getExtFile, uploadFile } from '../utils/upload';
 import { Usuario } from '../entities/Usuario';
-import { getOneUsuario } from '../services/usuario.service';
+import { getOne } from '../services/usuario.service';
 
 const uploadStudentFile = async (
 	{ files, body, user }: Request,
@@ -19,7 +19,7 @@ const uploadStudentFile = async (
 			);
 		}
 
-		let curUser: Usuario | null = await getOneUsuario(user.primaryKey);
+		let curUser: Usuario | null = await getOne(user.primaryKey);
 
 		if (!curUser) {
 			throw new Error('Usuario no encontrado');
@@ -52,7 +52,7 @@ const uploadTesis = async ({ files, user }: Request, res: Response) => {
 			);
 		}
 
-		let curUser: Usuario | null = await getOneUsuario(user.primaryKey);
+		let curUser: Usuario | null = await getOne(user.primaryKey);
 
 		if (!curUser) {
 			throw new Error('Usuario no encontrado');

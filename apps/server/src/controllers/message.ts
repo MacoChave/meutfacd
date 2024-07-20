@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
+import { sqlEjecutar, sqlInsert } from '../db/consultas';
 import { errorHttp } from '../utils/error.handle';
-import { sqlEjecutar, sqlInsert, sqlSelect } from '../db/consultas';
 
 // CREATE MESSAGE
 export const createMessage = async ({ body, user }: Request, res: Response) => {

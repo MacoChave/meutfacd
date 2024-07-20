@@ -1,28 +1,46 @@
-// import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import {
+	Column,
+	CreateDateColumn,
+	Entity,
+	JoinColumn,
+	ManyToOne,
+	OneToMany,
+	PrimaryGeneratedColumn,
+	UpdateDateColumn,
+} from 'typeorm';
+import { Usuario } from './Usuario';
+import { UTRevision } from './Revision';
 
-// @Entity('ut_tesis')
-// export class Tesis extends BaseEntity {
-// 	@PrimaryGeneratedColumn()
-// 	id_tesis: number;
+@Entity({ name: 'ut_tesis' })
+export class UTTesis {
+	@PrimaryGeneratedColumn()
+	id_tesis: number;
 
-// 	@Column()
-// 	titulo: string;
+	@Column({ type: 'varchar', length: 255 })
+	titulo: string;
 
-// 	@Column()
-// 	ruta_perfil: string;
+	@Column({ type: 'varchar', length: 255 })
+	ruta_perfil: string;
 
-// 	@Column()
-// 	ruta_tesis: string;
+	@Column({ type: 'varchar', length: 255, nullable: true })
+	ruta_tesis: string;
 
-// 	@Column()
-// 	ruta_asesor: string;
+	@Column({ type: 'varchar', length: 255, nullable: true })
+	ruta_asesor: string;
 
-// 	@Column()
-// 	fecha_creacion: string;
+	@CreateDateColumn({ type: 'datetime', default: () => 'CURRENT_TIMESTAMP' })
+	fecha_creacion: Date;
 
-// 	@Column()
-// 	fecha_modificacion: string;
+	@UpdateDateColumn({ type: 'datetime', default: () => 'CURRENT_TIMESTAMP' })
+	fecha_modificacion: Date;
 
-// 	@Column()
-// 	id_estudiante: number;
-// }
+	@Column({ type: 'int', unsigned: true })
+	id_estudiante: number;
+
+	@ManyToOne(() => Usuario, (usuario: Usuario) => usuario.tesis)
+	@JoinColumn({ name: 'id_estudiante' })
+	estudiante: Usuario;
+
+	@OneToMany(() => UTRevision, (revision: UTRevision) => revision.tesis)
+	revisions: UTRevision[];
+}

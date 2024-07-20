@@ -5,7 +5,6 @@ import { IGetAll } from '../interfaces/parameters';
 
 export const getItem = async ({ params }: Request, res: Response) => {
 	try {
-		console.log(`Obtener curso ${params.id}`);
 		const user = await getOneCurso(Number(params.id ?? '0'));
 		successHttp(res, 200, user);
 	} catch (error) {

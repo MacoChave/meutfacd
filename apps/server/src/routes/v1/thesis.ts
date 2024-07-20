@@ -10,8 +10,8 @@ import { requireAuth } from '../../middlewares/requireAuth';
 
 const router = Router();
 
-router.post('/one', requireAuth, getItem);
-router.post('/all', requireAuth, getItems);
+router.get('/all', requireAuth, getItems);
+router.get('/:id', requireAuth, getItem);
 router.post('', requireAuth, postItem);
 router.put('', requireAuth, putItem);
 router.delete('', requireAuth, deleteItem);

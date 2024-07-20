@@ -16,6 +16,8 @@ import { ContactData } from './components/ContactData';
 import { PersonalData } from './components/PersonalData';
 import { SesionData } from './components/SesionData';
 import dayjs from 'dayjs';
+import { TRole } from '@/interfaces/usuario';
+import { TRoles } from '@/models/Control';
 
 export const UserProfile = (): JSX.Element => {
 	const [isEditing, setIsEditing] = useState(false);
@@ -30,6 +32,26 @@ export const UserProfile = (): JSX.Element => {
 		defaultValues: profileDefault,
 		mode: 'onBlur',
 		resolver: yupResolver(schemaUsuario),
+		values: {
+			id_usuario: perfil.id_usuario,
+			nombre: perfil.nombre,
+			apellidos: perfil.apellidos,
+			genero: perfil.genero,
+			correo: perfil.correo,
+			carnet: perfil.carnet,
+			cui: perfil.cui,
+			direccion: perfil.direccion,
+			fecha_nac: dayjs(perfil.fecha_nac).format('YYYY-MM-DD'),
+			estado: perfil.estado,
+			telefono: perfil.telefono,
+			id_rol: 0,
+			rol: '',
+			id_jornada: perfil.id_jornada,
+			id_horario: perfil.id_horario,
+			pass: '',
+			passConfirm: '',
+			roles: '',
+		},
 	});
 
 	const toggleEditing = (event: SyntheticEvent) => {
@@ -58,28 +80,28 @@ export const UserProfile = (): JSX.Element => {
 		}
 	};
 
-	useEffect(() => {
-		if (perfil) {
-			methods.setValue('id_usuario', perfil.id_usuario);
-			methods.setValue('nombre', perfil.nombre);
-			methods.setValue('apellidos', perfil.apellidos);
-			methods.setValue('genero', perfil.genero);
-			methods.setValue('correo', perfil.correo);
-			methods.setValue('carnet', perfil.carnet);
-			methods.setValue('cui', perfil.cui);
-			methods.setValue('direccion', perfil.direccion);
-			methods.setValue(
-				'fecha_nac',
-				dayjs(perfil.fecha_nac).format('YYYY-MM-DD')
-			);
-			methods.setValue('estado', perfil.estado);
-			methods.setValue('telefono', perfil.telefono);
-			methods.setValue('id_rol', perfil.id_rol);
-			methods.setValue('rol', perfil.rol);
-			methods.setValue('id_jornada', perfil.id_jornada);
-			methods.setValue('id_horario', perfil.id_horario);
-		}
-	}, [isLoading]);
+	// useEffect(() => {
+	// 	if (perfil) {
+	// 		methods.setValue('id_usuario', perfil.id_usuario);
+	// 		methods.setValue('nombre', perfil.nombre);
+	// 		methods.setValue('apellidos', perfil.apellidos);
+	// 		methods.setValue('genero', perfil.genero);
+	// 		methods.setValue('correo', perfil.correo);
+	// 		methods.setValue('carnet', perfil.carnet);
+	// 		methods.setValue('cui', perfil.cui);
+	// 		methods.setValue('direccion', perfil.direccion);
+	// 		methods.setValue(
+	// 			'fecha_nac',
+	// 			dayjs(perfil.fecha_nac).format('YYYY-MM-DD')
+	// 		);
+	// 		methods.setValue('estado', perfil.estado);
+	// 		methods.setValue('telefono', perfil.telefono);
+	// 		methods.setValue('id_rol', perfil.id_rol);
+	// 		methods.setValue('rol', perfil.rol);
+	// 		methods.setValue('id_jornada', perfil.id_jornada);
+	// 		methods.setValue('id_horario', perfil.id_horario);
+	// 	}
+	// }, [isLoading]);
 
 	if (isLoading) return <DotsLoaders />;
 
@@ -94,31 +116,72 @@ export const UserProfile = (): JSX.Element => {
 	return (
 		<FormProvider {...methods}>
 			<Contenedor title='Perfil de usuario'>
-				<form onSubmit={methods.handleSubmit(onSubmit)}>
+				<Box
+					sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}
+					component={'form'}
+					onSubmit={methods.handleSubmit(onSubmit)}>
 					<Box
-						component='article'
 						sx={{
-							display: 'grid',
-							gap: 4,
-							gridTemplateColumns: {
-								xs: '1fr',
-								sm: '2fr 1fr',
-							},
+							display: 'flex',
+							justifyContent: 'space-between',
+							gap: 2,
+							flexWrap: 'wrap',
 						}}>
-						{/* PERSONAL DATA */}
-						<Typography variant='h6'>Datos personales</Typography>
-						<PersonalData editing={isEditing} />
-						<Divider sx={{ gridColumn: '1 / span 2' }} />
-						{/* CONTACT DATA */}
-						<Typography variant='h6'>Datos de contacto</Typography>
-						<ContactData editing={isEditing} />
-						<Divider sx={{ gridColumn: '1 / span 2' }} />
-						{/* SESSION DATA */}
-						<Typography variant='h6'>Datos de sesión</Typography>
-						<SesionData editing={isEditing} />
-						<Divider sx={{ gridColumn: '1 / span 2' }} />
-						{/* END FORM */}
+						<Typography sx={{ flex: 1 }} variant='h6'>
+							Datos personales
+						</Typography>
+						<PersonalData
+							sx={{
+								minWidth: 300,
+							}}
+							editing={isEditing}
+						/>
+					</Box>
+					{/* PERSONAL DATA */}
+					<Divider sx={{ my: 2 }} />
+					{/* CONTACT DATA */}
+					<Box
+						sx={{
+							display: 'flex',
+							justifyContent: 'space-between',
+							gap: 2,
+							flexWrap: 'wrap',
+						}}>
+						<Typography sx={{ flex: 1 }} variant='h6'>
+							Datos de contacto
+						</Typography>
+						<ContactData
+							sx={{ minWidth: 300 }}
+							editing={isEditing}
+						/>
+					</Box>
+					<Divider sx={{ my: 2 }} />
+					{/* SESSION DATA */}
+					<Box
+						sx={{
+							display: 'flex',
+							justifyContent: 'space-between',
+							gap: 2,
+							flexWrap: 'wrap',
+						}}>
+						<Typography sx={{ flex: 1 }} variant='h6'>
+							Datos de sesión
+						</Typography>
+						<SesionData
+							sx={{ minWidth: 300 }}
+							editing={isEditing}
+						/>
+						<Divider sx={{ my: 2 }} />
+					</Box>
+					{/* END FORM */}
+					<Box
+						sx={{
+							display: 'flex',
+							gap: 2,
+							justifyContent: 'center',
+						}}>
 						<Button
+							fullWidth
 							variant={isEditing ? 'outlined' : 'contained'}
 							color={isEditing ? 'secondary' : 'primary'}
 							type='button'
@@ -126,6 +189,7 @@ export const UserProfile = (): JSX.Element => {
 							{isEditing ? 'Cancelar' : 'Editar'}
 						</Button>
 						<Button
+							fullWidth
 							variant='contained'
 							color='primary'
 							type='submit'
@@ -133,7 +197,7 @@ export const UserProfile = (): JSX.Element => {
 							Guardar
 						</Button>
 					</Box>
-				</form>
+				</Box>
 			</Contenedor>
 		</FormProvider>
 	);

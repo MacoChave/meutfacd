@@ -1,11 +1,11 @@
-import { URL } from '@/consts/Api';
 import { DotsLoaders } from '@/components/Loader/DotsLoaders';
+import { URL } from '@/consts/Api';
 import { useCustomFetch } from '@/hooks/useFetch';
 import { TChat } from '@/models/Chat';
 import { TMessage } from '@/models/Message';
 import store from '@/redux/store';
 import { postData } from '@/services/fetching';
-import { formatByDataType, formatDate } from '@/utils/formatHandler';
+import { formatByDataType } from '@/utils/formatHandler';
 import { Autorenew, Send } from '@mui/icons-material';
 import {
 	Box,

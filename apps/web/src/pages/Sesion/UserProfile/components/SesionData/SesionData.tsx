@@ -5,7 +5,7 @@ import { TUser } from '@/models/Perfil';
 import { Box, TextField } from '@mui/material';
 import { McInput } from '@/components';
 
-const SesionData: React.FC<DataProps> = ({ editing }) => {
+const SesionData: React.FC<DataProps> = ({ editing, ...props }) => {
 	const {
 		control,
 		formState: { errors },
@@ -16,6 +16,7 @@ const SesionData: React.FC<DataProps> = ({ editing }) => {
 				display: 'flex',
 				flexDirection: 'column',
 				gap: 4,
+				...props.sx,
 			}}>
 			<Controller
 				control={control}

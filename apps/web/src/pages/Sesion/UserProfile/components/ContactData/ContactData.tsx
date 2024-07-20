@@ -8,7 +8,7 @@ import { URL } from '@/consts/Api';
 import { McAutocomplete } from '@/components/McWithForms/McAutocomplete';
 import { DotsLoaders } from '@/components/Loader/DotsLoaders';
 
-const ContactData: React.FC<DataProps> = ({ editing }) => {
+const ContactData: React.FC<DataProps> = ({ editing, ...props }) => {
 	const {
 		control,
 		formState: { errors },
@@ -56,6 +56,7 @@ const ContactData: React.FC<DataProps> = ({ editing }) => {
 				display: 'flex',
 				flexDirection: 'column',
 				gap: 4,
+				...props.sx,
 			}}>
 			<Controller
 				control={control}

@@ -50,7 +50,7 @@ const Logup: React.FC<LogupProps> = () => {
 	const onSubmit: SubmitHandler<TLogup> = async (data) => {
 		try {
 			setEnviando(true);
-			const response = await postData({
+			const response: any = await postData({
 				path: URL.AUTH.LOGUP,
 				body: data,
 				params: { rol: rol },
@@ -63,7 +63,7 @@ const Logup: React.FC<LogupProps> = () => {
 			);
 			methods.reset();
 		} catch (error: any) {
-			errorHandler(error as AxiosError);
+			errorHandler(error.respone.data);
 		} finally {
 			setEnviando(false);
 		}

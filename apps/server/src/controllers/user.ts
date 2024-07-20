@@ -8,11 +8,7 @@ import { sqlDelete, sqlSelect, sqlUpdate } from '../db/consultas';
 import { IGetAll } from '../interfaces/parameters';
 import { IReturnEmail } from '../interfaces/returns';
 import { sendEmail } from '../services/email.service';
-import {
-	getAllUser,
-	createUser,
-	getOneUsuario,
-} from '../services/usuario.service';
+import { getAll, createUser, getOne } from '../services/usuario.service';
 import { errorHttp, successHttp } from '../utils/error.handle';
 import { formatDate, newDate } from '../utils/formats';
 import { getRandomPassword } from '../utils/password';
@@ -20,7 +16,7 @@ import { encryptPassword } from '../utils/token';
 
 const getItem = async ({ params }: Request, res: Response) => {
 	try {
-		const user = await getOneUsuario(Number(params.id ?? '0'));
+		const user = await getOne(Number(params.id ?? '0'));
 		successHttp(res, 200, user);
 	} catch (error: any) {
 		errorHttp(res, error);
@@ -44,7 +40,7 @@ const getItems = async ({ body, query }: Request, res: Response) => {
 const getUsers = async ({ query }: Request, res: Response) => {
 	try {
 		let params: IGetAll = query;
-		let user = await getAllUser(params);
+		let user = await getAll(params);
 		successHttp(res, 200, user);
 	} catch (error: any) {
 		errorHttp(res, error);
@@ -174,7 +170,7 @@ export {
 	bulkInsert,
 	createItem,
 	deleteItem,
-	getAllUser,
+	getAll as getAllUser,
 	getUsers,
 	getItem,
 	getItems,

@@ -7,7 +7,7 @@ import {
 } from '../services/curso_tutor.service';
 import { errorHttp, successHttp } from '../utils/error.handle';
 import { UTCursoTutor } from '../entities/CursoTutor';
-import { getOneUsuario } from '../services/usuario.service';
+import { getOne } from '../services/usuario.service';
 import { UTCurso } from '../entities/Curso';
 import { Usuario } from '../entities/Usuario';
 import { getOneHorario } from '../services/horario.service';
@@ -22,7 +22,7 @@ export const postItem = async ({ body }: Request, res: Response) => {
 		data.dias = JSON.parse(body.dias);
 		data.fecha = new Date(body.fecha);
 		data.curso = (await getOneCurso(body.id_curso)) as UTCurso;
-		data.tutor = (await getOneUsuario(body.id_tutor)) as Usuario;
+		data.tutor = (await getOne(body.id_tutor)) as Usuario;
 		data.horario = (await getOneHorario(
 			body.id_horario,
 			body.id_jornada

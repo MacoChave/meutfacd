@@ -3,11 +3,13 @@ import {
 	Entity,
 	JoinColumn,
 	ManyToOne,
+	OneToMany,
 	PrimaryGeneratedColumn,
 } from 'typeorm';
 import { Usuario } from './Usuario';
 import { UTCurso } from './Curso';
 import { UTHorario } from './Horario';
+import { UTRevision } from './Revision';
 
 @Entity('ut_curso_tutor')
 export class UTCursoTutor {
@@ -44,4 +46,7 @@ export class UTCursoTutor {
 		{ name: 'id_jornada', referencedColumnName: 'id_jornada' },
 	])
 	horario: UTHorario;
+
+	@OneToMany(() => UTRevision, (revision: UTRevision) => revision.cursoTutor)
+	revisions: UTRevision[];
 }

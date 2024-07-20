@@ -8,6 +8,7 @@ import { createWriteStream, readFileSync } from 'fs';
 import { DATA_SOURCES } from '../config/vars.config';
 import { sqlSelectOne } from '../db/consultas';
 import { errorHttp } from '../utils/error.handle';
+import { formatDate } from '../utils/formats';
 import { logger } from '../utils/logger';
 import {
 	createDocument,
@@ -21,7 +22,6 @@ import {
 	setQRCode,
 } from '../utils/pdf';
 import { config } from '../utils/upload';
-import { formatDate } from '../utils/formats';
 
 export const createReport = async ({ body, user }: Request, res: Response) => {
 	try {
@@ -160,6 +160,176 @@ export const createReport = async ({ body, user }: Request, res: Response) => {
 	} catch (error: any) {
 		console.log({ error });
 		errorHttp(res, error);
+	}
+};
+
+export const dictamenCourse1 = ({ body, user }: Request, res: Response) => {
+	try {
+		// GET STUDENT, TUTOR & COURSE DATA
+
+		const localFilename: string = 'src/storage/report.pdf';
+		const doc = createDocument();
+
+		let writeStriam = createWriteStream(localFilename);
+		doc.pipe(writeStriam);
+
+		doc.font('NotoSans-Bold');
+		setLetterHead(doc);
+
+		doc.moveDown(3);
+
+		doc.fontSize(12).text(`UNIVERSIDAD DE SAN CARLOS DE GUATEMALA`, {
+			align: 'center',
+		});
+		doc.fontSize(12).text(`FACULTAD DE CIENCIAS JURÍDICAS Y SOCIALES`, {
+			align: 'center',
+		});
+		doc.fontSize(12).text(`UNIDAD DE ASESORÍA DE TESIS`, {
+			align: 'center',
+		});
+
+		doc.moveDown();
+
+		doc.fontSize(12).text('CONSTANCIA', {
+			align: 'center',
+		});
+
+		doc.moveDown();
+
+		doc.fontSize(12).text(
+			'EL INFRAESCRITO JEFE DE LA UNIDAD DE ASESORÍA DE TESIS',
+			{
+				align: 'center',
+			}
+		);
+
+		doc.moveDown();
+
+		doc.fontSize(12).text('HACE CONSTAR', {
+			align: 'center',
+		});
+
+		doc.moveDown();
+
+		doc.fontSize(12).text('Que el(la) estudiante: ', {
+			align: 'left',
+			continued: true,
+		});
+		doc.font('NotoSans')
+			.fontSize(12)
+			.text('${student.nombre} ${student.apellidos}', {
+				underline: true,
+			});
+
+		doc.font('NotoSans-Bold')
+			.fontSize(12)
+			.text('quien se identifica con el carné No. ', {
+				align: 'left',
+				continued: true,
+			});
+		doc.font('NotoSans').fontSize(12).text('${student.carnet}', {
+			underline: true,
+		});
+
+		doc.moveDown();
+
+		doc.font('NotoSans-Bold').fontSize(12).text('Asistió al: ', {
+			align: 'justify',
+			continued: true,
+		});
+		doc.font('NotoSans-Bold').fontSize(12).text('${curso.nombre}.', {
+			align: 'justify',
+		});
+
+		doc.moveDown();
+
+		doc.font('NotoSans-Bold')
+			.fontSize(12)
+			.text(
+				'Asimismo, acredita todos los requisitos estipulados en el Artículo 28 del Normativo para la Elaboración de Tesis de Licenciatura en Ciencias Jurídicas y Sociales y del Examen General Público, de esta unidad académica.',
+				{
+					align: 'justify',
+				}
+			);
+
+		doc.moveDown();
+
+		doc.font('NotoSans-Bold').fontSize(12).text('"ID Y ENSAÑAD A TODOS"', {
+			align: 'center',
+		});
+
+		doc.moveDown(3);
+
+		doc.font('NotoSans-Bold')
+			.fontSize(12)
+			.text(
+				`Guatemala, ${formatDate({
+					date: new Date(),
+					format: 'report',
+					type: 'date',
+				})}`,
+				{
+					align: 'right',
+				}
+			);
+
+		doc.moveDown(4);
+		doc.font('NotoSans-Bold')
+			.fontSize(12)
+			.text('Dr. Carlos Herrer Recinos', {
+				align: 'left',
+			});
+		doc.font('NotoSans-Bold')
+			.fontSize(10)
+			.text('Jefe de la Unidad de Asesoría de Tesis', {
+				align: 'left',
+			});
+
+		doc.moveUp(2);
+		doc.font('NotoSans-Bold')
+			.fontSize(12)
+			.text('LICDA. ${tutor.nombre} ${tutor.apellidos}', {
+				align: 'right',
+			});
+		doc.font('NotoSans-Bold')
+			.fontSize(10)
+			.text('Docente Consejero de Redacción y Estilo', {
+				align: 'right',
+			});
+
+		setFooter(doc);
+
+		doc.flushPages();
+		doc.end();
+
+		writeStriam.on('finish', async () => {
+			const fileContent = readFileSync(localFilename);
+
+			if (DATA_SOURCES.UPLOAD_S3) {
+				const params: PutObjectCommandInput = {
+					Bucket: DATA_SOURCES.AWS_BUCKET_NAME,
+					Key: '${student.carnet}/${filename}.pdf',
+					Body: fileContent,
+					ACL: 'public-read',
+					ContentType: 'application/pdf',
+					Metadata: {
+						fieldname: 'dictamen',
+					},
+				};
+
+				const client = new S3Client(config);
+				const result = await client.send(new PutObjectCommand(params));
+				logger({
+					dirname: __dirname,
+					proc: 'createReport',
+					message: result,
+				});
+			}
+
+			res.status(200).json({ name: '${student.carnet}/${filename}.pdf' });
+		});
+	} catch (error: any) {
+		throw new Error(error.message);
 	}
 };
 

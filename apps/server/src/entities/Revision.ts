@@ -1,40 +1,65 @@
-// import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import {
+	Column,
+	CreateDateColumn,
+	Entity,
+	JoinColumn,
+	ManyToOne,
+	PrimaryGeneratedColumn,
+} from 'typeorm';
+import { Usuario } from './Usuario';
+import { UTCursoTutor } from './CursoTutor';
+import { UTTesis } from './Tesis';
 
-// @Entity('ut_revision')
-// export class Revision extends BaseEntity {
-// 	@PrimaryGeneratedColumn()
-// 	id_revision: number;
+@Entity({ name: 'ut_revision' })
+export class UTRevision {
+	@PrimaryGeneratedColumn()
+	id_revision: number;
 
-// 	@Column()
-// 	fecha: string;
+	@CreateDateColumn({ type: 'datetime', default: () => 'CURRENT_TIMESTAMP' })
+	fecha: Date;
 
-// 	@Column()
-// 	titulo: string;
+	@Column({ type: 'varchar', length: 255, nullable: true })
+	titulo: string;
 
-// 	@Column()
-// 	detalle: string;
+	@Column({ type: 'varchar', length: 500, nullable: true })
+	detalle: string;
 
-// 	@Column()
-// 	ruta_certificado: string;
+	@Column({ type: 'varchar', length: 100, nullable: true })
+	ruta_certificado: string;
 
-// 	@Column()
-// 	ruta_dictamen: string;
+	@Column({ type: 'varchar', length: 255, nullable: true })
+	ruta_dictamen: string;
 
-// 	@Column()
-// 	id_curso_tutor: number;
+	@Column({ type: 'int', unsigned: true, nullable: true })
+	id_curso_tutor: number;
 
-// 	@Column()
-// 	id_tutor: number;
+	@Column({ type: 'int', unsigned: true, nullable: true })
+	id_tutor: number;
 
-// 	@Column()
-// 	id_tesis: number;
+	@Column({ type: 'int', unsigned: true, nullable: true })
+	id_tesis: number;
 
-// 	@Column()
-// 	estado: string;
+	@Column({ type: 'char', length: 1, default: 'E' })
+	estado: string;
 
-// 	@Column()
-// 	estacion: string;
+	@Column({ type: 'smallint', default: 1 })
+	estacion: number;
 
-// 	@Column()
-// 	sala: string;
-// }
+	@Column({ type: 'varchar', length: 100, nullable: true })
+	sala: string;
+
+	@ManyToOne(
+		() => UTCursoTutor,
+		(cursoTutor: UTCursoTutor) => cursoTutor.revisions
+	)
+	@JoinColumn({ name: 'id_curso_tutor' })
+	cursoTutor: UTCursoTutor;
+
+	@ManyToOne(() => UTTesis, (tesis: UTTesis) => tesis.revisions)
+	@JoinColumn({ name: 'id_tesis' })
+	tesis: any;
+
+	@ManyToOne(() => Usuario, (usuario: Usuario) => usuario.revisions)
+	@JoinColumn({ name: 'id_tutor' })
+	tutor: Usuario;
+}

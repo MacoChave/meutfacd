@@ -5,7 +5,6 @@ import fileUpload from 'express-fileupload';
 import { connection } from './config/mysql';
 import { DATA_SOURCES } from './config/vars.config';
 import { router as routesV1 } from './routes/v1';
-import { router as routesV2 } from './routes/v2';
 import AppDataSource from './config/orm';
 
 const PORT = DATA_SOURCES.API_PORT;
@@ -30,7 +29,6 @@ app.use(express.static('storage'));
 
 // ROUTES
 app.use('/api/v1', routesV1);
-app.use('/api/v2', routesV2);
 
 const main = async () => {
 	try {

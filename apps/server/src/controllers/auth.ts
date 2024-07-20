@@ -5,10 +5,11 @@ import { Usuario } from '../entities/Usuario';
 import { IReturnEmail } from '../interfaces/returns';
 import { TSignIn } from '../models/signIn';
 import { sendEmail } from '../services/email.service';
-import { userAuth } from '../services/usuario.service';
+import { getOne, userAuth } from '../services/usuario.service';
 import { errorHttp, successHttp } from '../utils/error.handle';
 import { formatDate } from '../utils/formats';
 import { comparePassword, encryptPassword, generarToken } from '../utils/token';
+import { logger } from '../utils/logger';
 
 const signIn = async ({ user, password }: TSignIn) => {
 	try {
@@ -190,25 +191,20 @@ export const logupHandler = async ({ body, query }: Request, res: Response) => {
 
 		// Crear variables para almacenar en BD
 		const keys: string[] = Object.keys(usuario).map((key) => '?');
-		keys.push(...['@error_code', '@error_message']);
+		// keys.push(...['@error_code', '@error_message']);
 		const values = Object.values(usuario).map((value) => value);
 
 		// Almacenar en BD
-		await sqlEjecutar({
+		let [rows, fields]: any = await sqlEjecutar({
 			sql: `call ut_sp_crear_usuario(${keys.join(',')})`,
 			values,
 		});
 
-		const [errorInfo]: any = await sqlEjecutar({
-			sql: `select @error_code, @error_message`,
-		});
+		console.log('ROWS', JSON.stringify(rows, null, 2));
+		console.log('FIELDS', JSON.stringify(fields, null, 2));
 
-		console.log({ errorInfo });
-
-		const { error_code, error_message } = errorInfo;
-
-		if (error_code && error_code !== 0) {
-			throw new Error(error_message);
+		if (rows[0].message !== '') {
+			throw new Error(rows[0].message);
 		}
 
 		// SEND EMAIL VERIFICATION TO USER
@@ -251,30 +247,27 @@ export const loginHandler = async ({ body }: Request, res: Response) => {
 
 export const profileHandler = async ({ user }: Request, res: Response) => {
 	try {
-		const result = await sqlSelectOne({
-			table: 'ut_v_usuarios',
-			columns: [],
-			query: { id_usuario: user.primaryKey },
-		});
+		const usuario: Usuario | null = await getOne(user.primaryKey);
 
-		if (!result) {
+		if (!usuario) {
 			throw new Error('No se encontró el usuario');
 		}
 
 		return res.status(200).json({
-			fecha_nac: result.fecha_nac,
-			genero: result.genero,
-			direccion: result.direccion,
-			id_municipio: result.id_municipio,
-			nombre: result.nombre,
-			apellidos: result.apellidos,
-			correo: result.correo,
-			estado: result.estado,
-			carnet: result.carnet,
-			cui: result.cui,
-			roles: result.roles,
-			id_jornada: result.id_jornada,
-			id_horario: result.id_horario,
+			fecha_nac: usuario.fecha_nac,
+			genero: usuario.genero,
+			direccion: usuario.direccion,
+			id_municipio: usuario.municipio.id_municipio,
+			nombre: usuario.nombre,
+			apellidos: usuario.apellidos,
+			telefono: usuario.telefono,
+			correo: usuario.correo,
+			estado: usuario.estado,
+			carnet: usuario.carnet,
+			cui: usuario.cui,
+			roles: usuario.roles,
+			id_jornada: usuario.perfil.id_jornada,
+			id_horario: usuario.perfil.id_horario,
 		});
 	} catch (error: any) {
 		errorHttp(res, error);

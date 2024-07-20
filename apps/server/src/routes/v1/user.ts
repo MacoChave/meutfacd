@@ -12,8 +12,7 @@ import { requireAuth } from '../../middlewares/requireAuth';
 
 const router = Router();
 
-router.get('/all', requireAuth, getAllUser);
-router.get('/allORM', requireAuth, getUsers);
+router.get('/all', requireAuth, getUsers);
 router.get('/:id', requireAuth, getItem);
 router.post('/bulk', requireAuth, bulkInsert);
 router.post('/', requireAuth, createItem);

@@ -46,7 +46,7 @@ export const getAll = async ({
 
 		return {
 			data: departamentos,
-			next: next < count ? next : undefined,
+			next: next < count ? +next : undefined,
 		};
 	} catch (error: any) {
 		throw new Error(error.message);

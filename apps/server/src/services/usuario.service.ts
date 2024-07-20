@@ -60,7 +60,7 @@ export const createUser = async (usuario: ISPCreateUser): Promise<string> => {
 	}
 };
 
-export const getAllUser = async ({
+export const getAll = async ({
 	skip = 0,
 	take = 10,
 	q,
@@ -97,9 +97,7 @@ export const getAllUser = async ({
 	}
 };
 
-export const getOneUsuario = async (
-	id_usuario: number
-): Promise<Usuario | null> => {
+export const getOne = async (id_usuario: number): Promise<Usuario | null> => {
 	try {
 		let userRepo = AppDataSource.getRepository(Usuario);
 		let user: Usuario | null = await userRepo.findOne({
@@ -112,6 +110,20 @@ export const getOneUsuario = async (
 				'notificacionesRecibidas',
 			],
 			where: [{ id_usuario }],
+		});
+
+		return user;
+	} catch (error: any) {
+		throw new Error(error.message);
+	}
+};
+
+export const showMe = async (id_usuario: number) => {
+	try {
+		let userRepo = AppDataSource.getRepository(Usuario);
+		let user = await userRepo.findOneOrFail({
+			relations: ['roles'],
+			where: { id_usuario },
 		});
 
 		return user;

@@ -7,7 +7,7 @@ import React from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 import { DataProps } from '../../propTypes/DataProps';
 
-const PersonalData: React.FC<DataProps> = ({ editing }) => {
+const PersonalData: React.FC<DataProps> = ({ editing, ...props }) => {
 	const {
 		control,
 		setValue,
@@ -20,6 +20,7 @@ const PersonalData: React.FC<DataProps> = ({ editing }) => {
 				display: 'flex',
 				flexDirection: 'column',
 				gap: 4,
+				...props.sx,
 			}}>
 			<Controller
 				control={control}
