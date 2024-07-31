@@ -17,6 +17,6 @@ router.get('/:id', requireAuth, getItem);
 router.post('/bulk', requireAuth, bulkInsert);
 router.post('/', requireAuth, createItem);
 router.put('/:id', requireAuth, updateItem);
-router.delete('/:id', requireAuth, deleteItem);
+router.delete('/:action/:id', requireAuth, deleteItem);
 
 export { router };

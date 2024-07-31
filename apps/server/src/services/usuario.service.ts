@@ -84,6 +84,7 @@ export const getAll = async ({
 			where: filters,
 			take: +take,
 			skip: +skip,
+			withDeleted: true,
 		});
 
 		let next = +skip + +take;
@@ -130,6 +131,13 @@ export const showMe = async (id_usuario: number) => {
 	} catch (error: any) {
 		throw new Error(error.message);
 	}
+};
+
+export const restoreUsuario = async (id_usuario: number) => {
+	try {
+		let userRepo = AppDataSource.getRepository(Usuario);
+		return await userRepo.restore(id_usuario);
+	} catch (error: any) {}
 };
 
 export const deleteUsuario = async (id_usuario: number) => {

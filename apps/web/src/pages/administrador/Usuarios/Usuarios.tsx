@@ -1,5 +1,5 @@
 import { Contenedor, McModal } from '@/components';
-import { URL_V2 } from '@/consts/Api';
+import { URL } from '@/consts/Api';
 import { TResponse } from '@/models/Fetching';
 import { TUser } from '@/models/Perfil';
 import { deleteData } from '@/services/fetching';
@@ -20,11 +20,29 @@ const Usuarios = () => {
 		navigate('detail', { state: { usuario } });
 	};
 
-	const onDelete = async (registro: any) => {
+	const onSwitchActive = async (registro: any) => {
+		let action = registro.deletedAt ? 'R' : 'D';
+
 		const response: TResponse<any> = await deleteData({
-			path: `${URL_V2.USER}`,
-			params: { id_usuario: registro['id_usuario'] },
+			path: `${URL.USER}/`,
+			query: [action, registro.id_usuario],
 		});
+
+		if (response.code === 200) {
+			swal({
+				icon: 'success',
+				title: 'Edición de usuario',
+				text: response.message,
+				timer: 3000,
+			});
+		} else {
+			swal({
+				icon: 'error',
+				title: 'Edición de usuario',
+				text: response.message,
+				timer: 3000,
+			});
+		}
 	};
 
 	const onClose = () => {
@@ -34,15 +52,6 @@ const Usuarios = () => {
 	return (
 		<>
 			<Contenedor title='Gestión de usuarios'>
-				<Box
-					sx={{
-						display: 'flex',
-						flexDirection: 'row',
-						justifyContent: 'left',
-						alignItems: 'center',
-						gap: 2,
-						mb: 2,
-					}}></Box>
 				<Box
 					sx={{
 						display: 'flex',
@@ -79,7 +88,7 @@ const Usuarios = () => {
 				<FetchUsers
 					filter={filter}
 					onEdit={onEdit}
-					onDelete={onDelete}
+					onDelete={onSwitchActive}
 				/>
 			</Contenedor>
 			{openModal && (

@@ -19,13 +19,16 @@ import {
 	TableBody,
 	TableCell,
 	TableRow,
+	Tooltip,
 	Typography,
 } from '@mui/material';
 import React from 'react';
+import { McTableAction } from '../McTable';
 
 export type McBodyProps = {
 	headers: object;
 	rows: object[];
+	actions?: McTableAction[];
 	onEdit?: (row: object) => void;
 	onView?: (row: object) => void;
 	onDelete?: (row: object) => void;
@@ -69,12 +72,13 @@ const getNestedValue = (obj: any, path: string): any => {
 const McBody: React.FC<McBodyProps> = ({
 	headers,
 	rows,
-	onEdit,
-	onView,
-	onDelete,
-	onPrint,
-	onPass,
-	onFail,
+	actions = [],
+	// onEdit,
+	// onView,
+	// onDelete,
+	// onPrint,
+	// onPass,
+	// onFail,
 }) => {
 	return (
 		<TableBody>
@@ -92,7 +96,14 @@ const McBody: React.FC<McBodyProps> = ({
 						);
 					})}
 					<TableCell>
-						{onEdit && (
+						{actions.map((action: McTableAction, index: number) => (
+							<Tooltip key={index} title={action.tooltip}>
+								<IconButton onClick={() => action.onClick(row)}>
+									{action.icon}
+								</IconButton>
+							</Tooltip>
+						))}
+						{/* {onEdit && (
 							<IconButton
 								color='secondary'
 								onClick={() => onEdit(row)}>
@@ -133,7 +144,7 @@ const McBody: React.FC<McBodyProps> = ({
 								onClick={() => onFail(row)}>
 								<CancelOutlined />
 							</IconButton>
-						)}
+						)} */}
 					</TableCell>
 				</TableRow>
 			))}

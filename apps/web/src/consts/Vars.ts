@@ -28,7 +28,7 @@ export const STATES = [
 	{ value: 'E', label: 'Espera' },
 	{ value: 'V', label: 'Revisión' },
 	{ value: 'R', label: 'Rechazado' },
-	{ value: 'P', label: 'Previa' },
+	{ value: 'P', label: 'Previo' },
 	{ value: 'A', label: 'Aprobado' },
 ];
 

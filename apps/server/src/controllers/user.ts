@@ -4,11 +4,17 @@ import { existsSync, mkdirSync, unlinkSync } from 'fs';
 import path from 'path';
 import { readFile, utils } from 'xlsx';
 import { DATA_SOURCES } from '../config/vars.config';
-import { sqlDelete, sqlSelect, sqlUpdate } from '../db/consultas';
+import { sqlSelect, sqlUpdate } from '../db/consultas';
 import { IGetAll } from '../interfaces/parameters';
 import { IReturnEmail } from '../interfaces/returns';
 import { sendEmail } from '../services/email.service';
-import { getAll, createUser, getOne } from '../services/usuario.service';
+import {
+	createUser,
+	deleteUsuario,
+	getAll,
+	getOne,
+	restoreUsuario,
+} from '../services/usuario.service';
 import { errorHttp, successHttp } from '../utils/error.handle';
 import { formatDate, newDate } from '../utils/formats';
 import { getRandomPassword } from '../utils/password';
@@ -154,13 +160,31 @@ const updateItem = async ({ body, query, user }: Request, res: Response) => {
 	}
 };
 
-const deleteItem = async ({ query }: Request, res: Response) => {
+const restoreItem = async ({ params }: Request, res: Response) => {
 	try {
-		const result = await sqlDelete({
-			table: 'usuario',
-			query,
-		});
-		res.status(400).json(result);
+		let { id } = params;
+
+		let result = await restoreUsuario(Number(id));
+		console.log('RESTORE', result);
+
+		successHttp(res, 200, 'Se restauró el usuario');
+	} catch (error: any) {
+		errorHttp(res, error);
+	}
+};
+
+const deleteItem = async ({ params }: Request, res: Response) => {
+	try {
+		let { action, id } = params;
+
+		let result;
+
+		if (action === 'D') result = await deleteUsuario(Number(id));
+		else if (action === 'R') result = await restoreUsuario(Number(id));
+
+		console.log('SOFT DELETE', result);
+
+		successHttp(res, 200, 'Se modificó el usuario satisfactoriamente');
 	} catch (error: any) {
 		errorHttp(res, error);
 	}
@@ -171,8 +195,9 @@ export {
 	createItem,
 	deleteItem,
 	getAll as getAllUser,
-	getUsers,
 	getItem,
 	getItems,
+	getUsers,
+	restoreItem,
 	updateItem,
 };
