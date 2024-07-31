@@ -9,6 +9,7 @@ import { Box, Typography } from '@mui/material';
 import React, { useState } from 'react';
 import { Cita } from './Cita';
 import { AsignReviewTutor } from './components/AsignReviewTutor';
+import { Edit, FileOpen } from '@mui/icons-material';
 
 type ProgressType = {
 	estacion: string;
@@ -83,8 +84,20 @@ const ReviewThesisResponsible: React.FC<
 						}}
 						rows={data}
 						totalCols={{}}
-						onView={openPDF}
-						onEdit={setReview}
+						actions={[
+							{
+								tooltip: 'Ver documento',
+								icon: <FileOpen color='secondary' />,
+								onClick: (row) => openPDF(row),
+							},
+							{
+								tooltip: 'Aprobar o rechazar',
+								icon: <Edit color='primary' />,
+								onClick: (row) => setReview(row),
+							},
+						]}
+						// onView={openPDF}
+						// onEdit={setReview}
 					/>
 				</Box>
 			</Contenedor>

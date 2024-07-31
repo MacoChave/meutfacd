@@ -6,9 +6,9 @@ import { useCustomFetch } from '@/hooks/useFetch';
 import { TResult } from '@/models/Fetching';
 import { TUser } from '@/models/Perfil';
 import { TProgress } from '@/models/Progress';
-import { getData, postData, putData } from '@/services/fetching';
+import { getData, putData } from '@/services/fetching';
+import { Check, Close, Delete } from '@mui/icons-material';
 import { Skeleton, Typography } from '@mui/material';
-import { table } from 'console';
 import dayjs from 'dayjs';
 import React from 'react';
 import swal from 'sweetalert';
@@ -139,8 +139,20 @@ const Historial: React.FC<HistorialProps> = ({
 			}}
 			rows={data || []}
 			totalCols={{}}
-			onPass={handlePass}
-			onPrint={handlePrint}
+			actions={[
+				{
+					tooltip: 'Rechazar',
+					icon: <Close color='warning' />,
+					onClick: (row) => handlePass,
+				},
+				{
+					tooltip: 'Aprobar',
+					icon: <Check color='primary' />,
+					onClick: (row) => handlePrint,
+				},
+			]}
+			// onPass={handlePass}
+			// onPrint={handlePrint}
 		/>
 	);
 };

@@ -1,12 +1,17 @@
-import { URL } from '@/consts/Api';
 import { Contenedor } from '@/components';
 import { DotsLoaders } from '@/components/Loader/DotsLoaders';
 import { McTable } from '@/components/MyTable';
+import { URL } from '@/consts/Api';
 import { APROBADO, ESTACIONES } from '@/consts/Vars';
 import { useCustomFetch } from '@/hooks/useFetch';
 import { TResult } from '@/models/Fetching';
 import { postData, putData } from '@/services/fetching';
 import { formatStationName } from '@/utils/formatHandler';
+import {
+	Check,
+	Close,
+	Publish
+} from '@mui/icons-material';
 import { Typography } from '@mui/material';
 import React, { useState } from 'react';
 import swal from 'sweetalert';
@@ -35,6 +40,10 @@ const StudentTutor: React.FC<StudentTutorProps> = ({}) => {
 		},
 		params: { estado: APROBADO, estacion: 2 },
 	});
+
+	const onPublish = (item: any) => {
+		throw 'Method not implemented';
+	};
 
 	const onPass = async (item: any) => {
 		setLoading(true);
@@ -168,6 +177,23 @@ const StudentTutor: React.FC<StudentTutorProps> = ({}) => {
 					}}
 					rows={data}
 					totalCols={{}}
+					actions={[
+						{
+							tooltip: 'Rechazar asesor',
+							icon: <Close color='warning' />,
+							onClick: (row) => onFail(row),
+						},
+						{
+							tooltip: 'Aprobar asesor',
+							icon: <Check color='primary' />,
+							onClick: (row) => onPass(row),
+						},
+						{
+							tooltip: 'Publicar cambio',
+							icon: <Publish color='secondary' />,
+							onClick: (row) => onPublish(row),
+						},
+					]}
 					onPass={onPass}
 					onFail={onFail}
 				/>

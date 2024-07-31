@@ -10,6 +10,7 @@ import React, { useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import swal from 'sweetalert';
 import { TabsProps } from '../../propTypes/tabsProps';
+import { Delete } from '@mui/icons-material';
 
 const Rol: React.FC<TabsProps> = ({ usuario, index, ...other }) => {
 	const [rootRol, setRootRol] = useState(
@@ -133,8 +134,15 @@ const Rol: React.FC<TabsProps> = ({ usuario, index, ...other }) => {
 					headers={{
 						r_nombre: 'Rol',
 					}}
-					onDelete={onDelete}
 					totalCols={{}}
+					actions={[
+						{
+							tooltip: 'Eliminar rol',
+							icon: <Delete color='warning' />,
+							onClick: (row) => onDelete(row),
+						},
+					]}
+					// onDelete={onDelete}
 				/>
 			</Box>
 		</>

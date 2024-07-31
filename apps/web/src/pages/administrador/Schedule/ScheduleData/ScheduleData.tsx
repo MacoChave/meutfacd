@@ -9,6 +9,7 @@ import React, { useEffect, useState } from 'react';
 import swal from 'sweetalert';
 import { FormSchedule } from '../FormSchedule';
 import { TSchedule } from '@/models/Schedule';
+import { Delete, Edit } from '@mui/icons-material';
 
 export type ScheduleDataProps = {
 	reload: boolean;
@@ -79,6 +80,18 @@ const ScheduleData: React.FC<ScheduleDataProps> = ({ reload, setReload }) => {
 					) ?? []
 				}
 				totalCols={{}}
+				actions={[
+					{
+						tooltip: 'Eliminar jornada',
+						icon: <Delete color='warning' />,
+						onClick: (row) => onDelete(row),
+					},
+					{
+						tooltip: 'Editar jornada',
+						icon: <Edit color='primary' />,
+						onClick: (row) => onEdit(row),
+					},
+				]}
 				onDelete={onDelete}
 				onEdit={onEdit}
 			/>

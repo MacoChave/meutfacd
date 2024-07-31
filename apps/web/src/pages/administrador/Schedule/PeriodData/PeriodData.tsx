@@ -8,6 +8,7 @@ import { Box, Typography } from '@mui/material';
 import React, { useEffect } from 'react';
 import swal from 'sweetalert';
 import { FormPeriod } from '../FormPeriod';
+import { Edit } from '@mui/icons-material';
 
 export type PeriodDataProps = {
 	reload: boolean;
@@ -55,7 +56,14 @@ const PeriodData: React.FC<PeriodDataProps> = ({ reload, setReload }) => {
 				}}
 				rows={data?.message?.data ?? []}
 				totalCols={{}}
-				onDelete={onDelete}
+				actions={[
+					{
+						tooltip: 'Editar horario',
+						icon: <Edit color='primary' />,
+						onClick: (row) => onEdit(row),
+					},
+				]}
+				// onDelete={onDelete}
 				// onEdit={onEdit}
 			/>
 		</Box>

@@ -5,6 +5,7 @@ import { useCustomFetch } from '@/hooks/useFetch';
 import { TPageApp } from '@/models/PageApp';
 import React, { useState } from 'react';
 import { FormPagesApp } from './FormPagesApp';
+import { Edit } from '@mui/icons-material';
 
 export type PagesAppProps = Record<string, never>;
 
@@ -68,7 +69,14 @@ const PagesApp: React.FC<PagesAppProps> = ({}) => {
 					}}
 					rows={data}
 					totalCols={{}}
-					onEdit={onEdit}
+					actions={[
+						{
+							tooltip: 'Ver o editar página',
+							icon: <Edit color='primary' />,
+							onClick: (row) => onEdit(row),
+						},
+					]}
+					// onEdit={onEdit}
 				/>
 			</Contenedor>
 			{editing && (

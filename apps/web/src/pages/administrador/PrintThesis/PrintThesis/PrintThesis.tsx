@@ -5,6 +5,7 @@ import { PENDIENTE, REVISION } from '@/consts/Vars';
 import { useCustomFetch } from '@/hooks/useFetch';
 import { TProgress } from '@/models/Progress';
 import { Cita } from '@/pages/encargado/ReviewThesis/Cita';
+import { Edit } from '@mui/icons-material';
 import { Typography } from '@mui/material';
 import React, { useState } from 'react';
 
@@ -59,7 +60,14 @@ const PrintThesis: React.FC<PrintThesisProps> = ({}) => {
 					}}
 					rows={data}
 					totalCols={{}}
-					onEdit={setReview}
+					actions={[
+						{
+							tooltip: 'Ver solicitud de impresión',
+							icon: <Edit color='primary' />,
+							onClick: (row) => setReview(row),
+						},
+					]}
+					// onEdit={setReview}
 				/>
 			</Contenedor>
 			<McModal title='Gestión de citas' open={open} onClose={onClose}>

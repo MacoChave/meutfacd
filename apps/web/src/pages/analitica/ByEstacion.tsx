@@ -1,6 +1,6 @@
 import { Contenedor } from '@/components';
 import { McTable } from '@/components/MyTable';
-import { Download } from '@mui/icons-material';
+import { Cancel, Check, Delete, Download } from '@mui/icons-material';
 import {
 	Box,
 	FormControl,
@@ -80,8 +80,9 @@ const ByEstacion = () => {
 							headers={{ name: 'Nombre', value: 'Valor' }}
 							rows={data}
 							totalCols={{}}
-							onDelete={() => {}}
-							onEdit={() => {}}
+							actions={[]}
+							// onDelete={() => {}}
+							// onEdit={() => {}}
 						/>
 					</Box>
 				</Box>

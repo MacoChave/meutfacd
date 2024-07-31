@@ -6,6 +6,7 @@ import { useCustomFetch } from '@/hooks/useFetch';
 import { getData } from '@/services/fetching';
 import { Typography } from '@mui/material';
 import React, { lazy, useState } from 'react';
+import { Edit, OpenInNew } from '@mui/icons-material';
 const ReviewDoc = lazy(() => import('../components/ReviewDoc/ReviewDoc'));
 
 export type DraftProfessorProps = Record<string, never>;
@@ -55,8 +56,20 @@ const DraftProfessor: React.FC<DraftProfessorProps> = ({}) => {
 					}}
 					rows={data}
 					totalCols={{}}
-					onView={openPDF}
-					onEdit={setReview}
+					actions={[
+						{
+							tooltip: 'Ver documento',
+							icon: <OpenInNew color='secondary' />,
+							onClick: (row) => openPDF,
+						},
+						{
+							tooltip: 'Realizar acción',
+							icon: <Edit color='primary' />,
+							onClick: (row) => setReview,
+						},
+					]}
+					// onView={openPDF}
+					// onEdit={setReview}
 				/>
 			</Contenedor>
 			<McModal

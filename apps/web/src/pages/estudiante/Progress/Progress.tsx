@@ -10,6 +10,7 @@ import { Typography } from '@mui/material';
 import { FC, useState } from 'react';
 import swal from 'sweetalert';
 import Dialogo from '../../../components/Modal';
+import { Print } from '@mui/icons-material';
 
 export type ProgressProps = {};
 
@@ -78,6 +79,13 @@ const Progress: FC<ProgressProps> = ({}) => {
 					}}
 					rows={data || []}
 					totalCols={{}}
+					actions={[
+						{
+							tooltip: 'Mostrar dictámen',
+							icon: <Print color='primary' />,
+							onClick: (row) => handlePrint(row),
+						},
+					]}
 					onPrint={handlePrint}
 				/>
 			</Contenedor>

@@ -7,6 +7,7 @@ type axiosProps = {
 	method?: 'GET' | 'POST' | 'PUT' | 'DELETE';
 	body?: any;
 	params?: TypeWithKey<any>;
+	query?: any[];
 	headers?: TypeWithKey<string>;
 	responseType?: string;
 };
@@ -80,9 +81,12 @@ export async function deleteData<T>({
 	headers = {
 		'Content-Type': 'application/json',
 	},
+	query = [],
 }: axiosProps): Promise<T> {
 	setBearerToken();
-	const response = await api.delete<T>(path, {
+	let queries: string = '';
+	queries = query.map((q) => q).join('/');
+	const response = await api.delete<T>(`${path}${queries}`, {
 		headers: {
 			...headers,
 		},

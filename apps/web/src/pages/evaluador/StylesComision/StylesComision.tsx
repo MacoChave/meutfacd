@@ -1,9 +1,10 @@
-import { URL as URI } from '@/consts/Api';
 import { Contenedor, McModal } from '@/components';
 import { DotsLoaders } from '@/components/Loader/DotsLoaders';
 import { McTable } from '@/components/MyTable';
+import { URL as URI } from '@/consts/Api';
 import { useCustomFetch } from '@/hooks/useFetch';
 import { getData } from '@/services/fetching';
+import { Edit, OpenInNew } from '@mui/icons-material';
 import { Typography } from '@mui/material';
 import React, { lazy, useState } from 'react';
 const ReviewDoc = lazy(() => import('../components/ReviewDoc/ReviewDoc'));
@@ -55,8 +56,20 @@ const StylesComision: React.FC<StylesComisionProps> = ({}) => {
 					}}
 					rows={data}
 					totalCols={{}}
-					onView={openPDF}
-					onEdit={setReview}
+					actions={[
+						{
+							tooltip: 'Ver documento',
+							icon: <OpenInNew color='secondary' />,
+							onClick: (row) => openPDF,
+						},
+						{
+							tooltip: 'Realizar acción',
+							icon: <Edit color='primary' />,
+							onClick: (row) => setReview,
+						},
+					]}
+					// onView={openPDF}
+					// onEdit={setReview}
 				/>
 			</Contenedor>
 			<McModal

@@ -5,6 +5,7 @@ import { ESPERA, PENDIENTE, REVISION } from '@/consts/Vars';
 import { useCustomFetch } from '@/hooks/useFetch';
 import { Cita } from '@/pages/encargado/ReviewThesis/Cita';
 import { getData } from '@/services/fetching';
+import { Edit, OpenInNew } from '@mui/icons-material';
 import { Box, Typography } from '@mui/material';
 import React, { useState } from 'react';
 
@@ -74,8 +75,20 @@ const ReviewThesis: React.FC<ReviewThesisProps> = ({}) => {
 						}}
 						rows={data}
 						totalCols={{}}
-						onView={openPDF}
-						onEdit={setReview}
+						actions={[
+							{
+								tooltip: 'Ver documento',
+								icon: <OpenInNew color='secondary' />,
+								onClick: (row) => openPDF,
+							},
+							{
+								tooltip: 'Realizar acción',
+								icon: <Edit color='primary' />,
+								onClick: (row) => setReview,
+							},
+						]}
+						// onView={openPDF}
+						// onEdit={setReview}
 					/>
 				</Box>
 			</Contenedor>

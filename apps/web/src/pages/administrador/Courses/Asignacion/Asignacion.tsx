@@ -6,7 +6,7 @@ import { useFetch, useInfiniteFetch } from '@/hooks/useFetch';
 import { courseTutorDefault, TCourseTutor } from '@/models/CourseTutor';
 import { TResult } from '@/models/Fetching';
 import { deleteData } from '@/services/fetching';
-import { Refresh, Search } from '@mui/icons-material';
+import { Delete, Edit, Refresh, Search } from '@mui/icons-material';
 import { Box, IconButton, TextField, Typography } from '@mui/material';
 import React, { lazy, useState } from 'react';
 import swal from 'sweetalert';
@@ -73,8 +73,20 @@ const Asignacion: React.FC<AsignacionProps> = ({ filter }) => {
 				}}
 				rows={data?.pages.flatMap((page) => page.message.data) ?? []}
 				totalCols={{}}
-				onEdit={handleSelect}
-				onDelete={handleDelete}
+				actions={[
+					{
+						tooltip: 'Liberar salon y eliminarlo',
+						icon: <Delete color='warning' />,
+						onClick: (row) => handleDelete(row),
+					},
+					{
+						tooltip: 'Ver o editar asignación',
+						icon: <Edit color='primary' />,
+						onClick: (row) => handleSelect(row),
+					},
+				]}
+				// onEdit={handleSelect}
+				// onDelete={handleDelete}
 			/>
 			<McModal title='Editar asignación' open={open} onClose={onClose}>
 				<Form preloadData={preloadData} onClose={() => {}} />

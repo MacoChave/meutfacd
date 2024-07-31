@@ -13,12 +13,19 @@ import { useCustomFetch } from '@/hooks/useFetch';
 import { TResult } from '@/models/Fetching';
 import { postData, putData } from '@/services/fetching';
 import { formatStationName } from '@/utils/formatHandler';
-import { Box, IconButton, TextField, Typography } from '@mui/material';
+import {
+	Cancel,
+	Check,
+	Close,
+	GridOn,
+	Publish,
+	Save,
+	Summarize,
+} from '@mui/icons-material';
+import { Box, IconButton, TextField, Tooltip, Typography } from '@mui/material';
 import React, { useState } from 'react';
 import swal from 'sweetalert';
 import { PickSeccionCourse } from '../components/PickSeccionCourse';
-import { Update } from '@mui/icons-material';
-import { set } from 'react-hook-form';
 
 export type Course1ProfessorProps = Record<string, never>;
 
@@ -151,29 +158,47 @@ const Course1Professor: React.FC<Course1ProfessorProps> = ({}) => {
 						display: 'flex',
 						justifyContent: 'space-between',
 						alignItems: 'center',
+						gap: 2,
 						width: '100%',
 						marginBottom: 2,
 					}}>
 					<PickSeccionCourse
 						course={1}
 						section={section}
-						label='Salón actual'
+						label='Sección'
 						setSection={setSection}
 					/>
 					<TextField
-						label='Actualizar salón actual'
+						label='Salón'
 						value={newSection}
 						onChange={(e) => setNewSection(e.target.value)}
 						InputProps={{
 							endAdornment: (
-								<IconButton
-									aria-label='update'
-									onClick={() => updateSection()}>
-									<Update />
-								</IconButton>
+								<Tooltip title='Actualizar salón del curso'>
+									<IconButton
+										aria-label='update'
+										onClick={() => updateSection()}>
+										<Save />
+									</IconButton>
+								</Tooltip>
 							),
 						}}
 					/>
+					<Tooltip title='Generar Excel'>
+						<IconButton onClick={() => {}}>
+							<GridOn color='primary' />
+						</IconButton>
+					</Tooltip>
+					<Tooltip title='Generar PDF'>
+						<IconButton onClick={() => {}}>
+							<Summarize color='primary' />
+						</IconButton>
+					</Tooltip>
+					<Tooltip title='Congelar curso'>
+						<IconButton onClick={() => {}}>
+							<Publish color='warning' />
+						</IconButton>
+					</Tooltip>
 				</Box>
 				<McTable
 					headers={{
@@ -184,8 +209,20 @@ const Course1Professor: React.FC<Course1ProfessorProps> = ({}) => {
 					}}
 					rows={data}
 					totalCols={{}}
-					onPass={onPass}
-					onFail={onFail}
+					actions={[
+						{
+							tooltip: 'Rechazar estudiante',
+							icon: <Close color='warning' />,
+							onClick: (row) => onFail(row),
+						},
+						{
+							tooltip: 'Aprobar estudiante',
+							icon: <Check color='primary' />,
+							onClick: (row) => onPass(row),
+						},
+					]}
+					// onPass={onPass}
+					// onFail={onFail}
 				/>
 			</Contenedor>
 			{loading && <DotsLoaders />}

@@ -8,6 +8,7 @@ import { TProgress } from '@/models/Progress';
 import { Cita } from '@/pages/encargado/ReviewThesis/Cita';
 import { Typography } from '@mui/material';
 import React, { useState } from 'react';
+import { OpenInNew } from '@mui/icons-material';
 
 export type AproveThesisProps = {};
 
@@ -58,6 +59,13 @@ const AproveThesis: React.FC<AproveThesisProps> = ({}) => {
 					}}
 					rows={data}
 					totalCols={{}}
+					actions={[
+						{
+							tooltip: 'Ver documento',
+							icon: <OpenInNew color='primary' />,
+							onClick: (row) => setReview(row),
+						},
+					]}
 					onEdit={setReview}
 				/>
 			</Contenedor>

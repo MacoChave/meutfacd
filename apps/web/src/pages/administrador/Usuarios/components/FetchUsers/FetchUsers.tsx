@@ -2,6 +2,7 @@
 import { DotsLoaders, McTable } from '@/components';
 import { URL } from '@/consts/Api';
 import { useInfiniteFetch } from '@/hooks/useFetch';
+import { Edit, ToggleOff, ToggleOnTwoTone } from '@mui/icons-material';
 import { Button, Typography } from '@mui/material';
 import React from 'react';
 
@@ -40,7 +41,19 @@ const FetchUsers: React.FC<FetchUsersProps> = ({
 				}}
 				rows={data?.pages.flatMap((page) => page.message.data) ?? []}
 				totalCols={{}}
-				onEdit={onEdit}
+				actions={[
+					{
+						tooltip: 'Ver o editar usuario',
+						icon: <Edit color='primary' />,
+						onClick: (row) => onEdit(row),
+					},
+					{
+						tooltip: 'Activar o desactivar usuario',
+						icon: <ToggleOff color='secondary' />,
+						onClick: (row) => onDelete(row),
+					},
+				]}
+				// onEdit={onEdit}
 			/>
 			{hasNextPage ? (
 				<Button onClick={() => fetchNextPage()}>Cargar más</Button>

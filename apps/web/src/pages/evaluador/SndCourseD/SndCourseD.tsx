@@ -14,11 +14,11 @@ import { useCustomFetch } from '@/hooks/useFetch';
 import { TResult } from '@/models/Fetching';
 import { postData, putData } from '@/services/fetching';
 import { formatStationName } from '@/utils/formatHandler';
+import { Check, Close, Update } from '@mui/icons-material';
 import { Box, IconButton, TextField, Typography } from '@mui/material';
 import React, { useState } from 'react';
 import swal from 'sweetalert';
 import { PickSeccionCourse } from '../components/PickSeccionCourse';
-import { Update } from '@mui/icons-material';
 
 export type SndCourseDProps = Record<string, never>;
 
@@ -203,8 +203,20 @@ const SndCourseD: React.FC<SndCourseDProps> = ({}) => {
 					}}
 					rows={data}
 					totalCols={{}}
-					onPass={onPass}
-					onFail={onFail}
+					actions={[
+						{
+							tooltip: 'Rechazar',
+							icon: <Close color='warning' />,
+							onClick: (row) => onFail,
+						},
+						{
+							tooltip: 'Aprobar',
+							icon: <Check color='primary' />,
+							onClick: (row) => onPass,
+						},
+					]}
+					// onPass={onPass}
+					// onFail={onFail}
 				/>
 			</Contenedor>
 			{loading && <DotsLoaders />}
