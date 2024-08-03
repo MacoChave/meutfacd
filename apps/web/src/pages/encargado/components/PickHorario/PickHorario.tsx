@@ -1,7 +1,7 @@
 import { URL } from '@/consts/Api';
 import { DotsLoaders } from '@/components/Loader/DotsLoaders';
 import { McAutocomplete } from '@/components/McWithoutForms/McAutocomplete';
-import { useCustomFetch } from '@/hooks/useFetch';
+import { useCustomFetch, useFetch } from '@/hooks/useFetch';
 import { TSchedule } from '@/models/Schedule';
 import { Typography } from '@mui/material';
 import React from 'react';
@@ -18,32 +18,25 @@ const PickHorario: React.FC<PickHorarioProps> = ({
 	setHorario,
 }) => {
 	const {
-		data: horarios,
-		isLoading: isLoadingHorarios,
-		isError: isErrorHorarios,
-	} = useCustomFetch({
-		url: `${URL.GENERIC}/all`,
-		method: 'post',
-		body: {
-			table: 'ut_horario',
-		},
-		params: {
-			id_jornada: id_jornada ?? 0,
-		},
+		data,
+		isLoading: isLoadHorario,
+		isError: isErrHorario,
+	} = useFetch({
+		url: `${URL.SCHEDULE}/all`,
+		params: { id_jornada },
 	});
 
-	if (isLoadingHorarios) return <DotsLoaders />;
-	if (isErrorHorarios)
-		return <Typography>Error al cargar horarios</Typography>;
+	if (isLoadHorario) return <DotsLoaders />;
+	if (isErrHorario) return <Typography>Error al cargar horarios</Typography>;
 
 	return (
 		<McAutocomplete
 			label='Horario'
 			colLabel='hora_inicio'
 			value={horario}
-			options={horarios}
-			isLoading={isLoadingHorarios}
-			isError={isErrorHorarios}
+			options={data?.message?.data ?? []}
+			isLoading={isLoadHorario}
+			isError={isErrHorario}
 			setValue={setHorario}
 		/>
 	);

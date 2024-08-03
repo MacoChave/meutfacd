@@ -3,7 +3,6 @@ import {
 	bulkInsert,
 	createItem,
 	deleteItem,
-	getAllUser,
 	getItem,
 	getUsers,
 	updateItem,

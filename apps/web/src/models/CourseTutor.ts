@@ -1,11 +1,13 @@
 import * as yup from 'yup';
 import { TUser } from './TUser';
 import { TCourse } from './Course';
+import dayjs from 'dayjs';
 
 export type TCourseTutor = {
 	id_curso_tutor: number;
 	fecha: string;
 	salon: string;
+	seccion?: string;
 	dias: string[];
 	id_curso: number;
 	id_tutor: number;
@@ -27,11 +29,17 @@ export const courseTutorDefault: TCourseTutor = {
 };
 
 export const courseTutorSchema = yup.object().shape({
-	salon: yup
+	seccion: yup
 		.string()
 		.max(128, 'Salón no debe exceder los 128 carácteres')
 		.required('Salón es requerido'),
-	fetch: yup.string(),
+	salon: yup.string(),
+	fecha: yup
+		.string()
+		.test('in-future', 'Ingrese una fecha en el futuro', (value) => {
+			const date = dayjs(value, 'YYYY-MM-DD', true);
+			return date.isValid() && date.isAfter(dayjs());
+		}),
 	dias: yup
 		.array()
 		.min(1, 'Debe seleccionar al menos un día')

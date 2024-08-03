@@ -6,11 +6,19 @@ import { useFetch, useInfiniteFetch } from '@/hooks/useFetch';
 import { courseTutorDefault, TCourseTutor } from '@/models/CourseTutor';
 import { TResult } from '@/models/Fetching';
 import { deleteData } from '@/services/fetching';
-import { Delete, Edit, Refresh, Search } from '@mui/icons-material';
+import {
+	CleaningServices,
+	Clear,
+	Delete,
+	Edit,
+	Refresh,
+	Search,
+} from '@mui/icons-material';
 import { Box, IconButton, TextField, Typography } from '@mui/material';
 import React, { lazy, useState } from 'react';
 import swal from 'sweetalert';
 import { Form } from '../Gestion/Form';
+import { url } from 'inspector';
 
 export type AsignacionProps = {
 	filter: string;
@@ -34,6 +42,13 @@ const Asignacion: React.FC<AsignacionProps> = ({ filter }) => {
 		setOpen(true);
 		console.log(item);
 		setPreloadData(item);
+	};
+
+	const handleClean = async (item: any) => {
+		const result: TResult = await deleteData({
+			path: `${URL.COURSE_TUTOR}/clean`,
+			params: item.id_curso_tutor,
+		});
 	};
 
 	const handleDelete = async (item: any) => {
@@ -80,13 +95,16 @@ const Asignacion: React.FC<AsignacionProps> = ({ filter }) => {
 						onClick: (row) => handleDelete(row),
 					},
 					{
+						tooltip: 'Liberar salón',
+						icon: <CleaningServices color='warning' />,
+						onClick: (row) => handleClean(row),
+					},
+					{
 						tooltip: 'Ver o editar asignación',
 						icon: <Edit color='primary' />,
 						onClick: (row) => handleSelect(row),
 					},
 				]}
-				// onEdit={handleSelect}
-				// onDelete={handleDelete}
 			/>
 			<McModal title='Editar asignación' open={open} onClose={onClose}>
 				<Form preloadData={preloadData} onClose={() => {}} />

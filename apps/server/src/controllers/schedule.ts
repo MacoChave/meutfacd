@@ -27,11 +27,12 @@ export const getItems = async ({ query }: Request, res: Response) => {
 	try {
 		let take = query.take ?? 10;
 		let skip = query.skip ?? 0;
-		let q = query?.q ?? '';
+		let q = query?.q;
 
 		let horarioRepo = AppDataSource.getRepository(UTHorario);
 		let [result, total] = await horarioRepo.findAndCount({
 			relations: ['jornada'],
+			where: q ? { id_jornada: +q } : {},
 			take: +take,
 			skip: +skip,
 		});

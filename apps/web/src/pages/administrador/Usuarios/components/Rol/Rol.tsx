@@ -2,7 +2,7 @@ import { McAutocomplete } from '@/components/McWithForms/McAutocomplete';
 import { Option } from '@/components/McWithForms/McAutocomplete/McAutocomplete';
 import { McTable } from '@/components/MyTable';
 import { URL } from '@/consts/Api';
-import { useCustomFetch } from '@/hooks/useFetch';
+import { useCustomFetch, useFetch } from '@/hooks/useFetch';
 import { TRol, defaultRol } from '@/models/Rol';
 import { deleteData, postData } from '@/services/fetching';
 import { Box, Button, Typography } from '@mui/material';
@@ -13,35 +13,22 @@ import { TabsProps } from '../../propTypes/tabsProps';
 import { Delete } from '@mui/icons-material';
 
 const Rol: React.FC<TabsProps> = ({ usuario, index, ...other }) => {
-	const [rootRol, setRootRol] = useState(
-		usuario.roles.flat(1).join(',').toLowerCase()
-	);
+	const [rootRol, setRootRol] = useState();
+	// usuario.roles.flat(1).join(',').toLowerCase()
 	const {
 		data: vRol,
 		isLoading: isLoadvRol,
 		isError: isErrvRol,
 		refetch,
-	} = useCustomFetch({
-		url: `${URL.GENERIC}/all`,
-		method: 'post',
-		body: {
-			table: 'ut_v_rol',
-		},
-		params: { id_usuario: usuario.id_usuario },
+	} = useFetch({
+		url: `${URL.USER}/${usuario.id_usuario}`,
 	});
 	const {
 		data: rols,
 		isLoading: isLoadingRols,
 		isError: isErrRols,
-	} = useCustomFetch({
-		url: `${URL.GENERIC}/all`,
-		method: 'post',
-		body: {
-			table: 'rol',
-			conditions: [
-				// { column: 'nombre', operator: 'LIKE', value: `${rootRol}%` },
-			],
-		},
+	} = useFetch({
+		url: `${URL.ROL}/all`,
 	});
 
 	const { control, handleSubmit } = useForm<TRol>({
@@ -81,7 +68,7 @@ const Rol: React.FC<TabsProps> = ({ usuario, index, ...other }) => {
 		}
 	};
 
-	const onChangeRootRol = (rol: string) => {
+	const onChangeRootRol = (rol: any) => {
 		setRootRol(rol);
 	};
 
@@ -117,7 +104,7 @@ const Rol: React.FC<TabsProps> = ({ usuario, index, ...other }) => {
 							control={control as any}
 							name='id_rol'
 							label='Seleccionar rol'
-							options={rols.map(
+							options={(rols?.message?.data ?? []).map(
 								(rol: TRol): Option => ({
 									id: rol.id_rol,
 									label: rol.nombre,
@@ -130,9 +117,9 @@ const Rol: React.FC<TabsProps> = ({ usuario, index, ...other }) => {
 					</Box>
 				</form>
 				<McTable
-					rows={vRol}
+					rows={vRol?.message?.roles ?? []}
 					headers={{
-						r_nombre: 'Rol',
+						nombre: 'Rol',
 					}}
 					totalCols={{}}
 					actions={[

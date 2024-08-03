@@ -2,14 +2,14 @@ import { DotsLoaders } from '@/components/Loader/DotsLoaders';
 import { McAutocomplete } from '@/components/McWithForms/McAutocomplete';
 import { McInput } from '@/components/McWithForms/McInput';
 import { URL } from '@/consts/Api';
-import { useCustomFetch } from '@/hooks/useFetch';
+import { useCustomFetch, useFetch } from '@/hooks/useFetch';
 import { TCourse } from '@/models/Course';
 import {
 	TCourseTutor,
 	courseTutorDefault,
 	courseTutorSchema,
 } from '@/models/CourseTutor';
-import { TResponse, TResult } from '@/models/Fetching';
+import { TResult } from '@/models/Fetching';
 import { TUser } from '@/models/Perfil';
 import { TPeriod } from '@/models/Period';
 import { TSchedule } from '@/models/Schedule';
@@ -51,7 +51,7 @@ const Form: React.FC<FormProps> = ({
 	} = useForm<TCourseTutor>({
 		defaultValues: {
 			id_curso_tutor: preloadData?.id_curso_tutor ?? 0,
-			salon: preloadData.salon,
+			seccion: preloadData.seccion,
 			fecha: dayjs(preloadData.fecha).format('YYYY-MM-DD'),
 			id_curso: preloadData.curso?.id_curso ?? 0,
 			id_tutor: preloadData.tutor?.id_usuario ?? 0,
@@ -62,14 +62,8 @@ const Form: React.FC<FormProps> = ({
 		resolver: yupResolver(courseTutorSchema),
 	});
 
-	console.log(errors);
-
-	const { data, isLoading, isError } = useCustomFetch({
-		url: `${URL.GENERIC}/all`,
-		body: {
-			table: 'ut_curso',
-		},
-		method: 'post',
+	const { data, isLoading, isError } = useFetch({
+		url: `${URL.COURSE._}/all`,
 		params: {},
 	});
 
@@ -79,7 +73,7 @@ const Form: React.FC<FormProps> = ({
 			const result: TResult = await postData({
 				path: URL.COURSE_TUTOR,
 				body: {
-					salon: data['salon'],
+					salon: data['seccion'],
 					dias: JSON.stringify(data['dias']),
 					fecha: data['fecha'],
 					id_curso: data['id_curso'],
@@ -109,7 +103,7 @@ const Form: React.FC<FormProps> = ({
 			const result: TResult = await putData({
 				path: URL.COURSE_TUTOR,
 				body: {
-					salon: data['salon'],
+					seccion: data['seccion'],
 					dias: JSON.stringify(data['dias']),
 					fecha: dayjs(data['fecha']).format('YYYY-MM-DD'),
 				},
@@ -153,16 +147,18 @@ const Form: React.FC<FormProps> = ({
 						control={control as any}
 						name='id_curso'
 						label='Curso'
-						options={data.map((item: TCourse) => ({
-							id: item.id_curso,
-							label: item.nombre,
-						}))}
+						options={(data?.message?.data ?? []).map(
+							(item: TCourse) => ({
+								id: item.id_curso,
+								label: item.nombre,
+							})
+						)}
 						disabled={!!preloadData.id_curso_tutor}
 					/>
 					<McInput
 						control={control as any}
-						name='salon'
-						label='Salón'
+						name='seccion'
+						label='Nombre de sección'
 					/>
 					<McInput
 						control={control as any}

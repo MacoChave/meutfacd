@@ -1,6 +1,6 @@
 import { Box, Typography } from '@mui/material';
-import React from 'react';
-import { Form } from './Form';
+import React, { lazy } from 'react';
+const Form = lazy(() => import('./Form/Form'));
 
 export type GestionProps = Record<string, never>;
 

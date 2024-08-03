@@ -25,7 +25,7 @@ const PickDays: React.FC<PickDaysProps> = ({
 				sx={{
 					m: 'auto',
 				}}>
-				<Typography variant='body1'>Días a impartir</Typography>
+				<Typography variant='body1'>Días de curso</Typography>
 				<ToggleButtonGroup
 					sx={{
 						display: 'flex',

@@ -1,9 +1,8 @@
 import { Request, Response } from 'express';
-import { sqlDelete, sqlInsert, sqlUpdate } from '../db/consultas';
-import { errorHttp, successHttp } from '../utils/error.handle';
 import AppDataSource from '../config/orm';
+import { sqlDelete, sqlInsert, sqlUpdate } from '../db/consultas';
 import { UTJornada } from '../entities/Jornada';
-import { Like } from 'typeorm';
+import { errorHttp, successHttp } from '../utils/error.handle';
 
 export const getItem = async ({ params }: Request, res: Response) => {
 	try {
