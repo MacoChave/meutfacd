@@ -14,7 +14,7 @@ export const sendEmail = async ({
 }: ISendEmail): Promise<IReturnEmail> => {
 	try {
 		let bodyHTML = readFileSync(
-			`${__dirname}/../utils/pdf/${template}`,
+			`${__dirname}/../utils/template_pdf/${template}`,
 			'utf-8'
 		);
 
@@ -23,7 +23,7 @@ export const sendEmail = async ({
 		}
 
 		let templateHTML = readFileSync(
-			`${__dirname}/../utils/pdf/template.html`,
+			`${__dirname}/../utils/template_pdf/template.html`,
 			'utf-8'
 		);
 
