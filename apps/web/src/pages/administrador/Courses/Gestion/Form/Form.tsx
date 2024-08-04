@@ -76,7 +76,7 @@ const Form: React.FC<FormProps> = ({
 	const onSubmit: SubmitHandler<TCourseTutor> = async (data) => {
 		if (!!!preloadData.id_curso_tutor) {
 			console.log('Crear sección de curso');
-			const result: TResult = await postData({
+			const result: TResponse<string> = await postData({
 				path: URL.COURSE_TUTOR,
 				body: {
 					salon: data['salon'],
@@ -89,7 +89,7 @@ const Form: React.FC<FormProps> = ({
 				},
 			});
 
-			if (result.affectedRows > 0) {
+			if (result.code === 200) {
 				reset();
 				setHorario({} as TSchedule);
 				setJornada({} as TPeriod);
@@ -102,7 +102,7 @@ const Form: React.FC<FormProps> = ({
 				);
 				onClose();
 			} else {
-				swal('¡Error!', `${result.warningStatus}`, 'error');
+				swal('¡Error!', `${result.message}`, 'error');
 			}
 		} else {
 			console.log('Actualizar sección de curso');

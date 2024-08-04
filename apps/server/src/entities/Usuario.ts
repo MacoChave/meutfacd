@@ -1,5 +1,7 @@
 import {
 	Column,
+	CreateDateColumn,
+	DeleteDateColumn,
 	Entity,
 	JoinColumn,
 	JoinTable,
@@ -8,6 +10,7 @@ import {
 	OneToMany,
 	OneToOne,
 	PrimaryGeneratedColumn,
+	UpdateDateColumn,
 } from 'typeorm';
 import { Municipio } from './Municipio';
 import { UTPerfil } from './Perfil';
@@ -57,8 +60,14 @@ export class Usuario {
 	@Column({ unique: true, nullable: true })
 	carnet: number;
 
-	@Column({ type: 'date', default: () => 'CURRENT_TIMESTAMP' })
-	fecha_creacion: Date;
+	@CreateDateColumn({ type: 'date', nullable: true })
+	createdAt: Date;
+
+	@UpdateDateColumn({ type: 'datetime', nullable: true })
+	updatedAt: Date;
+
+	@DeleteDateColumn({ type: 'datetime', nullable: true })
+	deletedAt?: Date;
 
 	@ManyToOne(() => Municipio, (municipio: Municipio) => municipio.usuarios)
 	@JoinColumn({ name: 'id_municipio' })

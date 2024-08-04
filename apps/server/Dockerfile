@@ -23,6 +23,7 @@ COPY --from=prod-deps /app/node_modules ./node_modules
 COPY --from=build /app/dist ./
 COPY --from=base /app/src/storage ./src/storage
 COPY --from=base /app/src/utils/*.ttf ./src/utils
+COPY --from=base /app/src/utils/pdf/*.html ./src/utils/pdf
 
 EXPOSE 8000
 CMD [ "node", "src/app.js" ] 
