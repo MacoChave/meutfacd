@@ -47,9 +47,6 @@ export class Usuario {
 	@Column({ length: 11 })
 	telefono: string;
 
-	@Column({ type: 'date' })
-	fecha_nac: Date;
-
 	@Column({ length: 1, default: 'I' })
 	estado: string;
 

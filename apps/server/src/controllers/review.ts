@@ -1,9 +1,10 @@
 import { Request, Response } from 'express';
 import * as XLSX from 'xlsx';
 import { sqlInsert, sqlSelect, sqlSelectOne, sqlUpdate } from '../db/consultas';
-import { errorHttp } from '../utils/error.handle';
+import { errorHttp, successHttp } from '../utils/error.handle';
 import { formatDate } from '../utils/formats';
 import { createReadStream, unlinkSync } from 'fs';
+import { getAllByUser, getOne } from '../services/revision.service';
 
 export const getXlsxReport = async (
 	{ body, query }: Request,
@@ -62,6 +63,30 @@ export const getItemsByCurrentProf = async (
 			query: { id_tutor: user.primaryKey, ...query },
 		});
 		res.status(200).json(results);
+	} catch (error: any) {
+		errorHttp(res, error);
+	}
+};
+
+export const getItemByUser = async ({ query }: Request, res: Response) => {
+	try {
+		const { id_review, id_user } = query;
+		const review = await getOne(+id_review, +id_user);
+
+		console.log({ review });
+
+		successHttp(res, 200, review);
+	} catch (error: any) {
+		errorHttp(res, error);
+	}
+};
+
+export const getItemsByUser = async ({ query }: Request, res: Response) => {
+	try {
+		const { id_user } = query;
+		const reviews = await getAllByUser(+id_user);
+
+		successHttp(res, 200, reviews);
 	} catch (error: any) {
 		errorHttp(res, error);
 	}

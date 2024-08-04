@@ -19,7 +19,7 @@ const OneUser: React.FC<OneUserProps> = ({}) => {
 	const location = useLocation();
 	const { usuario } = location.state;
 
-	const { data, error, isLoading, isError } = useFetch({
+	const { data, isLoading, isError } = useFetch({
 		url: `${URL.USER}/${usuario.id_usuario || 0}`,
 		name: 'user',
 	});
@@ -61,8 +61,12 @@ const OneUser: React.FC<OneUserProps> = ({}) => {
 							</Button>
 						</Box>
 					</Box>
+					{}
 					<Box sx={{ flex: 1 }}>
-						<Progress />
+						<Progress
+							id_user={usuario.id_usuario}
+							title='Progreso'
+						/>
 					</Box>
 				</Box>
 			</Contenedor>

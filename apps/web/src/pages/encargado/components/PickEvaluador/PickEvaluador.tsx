@@ -2,19 +2,19 @@ import { URL } from '@/consts/Api';
 import { DotsLoaders } from '@/components/Loader/DotsLoaders';
 import { McAutocomplete } from '@/components/McWithoutForms/McAutocomplete';
 import { useCustomFetch } from '@/hooks/useFetch';
-import { TUser } from '@/models/Perfil';
+import { TProfessor, TUser } from '@/models/Perfil';
 import { Typography } from '@mui/material';
 import React from 'react';
 
 export type PickEvaluadorProps = {
-	evaluador: TUser;
+	evaluador: TProfessor;
 	ruta?: string;
 	rol?: string;
 	page?: string;
 	status?: number;
 	horario?: number;
 	jornada?: number;
-	setEvaluador: (evaluador: TUser) => void;
+	setEvaluador: (evaluador: TProfessor) => void;
 };
 
 const PickEvaluador: React.FC<PickEvaluadorProps> = ({
@@ -49,9 +49,14 @@ const PickEvaluador: React.FC<PickEvaluadorProps> = ({
 	return (
 		<McAutocomplete
 			label='Docente'
-			colLabel='nombre'
+			colLabel='fullname'
 			value={evaluador}
-			options={teachers}
+			options={(teachers?.message ?? []).map((teacher: any) => {
+				return {
+					id: teacher.id_usuario,
+					fullname: `${teacher.apellidos}, ${teacher.nombre}`,
+				};
+			})}
 			isLoading={isLoadingTeacher}
 			isError={isErrorTeacher}
 			setValue={setEvaluador}

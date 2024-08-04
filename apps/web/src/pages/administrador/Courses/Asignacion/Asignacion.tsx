@@ -2,23 +2,15 @@ import { DotsLoaders } from '@/components/Loader/DotsLoaders';
 import { McModal } from '@/components/McModal';
 import { McTable } from '@/components/MyTable';
 import { URL } from '@/consts/Api';
-import { useFetch, useInfiniteFetch } from '@/hooks/useFetch';
+import { useInfiniteFetch } from '@/hooks/useFetch';
 import { courseTutorDefault, TCourseTutor } from '@/models/CourseTutor';
 import { TResult } from '@/models/Fetching';
 import { deleteData } from '@/services/fetching';
-import {
-	CleaningServices,
-	Clear,
-	Delete,
-	Edit,
-	Refresh,
-	Search,
-} from '@mui/icons-material';
-import { Box, IconButton, TextField, Typography } from '@mui/material';
-import React, { lazy, useState } from 'react';
+import { CleaningServices, Delete, Edit, Refresh } from '@mui/icons-material';
+import { Box, IconButton, Typography } from '@mui/material';
+import React, { useState } from 'react';
 import swal from 'sweetalert';
 import { Form } from '../Gestion/Form';
-import { url } from 'inspector';
 
 export type AsignacionProps = {
 	filter: string;

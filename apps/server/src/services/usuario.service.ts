@@ -98,6 +98,23 @@ export const getAll = async ({
 	}
 };
 
+/**
+ * Usuarios con el rol buscado
+ * @param role {string} Nombre o fragmento de rol buscado
+ * @returns Arreglo de usuarios con el rol especificado con campos: 'apellidos, usuario'
+ */
+export const getAllByRole = (role: string) => {
+	try {
+		return AppDataSource.getRepository(Usuario).find({
+			select: ['id_usuario', 'apellidos', 'nombre'],
+			// relations: ['roles'],
+			where: { roles: { nombre: Like(`%${role}%`) } },
+		});
+	} catch (error: any) {
+		throw new Error(error.message);
+	}
+};
+
 export const getOne = async (id_usuario: number): Promise<Usuario | null> => {
 	try {
 		let userRepo = AppDataSource.getRepository(Usuario);

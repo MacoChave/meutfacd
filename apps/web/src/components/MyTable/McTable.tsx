@@ -15,12 +15,6 @@ export type McTableProps = {
 	headers: object;
 	totalCols: object;
 	actions?: McTableAction[];
-	onEdit?: (row: object) => void;
-	onView?: (row: object) => void;
-	onDelete?: (row: object) => void;
-	onPrint?: (row: object) => void;
-	onPass?: (row: object) => void;
-	onFail?: (row: object) => void;
 };
 
 const McTable: React.FC<McTableProps> = ({
@@ -28,33 +22,15 @@ const McTable: React.FC<McTableProps> = ({
 	headers,
 	totalCols,
 	actions = [],
-	// onEdit = undefined,
-	// onView = undefined,
-	// onDelete = undefined,
-	// onPrint = undefined,
-	// onPass = undefined,
-	// onFail = undefined,
 }) => {
 	return (
 		<Box
 			sx={{
 				mx: 'auto',
-				// overflowX: 'scroll',
-				// scrollbarWidth: 'none',
 			}}>
 			<Table>
 				<McHeaders headers={headers} />
-				<McBody
-					headers={headers}
-					rows={rows}
-					actions={actions}
-					// onEdit={onEdit}
-					// onView={onView}
-					// onDelete={onDelete}
-					// onPrint={onPrint}
-					// onPass={onPass}
-					// onFail={onFail}
-				/>
+				<McBody headers={headers} rows={rows} actions={actions} />
 				<McFooter headers={headers} rows={rows} totalCols={totalCols} />
 			</Table>
 		</Box>

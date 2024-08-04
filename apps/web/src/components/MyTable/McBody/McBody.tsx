@@ -24,6 +24,7 @@ import {
 } from '@mui/material';
 import React from 'react';
 import { McTableAction } from '../McTable';
+import { getNestedValue } from '@/utils/dataManagement';
 
 export type McBodyProps = {
 	headers: object;
@@ -64,22 +65,7 @@ export const getValue = (key: string, cellValue: any): React.ReactNode => {
 	}
 };
 
-const getNestedValue = (obj: any, path: string): any => {
-	return path.split('.').reduce((acc, key) => acc && acc[key], obj);
-	// return path.split('.').reduce((acc, key) => acc[key], obj);
-};
-
-const McBody: React.FC<McBodyProps> = ({
-	headers,
-	rows,
-	actions = [],
-	// onEdit,
-	// onView,
-	// onDelete,
-	// onPrint,
-	// onPass,
-	// onFail,
-}) => {
+const McBody: React.FC<McBodyProps> = ({ headers, rows, actions = [] }) => {
 	return (
 		<TableBody>
 			{rows.map((row, index) => (
@@ -103,48 +89,6 @@ const McBody: React.FC<McBodyProps> = ({
 								</IconButton>
 							</Tooltip>
 						))}
-						{/* {onEdit && (
-							<IconButton
-								color='secondary'
-								onClick={() => onEdit(row)}>
-								<Edit />
-							</IconButton>
-						)}
-						{onView && (
-							<IconButton
-								color='secondary'
-								onClick={() => onView(row)}>
-								<FilePresent />
-							</IconButton>
-						)}
-						{onDelete && (
-							<IconButton
-								color='warning'
-								onClick={() => onDelete(row)}>
-								<Delete />
-							</IconButton>
-						)}
-						{onPrint && (
-							<IconButton
-								color='primary'
-								onClick={() => onPrint(row)}>
-								<Print />
-							</IconButton>
-						)}
-						{onPass && (
-							<IconButton
-								color='primary'
-								onClick={() => onPass(row)}>
-								<Check />
-							</IconButton>
-						)}
-						{onFail && (
-							<IconButton
-								color='warning'
-								onClick={() => onFail(row)}>
-								<CancelOutlined />
-							</IconButton>
-						)} */}
 					</TableCell>
 				</TableRow>
 			))}

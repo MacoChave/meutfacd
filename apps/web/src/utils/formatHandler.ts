@@ -142,7 +142,9 @@ export const formatByDataType = (cellValue: TypeWithKey<string>): string => {
 		case 'number':
 			return new Intl.NumberFormat().format(Number(value));
 		case 'date':
-			return formatTimeAgo(new Date(value));
+			date = dayjs(value).locale('es').tz('America/Guatemala');
+			return date.format('DD/MM/YYYY HH:mm:ss');
+		// return formatTimeAgo(new Date(value));
 		case 'time':
 			date = dayjs(value).locale('es').tz('America/Guatemala');
 			return date.format('HH:mm:ss');

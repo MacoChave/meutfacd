@@ -13,6 +13,10 @@ export type TPagination = {
 	next?: number;
 };
 
+/**
+ * Response from the server
+ * @param T Type of the message
+ */
 export type TResponse<T> = {
 	code: number;
 	message: T;

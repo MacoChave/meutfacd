@@ -39,12 +39,34 @@ export const getAll = async ({
 	}
 };
 
-export const getOne = (id_revision: number): Promise<UTRevision | null> => {
+export const getAllByUser = async (
+	id_usuario: number
+): Promise<UTRevision[]> => {
 	try {
 		let revisionRepo = AppDataSource.getRepository(UTRevision);
+		return revisionRepo.find({
+			relations: ['cursoTutor', 'tutor', 'tesis'],
+			where: { tesis: { id_estudiante: id_usuario } },
+		});
+	} catch (error: any) {
+		throw new Error(error.message);
+	}
+};
+
+export const getOne = (
+	id_revision: number,
+	id_usuario: number
+): Promise<UTRevision | null> => {
+	try {
+		let params: FindOptionsWhere<UTRevision> = id_revision
+			? { id_revision }
+			: id_usuario
+			? { tesis: { id_estudiante: id_usuario } }
+			: {};
+		let revisionRepo = AppDataSource.getRepository(UTRevision);
 		return revisionRepo.findOne({
-			relations: ['cursoTutor', 'tutor'],
-			where: [{ id_revision }],
+			relations: ['cursoTutor', 'tutor', 'tesis'],
+			where: [params],
 		});
 	} catch (error: any) {
 		throw new Error(error.message);
@@ -55,6 +77,23 @@ export const deleteOne = (id_revision: number): Promise<UpdateResult> => {
 	try {
 		let revisionRepo = AppDataSource.getRepository(UTRevision);
 		return revisionRepo.softDelete(id_revision);
+	} catch (error: any) {
+		throw new Error(error.message);
+	}
+};
+
+/**
+ * Reset user assignment, set id_course_tuto to null and estado to 'E'
+ */
+export const resetUserAssignment = async (
+	id_curso_tutor: number
+): Promise<UpdateResult> => {
+	try {
+		let revisionRepo = AppDataSource.getRepository(UTRevision);
+		return revisionRepo.update(id_curso_tutor, {
+			id_curso_tutor: null,
+			estado: 'E',
+		});
 	} catch (error: any) {
 		throw new Error(error.message);
 	}

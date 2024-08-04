@@ -3,7 +3,7 @@ import { Contenedor } from '@/components';
 import { DotsLoaders } from '@/components/Loader/DotsLoaders';
 import { McTable } from '@/components/MyTable';
 import { APROBADO } from '@/consts/Vars';
-import { useCustomFetch } from '@/hooks/useFetch';
+import { useCustomFetch, useFetch } from '@/hooks/useFetch';
 import { TProgress } from '@/models/Progress';
 import { getData } from '@/services/fetching';
 import { Typography } from '@mui/material';
@@ -12,33 +12,22 @@ import swal from 'sweetalert';
 import Dialogo from '../../../components/Modal';
 import { Print } from '@mui/icons-material';
 
-export type ProgressProps = {};
+export type ProgressProps = {
+	id_user?: number;
+	title?: string;
+};
 
-const Progress: FC<ProgressProps> = ({}) => {
+const Progress: FC<ProgressProps> = ({
+	id_user = undefined,
+	title = 'Mi progreso',
+}) => {
 	const [open, setOpen] = useState(false);
 	const [row, setRow] = useState({} as TProgress);
-	const { data, isLoading, isError } = useCustomFetch({
+
+	const { data, isLoading, isError } = useFetch({
+		name: 'reviews',
 		url: `${URL.REVIEW}/all`,
-		method: 'post',
-		body: {
-			table: 'ut_v_revision',
-			columns: [
-				'id_revision',
-				'fecha_creacion',
-				'fecha_modificacion',
-				'ruta_dictamen',
-				'fecha',
-				'detalle',
-				'tutor',
-				'estado',
-				'estacion',
-				'titulo',
-			],
-			sort: {
-				estacion: 'asc',
-				fecha_creacion: 'asc',
-			},
-		},
+		params: { id_user: id_user },
 	});
 
 	const handleShow = (row: TProgress) => {
@@ -65,28 +54,20 @@ const Progress: FC<ProgressProps> = ({}) => {
 
 	return (
 		<>
-			<Contenedor title='Mi progreso'>
+			<Contenedor title={title}>
 				<McTable
 					headers={{
 						estacion: 'Estación',
-						titulo: 'Titulo',
+						'tesis.titulo': 'Titulo',
 						detalle: 'Observación',
-						tutor: 'Revisor',
+						// tutor: 'Revisor',
 						fecha_creacion: 'Creación',
 						fecha_modificacion: 'Modificación',
 						fecha: 'Revisión',
 						estado: 'Estado',
 					}}
-					rows={data || []}
+					rows={data?.message ?? []}
 					totalCols={{}}
-					actions={[
-						{
-							tooltip: 'Mostrar dictámen',
-							icon: <Print color='primary' />,
-							onClick: (row) => handlePrint(row),
-						},
-					]}
-					onPrint={handlePrint}
 				/>
 			</Contenedor>
 			<Dialogo open={open} title='Observaciones' setOpen={setOpen}>

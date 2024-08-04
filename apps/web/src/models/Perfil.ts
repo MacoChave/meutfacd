@@ -2,6 +2,11 @@ import { formatDate } from '@/utils/formatHandler';
 import dayjs from 'dayjs';
 import * as yup from 'yup';
 
+export type TProfessor = {
+	id: number;
+	fullname: string;
+};
+
 export type TPerfilTutor = {
 	id_tutor: number;
 	no_colegiado: string;

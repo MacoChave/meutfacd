@@ -31,13 +31,13 @@ export class UTRevision {
 	ruta_dictamen: string;
 
 	@Column({ type: 'int', unsigned: true, nullable: true })
-	id_curso_tutor: number;
+	id_curso_tutor: number | null;
 
 	@Column({ type: 'int', unsigned: true, nullable: true })
-	id_tutor: number;
+	id_tutor: number | null;
 
 	@Column({ type: 'int', unsigned: true, nullable: true })
-	id_tesis: number;
+	id_tesis: number | null;
 
 	@Column({ type: 'char', length: 1, default: 'E' })
 	estado: string;
@@ -57,7 +57,7 @@ export class UTRevision {
 
 	@ManyToOne(() => UTTesis, (tesis: UTTesis) => tesis.revisions)
 	@JoinColumn({ name: 'id_tesis' })
-	tesis: any;
+	tesis: UTTesis;
 
 	@ManyToOne(() => Usuario, (usuario: Usuario) => usuario.revisions)
 	@JoinColumn({ name: 'id_tutor' })

@@ -2,15 +2,15 @@ import { DotsLoaders } from '@/components/Loader/DotsLoaders';
 import { McAutocomplete } from '@/components/McWithForms/McAutocomplete';
 import { McInput } from '@/components/McWithForms/McInput';
 import { URL } from '@/consts/Api';
-import { useCustomFetch, useFetch } from '@/hooks/useFetch';
+import { useFetch } from '@/hooks/useFetch';
 import { TCourse } from '@/models/Course';
 import {
 	TCourseTutor,
 	courseTutorDefault,
 	courseTutorSchema,
 } from '@/models/CourseTutor';
-import { TResult } from '@/models/Fetching';
-import { TUser } from '@/models/Perfil';
+import { TResponse } from '@/models/Fetching';
+import { TProfessor } from '@/models/Perfil';
 import { TPeriod } from '@/models/Period';
 import { TSchedule } from '@/models/Schedule';
 import { PickEvaluador } from '@/pages/encargado/components/PickEvaluador';
@@ -37,18 +37,11 @@ const Form: React.FC<FormProps> = ({
 	const [jornada, setJornada] = useState({} as TPeriod);
 	const [horario, setHorario] = useState({} as TSchedule);
 	const [professor, setProfessor] = useState(
-		(preloadData?.tutor ?? {}) as TUser
+		(preloadData?.tutor ?? {}) as TProfessor
 	);
 	const [days, setDays] = React.useState<string[]>(preloadData.dias ?? []);
 
-	const {
-		control,
-		formState: { errors },
-		reset,
-		setValue,
-		getValues,
-		handleSubmit,
-	} = useForm<TCourseTutor>({
+	const { control, reset, setValue, handleSubmit } = useForm<TCourseTutor>({
 		defaultValues: {
 			id_curso_tutor: preloadData?.id_curso_tutor ?? 0,
 			seccion: preloadData.seccion,
@@ -70,7 +63,7 @@ const Form: React.FC<FormProps> = ({
 	const onSubmit: SubmitHandler<TCourseTutor> = async (data) => {
 		if (!!!preloadData.id_curso_tutor) {
 			console.log('Crear sección de curso');
-			const result: TResult = await postData({
+			const result: TResponse<string> = await postData({
 				path: URL.COURSE_TUTOR,
 				body: {
 					salon: data['seccion'],
@@ -83,11 +76,11 @@ const Form: React.FC<FormProps> = ({
 				},
 			});
 
-			if (result.affectedRows > 0) {
+			if (result.code === 200) {
 				reset();
 				setHorario({} as TSchedule);
 				setJornada({} as TPeriod);
-				setProfessor({} as TUser);
+				setProfessor({} as TProfessor);
 				setDays([]);
 				swal(
 					'¡Listo!',
@@ -96,11 +89,11 @@ const Form: React.FC<FormProps> = ({
 				);
 				onClose();
 			} else {
-				swal('¡Error!', `${result.warningStatus}`, 'error');
+				swal('¡Error!', `${result.message}`, 'error');
 			}
 		} else {
 			console.log('Actualizar sección de curso');
-			const result: TResult = await putData({
+			const result: TResponse<string> = await putData({
 				path: URL.COURSE_TUTOR,
 				body: {
 					seccion: data['seccion'],
@@ -112,11 +105,11 @@ const Form: React.FC<FormProps> = ({
 				},
 			});
 
-			if (result.affectedRows > 0) {
+			if (result.code > 0) {
 				reset();
 				setHorario({} as TSchedule);
 				setJornada({} as TPeriod);
-				setProfessor({} as TUser);
+				setProfessor({} as TProfessor);
 				setDays([]);
 				swal(
 					'¡Listo!',
@@ -125,7 +118,7 @@ const Form: React.FC<FormProps> = ({
 				);
 				onClose();
 			} else {
-				swal('¡Error!', `${result.warningStatus}`, 'error');
+				swal('¡Error!', `${result.message}`, 'error');
 			}
 		}
 	};
@@ -201,8 +194,8 @@ const Form: React.FC<FormProps> = ({
 							/>
 							<PickEvaluador
 								evaluador={professor}
-								setEvaluador={(professor: TUser) => {
-									setValue('id_tutor', professor.id_usuario);
+								setEvaluador={(professor: TProfessor) => {
+									setValue('id_tutor', professor.id);
 									setProfessor(professor);
 								}}
 								ruta='schedule'
