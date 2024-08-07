@@ -11,7 +11,12 @@ import { AxiosError } from 'axios';
 import React, { SyntheticEvent, lazy } from 'react';
 import { FormProvider, SubmitHandler, useForm } from 'react-hook-form';
 import { useDispatch } from 'react-redux';
-import { useNavigate, useParams } from 'react-router-dom';
+import {
+	Navigate,
+	useNavigate,
+	useNavigation,
+	useParams,
+} from 'react-router-dom';
 import swal from 'sweetalert';
 const SiderLogotipo = lazy(
 	() => import('@/components/SiderLogotipo/SiderLogotipo')
@@ -75,28 +80,36 @@ const Login: React.FC<LoginProps> = () => {
 
 	const handleRecovery = async (e: SyntheticEvent) => {
 		e.preventDefault();
-		try {
-			if (!methods.getValues('correo'))
-				throw new Error(
-					'Escribe tu correo electrónico para recuperar tu contraseña'
-				);
-
-			const response: TResponse<any> = await postData<TResponse<any>>({
-				path: URL.AUTH.RECOVERY,
-				body: { correo: methods.getValues('correo') },
-			});
+		if (!methods.getValues('correo')) {
 			swal({
-				title: '¡Bien hecho!',
-				text: response.message,
-				icon: 'success',
-			});
-		} catch (error: any) {
-			swal({
-				title: '¡Ha ocurrido un error!',
-				text: error.message ?? error.response?.data.message,
+				title: '¡Error!',
+				text: 'Debe ingresar un correo',
 				icon: 'error',
 			});
 		}
+		let correo = methods.getValues('correo');
+		let correoB64 = btoa(correo);
+
+		navigate(`/recovery/${correoB64}`, {
+			replace: true,
+		});
+		// try {
+		// const response: TResponse<any> = await postData<TResponse<any>>({
+		// 	path: URL.AUTH.RECOVERY,
+		// 	body: { correo: methods.getValues('correo') },
+		// });
+		// swal({
+		// 	title: '¡Bien hecho!',
+		// 	text: response.message,
+		// 	icon: 'success',
+		// });
+		// } catch (error: any) {
+		// 	swal({
+		// 		title: '¡Ha ocurrido un error!',
+		// 		text: error.message ?? error.response?.data.message,
+		// 		icon: 'error',
+		// 	});
+		// }
 	};
 
 	const handleLogup = (e: SyntheticEvent) => {
