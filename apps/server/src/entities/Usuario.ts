@@ -44,6 +44,9 @@ export class Usuario {
 	@Column({ length: 200 })
 	direccion: string;
 
+	@Column({ type: 'date' })
+	fecha_nac: Date;
+
 	@Column({ length: 11 })
 	telefono: string;
 
