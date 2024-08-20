@@ -7,3 +7,9 @@ export const setBearerToken = () => {
 		getStorage(STORAGE_TYPES.CONTROL)?.auth?.token ?? ''
 	}`;
 };
+
+export const setVersion = () => {
+	api.defaults.headers.common['version'] = `${
+		getStorage(STORAGE_TYPES.CONTROL)?.auth?.version ?? ''
+	}`;
+};

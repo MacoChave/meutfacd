@@ -2,10 +2,10 @@ import { Contenedor } from '@/components';
 import { DotsLoaders } from '@/components/Loader/DotsLoaders';
 import { TResult } from '@/models/Fetching';
 import { putData } from '@/services/fetching';
-import { formatDate } from '@/utils/formatHandler';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Box, Button, Divider, Typography } from '@mui/material';
-import { SyntheticEvent, useEffect, useState } from 'react';
+import dayjs from 'dayjs';
+import { SyntheticEvent, useState } from 'react';
 import { FormProvider, SubmitHandler, useForm } from 'react-hook-form';
 import swal from 'sweetalert';
 import { URL } from '../../../consts/Api';
@@ -15,14 +15,11 @@ import { ErrorPage } from '../../ErrorPage';
 import { ContactData } from './components/ContactData';
 import { PersonalData } from './components/PersonalData';
 import { SesionData } from './components/SesionData';
-import dayjs from 'dayjs';
-import { TRole } from '@/interfaces/usuario';
-import { TRoles } from '@/models/Control';
 
 export const UserProfile = (): JSX.Element => {
 	const [isEditing, setIsEditing] = useState(false);
 	const {
-		data: perfil,
+		data: { message },
 		isError,
 		isLoading,
 	} = useFetch({
@@ -33,21 +30,23 @@ export const UserProfile = (): JSX.Element => {
 		mode: 'onBlur',
 		resolver: yupResolver(schemaUsuario),
 		values: {
-			id_usuario: perfil.id_usuario,
-			nombre: perfil.nombre,
-			apellidos: perfil.apellidos,
-			genero: perfil.genero,
-			correo: perfil.correo,
-			carnet: perfil.carnet,
-			cui: perfil.cui,
-			direccion: perfil.direccion,
-			fecha_nac: dayjs(perfil.fecha_nac).format('YYYY-MM-DD'),
-			estado: perfil.estado,
-			telefono: perfil.telefono,
+			id_usuario: message?.id_usuario ?? 0,
+			nombre: message?.nombre,
+			apellidos: message?.apellidos ?? '',
+			genero: message?.genero ?? '',
+			correo: message?.correo ?? '',
+			carnet: message?.carnet ?? '',
+			cui: message?.cui ?? '',
+			direccion: message?.direccion ?? '',
+			fecha_nac: dayjs(message?.fecha_nac, 'YYYY-MM-DD').format(
+				'YYYY-MM-DD'
+			),
+			estado: message?.estado ?? '',
+			telefono: message?.telefono ?? '',
 			id_rol: 0,
 			rol: '',
-			id_jornada: perfil.id_jornada,
-			id_horario: perfil.id_horario,
+			id_jornada: message?.perfil?.id_jornada ?? '',
+			id_horario: message?.perfil?.id_horario ?? '',
 			pass: '',
 			passConfirm: '',
 			roles: '',

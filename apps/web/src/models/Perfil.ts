@@ -51,7 +51,7 @@ export const profileDefault: TUser = {
 	carnet: 0,
 	cui: '',
 	direccion: '',
-	fecha_nac: formatDate({ date: new Date() }),
+	fecha_nac: dayjs().format('YYYY-MM-DD'),
 	estado: '',
 	telefono: '',
 	id_rol: 0,

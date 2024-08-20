@@ -1,17 +1,13 @@
 import { Request, Response } from 'express';
-import AppDataSource from '../config/orm';
+import { UTPagina } from '../entities/Pagina';
+import {
+	getAllChildrensPage,
+	getAllParentsPage,
+} from '../services/pagina.service';
 import { errorHttp, successHttp } from '../utils/error.handle';
 
 export const getItem = async ({ params }: Request, res: Response) => {
 	try {
-		// let id = params.id || 0;
-
-		// let pageRepo = AppDataSource.getRepository(Page);
-		// let page = await pageRepo.findOne({
-		// 	relations: [],
-		// 	where: { id_pagina: +id },
-		// });
-		// successHttp(res, 200, page);
 		successHttp(res, 200, {});
 	} catch (error: any) {
 		errorHttp(res, error);
@@ -23,25 +19,8 @@ export const getChildrens = async (
 	res: Response
 ) => {
 	try {
-		// let take = query.take || 10;
-		// let skip = query.skip || 0;
-		// let q = query.q || '';
-		// let id = params.id || 0;
-
-		// let pageRepo = AppDataSource.getRepository(Page);
-		// let [result, total] = await pageRepo.findAndCount({
-		// 	relations: ['parent', 'childrens'],
-		// 	where: [{ parent: { id_pagina: +id } }],
-		// 	order: { indice: 'ASC' },
-		// });
-
-		// let next = +skip + +take;
-
-		// successHttp(res, 200, {
-		// 	data: result,
-		// 	nextCursor: next < total ? next : undefined,
-		// });
-		successHttp(res, 200, {});
+		let response: UTPagina[] = await getAllChildrensPage();
+		successHttp(res, 200, response);
 	} catch (error: any) {
 		errorHttp(res, error);
 	}
@@ -49,26 +28,8 @@ export const getChildrens = async (
 
 export const getParentPages = async ({ query }: Request, res: Response) => {
 	try {
-		// let take = query.take || 10;
-		// let skip = query.skip || 0;
-		// let q = query.q || '';
-
-		// let pageRepo = AppDataSource.getRepository(Page);
-		// let [result, total] = await pageRepo.findAndCount({
-		// 	relations: ['parent'],
-		// 	where: [{ parent: IsNull() }],
-		// 	order: { id_pagina: 'ASC' },
-		// 	take: +take,
-		// 	skip: +skip,
-		// });
-
-		// let next = +skip + +take;
-
-		// successHttp(res, 200, {
-		// 	data: result,
-		// 	nextCursor: next < total ? next : undefined,
-		// });
-		successHttp(res, 200, {});
+		let response: UTPagina[] = await getAllParentsPage();
+		successHttp(res, 200, response);
 	} catch (error: any) {
 		errorHttp(res, error);
 	}

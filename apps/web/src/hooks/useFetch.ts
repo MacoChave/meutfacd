@@ -1,6 +1,6 @@
 import api from '@/api/server';
 import { TPagination, TResponse } from '@/models/Fetching';
-import { setBearerToken } from '@/utils/bearer';
+import { setBearerToken, setVersion } from '@/utils/bearer';
 import {
 	QueryFunctionContext,
 	useInfiniteQuery,
@@ -9,6 +9,7 @@ import {
 
 const fetchData = async ({ queryKey }: QueryFunctionContext) => {
 	setBearerToken();
+	setVersion();
 	let queryParams = '';
 	if (queryKey[3] !== undefined) {
 		queryParams = `?${Object.entries(queryKey[2] as Object)
@@ -37,6 +38,7 @@ export const useFetch = ({
 
 const fetchCustomData = async ({ queryKey }: QueryFunctionContext) => {
 	setBearerToken();
+	setVersion();
 	const { data } = await api({
 		url: queryKey[1] as string,
 		method: queryKey[2] as string,
@@ -65,6 +67,7 @@ const fetchInfinite = async ({
 	pageParam = 0,
 }: QueryFunctionContext) => {
 	setBearerToken();
+	setVersion();
 	const { data } = await api.get(queryKey[1] as string, {
 		params: {
 			take: queryKey[2] as number,

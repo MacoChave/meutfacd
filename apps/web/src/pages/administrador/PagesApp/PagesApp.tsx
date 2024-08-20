@@ -1,7 +1,7 @@
 import { Contenedor, McModal } from '@/components';
 import { McTable } from '@/components/MyTable';
 import { URL } from '@/consts/Api';
-import { useCustomFetch } from '@/hooks/useFetch';
+import { useCustomFetch, useFetch } from '@/hooks/useFetch';
 import { TPageApp } from '@/models/PageApp';
 import React, { useState } from 'react';
 import { FormPagesApp } from './FormPagesApp';
@@ -13,16 +13,8 @@ const PagesApp: React.FC<PagesAppProps> = ({}) => {
 	const [editPage, setEditPage] = useState<TPageApp>({} as TPageApp);
 	const [editing, setEditing] = useState(false);
 
-	const { data, isLoading, isError, refetch } = useCustomFetch({
-		url: `${URL.GENERIC}/all`,
-		method: 'post',
-		body: {
-			table: 'ut_v_pagina',
-			sort: { n_padre: 'asc' },
-			conditions: [
-				{ column: 'n_padre', operator: 'is not', value: 'null' },
-			],
-		},
+	const { data, isLoading, isError, refetch } = useFetch({
+		url: `${URL.PAGE}/childrens`,
 	});
 
 	// const onSave = async (item: any) => {
@@ -62,12 +54,12 @@ const PagesApp: React.FC<PagesAppProps> = ({}) => {
 			<Contenedor title='Gestión de páginas'>
 				<McTable
 					headers={{
-						n_padre: 'Categoría',
-						n_hijo: 'Nombre',
+						'padre.nombre': 'Grupo',
+						nombre: 'Nombre',
 						descripcion: 'Descripción',
 						ruta: 'Ruta de la página',
 					}}
-					rows={data}
+					rows={data?.message ?? []}
 					totalCols={{}}
 					actions={[
 						{

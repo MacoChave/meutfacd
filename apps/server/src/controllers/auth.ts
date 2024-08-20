@@ -7,9 +7,8 @@ import { TSignIn } from '../models/signIn';
 import { sendEmail } from '../services/email.service';
 import { getOne, userAuth } from '../services/usuario.service';
 import { errorHttp, successHttp } from '../utils/error.handle';
-import { formatDate } from '../utils/formats';
 import { comparePassword, encryptPassword, generarToken } from '../utils/token';
-import { logger } from '../utils/logger';
+import dayjs from 'dayjs';
 
 const signIn = async ({ user, password }: TSignIn) => {
 	try {
@@ -178,11 +177,7 @@ export const logupHandler = async ({ body, query }: Request, res: Response) => {
 			correo,
 			hash,
 			direccion,
-			fecha_nac: formatDate({
-				date: new Date(fecha_nac),
-				format: 'mysql',
-				type: 'date',
-			}),
+			fecha_nac: dayjs(fecha_nac, 'YYYY-DD-MM').format('YYYY-MM-DD'),
 			id_municipio: 1,
 			carnet: +carnet.toString().replace(' ', ''),
 			cui,
@@ -239,7 +234,12 @@ export const loginHandler = async ({ body }: Request, res: Response) => {
 			carnet: user.carnet,
 		});
 
-		successHttp(res, 200, { token, name: user.nombre, roles: user.roles });
+		successHttp(res, 200, {
+			token,
+			version: DATA_SOURCES.API_VERSION,
+			name: user.nombre,
+			roles: user.roles,
+		});
 	} catch (error: any) {
 		errorHttp(res, error);
 	}
@@ -253,22 +253,7 @@ export const profileHandler = async ({ user }: Request, res: Response) => {
 			throw new Error('No se encontró el usuario');
 		}
 
-		return res.status(200).json({
-			fecha_nac: usuario.fecha_nac,
-			genero: usuario.genero,
-			direccion: usuario.direccion,
-			id_municipio: usuario.municipio.id_municipio,
-			nombre: usuario.nombre,
-			apellidos: usuario.apellidos,
-			telefono: usuario.telefono,
-			correo: usuario.correo,
-			estado: usuario.estado,
-			carnet: usuario.carnet,
-			cui: usuario.cui,
-			roles: usuario.roles,
-			id_jornada: usuario.perfil.id_jornada,
-			id_horario: usuario.perfil.id_horario,
-		});
+		successHttp(res, 200, { ...usuario });
 	} catch (error: any) {
 		errorHttp(res, error);
 	}

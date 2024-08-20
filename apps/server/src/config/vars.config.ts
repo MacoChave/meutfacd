@@ -2,6 +2,7 @@ import { logger } from '../utils/logger';
 
 export const DATA_SOURCES = {
 	API_PORT: Number(process.env.API_PORT) || 5000,
+	API_VERSION: process.env.API_VERSION || '',
 	URL_FRONTEND: process.env.URL_FRONTEND || 'localhost:5173',
 	URL_EMAIL_VERIFIED:
 		process.env.URL_EMAIL_VERIFIED || 'localhost:5173/email-verified',
