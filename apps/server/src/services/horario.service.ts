@@ -51,6 +51,18 @@ export const getAllHorario = async ({
 	}
 };
 
+export const getAllByPeriod = (id_jornada: number): Promise<UTHorario[]> => {
+	try {
+		let horarioRepo = AppDataSource.getRepository(UTHorario);
+		return horarioRepo.find({
+			where: { id_jornada },
+			relations: ['jornada'],
+		});
+	} catch (error: any) {
+		throw new Error(error.message);
+	}
+};
+
 export const getOneHorario = async (
 	id_horario: number,
 	id_jornada: number

@@ -22,8 +22,7 @@ const PickHorario: React.FC<PickHorarioProps> = ({
 		isLoading: isLoadHorario,
 		isError: isErrHorario,
 	} = useFetch({
-		url: `${URL.SCHEDULE}/all`,
-		params: { id_jornada },
+		url: `${URL.SCHEDULE}/period/${id_jornada}`,
 	});
 
 	if (isLoadHorario) return <DotsLoaders />;
@@ -34,7 +33,7 @@ const PickHorario: React.FC<PickHorarioProps> = ({
 			label='Horario'
 			colLabel='hora_inicio'
 			value={horario}
-			options={data?.message?.data ?? []}
+			options={data?.message ?? []}
 			isLoading={isLoadHorario}
 			isError={isErrHorario}
 			setValue={setHorario}

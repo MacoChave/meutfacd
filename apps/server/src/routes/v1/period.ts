@@ -1,5 +1,4 @@
 import { Router } from 'express';
-import { requireAuth } from '../../middlewares/requireAuth';
 import {
 	createItem,
 	deleteItem,
@@ -7,6 +6,7 @@ import {
 	getItems,
 	updateItem,
 } from '../../controllers/period';
+import { requireAuth } from '../../middlewares/requireAuth';
 
 const router = Router();
 

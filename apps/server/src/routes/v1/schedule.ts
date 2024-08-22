@@ -1,17 +1,18 @@
 import { Router } from 'express';
-import { requireAuth } from '../../middlewares/requireAuth';
 import {
 	createItem,
 	deleteItem,
-	getItem,
 	getItems,
+	getItemsByPeriod,
 	updateItem,
 } from '../../controllers/schedule';
+import { requireAuth } from '../../middlewares/requireAuth';
 
 const router = Router();
 
 router.get('/all', requireAuth, getItems);
-router.get('/:period/:schedule', requireAuth, getItem);
+router.get('/period/:id_jornada', requireAuth, getItemsByPeriod);
+// router.get('period/:period/schedule/:schedule', requireAuth, getItem);
 router.post('/', requireAuth, createItem);
 router.put('/', requireAuth, updateItem);
 router.delete('/', requireAuth, deleteItem);

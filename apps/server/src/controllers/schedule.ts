@@ -1,8 +1,10 @@
 import { Request, Response } from 'express';
-import { sqlDelete, sqlInsert, sqlSelect, sqlUpdate } from '../db/consultas';
+import { sqlDelete, sqlInsert, sqlUpdate } from '../db/consultas';
+import { IQueryAll } from '../interfaces/returns';
+import { getAll } from '../services/jornada.service';
 import { errorHttp, successHttp } from '../utils/error.handle';
-import AppDataSource from '../config/orm';
 import { UTHorario } from '../entities/Horario';
+import { getAllByPeriod } from '../services/horario.service';
 
 export const getItem = async ({ params }: Request, res: Response) => {
 	try {
@@ -25,26 +27,23 @@ export const getItem = async ({ params }: Request, res: Response) => {
 
 export const getItems = async ({ query }: Request, res: Response) => {
 	try {
-		let take = query.take ?? 10;
-		let skip = query.skip ?? 0;
-		let q = query?.q;
-
-		let horarioRepo = AppDataSource.getRepository(UTHorario);
-		let [result, total] = await horarioRepo.findAndCount({
-			relations: ['jornada'],
-			where: q ? { id_jornada: +q } : {},
-			take: +take,
-			skip: +skip,
-		});
-
-		let next = +skip + +take;
-
-		successHttp(res, 200, {
-			data: result,
-			nextCursor: next < total ? next : undefined,
-		});
+		let result: IQueryAll = await getAll(query);
+		successHttp(res, 200, result);
 	} catch (error) {
 		errorHttp(res, error as any);
+	}
+};
+
+export const getItemsByPeriod = async (
+	{ params: { id_jornada } }: Request,
+	res: Response
+) => {
+	try {
+		let result: UTHorario[] = await getAllByPeriod(+id_jornada);
+
+		successHttp(res, 200, result);
+	} catch (error: any) {
+		errorHttp(res, error.message);
 	}
 };
 

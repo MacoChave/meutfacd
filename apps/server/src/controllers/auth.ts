@@ -208,7 +208,7 @@ export const logupHandler = async ({ body, query }: Request, res: Response) => {
 			subject: 'Verificación de correo electrónico',
 			template: 'confirm-email.html',
 			replaceValues: {
-				username: nombre,
+				name: nombre,
 				email: correo,
 				url: DATA_SOURCES.URL_EMAIL_VERIFIED,
 			},

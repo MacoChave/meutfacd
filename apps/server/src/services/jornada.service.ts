@@ -1,8 +1,9 @@
-import { Like } from 'typeorm';
+import { FindOptionsWhere, Like } from 'typeorm';
 import AppDataSource from '../config/orm';
 import { UTJornada } from '../entities/Jornada';
 import { IGetAll } from '../interfaces/parameters';
 import { IQueryAll } from '../interfaces/returns';
+import { UTHorario } from '../entities/Horario';
 
 export const createOrUpdateOne = async (
 	jornada: UTJornada
@@ -34,10 +35,17 @@ export const getAll = async ({
 	q,
 }: IGetAll): Promise<IQueryAll> => {
 	try {
+		let filterJornada: FindOptionsWhere<UTHorario> = {};
+
+		if (typeof q === 'number')
+			filterJornada = { jornada: { id_jornada: +q } };
+
+		console.log('FILTER JORANDA', filterJornada);
+
 		let jornadaRepo = AppDataSource.getRepository(UTJornada);
 		let [jornadas, count] = await jornadaRepo.findAndCount({
 			relations: ['horarios'],
-			where: q ? [{ nombre: Like(`%${q}%`) }] : [],
+			where: q ? [{ nombre: Like(`%${q}%`), ...filterJornada }] : [],
 			take: take,
 			skip: skip,
 		});

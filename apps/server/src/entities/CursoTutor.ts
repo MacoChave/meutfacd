@@ -26,11 +26,11 @@ export class UTCursoTutor {
 	activo: boolean;
 
 	@Column({ type: 'json', nullable: true })
-	dias: any;
+	dias: string[];
 
-	id_horario: number;
+	// id_horario: number;
 
-	id_jornada: number;
+	// id_jornada: number;
 
 	@ManyToOne(() => UTCurso, (curso: UTCurso) => curso.cursoTutores)
 	@JoinColumn({ name: 'id_curso' })

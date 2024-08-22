@@ -12,23 +12,34 @@ import { UTCurso } from '../entities/Curso';
 import { Usuario } from '../entities/Usuario';
 import { getOneHorario } from '../services/horario.service';
 import { UTHorario } from '../entities/Horario';
+import dayjs from 'dayjs';
 
 export const postItem = async ({ body }: Request, res: Response) => {
 	try {
-		// console.table(body);
+		const {
+			id_curso_tutor,
+			salon,
+			fecha,
+			id_curso,
+			id_tutor,
+			id_horario,
+			id_jornada,
+			dias,
+		} = body;
+
 		let data = new UTCursoTutor();
 
 		data.salon = body.salon;
 		data.dias = JSON.parse(body.dias);
-		data.fecha = new Date(body.fecha);
+		data.fecha = dayjs(body.fecha, 'YYYY-MM-DD').toDate();
 		data.curso = (await getOneCurso(body.id_curso)) as UTCurso;
 		data.tutor = (await getOne(body.id_tutor)) as Usuario;
 		data.horario = (await getOneHorario(
 			body.id_horario,
 			body.id_jornada
 		)) as UTHorario;
-		data.id_horario = body.id_horario;
-		data.id_jornada = body.id_jornada;
+
+		console.log('NEW CURSO TUTOR', data);
 
 		const cursoTutor = await createOrUpdateCursoTutor(data);
 		successHttp(res, 200, cursoTutor);

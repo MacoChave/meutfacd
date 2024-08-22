@@ -62,7 +62,7 @@ const Form: React.FC<FormProps> = ({
 
 	const onSubmit: SubmitHandler<TCourseTutor> = async (data) => {
 		if (!!!preloadData.id_curso_tutor) {
-			console.log('Crear sección de curso');
+			console.log('Crear sección de curso', data);
 			const result: TResponse<string> = await postData({
 				path: URL.COURSE_TUTOR,
 				body: {

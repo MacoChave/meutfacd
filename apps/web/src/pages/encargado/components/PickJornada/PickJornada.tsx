@@ -1,7 +1,7 @@
-import { URL } from '@/consts/Api';
 import { DotsLoaders } from '@/components/Loader/DotsLoaders';
 import { McAutocomplete } from '@/components/McWithoutForms/McAutocomplete';
-import { useCustomFetch, useFetch } from '@/hooks/useFetch';
+import { URL } from '@/consts/Api';
+import { useFetch } from '@/hooks/useFetch';
 import { TPeriod } from '@/models/Period';
 import { Typography } from '@mui/material';
 import React from 'react';
