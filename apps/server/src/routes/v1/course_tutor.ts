@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import { requireAuth } from '../../middlewares/requireAuth';
 import {
+	cleanStudents,
 	deleteItem,
 	getItem,
 	getItems,
@@ -16,6 +17,7 @@ router.get('/:id', requireAuth, getItem);
 router.post('', requireAuth, postItem);
 router.put('/salon', requireAuth, updateSalon);
 router.put('', requireAuth, putItem);
+router.delete('/clean', requireAuth, cleanStudents);
 router.delete('', requireAuth, deleteItem);
 
 export { router };

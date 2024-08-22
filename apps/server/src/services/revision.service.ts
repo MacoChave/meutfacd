@@ -90,10 +90,15 @@ export const resetUserAssignment = async (
 ): Promise<UpdateResult> => {
 	try {
 		let revisionRepo = AppDataSource.getRepository(UTRevision);
-		return revisionRepo.update(id_curso_tutor, {
-			id_curso_tutor: null,
-			estado: 'E',
-		});
+		return revisionRepo.update(
+			{
+				cursoTutor: { id_curso_tutor },
+			},
+			{
+				id_curso_tutor: null,
+				estado: 'E',
+			}
+		);
 	} catch (error: any) {
 		throw new Error(error.message);
 	}

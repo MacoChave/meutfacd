@@ -13,6 +13,8 @@ import { Usuario } from '../entities/Usuario';
 import { getOneHorario } from '../services/horario.service';
 import { UTHorario } from '../entities/Horario';
 import dayjs from 'dayjs';
+import { resetUserAssignment } from '../services/revision.service';
+import { UpdateResult } from 'typeorm';
 
 export const postItem = async ({ body }: Request, res: Response) => {
 	try {
@@ -105,6 +107,23 @@ export const updateSalon = async (
 			query: { id_curso_tutor: query.id_curso_tutor },
 		});
 		res.status(200).json(result);
+	} catch (error) {
+		errorHttp(res, error as any);
+	}
+};
+
+export const cleanStudents = async (
+	{ query: { id_curso_tutor } }: Request,
+	res: Response
+) => {
+	try {
+		let response: UpdateResult = await resetUserAssignment(+id_curso_tutor);
+
+		let message: string = response.affected
+			? 'Se ha liberado el salón'
+			: 'No hay registros para liberar';
+
+		successHttp(res, 200, message);
 	} catch (error) {
 		errorHttp(res, error as any);
 	}

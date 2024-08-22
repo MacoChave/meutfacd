@@ -4,7 +4,7 @@ import { McTable } from '@/components/MyTable';
 import { URL } from '@/consts/Api';
 import { useInfiniteFetch } from '@/hooks/useFetch';
 import { courseTutorDefault, TCourseTutor } from '@/models/CourseTutor';
-import { TResult } from '@/models/Fetching';
+import { TResponse, TResult } from '@/models/Fetching';
 import { deleteData } from '@/services/fetching';
 import { CleaningServices, Delete, Edit, Refresh } from '@mui/icons-material';
 import { Box, IconButton, Typography } from '@mui/material';
@@ -37,10 +37,19 @@ const Asignacion: React.FC<AsignacionProps> = ({ filter }) => {
 	};
 
 	const handleClean = async (item: any) => {
-		const result: TResult = await deleteData({
+		const result: TResponse<string> = await deleteData({
 			path: `${URL.COURSE_TUTOR}/clean`,
-			params: item.id_curso_tutor,
+			params: {
+				id_curso_tutor: item.id_curso_tutor,
+			},
 		});
+
+		if (result.code === 200) {
+			refetch();
+			swal('Liberado', 'Se ha liberado el salón', 'success');
+		} else {
+			swal('Error', 'No se ha podido liberar el salón', 'error');
+		}
 	};
 
 	const handleDelete = async (item: any) => {
