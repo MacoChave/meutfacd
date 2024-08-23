@@ -2,19 +2,19 @@ import { McAutocomplete } from '@/components/McWithForms/McAutocomplete';
 import { Option } from '@/components/McWithForms/McAutocomplete/McAutocomplete';
 import { McTable } from '@/components/MyTable';
 import { URL } from '@/consts/Api';
-import { useCustomFetch, useFetch } from '@/hooks/useFetch';
+import { useFetch } from '@/hooks/useFetch';
 import { TRol, defaultRol } from '@/models/Rol';
 import { deleteData, postData } from '@/services/fetching';
+import { Delete } from '@mui/icons-material';
 import { Box, Button, Typography } from '@mui/material';
 import React, { useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import swal from 'sweetalert';
 import { TabsProps } from '../../propTypes/tabsProps';
-import { Delete } from '@mui/icons-material';
 
 const Rol: React.FC<TabsProps> = ({ usuario, index, ...other }) => {
 	const [rootRol, setRootRol] = useState();
-	// usuario.roles.flat(1).join(',').toLowerCase()
+
 	const {
 		data: vRol,
 		isLoading: isLoadvRol,
@@ -37,16 +37,6 @@ const Rol: React.FC<TabsProps> = ({ usuario, index, ...other }) => {
 	});
 
 	const onSubmit: SubmitHandler<TRol> = async (data) => {
-		// const diffRol = vRol.filter(
-		// 	(vr: any) => vr.r_nombre.split(' ')[0].toLowerCase() !== rootRol
-		// );
-		// if (diffRol.length) {
-		// 	return swal(
-		// 		'¡No se puede agregar el permiso!',
-		// 		'El usuario tiene uno o varios roles diferentes al seleccionado',
-		// 		'error'
-		// 	);
-		// }
 		const result = await postData({
 			path: `${URL.USER_ROL}`,
 			body: { id_usuario: usuario.id_usuario, id_rol: data.id_rol },
@@ -87,11 +77,6 @@ const Rol: React.FC<TabsProps> = ({ usuario, index, ...other }) => {
 					p: 3,
 				}}>
 				<Typography variant='h6'>Editar rol de usuario</Typography>
-				{/* <PickerRol
-					rootRol={rootRol}
-					onChangeRootRol={onChangeRootRol}
-				/>
-				<Typography variant='h6'>Agregar permisos</Typography> */}
 				<form onSubmit={handleSubmit(onSubmit)}>
 					<Box
 						sx={{
@@ -129,7 +114,6 @@ const Rol: React.FC<TabsProps> = ({ usuario, index, ...other }) => {
 							onClick: (row) => onDelete(row),
 						},
 					]}
-					// onDelete={onDelete}
 				/>
 			</Box>
 		</>

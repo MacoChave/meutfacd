@@ -8,6 +8,7 @@ import { useLocation } from 'react-router-dom';
 import { Informacion } from '../components/Informacion';
 import Progress from '@/pages/estudiante/Progress/Progress';
 import { Rol } from '../components/Rol';
+import { Permisos } from '../components/Permisos';
 const DetalleUsuario = lazy(() => import('../DetalleUsuario/DetalleUsuario'));
 
 export type OneUserProps = {
@@ -74,7 +75,10 @@ const OneUser: React.FC<OneUserProps> = ({}) => {
 				title='Edición de usuario'
 				open={openModal}
 				onClose={() => setOpenModal(false)}>
-				<Rol usuario={usuario} index={0} />
+				<Box>
+					<Rol usuario={usuario} index={0} />
+					<Permisos usuario={usuario} index={1} />
+				</Box>
 			</McModal>
 		</>
 	);
