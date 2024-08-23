@@ -2,14 +2,14 @@ import { DotsLoaders } from '@/components/Loader/DotsLoaders';
 import { McTable } from '@/components/MyTable';
 import { URL } from '@/consts/Api';
 import { useFetch } from '@/hooks/useFetch';
-import { TResponse, TResult } from '@/models/Fetching';
+import { TResult } from '@/models/Fetching';
+import { TSchedule } from '@/models/Schedule';
 import { deleteData } from '@/services/fetching';
+import { Delete, Edit } from '@mui/icons-material';
 import { Box, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import swal from 'sweetalert';
 import { FormSchedule } from '../FormSchedule';
-import { TSchedule } from '@/models/Schedule';
-import { Delete, Edit } from '@mui/icons-material';
 
 export type ScheduleDataProps = {
 	reload: boolean;
@@ -63,22 +63,11 @@ const ScheduleData: React.FC<ScheduleDataProps> = ({ reload, setReload }) => {
 			/>
 			<McTable
 				headers={{
-					jornada: 'Jornada',
+					'jornada.nombre': 'Jornada',
 					hora_inicio: 'Inicio',
 					hora_final: 'Final',
 				}}
-				rows={
-					(data?.message?.data as Array<TSchedule>).flatMap(
-						(value: TSchedule) => {
-							return {
-								jornada: value.jornada?.nombre ?? '',
-								id_horario: value.id_horario,
-								hora_inicio: value.hora_inicio.slice(0, 5),
-								hora_final: value.hora_final.slice(0, 5),
-							};
-						}
-					) ?? []
-				}
+				rows={data?.message?.data ?? []}
 				totalCols={{}}
 				actions={[
 					{
@@ -92,8 +81,8 @@ const ScheduleData: React.FC<ScheduleDataProps> = ({ reload, setReload }) => {
 						onClick: (row) => onEdit(row),
 					},
 				]}
-				onDelete={onDelete}
-				onEdit={onEdit}
+				// onDelete={onDelete}
+				// onEdit={onEdit}
 			/>
 		</Box>
 	);

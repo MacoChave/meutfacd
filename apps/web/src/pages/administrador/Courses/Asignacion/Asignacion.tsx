@@ -84,6 +84,7 @@ const Asignacion: React.FC<AsignacionProps> = ({ filter }) => {
 			<McTable
 				headers={{
 					fecha: 'Fecha',
+					'curso.nombre': 'Curso',
 					salon: 'Salón',
 					'tutor.nombre': 'Tutor',
 				}}

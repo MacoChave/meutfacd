@@ -1,10 +1,9 @@
 import { Request, Response } from 'express';
 import { sqlDelete, sqlInsert, sqlUpdate } from '../db/consultas';
-import { IQueryAll } from '../interfaces/returns';
-import { getAll } from '../services/jornada.service';
-import { errorHttp, successHttp } from '../utils/error.handle';
 import { UTHorario } from '../entities/Horario';
-import { getAllByPeriod } from '../services/horario.service';
+import { IQueryAll } from '../interfaces/returns';
+import { getAllByPeriod, getAllHorario } from '../services/horario.service';
+import { errorHttp, successHttp } from '../utils/error.handle';
 
 export const getItem = async ({ params }: Request, res: Response) => {
 	try {
@@ -27,7 +26,8 @@ export const getItem = async ({ params }: Request, res: Response) => {
 
 export const getItems = async ({ query }: Request, res: Response) => {
 	try {
-		let result: IQueryAll = await getAll(query);
+		let result: IQueryAll = await getAllHorario(query);
+
 		successHttp(res, 200, result);
 	} catch (error) {
 		errorHttp(res, error as any);
