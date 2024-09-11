@@ -1,9 +1,9 @@
 'use client';
-import { TReview } from '@/models/Review';
+import { TRevision } from '@/models/TRevision';
 import React from 'react';
 
 export type DetailReviewProps = {
-	review: TReview;
+	review: TRevision;
 	isEditing: boolean;
 };
 

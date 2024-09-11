@@ -1,4 +1,6 @@
 import {
+	BeforeInsert,
+	BeforeUpdate,
 	Column,
 	CreateDateColumn,
 	DeleteDateColumn,
@@ -20,6 +22,7 @@ import { UTPerfil } from './Perfil';
 import { Rol } from './Rol';
 import { UTRevision } from './Revision';
 import { UTTesis } from './Tesis';
+import { encryptPassword } from '../utils/token';
 
 @Entity('usuario')
 export class Usuario {
@@ -118,4 +121,12 @@ export class Usuario {
 
 	@OneToMany(() => UTTesis, (tesis: UTTesis) => tesis.estudiante)
 	tesis: UTTesis[];
+
+	@BeforeInsert()
+	@BeforeUpdate()
+	async hashPassword() {
+		if (this.pass) {
+			this.pass = await encryptPassword(this.pass);
+		}
+	}
 }

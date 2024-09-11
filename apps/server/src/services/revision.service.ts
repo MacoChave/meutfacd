@@ -54,19 +54,22 @@ export const getAllByUser = async (
 };
 
 export const getOne = (
-	id_revision: number,
-	id_usuario: number
+	id_revision: number | undefined,
+	id_usuario: number | undefined,
+	estacion: number | undefined
 ): Promise<UTRevision | null> => {
 	try {
-		let params: FindOptionsWhere<UTRevision> = id_revision
-			? { id_revision }
-			: id_usuario
-			? { tesis: { id_estudiante: id_usuario } }
-			: {};
+		let params: FindOptionsWhere<UTRevision> = {};
+		if (id_revision) params = { ...params, id_revision };
+		if (id_usuario)
+			params = { ...params, tesis: { estudiante: { id_usuario } } };
+		if (estacion) params = { ...params, estacion };
+
 		let revisionRepo = AppDataSource.getRepository(UTRevision);
 		return revisionRepo.findOne({
 			relations: ['cursoTutor', 'tutor', 'tesis'],
 			where: [params],
+			order: { id_revision: 'DESC' },
 		});
 	} catch (error: any) {
 		throw new Error(error.message);

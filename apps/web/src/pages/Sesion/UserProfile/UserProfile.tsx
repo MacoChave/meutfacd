@@ -18,11 +18,7 @@ import { SesionData } from './components/SesionData';
 
 export const UserProfile = (): JSX.Element => {
 	const [isEditing, setIsEditing] = useState(false);
-	const {
-		data: { message },
-		isError,
-		isLoading,
-	} = useFetch({
+	const { data, isError, isLoading } = useFetch({
 		url: URL.AUTH.PROFILE,
 	});
 	const methods = useForm<TUser>({
@@ -30,23 +26,23 @@ export const UserProfile = (): JSX.Element => {
 		mode: 'onBlur',
 		resolver: yupResolver(schemaUsuario),
 		values: {
-			id_usuario: message?.id_usuario ?? 0,
-			nombre: message?.nombre,
-			apellidos: message?.apellidos ?? '',
-			genero: message?.genero ?? '',
-			correo: message?.correo ?? '',
-			carnet: message?.carnet ?? '',
-			cui: message?.cui ?? '',
-			direccion: message?.direccion ?? '',
-			fecha_nac: dayjs(message?.fecha_nac, 'YYYY-MM-DD').format(
+			id_usuario: data?.message?.id_usuario ?? 0,
+			nombre: data?.message?.nombre,
+			apellidos: data?.message?.apellidos ?? '',
+			genero: data?.message?.genero ?? '',
+			correo: data?.message?.correo ?? '',
+			carnet: data?.message?.carnet ?? '',
+			cui: data?.message?.cui ?? '',
+			direccion: data?.message?.direccion ?? '',
+			fecha_nac: dayjs(data?.message?.fecha_nac, 'YYYY-MM-DD').format(
 				'YYYY-MM-DD'
 			),
-			estado: message?.estado ?? '',
-			telefono: message?.telefono ?? '',
+			estado: data?.message?.estado ?? '',
+			telefono: data?.message?.telefono ?? '',
 			id_rol: 0,
 			rol: '',
-			id_jornada: message?.perfil?.id_jornada ?? '',
-			id_horario: message?.perfil?.id_horario ?? '',
+			id_jornada: data?.message?.perfil?.id_jornada ?? '',
+			id_horario: data?.message?.perfil?.id_horario ?? '',
 			pass: '',
 			passConfirm: '',
 			roles: '',

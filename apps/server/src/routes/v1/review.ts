@@ -19,7 +19,7 @@ router.get('/professor', requireAuth, getItemsByCurrentProf);
 router.get('/', requireAuth, getItemByUser);
 router.get('/all', requireAuth, getItemsByUser);
 router.post('/xlsx', getXlsxReport);
-router.post('/one', requireAuth, getItem);
+router.get('/one', requireAuth, getItem);
 router.post('/all', requireAuth, getItems);
 router.post('/', requireAuth, postItem);
 router.put('/assign', requireAuth, assignReview);

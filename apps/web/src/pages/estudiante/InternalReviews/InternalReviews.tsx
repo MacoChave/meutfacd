@@ -3,10 +3,10 @@ import { Contenedor, FileChooser } from '@/components';
 import { EmptyReview } from '@/components/EmptyReview';
 import { DotsLoaders } from '@/components/Loader/DotsLoaders';
 import { SpinLoader } from '@/components/Loader/SpinLoader';
-import { PREVIA, RECHAZADO, REVISION } from '@/consts/Vars';
-import { useCustomFetch } from '@/hooks/useFetch';
+import { ESTACION6, PREVIA, RECHAZADO, REVISION } from '@/consts/Vars';
+import { useCustomFetch, useFetch } from '@/hooks/useFetch';
 import { TUploadFile } from '@/models/UploadFile';
-import { TReview } from '@/models/Review';
+import { TRevision } from '@/models/TRevision';
 import { getData, postData, putData } from '@/services/fetching';
 import { style } from '@/themes/styles';
 import { errorHandler } from '@/utils/errorHandler';
@@ -40,29 +40,10 @@ const InternalReviews: FC<InternalReviewsProps> = ({}) => {
 		isLoading,
 		isError,
 		refetch,
-	} = useCustomFetch({
+	} = useFetch({
 		url: `${URL.REVIEW}/one`,
-		method: 'post',
-		body: {
-			table: 'ut_v_revision',
-			columns: [
-				'id_revision',
-				'titulo',
-				'fecha',
-				'detalle',
-				'estado',
-				'tutor',
-				'ruta_tesis',
-				'id_tutor',
-				'sala',
-			],
-			sort: {
-				fecha: 'DESC',
-			},
-			limit: 1,
-		},
 		params: {
-			estacion: 6,
+			estacion: ESTACION6,
 		},
 	});
 
@@ -78,7 +59,7 @@ const InternalReviews: FC<InternalReviewsProps> = ({}) => {
 	const createChat = async () => {
 		const data = await postData({
 			path: URL.CHAT,
-			params: { user_id: (revision as TReview).id_tutor },
+			params: { user_id: (revision as TRevision).id_tutor },
 		});
 		console.log(data);
 	};

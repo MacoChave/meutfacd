@@ -1,17 +1,14 @@
 import { Request, Response } from 'express';
 import { DATA_SOURCES } from '../config/vars.config';
-import { errorHttp } from '../utils/error.handle';
+import { errorHttp, successHttp } from '../utils/error.handle';
 import { logger } from '../utils/logger';
 import { getExtFile, uploadFile } from '../utils/upload';
 import { Usuario } from '../entities/Usuario';
 import { getOne } from '../services/usuario.service';
 
-const uploadStudentFile = async (
-	{ files, body, user }: Request,
-	res: Response
-) => {
+const uploadDraft = async ({ files, body, user }: Request, res: Response) => {
 	try {
-		logger({ dirname: __dirname, proc: 'uploadDraft', message: files });
+		console.log({ files, body, user });
 
 		if (getExtFile(files.file.name) !== 'pdf') {
 			throw new Error(
@@ -21,6 +18,8 @@ const uploadStudentFile = async (
 
 		let curUser: Usuario | null = await getOne(user.primaryKey);
 
+		console.log({ curUser });
+
 		if (!curUser) {
 			throw new Error('Usuario no encontrado');
 		}
@@ -28,15 +27,17 @@ const uploadStudentFile = async (
 		let result = await uploadFile(
 			files.file.tempFilePath,
 			files.file.name,
-			curUser.carnet.toString(),
+			`${curUser.carnet ?? user.primaryKey}`,
 			body.filename
 		);
 
-		res.status(200).json({
-			name: `${user.carnet}/${body.filename}.${getExtFile(
+		successHttp(
+			res,
+			200,
+			`${curUser.carnet ?? user.primaryKey}/${body.filename}.${getExtFile(
 				files.file.name
-			)}`,
-		});
+			)}`
+		);
 	} catch (error: any) {
 		errorHttp(res, error);
 	}
@@ -115,9 +116,4 @@ const getFile = async ({ query }: Request, res: Response) => {
 	}
 };
 
-export {
-	getFile,
-	uploadStudentFile as uploadDraft,
-	uploadDictamen,
-	uploadTesis,
-};
+export { getFile, uploadDraft as uploadDraft, uploadDictamen, uploadTesis };

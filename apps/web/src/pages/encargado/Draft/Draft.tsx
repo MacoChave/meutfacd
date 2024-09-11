@@ -5,7 +5,7 @@ import { ESPERA } from '@/consts/Vars';
 import { useCustomFetch } from '@/hooks/useFetch';
 import { TUser } from '@/models/Perfil';
 import { TResult } from '@/models/Fetching';
-import { TReview } from '@/models/Review';
+import { TRevision } from '@/models/TRevision';
 import { putData } from '@/services/fetching';
 import { style } from '@/themes/styles';
 import { SwitchLeft, SwitchRight } from '@mui/icons-material';
@@ -27,11 +27,11 @@ export type DraftProps = Record<string, never>;
 
 const Draft: React.FC<DraftProps> = ({}) => {
 	const [docente, setDocente] = useState<TUser>({} as TUser);
-	const [unAssignmentUsers, setUnassignmentUsers] = useState<TReview[]>(
-		[] as TReview[]
+	const [unAssignmentUsers, setUnassignmentUsers] = useState<TRevision[]>(
+		[] as TRevision[]
 	);
-	const [assignmentUsers, setAssignmentUsers] = useState<TReview[]>(
-		[] as TReview[]
+	const [assignmentUsers, setAssignmentUsers] = useState<TRevision[]>(
+		[] as TRevision[]
 	);
 
 	const { data, isLoading, isError } = useCustomFetch({

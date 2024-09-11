@@ -1,4 +1,4 @@
-export type TReview = {
+export type TRevision = {
 	id_revision: number;
 	estado: string;
 	detalle: string;

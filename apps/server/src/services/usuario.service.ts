@@ -168,3 +168,16 @@ export const deleteUsuario = async (id_usuario: number) => {
 		throw new Error(error.message);
 	}
 };
+
+export const updateUsuario = async (id_usuario: number, user: Usuario) => {
+	try {
+		let userRepo = AppDataSource.getRepository(Usuario);
+		let userToUpdate = await userRepo.findOneOrFail({
+			where: { id_usuario },
+		});
+		userRepo.merge(userToUpdate, user);
+		return await userRepo.save(userToUpdate);
+	} catch (error: any) {
+		throw new Error(error.message);
+	}
+};

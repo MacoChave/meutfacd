@@ -1,13 +1,19 @@
-import { URL } from '@/consts/Api';
 import { Contenedor } from '@/components';
 import { DotsLoaders } from '@/components/Loader/DotsLoaders';
 import { SpinLoader } from '@/components/Loader/SpinLoader';
-import { APROBADO, ESPERA, PREVIA, RECHAZADO, REVISION } from '@/consts/Vars';
-import { useCustomFetch } from '@/hooks/useFetch';
-import { TUploadFile } from '@/models/UploadFile';
+import { URL } from '@/consts/Api';
+import {
+	APROBADO,
+	ESTACION1,
+	PREVIA,
+	RECHAZADO,
+	REVISION,
+} from '@/consts/Vars';
+import { useFetch } from '@/hooks/useFetch';
 import { TDraft, draftDefault, draftSchema } from '@/models/Draft';
+import { TResponse } from '@/models/Fetching';
+import { TRevision } from '@/models/TRevision';
 import { getData, postData, putData } from '@/services/fetching';
-import { style } from '@/themes/styles';
 import { errorHandler } from '@/utils/errorHandler';
 import { getChipColor, getChipLabel } from '@/utils/formatHandler';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -21,10 +27,9 @@ import {
 	Typography,
 } from '@mui/material';
 import { AxiosError } from 'axios';
-import { FC, lazy, useEffect, useState } from 'react';
+import { FC, lazy, useState } from 'react';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import swal from 'sweetalert';
-import { TReview } from '@/models/Review';
 const TutorInfo = lazy(() => import('../components/TutorInfo/TutorInfo'));
 const DetailReview = lazy(
 	() => import('../components/DetailReview/DetailReview')
@@ -39,33 +44,10 @@ export type ThesisCoverProps = {};
 const ThesisCover: FC<ThesisCoverProps> = ({}) => {
 	const [isUploading, setIsUploading] = useState(false);
 	const [isUploaded, setIsUploaded] = useState(false);
-	const {
-		data: revision,
-		isLoading,
-		isError,
-		refetch,
-	} = useCustomFetch({
+	const { data, isLoading, isError, error, refetch } = useFetch({
 		url: `${URL.REVIEW}/one`,
-		method: 'post',
-		body: {
-			table: 'ut_v_revision',
-			columns: [
-				'id_revision',
-				'titulo',
-				'fecha',
-				'detalle',
-				'estado',
-				'tutor',
-				'ruta_perfil',
-				'id_tutor',
-			],
-			sort: {
-				fecha: 'DESC',
-			},
-			limit: 1,
-		},
 		params: {
-			estacion: 1,
+			estacion: ESTACION1,
 		},
 	});
 
@@ -78,6 +60,10 @@ const ThesisCover: FC<ThesisCoverProps> = ({}) => {
 	} = useForm<TDraft>({
 		defaultValues: draftDefault,
 		mode: 'onBlur',
+		values: {
+			name: data?.message!.tesis!.ruta_perfil ?? '',
+			titulo: data?.message!.tesis!.titulo ?? '',
+		},
 		resolver: yupResolver(draftSchema),
 	});
 
@@ -87,7 +73,7 @@ const ThesisCover: FC<ThesisCoverProps> = ({}) => {
 			const formData = new FormData();
 			formData.append('file', file);
 			formData.append('filename', 'preview');
-			const data = await postData<TUploadFile>({
+			const data: TResponse<string> = await postData<TResponse<string>>({
 				path: `${URL.STORAGE}/draft`,
 				body: formData,
 				headers: {
@@ -95,7 +81,7 @@ const ThesisCover: FC<ThesisCoverProps> = ({}) => {
 					'Access-Control-Allow-Origin': '*', // Required for CORS support to work
 				},
 			});
-			setValue('name', data.name);
+			setValue('name', data.message);
 			swal(
 				'¡Bien hecho!',
 				'El archivo se subió correctamente',
@@ -103,7 +89,7 @@ const ThesisCover: FC<ThesisCoverProps> = ({}) => {
 			);
 			setIsUploaded(true);
 		} catch (error: any) {
-			// errorHandler(error as AxiosError);
+			errorHandler(error as AxiosError);
 		} finally {
 			setIsUploading(false);
 		}
@@ -111,60 +97,43 @@ const ThesisCover: FC<ThesisCoverProps> = ({}) => {
 
 	const onSubmit: SubmitHandler<TDraft> = async (draft) => {
 		try {
-			if (revision.estado === PREVIA || revision.estado === RECHAZADO) {
-				Promise.all([
-					putData({
-						path: URL.THESIS,
-						body: {
-							titulo: draft.titulo,
-							ruta_perfil: draft?.name,
-						},
-					}),
-					postData({
-						path: URL.REVIEW,
-						body: {
-							id_curso_tutor: revision.id_curso_tutor,
-							id_tutor: revision.id_tutor,
-							id_tesis: revision.id_tesis,
-							estado: REVISION,
-							estacion: 1,
-						},
-					}),
-				]);
-			} else if (revision.estado === ESPERA) {
-				Promise.all([
-					putData({
-						path: URL.THESIS,
-						body: {
-							titulo: draft.titulo,
-							ruta_perfil: draft.name,
-						},
-					}),
-					putData({
-						path: URL.REVIEW,
-						body: {
-							estado: ESPERA,
-						},
-						params: {
-							id_revision: revision.id_revision,
-						},
-					}),
-				]);
-			} else {
-				await postData({
-					path: URL.THESIS,
-					body: {
-						titulo: draft.titulo,
-						ruta_perfil: draft.name,
-					},
+			if (data?.message) {
+				const newTesis: TResponse<any> = await postData({
+					path: `${URL.THESIS}`,
+					body: draft,
 				});
+
+				if (newTesis.code === 200) {
+					swal(
+						'¡Bien hecho!',
+						'El punto de tesis se presentó correctamente',
+						'success'
+					);
+				} else {
+					swal('Error', newTesis.message, 'error');
+					return;
+				}
+			} else if (
+				data?.message?.estado === PREVIA ||
+				data?.message?.estado === RECHAZADO
+			) {
+				const updateReview: TResponse<any> = await putData({
+					path: `${URL.REVIEW}`,
+					body: draft,
+				});
+
+				if (updateReview.code === 200) {
+					swal(
+						'¡Bien hecho!',
+						'El punto de tesis se presentó correctamente',
+						'success'
+					);
+				} else {
+					swal('Error', updateReview.message, 'error');
+					return;
+				}
 			}
 
-			swal(
-				'¡Bien hecho!',
-				'El punto de tesis se presentó correctamente',
-				'success'
-			);
 			reset();
 			refetch();
 		} catch (error: any) {
@@ -182,54 +151,50 @@ const ThesisCover: FC<ThesisCoverProps> = ({}) => {
 	};
 
 	const createChat = async () => {
-		const data = await postData({
+		const response = await postData({
 			path: URL.CHAT,
-			params: { user_id: (revision as TReview).id_tutor },
+			params: { user_id: (data?.message as TRevision).id_tutor },
 		});
-		console.log(data);
+		console.log(response);
 	};
-
-	useEffect(() => {
-		if (revision) {
-			setValue('titulo', revision.titulo);
-		}
-	}, [revision]);
 
 	if (isLoading) return <DotsLoaders />;
 	if (isError)
-		return <Typography>No se pudo cargar la revisión...</Typography>;
+		return <Typography>No se pudo cargar la revisión ...</Typography>;
 
 	return (
 		<>
 			<Contenedor title='Presentar punto de tesis'>
-				{/* <TutorInfo
-					tutor={revision?.tutor || 'Sin asignación'}
-					openChat={createChat}
-				/>
-				<DetailReview review={revision} isEditing={false} />
-				<UploadsReview>
-					<FileChooser
-						title='Punto de tesis'
-						onUpload={onUpload}
-						disabled={true}
-					/>
-				</UploadsReview> */}
 				<form onSubmit={handleSubmit(onSubmit)}>
-					<Box sx={style}>
+					<Box
+						sx={{
+							display: 'grid',
+							gridTemplateColumns:
+								'repeat(auto-fit, minmax(250px, 1fr))',
+							alignItems: 'center',
+							gap: 2,
+						}}>
 						<Box>
 							<Typography variant='h6'>
 								Detalle del previo
 								<Box component='span' sx={{ ml: 2 }}>
 									<Chip
-										color={getChipColor(revision.estado)}
-										label={getChipLabel(revision.estado)}
+										color={getChipColor(
+											data?.message?.estado ?? 'N'
+										)}
+										label={getChipLabel(
+											data?.message?.estado ?? 'N'
+										)}
 									/>
-									{revision.ruta_perfil && (
+									{data?.message?.tesis?.ruta_perfil && (
 										<IconButton
 											color='info'
 											title='Ver archivo subido'
 											onClick={() =>
-												openPDF(revision.ruta_perfil)
+												openPDF(
+													data?.message?.tesis
+														?.ruta_perfil
+												)
 											}>
 											<OpenInBrowser />
 										</IconButton>
@@ -238,8 +203,8 @@ const ThesisCover: FC<ThesisCoverProps> = ({}) => {
 							</Typography>
 							<Typography>
 								Docente revisor:{' '}
-								{revision?.tutor || 'Sin asignación'}
-								{revision?.id_tutor && (
+								{data?.message?.tutor ?? 'Sin asignación'}
+								{data?.message?.id_tutor && (
 									<IconButton
 										color='info'
 										title='Crear chat'
@@ -249,8 +214,7 @@ const ThesisCover: FC<ThesisCoverProps> = ({}) => {
 								)}
 							</Typography>
 							<Typography>
-								{revision?.detalle ??
-									'Aún no hay detalle del previo'}
+								{data?.message?.detalle ?? 'Sin comentarios'}
 							</Typography>
 						</Box>
 						<Box>
@@ -265,8 +229,10 @@ const ThesisCover: FC<ThesisCoverProps> = ({}) => {
 										variant='standard'
 										InputProps={{
 											readOnly:
-												revision.estado === REVISION ||
-												revision.estado === APROBADO,
+												data?.message?.estado ===
+													REVISION ||
+												data?.message?.estado ===
+													APROBADO,
 										}}
 										error={!!errors.titulo}
 										helperText={errors.titulo?.message}
@@ -275,28 +241,33 @@ const ThesisCover: FC<ThesisCoverProps> = ({}) => {
 							/>
 						</Box>
 						{!(
-							revision.estado === REVISION ||
-							revision.estado === APROBADO
+							data?.message?.estado === REVISION ||
+							data?.message?.estado === APROBADO
 						) && (
 							<Box
 								sx={{
-									gridColumn: { xs: '1', sm: '2' },
-									gridRow: { xs: '1', sm: '1 / span 2' },
+									// gridColumn: { xs: '1', sm: '2' },
+									// gridRow: { xs: '1', sm: '1 / span 2' },
+									display: 'flex',
+									flexDirection: 'column',
+									gap: 2,
 								}}>
-								{!isUploaded ? (
+								{!isUploaded && (
 									<FileChooser
 										title='Punto de tesis'
 										onUpload={onUpload}
 										disabled={true}
 									/>
-								) : (
-									<Button
-										variant='contained'
-										color='primary'
-										type='submit'>
-										Enviar
-									</Button>
 								)}
+								{isUploaded ||
+									(data?.message && (
+										<Button
+											variant='contained'
+											color='primary'
+											type='submit'>
+											Enviar
+										</Button>
+									))}
 							</Box>
 						)}
 					</Box>

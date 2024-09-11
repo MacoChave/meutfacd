@@ -2,7 +2,7 @@ import { Contenedor, DotsLoaders, EmptyReview } from '@/components';
 import { URL } from '@/consts/Api';
 import { useCustomFetch } from '@/hooks/useFetch';
 import { TResult } from '@/models/Fetching';
-import { TReview } from '@/models/Review';
+import { TRevision } from '@/models/TRevision';
 import { postData } from '@/services/fetching';
 import { style } from '@/themes/styles';
 import { formatDate, getChipColor, getChipLabel } from '@/utils/formatHandler';
@@ -42,7 +42,7 @@ const PrintedThesis: React.FC<PrintedThesisProps> = ({}) => {
 	const createChat = async () => {
 		const result: TResult = await postData({
 			path: URL.CHAT,
-			params: { user_id: (data as TReview).id_tutor },
+			params: { user_id: (data as TRevision).id_tutor },
 		});
 		console.log(result);
 	};

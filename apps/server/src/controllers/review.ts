@@ -1,10 +1,9 @@
 import { Request, Response } from 'express';
 import * as XLSX from 'xlsx';
 import { sqlInsert, sqlSelect, sqlSelectOne, sqlUpdate } from '../db/consultas';
+import { getAllByUser, getOne } from '../services/revision.service';
 import { errorHttp, successHttp } from '../utils/error.handle';
 import { formatDate } from '../utils/formats';
-import { createReadStream, unlinkSync } from 'fs';
-import { getAllByUser, getOne } from '../services/revision.service';
 
 export const getXlsxReport = async (
 	{ body, query }: Request,
@@ -70,10 +69,8 @@ export const getItemsByCurrentProf = async (
 
 export const getItemByUser = async ({ query }: Request, res: Response) => {
 	try {
-		const { id_review, id_user } = query;
-		const review = await getOne(+id_review, +id_user);
-
-		console.log({ review });
+		const { id_revision, id_usuario, estacion } = query;
+		const review = await getOne(id_revision, id_usuario, estacion);
 
 		successHttp(res, 200, review);
 	} catch (error: any) {
@@ -81,10 +78,13 @@ export const getItemByUser = async ({ query }: Request, res: Response) => {
 	}
 };
 
-export const getItemsByUser = async ({ query }: Request, res: Response) => {
+export const getItemsByUser = async (
+	{ query, user }: Request,
+	res: Response
+) => {
 	try {
 		const { id_user } = query;
-		const reviews = await getAllByUser(+id_user);
+		const reviews = await getAllByUser(id_user ?? user.primaryKey);
 
 		successHttp(res, 200, reviews);
 	} catch (error: any) {
@@ -97,11 +97,16 @@ export const getItem = async (
 	res: Response
 ) => {
 	try {
-		const result = await sqlSelectOne({
-			...body,
-			query: { id_usuario: user.primaryKey, ...query },
-		});
-		res.status(200).json(result);
+		const { estacion, id_usuario, id_revision } = query;
+
+		const result = await getOne(
+			id_revision ?? undefined,
+			id_usuario ?? user.primaryKey,
+			estacion
+		);
+		console.log({ result });
+
+		successHttp(res, 200, result);
 	} catch (error: any) {
 		errorHttp(res, error);
 	}
@@ -177,22 +182,25 @@ export const putItem = async (
 	res: Response
 ) => {
 	try {
-		let data = Object.assign({}, body);
-		if (data.id_tutor === 0) data.id_tutor = user.primaryKey;
+		console.log({ query, body, user });
 
-		const results = await sqlUpdate({
-			table: 'ut_revision',
-			query,
-			datos: {
-				fecha: formatDate({
-					date: new Date(),
-					format: 'mysql',
-					type: 'datetime',
-				}),
-				...data,
-			},
-		});
-		res.status(200).json(results);
+		successHttp(res, 200, {});
+		// let data = Object.assign({}, body);
+		// if (data.id_tutor === 0) data.id_tutor = user.primaryKey;
+
+		// const results = await sqlUpdate({
+		// 	table: 'ut_revision',
+		// 	query,
+		// 	datos: {
+		// 		fecha: formatDate({
+		// 			date: new Date(),
+		// 			format: 'mysql',
+		// 			type: 'datetime',
+		// 		}),
+		// 		...data,
+		// 	},
+		// });
+		// res.status(200).json(results);
 	} catch (error: any) {
 		errorHttp(res, error);
 	}

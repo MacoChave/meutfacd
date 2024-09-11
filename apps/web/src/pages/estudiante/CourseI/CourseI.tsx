@@ -1,12 +1,12 @@
-import { URL } from '@/consts/Api';
 import { Contenedor, FileChooser } from '@/components';
 import { EmptyReview } from '@/components/EmptyReview';
 import { DotsLoaders } from '@/components/Loader/DotsLoaders';
 import { SpinLoader } from '@/components/Loader/SpinLoader';
-import { APROBADO } from '@/consts/Vars';
-import { useCustomFetch } from '@/hooks/useFetch';
+import { URL } from '@/consts/Api';
+import { APROBADO, ESTACION2 } from '@/consts/Vars';
+import { useFetch } from '@/hooks/useFetch';
+import { TRevision } from '@/models/TRevision';
 import { TUploadFile } from '@/models/UploadFile';
-import { TReview } from '@/models/Review';
 import { getData, postData, putData } from '@/services/fetching';
 import { style } from '@/themes/styles';
 import { formatDate, getChipColor, getChipLabel } from '@/utils/formatHandler';
@@ -31,37 +31,19 @@ const CourseI: FC<CourseIProps> = ({}) => {
 		data: revision,
 		isLoading,
 		isError,
+		error,
 		refetch,
-	} = useCustomFetch({
+	} = useFetch({
 		url: `${URL.REVIEW}/one`,
-		method: 'post',
-		body: {
-			table: 'ut_v_revision',
-			columns: [
-				'id_revision',
-				'dias',
-				'fecha_curso',
-				'estado',
-				'tutor',
-				'salon',
-				'id_tutor',
-				'ruta_asesor',
-				'ruta_certificado',
-			],
-			sort: {
-				fecha: 'DESC',
-			},
-			limit: 1,
-		},
 		params: {
-			estacion: 2,
+			estacion: ESTACION2,
 		},
 	});
 
 	const createChat = async () => {
 		const data = await postData({
 			path: URL.CHAT,
-			params: { user_id: (revision as TReview).id_tutor },
+			params: { user_id: (revision as TRevision).id_tutor },
 		});
 		console.log(data);
 	};
@@ -105,7 +87,7 @@ const CourseI: FC<CourseIProps> = ({}) => {
 		const { url }: any = await getData({
 			path: URL.STORAGE,
 			body: {},
-			params: { name: (revision as TReview).ruta_asesor },
+			params: { name: (revision as TRevision).ruta_asesor },
 		});
 		window.open(url);
 	};
@@ -114,15 +96,18 @@ const CourseI: FC<CourseIProps> = ({}) => {
 		const { url }: any = await getData({
 			path: URL.STORAGE,
 			body: {},
-			params: { name: (revision as TReview).ruta_certificado },
+			params: { name: (revision as TRevision).ruta_certificado },
 		});
 		window.open(url);
 	};
 
-	if (isLoading) return <DotsLoaders />;
-	if (isError) return <Typography>Error</Typography>;
+	console.log({ error });
 
-	if (!revision)
+	if (isLoading) return <DotsLoaders />;
+	if (isError)
+		return <Typography>No se pudo cargar la revisión ...</Typography>;
+
+	if (!revision.message)
 		return (
 			<EmptyReview title='Curso I: Introducción a la planeación científica' />
 		);
@@ -137,7 +122,7 @@ const CourseI: FC<CourseIProps> = ({}) => {
 							flexDirection: 'column',
 							gap: 4,
 						}}>
-						{revision?.id_tutor && (
+						{revision && (
 							<IconButton
 								sx={{ alignSelf: 'flex-start' }}
 								color='info'
@@ -166,7 +151,7 @@ const CourseI: FC<CourseIProps> = ({}) => {
 								}) ?? 'Fecha de inicio del curso'
 							}
 						/>
-						{/* <TextField
+						<TextField
 							variant='standard'
 							label='Horario'
 							InputProps={{
@@ -175,7 +160,7 @@ const CourseI: FC<CourseIProps> = ({}) => {
 							value={`${revision?.hora_inicio ?? 'Inicio'} - ${
 								revision?.hora_final ?? 'Final'
 							}`}
-						/>	 */}
+						/>
 						<PickDays
 							days={revision?.dias ?? []}
 							setDays={(days: string[]) => {}}

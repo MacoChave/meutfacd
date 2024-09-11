@@ -4,12 +4,13 @@ import { SpinLoader } from '@/components/Loader/SpinLoader';
 import {
 	APROBADO,
 	ESPERA,
+	ESTACION5,
 	PENDIENTE,
 	PREVIA,
 	RECHAZADO,
 	REVISION,
 } from '@/consts/Vars';
-import { useCustomFetch } from '@/hooks/useFetch';
+import { useCustomFetch, useFetch } from '@/hooks/useFetch';
 import { TUploadFile } from '@/models/UploadFile';
 import { TDraft, draftDefault, draftSchema } from '@/models/Draft';
 import { getData, postData, putData } from '@/services/fetching';
@@ -32,7 +33,7 @@ import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import swal from 'sweetalert';
 import FileChooser from '../../../components/controles/FileChooser';
 import { DotsLoaders } from '@/components/Loader/DotsLoaders';
-import { TReview } from '@/models/Review';
+import { TRevision } from '@/models/TRevision';
 import { EmptyReview } from '@/components/EmptyReview';
 
 export type CommissionStyleProps = {};
@@ -45,29 +46,10 @@ const CommissionStyle: FC<CommissionStyleProps> = ({}) => {
 		isLoading,
 		isError,
 		refetch,
-	} = useCustomFetch({
+	} = useFetch({
 		url: `${URL.REVIEW}/one`,
-		method: 'post',
-		body: {
-			table: 'ut_v_revision',
-			columns: [
-				'id_revision',
-				'titulo',
-				'fecha',
-				'detalle',
-				'estado',
-				'tutor',
-				'ruta_tesis',
-				'id_tutor',
-				'sala',
-			],
-			sort: {
-				fecha: 'DESC',
-			},
-			limit: 1,
-		},
 		params: {
-			estacion: 5,
+			estacion: ESTACION5,
 		},
 	});
 
@@ -189,7 +171,7 @@ const CommissionStyle: FC<CommissionStyleProps> = ({}) => {
 	const createChat = async () => {
 		const data = await postData({
 			path: URL.CHAT,
-			params: { user_id: (revision as TReview).id_tutor },
+			params: { user_id: (revision as TRevision).id_tutor },
 		});
 		console.log(data);
 	};

@@ -2,8 +2,8 @@ import { URL } from '@/consts/Api';
 import { Contenedor } from '@/components';
 import { EmptyReview } from '@/components/EmptyReview';
 import { DotsLoaders } from '@/components/Loader/DotsLoaders';
-import { useCustomFetch } from '@/hooks/useFetch';
-import { TReview } from '@/models/Review';
+import { useCustomFetch, useFetch } from '@/hooks/useFetch';
+import { TRevision } from '@/models/TRevision';
 import { postData } from '@/services/fetching';
 import { style } from '@/themes/styles';
 import { formatDate, getChipColor, getChipLabel } from '@/utils/formatHandler';
@@ -11,6 +11,7 @@ import { Chat } from '@mui/icons-material';
 import { Box, Chip, IconButton, TextField, Typography } from '@mui/material';
 import { PickDays } from '../../administrador/Courses/Gestion/PickDays';
 import { FC } from 'react';
+import { ESTACION3 } from '@/consts/Vars';
 
 const boxStyle = {
 	display: 'flex',
@@ -26,34 +27,18 @@ const CourseII: FC<CourseIIProps> = ({}) => {
 		data: revision,
 		isLoading,
 		isError,
-	} = useCustomFetch({
+		refetch,
+	} = useFetch({
 		url: `${URL.REVIEW}/one`,
-		method: 'post',
-		body: {
-			table: 'ut_v_revision',
-			columns: [
-				'id_revision',
-				'dias',
-				'fecha_curso',
-				'estado',
-				'tutor',
-				'salon',
-				'id_tutor',
-			],
-			sort: {
-				fecha: 'DESC',
-			},
-			limit: 1,
-		},
 		params: {
-			estacion: 3,
+			estacion: ESTACION3,
 		},
 	});
 
 	const createChat = async () => {
 		const data = await postData({
 			path: URL.CHAT,
-			params: { user_id: (revision as TReview).id_tutor },
+			params: { user_id: (revision as TRevision).id_tutor },
 		});
 		console.log(data);
 	};

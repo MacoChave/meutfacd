@@ -1,8 +1,9 @@
 import { Request, Response } from 'express';
 import { sqlSelect, sqlSelectOne } from '../db/consultas';
 import { IQueryAll } from '../interfaces/returns';
-import { getAll, getOne } from '../services/tesis.service';
+import { createOrUpdate, getAll, getOne } from '../services/tesis.service';
 import { errorHttp, successHttp } from '../utils/error.handle';
+import { UTTesis } from '../entities/Tesis';
 
 export const getItem = async ({ params, user }: Request, res: Response) => {
 	try {
@@ -24,6 +25,15 @@ export const getItems = async ({ query, user }: Request, res: Response) => {
 
 export const postItem = async ({ body, user }: Request, res: Response) => {
 	try {
+		console.log({ body, user });
+
+		let result: UTTesis = await createOrUpdate({
+			titulo: `${body.titulo}`,
+			ruta_perfil: `${body.name}`,
+			id_estudiante: user.primaryKey,
+		});
+
+		successHttp(res, 200, result);
 		// const results = await sqlInsert({
 		// 	table: 'ut_tesis',
 		// 	datos: { ...body, id_estudiante: user.primaryKey },

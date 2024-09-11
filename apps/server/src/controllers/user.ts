@@ -4,7 +4,7 @@ import { existsSync, mkdirSync, unlinkSync } from 'fs';
 import path from 'path';
 import { readFile, utils } from 'xlsx';
 import { DATA_SOURCES } from '../config/vars.config';
-import { sqlSelect, sqlUpdate } from '../db/consultas';
+import { sqlSelect } from '../db/consultas';
 import { IGetAll } from '../interfaces/parameters';
 import { IReturnEmail } from '../interfaces/returns';
 import { sendEmail } from '../services/email.service';
@@ -14,9 +14,9 @@ import {
 	getAll,
 	getOne,
 	restoreUsuario,
+	updateUsuario,
 } from '../services/usuario.service';
 import { errorHttp, successHttp } from '../utils/error.handle';
-import { formatDate, newDate } from '../utils/formats';
 import { getRandomPassword } from '../utils/password';
 import { encryptPassword } from '../utils/token';
 
@@ -115,46 +115,48 @@ const createItem = async ({ body }: Request, res: Response) => {
 
 const updateItem = async ({ body, query, user }: Request, res: Response) => {
 	try {
-		const results = await Promise.all([
-			sqlUpdate({
-				table: 'usuario',
-				datos: {
-					nombre: body.nombre,
-					apellidos: body.apellidos,
-					genero: body.genero,
-					correo: body.correo,
-					carnet: body.carnet,
-					cui: body.cui,
-					direccion: body.direccion,
-					fecha_nac: formatDate({
-						date: newDate(body.fecha_nac, 'es'),
-						format: 'mysql',
-						type: 'date',
-					}),
-				},
-				query: { id_usuario: user.primaryKey },
-			}),
-			sqlUpdate({
-				table: 'ut_perfil',
-				datos: {
-					id_horario: body.id_horario,
-					id_jornada: body.id_jornada,
-				},
-				query: { id_usuario: user.primaryKey },
-			}),
-		]);
+		let results = await updateUsuario(user.primaryKey, body);
 
-		if (body.pass && body.pass.length > 0) {
-			let passHash = await encryptPassword(body.pass);
-			results.push(
-				await sqlUpdate({
-					table: 'usuario',
-					datos: { pass: passHash },
-					query: { id_usuario: user.primaryKey },
-				})
-			);
-		}
-		res.json(results);
+		// const results = await Promise.all([
+		// 	sqlUpdate({
+		// 		table: 'usuario',
+		// 		datos: {
+		// 			nombre: body.nombre,
+		// 			apellidos: body.apellidos,
+		// 			genero: body.genero,
+		// 			correo: body.correo,
+		// 			carnet: body.carnet,
+		// 			cui: body.cui,
+		// 			direccion: body.direccion,
+		// 			fecha_nac: formatDate({
+		// 				date: newDate(body.fecha_nac, 'es'),
+		// 				format: 'mysql',
+		// 				type: 'date',
+		// 			}),
+		// 		},
+		// 		query: { id_usuario: user.primaryKey },
+		// 	}),
+		// 	sqlUpdate({
+		// 		table: 'ut_perfil',
+		// 		datos: {
+		// 			id_horario: body.id_horario,
+		// 			id_jornada: body.id_jornada,
+		// 		},
+		// 		query: { id_usuario: user.primaryKey },
+		// 	}),
+		// ]);
+
+		// if (body.pass && body.pass.length > 0) {
+		// 	let passHash = await encryptPassword(body.pass);
+		// 	results.push(
+		// 		await sqlUpdate({
+		// 			table: 'usuario',
+		// 			datos: { pass: passHash },
+		// 			query: { id_usuario: user.primaryKey },
+		// 		})
+		// 	);
+		// }
+		successHttp(res, 200, results);
 	} catch (error: any) {
 		errorHttp(res, error);
 	}

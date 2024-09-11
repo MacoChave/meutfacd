@@ -5,7 +5,7 @@ import { ESPERA, REVISION } from '@/consts/Vars';
 import { useCustomFetch } from '@/hooks/useFetch';
 import { TCourseTutor } from '@/models/CourseTutor';
 import { TPeriod } from '@/models/Period';
-import { TReview } from '@/models/Review';
+import { TRevision } from '@/models/TRevision';
 import { TSchedule } from '@/models/Schedule';
 import { postData, putData } from '@/services/fetching';
 import { style } from '@/themes/styles';
@@ -35,9 +35,11 @@ const ScndCourse: React.FC<ScndCourseProps> = ({}) => {
 	const [courseTutor, setCourseTutor] = useState<TCourseTutor>(
 		{} as TCourseTutor
 	);
-	const [assignment, setAssignment] = useState<TReview[]>([] as TReview[]);
-	const [unAssignment, setUnAssignment] = useState<TReview[]>(
-		[] as TReview[]
+	const [assignment, setAssignment] = useState<TRevision[]>(
+		[] as TRevision[]
+	);
+	const [unAssignment, setUnAssignment] = useState<TRevision[]>(
+		[] as TRevision[]
 	);
 	const [waiting, setWaiting] = useState(false);
 

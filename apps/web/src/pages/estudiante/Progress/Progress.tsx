@@ -1,16 +1,15 @@
-import { URL } from '@/consts/Api';
 import { Contenedor } from '@/components';
 import { DotsLoaders } from '@/components/Loader/DotsLoaders';
 import { McTable } from '@/components/MyTable';
+import { URL } from '@/consts/Api';
 import { APROBADO } from '@/consts/Vars';
-import { useCustomFetch, useFetch } from '@/hooks/useFetch';
+import { useFetch } from '@/hooks/useFetch';
 import { TProgress } from '@/models/Progress';
 import { getData } from '@/services/fetching';
 import { Typography } from '@mui/material';
 import { FC, useState } from 'react';
 import swal from 'sweetalert';
 import Dialogo from '../../../components/Modal';
-import { Print } from '@mui/icons-material';
 
 export type ProgressProps = {
 	id_user?: number;

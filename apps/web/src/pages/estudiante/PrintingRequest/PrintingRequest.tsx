@@ -2,49 +2,31 @@ import { URL } from '@/consts/Api';
 import { Contenedor } from '@/components';
 import { EmptyReview } from '@/components/EmptyReview';
 import { DotsLoaders } from '@/components/Loader/DotsLoaders';
-import { useCustomFetch } from '@/hooks/useFetch';
+import { useCustomFetch, useFetch } from '@/hooks/useFetch';
 import { TResult } from '@/models/Fetching';
-import { TReview } from '@/models/Review';
+import { TRevision } from '@/models/TRevision';
 import { postData } from '@/services/fetching';
 import { style } from '@/themes/styles';
 import { formatDate, getChipColor, getChipLabel } from '@/utils/formatHandler';
 import { Chat } from '@mui/icons-material';
 import { Box, Chip, IconButton, TextField, Typography } from '@mui/material';
 import { FC } from 'react';
+import { ESTACION7 } from '@/consts/Vars';
 
 export type PrintingRequestProps = {};
 
 const PrintingRequest: FC<PrintingRequestProps> = ({}) => {
-	const { data, isLoading, isError } = useCustomFetch({
+	const { data, isLoading, isError, refetch } = useFetch({
 		url: `${URL.REVIEW}/one`,
-		method: 'post',
-		body: {
-			table: 'ut_v_revision',
-			columns: [
-				'id_revision',
-				'titulo',
-				'fecha',
-				'detalle',
-				'estado',
-				'tutor',
-				'ruta_tesis',
-				'id_tutor',
-				'sala',
-			],
-			sort: {
-				fecha: 'DESC',
-			},
-			limit: 1,
-		},
 		params: {
-			estacion: 7,
+			estacion: ESTACION7,
 		},
 	});
 
 	const createChat = async () => {
 		const result: TResult = await postData({
 			path: URL.CHAT,
-			params: { user_id: (data as TReview).id_tutor },
+			params: { user_id: (data as TRevision).id_tutor },
 		});
 		console.log(result);
 	};

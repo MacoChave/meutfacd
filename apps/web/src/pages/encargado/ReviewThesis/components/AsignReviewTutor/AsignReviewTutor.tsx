@@ -5,7 +5,7 @@ import { ESPERA, PENDIENTE } from '@/consts/Vars';
 import { useCustomFetch } from '@/hooks/useFetch';
 import { TResult } from '@/models/Fetching';
 import { TUser } from '@/models/Perfil';
-import { TReview } from '@/models/Review';
+import { TRevision } from '@/models/TRevision';
 import { PickEvaluador } from '@/pages/encargado/components/PickEvaluador';
 import { putData } from '@/services/fetching';
 import { SwitchLeft, SwitchRight } from '@mui/icons-material';
@@ -28,11 +28,11 @@ export type AsignReviewTutorProps = {
 
 const AsignReviewTutor: React.FC<AsignReviewTutorProps> = ({}) => {
 	const [docente, setDocente] = useState<TUser>({} as TUser);
-	const [unAssignmentUsers, setUnassignmentUsers] = useState<TReview[]>(
-		[] as TReview[]
+	const [unAssignmentUsers, setUnassignmentUsers] = useState<TRevision[]>(
+		[] as TRevision[]
 	);
-	const [assignmentUsers, setAssignmentUsers] = useState<TReview[]>(
-		[] as TReview[]
+	const [assignmentUsers, setAssignmentUsers] = useState<TRevision[]>(
+		[] as TRevision[]
 	);
 
 	const { data, isLoading, isError, refetch } = useCustomFetch({
