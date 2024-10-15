@@ -10,7 +10,7 @@ import { formatDate, getChipColor, getChipLabel } from '@/utils/formatHandler';
 import { Chat } from '@mui/icons-material';
 import { Box, Chip, IconButton, TextField, Typography } from '@mui/material';
 import { PickDays } from '../../administrador/Courses/Gestion/PickDays';
-import { FC } from 'react';
+import { FC, useState } from 'react';
 import { ESTACION3 } from '@/consts/Vars';
 
 const boxStyle = {
@@ -23,6 +23,7 @@ const boxStyle = {
 export type CourseIIProps = {};
 
 const CourseII: FC<CourseIIProps> = ({}) => {
+	const [loading, setloading] = useState(false);
 	const {
 		data: revision,
 		isLoading,
@@ -44,9 +45,10 @@ const CourseII: FC<CourseIIProps> = ({}) => {
 	};
 
 	if (isLoading) return <DotsLoaders />;
-	if (isError) return <Typography>Error</Typography>;
+	if (isError)
+		return <Typography>No se pudo cargar la revisón ...</Typography>;
 
-	if (!revision)
+	if (!revision.message)
 		return (
 			<EmptyReview title='Curso II: Elaboración y planeación de tesis' />
 		);

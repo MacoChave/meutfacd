@@ -41,6 +41,7 @@ export type CommissionStyleProps = {};
 const CommissionStyle: FC<CommissionStyleProps> = ({}) => {
 	const [isUploading, setIsUploading] = useState(false);
 	const [isUploaded, setIsUploaded] = useState(false);
+	const [loading, setLoading] = useState(false);
 	const {
 		data: revision,
 		isLoading,
@@ -186,7 +187,7 @@ const CommissionStyle: FC<CommissionStyleProps> = ({}) => {
 	if (isError)
 		return <Typography>No se pudo cargar la revisión...</Typography>;
 
-	if (!revision)
+	if (!revision.message)
 		return <EmptyReview title='Comisión y estilo (Presentar tesis)' />;
 
 	return (

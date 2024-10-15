@@ -126,7 +126,8 @@ const InternalReviews: FC<InternalReviewsProps> = ({}) => {
 	if (isLoading) return <DotsLoaders />;
 	if (isError) return <Typography>Error</Typography>;
 
-	if (!revision) return <EmptyReview title='Cita a previos internos' />;
+	if (!revision.message)
+		return <EmptyReview title='Cita a previos internos' />;
 
 	return (
 		<>

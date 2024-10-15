@@ -34,7 +34,8 @@ const PrintingRequest: FC<PrintingRequestProps> = ({}) => {
 	if (isLoading) return <DotsLoaders />;
 	if (isError) return <Typography>Error</Typography>;
 
-	if (!data) return <EmptyReview title='Solicitud de impresión de tesis' />;
+	if (!data.message)
+		return <EmptyReview title='Solicitud de impresión de tesis' />;
 
 	return (
 		<>

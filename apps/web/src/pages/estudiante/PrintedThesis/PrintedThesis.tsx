@@ -1,6 +1,7 @@
 import { Contenedor, DotsLoaders, EmptyReview } from '@/components';
 import { URL } from '@/consts/Api';
-import { useCustomFetch } from '@/hooks/useFetch';
+import { ESTACION8 } from '@/consts/Vars';
+import { useCustomFetch, useFetch } from '@/hooks/useFetch';
 import { TResult } from '@/models/Fetching';
 import { TRevision } from '@/models/TRevision';
 import { postData } from '@/services/fetching';
@@ -13,29 +14,10 @@ import React from 'react';
 export type PrintedThesisProps = {};
 
 const PrintedThesis: React.FC<PrintedThesisProps> = ({}) => {
-	const { data, isLoading, isError } = useCustomFetch({
+	const { data, isLoading, isError, refetch } = useFetch({
 		url: `${URL.REVIEW}/one`,
-		method: 'post',
-		body: {
-			table: 'ut_v_revision',
-			columns: [
-				'id_revision',
-				'titulo',
-				'fecha',
-				'detalle',
-				'estado',
-				'tutor',
-				'ruta_tesis',
-				'id_tutor',
-				'sala',
-			],
-			sort: {
-				fecha: 'DESC',
-			},
-			limit: 1,
-		},
 		params: {
-			estacion: 8,
+			estacion: ESTACION8,
 		},
 	});
 
@@ -50,7 +32,7 @@ const PrintedThesis: React.FC<PrintedThesisProps> = ({}) => {
 	if (isLoading) return <DotsLoaders />;
 	if (isError) return <Typography>Error</Typography>;
 
-	if (!data) return <EmptyReview title='Entrega de tesis' />;
+	if (!data.message) return <EmptyReview title='Entrega de tesis' />;
 
 	return (
 		<>

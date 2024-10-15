@@ -5,7 +5,7 @@ import {
 	deleteItem,
 	getItem,
 	getItems,
-	getItemsByCurrentProf,
+	getItemsByTutor,
 	getItemsByUser,
 	getItemByUser,
 	getXlsxReport,
@@ -15,8 +15,8 @@ import {
 
 const router = Router();
 
-router.get('/professor', requireAuth, getItemsByCurrentProf);
 router.get('/', requireAuth, getItemByUser);
+router.get('/professor', requireAuth, getItemsByTutor);
 router.get('/all', requireAuth, getItemsByUser);
 router.post('/xlsx', getXlsxReport);
 router.get('/one', requireAuth, getItem);

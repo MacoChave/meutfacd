@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import * as XLSX from 'xlsx';
 import { sqlInsert, sqlSelect, sqlSelectOne, sqlUpdate } from '../db/consultas';
-import { getAllByUser, getOne } from '../services/revision.service';
+import { getAll, getAllByUser, getOne } from '../services/revision.service';
 import { errorHttp, successHttp } from '../utils/error.handle';
 import { formatDate } from '../utils/formats';
 
@@ -34,34 +34,18 @@ export const getXlsxReport = async (
 		res.status(200).download(filePath, `${bookName}.xlsx`, (err) => {
 			if (err) throw err;
 		});
-
-		// const fileStream = createReadStream(filePath);
-		// fileStream.pipe(res);
-		// unlinkSync(`${filePath}`);
-
-		// res.status(200).sendFile(filePath, {
-		// 	root: './src/storage',
-		// 	headers: {
-		// 		'Content-Type':
-		// 			'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-		// 	},
-		// });
 	} catch (error: any) {
 		errorHttp(res, error);
 	}
 };
 
-export const getItemsByCurrentProf = async (
+export const getItemsByTutor = async (
 	{ query, body, user }: Request,
 	res: Response
 ) => {
 	try {
-		const results = await sqlSelect({
-			...body,
-			table: 'ut_v_revision',
-			query: { id_tutor: user.primaryKey, ...query },
-		});
-		res.status(200).json(results);
+		const { id_usuario } = query;
+		successHttp(res, 200, {});
 	} catch (error: any) {
 		errorHttp(res, error);
 	}

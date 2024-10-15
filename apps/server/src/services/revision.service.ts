@@ -53,6 +53,21 @@ export const getAllByUser = async (
 	}
 };
 
+export const getAllByTutor = (
+	id_tutor: number | undefined,
+	estacion: number | undefined
+): Promise<UTRevision[]> => {
+	try {
+		let revisionRepo = AppDataSource.getRepository(UTRevision);
+		return revisionRepo.find({
+			relations: ['cursoTutor', 'tutor', 'tesis'],
+			where: { id_tutor, estacion },
+		});
+	} catch (error: any) {
+		throw new Error(error.message);
+	}
+};
+
 export const getOne = (
 	id_revision: number | undefined,
 	id_usuario: number | undefined,
